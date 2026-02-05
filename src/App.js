@@ -13,6 +13,7 @@ import ContactUs from './pages/ContactUs';
 // Investor Pages
 import InvestorRegister from './pages/Investor/InvestorRegister';
 import InvestorLogin from './pages/Investor/InvestorLogin';
+import InvestorDashboard from './pages/Investor/InvestorDashboard';
 import Projects from './pages/Investor/Projects';
 import ProjectDetail from './pages/Investor/ProjectDetail';
 
@@ -55,6 +56,7 @@ function App() {
           {/* Investor Routes */}
           <Route path="/login" element={<InvestorLogin />} />
           <Route path="/register" element={<InvestorRegister />} />
+          <Route path="/dashboard" element={<ProtectedRoute role="investor"><InvestorDashboard /></ProtectedRoute>} />
           <Route path="/projects" element={<ProtectedRoute role="investor"><Projects /></ProtectedRoute>} />
           <Route path="/projects/:id" element={<ProtectedRoute role="investor"><ProjectDetail /></ProtectedRoute>} />
 

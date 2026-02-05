@@ -48,9 +48,9 @@ const Header = ({ transparent = false }) => {
   const getDashboardLink = () => {
     if (!user) return '/';
     switch (user.role) {
-      case 'admin': return '/admin';
+      case 'admin': return '/admin/dashboard';
       case 'builder': return '/partner/dashboard';
-      case 'investor': return '/projects';
+      case 'investor': return '/dashboard';
       default: return '/';
     }
   };
