@@ -22,6 +22,7 @@ const Header = ({ transparent = false }) => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false); // Mobile Hamburger Menu
   const [show, setShow] = useState(true);
   const [lastScrollY, setLastScrollY] = useState(0);
+  const [underlineStyle, setUnderlineStyle] = useState({ left: 0, width: 0, opacity: 0 });
 
   const handleLogout = () => {
     logout();
@@ -54,13 +55,26 @@ const Header = ({ transparent = false }) => {
     }
   };
 
+  const handleMouseEnter = (e) => {
+    const el = e.currentTarget;
+    setUnderlineStyle({
+      left: el.offsetLeft,
+      width: el.offsetWidth,
+      opacity: 1,
+    });
+  };
+
+  const handleMouseLeave = () => {
+    setUnderlineStyle((prev) => ({ ...prev, opacity: 0 }));
+  };
+
   return (
     <header
       className={`fixed w-full top-0 left-0 right-0 z-50 transition-transform duration-300 ${transparent ? 'bg-transparent' : 'bg-white shadow-sm'
         } ${show ? 'translate-y-0' : '-translate-y-full'}`}
     >
       <div className="px-4 py-2">
-        <div className="flex items-center justify-between relative max-w-7xl mx-auto">
+        <div className="container w-full mx-auto flex items-center justify-between">
 
           {/* LOGO: Responsive Handling */}
           <Link to="/" className="flex items-center">
@@ -79,61 +93,90 @@ const Header = ({ transparent = false }) => {
           </Link>
 
           {/* DESKTOP NAVIGATION (md and up) */}
-          <nav className="hidden md:flex items-center space-x-6">
+          <nav
+            className="hidden md:flex items-center space-x-6 relative px-2 pb-0"
+            onMouseLeave={handleMouseLeave}
+          >
+            {/* THE MAGIC UNDERLINE - Moved to the top of nav so it stays on top of the stack */}
+            <div
+              className="absolute bottom-0 h-0.5 bg-[#FB923C] transition-all duration-300 ease-out pointer-events-none"
+              style={{
+                left: `${underlineStyle.left}px`,
+                width: `${underlineStyle.width}px`,
+                opacity: underlineStyle.opacity,
+              }}
+            />
+
+            {/* INVESTOR LINKS */}
             {user && user.role === 'investor' && (
-              <Link to="/projects" className="font-medium text-[#08294F] hover:text-[#FB923C] transition-colors">
+              <Link
+                to="/projects"
+                onMouseEnter={handleMouseEnter}
+                className="font-medium text-[#08294F] hover:text-[#FB923C] transition-colors py-1"
+              >
                 Browse Projects
               </Link>
             )}
 
+            {/* ADMIN LINKS */}
             {user && user.role === 'admin' && (
               <>
-                <Link to="/admin" className="font-medium text-[#08294F] hover:text-[#FB923C] transition-colors">Dashboard</Link>
-                <Link to="/admin/projects" className="font-medium text-[#08294F] hover:text-[#FB923C] transition-colors">Projects</Link>
-                <Link to="/admin/builders" className="font-medium text-[#08294F] hover:text-[#FB923C] transition-colors">Builders</Link>
+                <Link to="/admin/dashboard" onMouseEnter={handleMouseEnter} className="font-medium text-[#08294F] hover:text-[#FB923C] transition-colors py-1">Dashboard</Link>
+                <Link to="/admin/projects" onMouseEnter={handleMouseEnter} className="font-medium text-[#08294F] hover:text-[#FB923C] transition-colors py-1">Projects</Link>
+                <Link to="/admin/investors" onMouseEnter={handleMouseEnter} className="font-medium text-[#08294F] hover:text-[#FB923C] transition-colors py-1">Investors</Link>
+                <Link to="/admin/builders" onMouseEnter={handleMouseEnter} className="font-medium text-[#08294F] hover:text-[#FB923C] transition-colors py-1">Builders</Link>
               </>
             )}
 
+            {/* BUILDER LINKS */}
             {user && user.role === 'builder' && (
               <>
-                <Link to="/partner/dashboard" className="font-medium text-[#08294F] hover:text-[#FB923C] transition-colors flex items-center gap-2">
+                <Link to="/partner/dashboard" onMouseEnter={handleMouseEnter} className="font-medium text-[#08294F] hover:text-[#FB923C] transition-colors flex items-center gap-2 py-1">
                   <LayoutDashboard className="h-4 w-4" /> Dashboard
                 </Link>
-                <Link to="/partner/add-project" className="font-medium text-[#08294F] hover:text-[#FB923C] transition-colors flex items-center gap-2">
+                <Link to="/partner/add-project" onMouseEnter={handleMouseEnter} className="font-medium text-[#08294F] hover:text-[#FB923C] transition-colors flex items-center gap-2 py-1">
                   Add Project
                 </Link>
               </>
             )}
 
-            {user ? (
-              <Button
-                onClick={handleLogout}
-                variant="outline"
-                size="sm"
-                className="flex items-center space-x-2 border-red-200 text-red-600 hover:bg-red-50"
-              >
-                <LogOut className="h-4 w-4" />
-                <span>Logout</span>
-              </Button>
-            ) : (
+            {/* PUBLIC LINKS (Shown only when logged out) */}
+            {!user && (
               <>
-                <Link to="/" className="font-medium text-[#08294F] hover:text-[#FB923C] transition-colors flex items-center gap-2">
-                  Properties
-                </Link>
-                <Link to="/" className="font-medium text-[#08294F] hover:text-[#FB923C] transition-colors flex items-center gap-2">
-                  Cities
-                </Link>
-                <Link to="/" className="font-medium text-[#08294F] hover:text-[#FB923C] transition-colors flex items-center gap-2">
-                  About Us
-                </Link>
-                <Link to="/" className="font-medium text-[#08294F] hover:text-[#FB923C] transition-colors flex items-center gap-2">
-                  Insights
-                </Link>
-                <Link to="/" className="font-medium text-[#08294F] hover:text-[#FB923C] transition-colors flex items-center gap-2">
-                  Contact Us
-                </Link>
+                {[
+                  { label: 'Properties', path: '/' },
+                  { label: 'Cities', path: '/' },
+                  { label: 'About Us', path: '/about-us' }, // ✅ custom route
+                  { label: 'Insights', path: '/' },
+                  { label: 'Contact Us', path: '/contact-us' },
+                ].map((item) => (
+                  <Link
+                    key={item.label}
+                    to={item.path}
+                    onMouseEnter={handleMouseEnter}
+                    className="font-medium text-[#08294F] hover:text-[#FB923C] transition-colors py-1"
+                  >
+                    {item.label}
+                  </Link>
+                ))}
+              </>
+            )}
 
-                <div className="flex items-center space-x-3">
+
+            {/* ACTION BUTTONS (Logout / Login Dropdown) */}
+            <div className="flex items-center space-x-3 ml-4">
+              {user ? (
+                <Button
+                  onClick={handleLogout}
+                  variant="outline"
+                  size="sm"
+                  className="flex items-center space-x-2 border-red-200 text-red-600 hover:bg-red-50"
+                >
+                  <LogOut className="h-4 w-4" />
+                  <span>Logout</span>
+                </Button>
+              ) : (
+                <>
                   <div
                     className="relative"
                     onMouseEnter={() => setOpen(true)}
@@ -150,12 +193,12 @@ const Header = ({ transparent = false }) => {
                       </div>
                     )}
                   </div>
-                  <Button onClick={() => navigate('/partner/register')} className="bg-orange-500 hover:bg-orange-600">
+                  <Button onClick={() => navigate('/partner/register')} className="bg-orange-500 hover:bg-orange-600 whitespace-nowrap">
                     Register as Partner
                   </Button>
-                </div>
-              </>
-            )}
+                </>
+              )}
+            </div>
           </nav>
 
           {/* MOBILE TOGGLE: 3 Bars Menu */}
@@ -202,17 +245,24 @@ const Header = ({ transparent = false }) => {
             <div className="flex flex-col gap-6">
               <div className="flex flex-col gap-1">
                 <p className="text-xs text-gray-400 font-bold uppercase tracking-widest mb-2">Explore</p>
-                {['Properties', 'Cities', 'About Us', 'Insights', 'Contact Us'].map((item) => (
+                {[
+                  { label: 'Properties', path: '/' },
+                  { label: 'Cities', path: '/' },
+                  { label: 'About Us', path: '/about-us' },
+                  { label: 'Insights', path: '/' },
+                  { label: 'Contact Us', path: '/contact-us' },
+                ].map((item) => (
                   <Link
-                    key={item}
-                    to="/"
+                    key={item.label}
+                    to={item.path}
                     onClick={() => setMobileMenuOpen(false)}
                     className="py-3 px-2 text-lg font-medium text-[#08294F] border-b border-gray-100 flex items-center justify-between"
                   >
-                    {item}
+                    {item.label}
                     <ChevronRight className="h-4 w-4 text-gray-300" />
                   </Link>
                 ))}
+
               </div>
               <div>
                 <p className="text-xs text-gray-400 font-bold uppercase tracking-widest mb-4">Investor Access</p>

@@ -4,6 +4,11 @@ import './App.css';
 import { AuthProvider, useAuth } from '@/hooks/AuthContext';
 
 import Index from './pages/Index';
+import TearmsAndCondition from './pages/TearmsAndCondition';
+import PrivacyPolicy from './pages/PrivacyPolicy';
+import Disclaimer from './pages/Disclaimer';
+import AboutUs from './pages/AboutUs';
+import ContactUs from './pages/ContactUs';
 
 // Investor Pages
 import InvestorRegister from './pages/Investor/InvestorRegister';
@@ -17,10 +22,13 @@ import BuilderLogin from './pages/Partner/BuilderLogin';
 import BuilderDashboard from './pages/Partner/BuilderDashboard';
 
 // Admin Pages
+import AdminLogin from './pages/Admin/AdminLogin';
 import AdminDashboard from './pages/Admin/AdminDashboard';
 import AdminProjects from './pages/Admin/AdminProjects';
 import AdminBuilders from './pages/Admin/AdminBuilders';
 import AdminInquiries from './pages/Admin/AdminInquiries';
+
+import ScrollToTop from './hooks/ScrollToTop';
 
 const ProtectedRoute = ({ children, role }) => {
   const { user } = useAuth();
@@ -33,10 +41,16 @@ function App() {
   return (
     <AuthProvider>
       <BrowserRouter>
+        <ScrollToTop />
         <Routes>
 
           {/* Public Routes */}
           <Route path="/" element={<Index />} />
+          <Route path="/privacy" element={<PrivacyPolicy />} />
+          <Route path="/disclaimer" element={<Disclaimer />} />
+          <Route path="/terms" element={<TearmsAndCondition />} />
+          <Route path="/about-us" element={<AboutUs />} />
+          <Route path="/contact-us" element={<ContactUs />} />
 
           {/* Investor Routes */}
           <Route path="/login" element={<InvestorLogin />} />
@@ -50,7 +64,8 @@ function App() {
           <Route path="/partner/dashboard" element={<ProtectedRoute role="builder"><BuilderDashboard /></ProtectedRoute>} />
 
           {/* Admin Routes */}
-          <Route path="/admin" element={<ProtectedRoute role="admin"><AdminDashboard /></ProtectedRoute>} />
+          <Route path="/admin/login" element={<AdminLogin />} />
+          <Route path="/admin/dashboard" element={<ProtectedRoute role="admin"><AdminDashboard /></ProtectedRoute>} />
           <Route path="/admin/projects" element={<ProtectedRoute role="admin"><AdminProjects /></ProtectedRoute>} />
           <Route path="/admin/builders" element={<ProtectedRoute role="admin"><AdminBuilders /></ProtectedRoute>} />
           <Route path="/admin/inquiries" element={<ProtectedRoute role="admin"><AdminInquiries /></ProtectedRoute>} />

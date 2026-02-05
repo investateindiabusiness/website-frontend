@@ -273,7 +273,7 @@ const AdminProjects = () => {
           </Dialog>
         </div>
 
-        <Card className="border-none shadow-lg">
+        <Card className="border-none shadow-lg bg-white">
           <CardContent className="p-0">
             <div className="overflow-x-auto">
               <table className="w-full">

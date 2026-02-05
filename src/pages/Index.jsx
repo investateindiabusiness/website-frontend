@@ -95,7 +95,7 @@ const Home = () => {
 
   return (
     <>
-      <div className="max-w-[100vw] min-h-screen bg-white overflow-x-hidden">
+      <div className="w-full min-h-screen bg-white overflow-x-hidden">
         <Header />
 
         {/* Hero Section - Fixed for mobile height */}
@@ -368,13 +368,13 @@ const Home = () => {
         <section className="py-10 pt-16 bg-white">
           <div className="container mx-auto px-4">
             <div className="text-center mb-8">
-              <h2 className="text-3xl md:text-4xl font-bold text-[#08294F] mb-4">Featured Investment Opportunities</h2>
+              <h2 className="text-3xl md:text-4xl font-bold text-[#0b264f] mb-4">Featured Investment Opportunities</h2>
             </div>
 
             {/* First Grid */}
             <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6 mt-2">
               {featuredProjects.map((project) => (
-                <Card key={project.id} className="overflow-hidden bg-white border-none shadow-sm hover:shadow-md transition-all">
+                <Card key={project.id} className="overflow-hidden bg-white border-none shadow-sm shadow-lg transition-all">
                   {/* Image Container */}
                   <div className="relative h-64 overflow-hidden rounded-2xl m-2">
                     <img
@@ -405,8 +405,8 @@ const Home = () => {
                       {/* Right Side: Pricing */}
                       <div className="text-right">
                         <p className="text-gray-400 text-xs">Starts from</p>
-                        <p className="text-xl font-bold text-gray-900">
-                          ₹ {project.priceRange}
+                        <p className="text-md font-bold text-gray-900">
+                          {project.priceRange}
                         </p>
                       </div>
                     </div>
@@ -431,7 +431,7 @@ const Home = () => {
             {/* Second Duplicate Grid as per original code */}
             <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6 mt-10">
               {featuredProjects.map((project) => (
-                <Card key={project.id + '-dup'} className="overflow-hidden bg-white border-none shadow-sm hover:shadow-md transition-all">
+                <Card key={project.id + '-dup'} className="overflow-hidden bg-white border-none shadow-sm shadow-lg transition-all">
                   <div className="relative h-64 overflow-hidden rounded-2xl m-2">
                     <img
                       src={project.images[0]}
@@ -457,8 +457,8 @@ const Home = () => {
                       </div>
                       <div className="text-right">
                         <p className="text-gray-400 text-xs">Starts from</p>
-                        <p className="text-xl font-bold text-gray-900">
-                          ₹ {project.priceRange}
+                        <p className="text-md font-bold text-gray-900">
+                          {project.priceRange}
                         </p>
                       </div>
                     </div>
@@ -483,7 +483,7 @@ const Home = () => {
         <section className="py-10 bg-gray-50 ">
           <div className="container mx-auto px-4">
             <div className="text-center mb-16">
-              <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">Why INVESTATE INDIA?</h2>
+              <h2 className="text-3xl md:text-4xl font-bold text-[#0b264f] mb-4">Why Investate India?</h2>
               <p className="text-lg md:text-xl text-gray-600 max-w-3xl mx-auto">
                 Your trusted partner for secure and transparent real estate investments in India
               </p>
@@ -602,7 +602,7 @@ const Home = () => {
         <section className="py-10 bg-gray-50 ">
           <div className="container mx-auto px-4">
             <div className="text-center mb-16">
-              <h2 className="text-3xl md:text-4xl font-bold text-[#08294F] mb-4">What Our Investors Say</h2>
+              <h2 className="text-3xl md:text-4xl font-bold text-[#0b264f] mb-4">What Our Investors Say</h2>
               <p className="text-lg md:text-xl text-[#08294F">
                 Trusted by NRIs worldwide for their India real estate investments
               </p>
@@ -641,7 +641,7 @@ const Home = () => {
         <section className="py-10  bg-white text-[#08294F]">
           <div className="container mx-auto px-4">
             <div className="text-center mb-16">
-              <h2 className="text-3xl md:text-4xl font-bold mb-4">How It Works</h2>
+              <h2 className="text-3xl md:text-4xl font-bold text-[#0b264f] mb-4">How It Works</h2>
               <p className="text-lg md:text-xl text-[#08294F]">
                 Simple, secure, and transparent investment process
               </p>
@@ -694,7 +694,7 @@ const Home = () => {
         {/* CTA Section */}
         <section className="py-10 bg-gray-50 text-[#08294F]">
           <div className="container mx-auto px-4 text-center">
-            <h2 className="text-3xl md:text-4xl font-bold">Ready to Start Your Investment Journey?</h2>
+            <h2 className="text-3xl md:text-4xl font-bold text-[#0b264f] mb-4">Ready to Start Your Investment Journey?</h2>
             <p className="text-lg md:text-xl mb-8 text-[#08294F] max-w-2xl mx-auto mt-4">
               Join hundreds of NRI investors who have successfully invested in India's premier real estate projects
             </p>

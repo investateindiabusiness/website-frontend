@@ -5,18 +5,16 @@ import Footer from '@/components/Footer';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { useAuth } from '@/hooks/AuthContext';
 import { toast } from '@/hooks/use-toast';
 import { Toaster } from '@/components/ui/toaster';
 import { loginRequest } from '@/api';
-import { Building2 } from 'lucide-react'; // Added an icon for visual distinction
+import { Building2, ArrowRight, CheckCircle2, LayoutDashboard } from 'lucide-react';
 
 const BuilderLogin = () => {
   const navigate = useNavigate();
   const { login } = useAuth();
-  
-  // We don't need 'role' in state because the backend determines the role from the DB
+
   const [formData, setFormData] = useState({
     email: '',
     password: ''
@@ -37,33 +35,29 @@ const BuilderLogin = () => {
 
     try {
       setSubmitting(true);
-      
-      // 1. Call the SAME backend endpoint (it handles both Investors and Builders)
+
       const userData = await loginRequest(formData);
 
-      // 2. Check if the user is actually a builder
-      // Optional: You can block investors from logging in here if you want strict separation
       if (userData.role !== 'builder' && userData.role !== 'admin') {
-         toast({
-            title: 'Incorrect Portal',
-            description: 'This login is for Builders. Please use the Investor Login.',
-            variant: 'destructive'
-         });
-         return; 
+        toast({
+          title: 'Incorrect Portal',
+          description: 'This login is for Builders. Please use the Investor Login.',
+          variant: 'destructive'
+        });
+        return;
       }
 
       login(userData);
-      
+
       toast({
         title: 'Login Successful',
         description: `Welcome back, ${userData.name || 'Partner'}!`
       });
 
-      // 3. Redirect to Builder Dashboard
       if (userData.role === 'admin') {
         navigate('/admin');
       } else {
-        navigate('/partner/dashboard'); // Redirects to the builder's home
+        navigate('/partner/dashboard');
       }
 
     } catch (error) {
@@ -79,69 +73,145 @@ const BuilderLogin = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50">
-      <Header />
+    // 1. Main Container: Flex column ensures Header/Footer stay at top/bottom
+    <div className="min-h-screen flex flex-col bg-white font-sans">
+      <div className="lg:hidden w-full absolute top-0 left-0 z-50">
+        <Header />
+      </div>
+      {/* <Header /> */}
       <Toaster />
 
-      <div className="container mx-auto px-4 py-24">
-        <div className="max-w-md mx-auto">
-          <Card className="border-none shadow-xl">
-            <CardHeader className="text-center">
-              <div className="mx-auto bg-orange-100 w-16 h-16 rounded-full flex items-center justify-center mb-4">
-                <Building2 className="h-8 w-8 text-orange-600" />
+      {/* 2. Content Area: flex-1 makes it fill all available space between Header and Footer */}
+      <div className="flex-1 flex w-full max-w-full mx-auto mt-10 md:mt-0">
+
+        {/* LEFT PANEL: Branding & Value Prop (Hidden on small mobile screens) */}
+        <div className="hidden lg:flex w-1/2 relative bg-[#2A1B15] flex-col justify-center px-12 xl:px-20 text-white overflow-hidden">
+          {/* Background Gradient Effect matching your image style */}
+          <div className="absolute inset-0 bg-gradient-to-br from-orange-900/40 via-[#2A1B15] to-[#1a100c] z-0"></div>
+
+          {/* Subtle background pattern/image overlay */}
+          <div
+            className="absolute inset-0 opacity-10 z-0"
+            style={{
+              backgroundImage: `url('https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?q=80&w=2070&auto=format&fit=crop')`,
+              backgroundSize: 'cover',
+              backgroundBlendMode: 'overlay'
+            }}
+          />
+
+          <div className="relative z-10 max-w-lg">
+            {/* Floating Icon */}
+            <div className="flex items-center space-x-2 mb-8">
+              <img src="/logo-big.png" alt="INVESTATE INDIA" onClick={() => navigate('/')} className="h-24 w-auto hover:cursor-pointer" />
+            </div>
+
+            <h1 className="text-4xl xl:text-5xl font-bold mb-6 leading-tight">
+              Build the future with <br />
+              <span className="text-orange-500">precision.</span>
+            </h1>
+
+            <p className="text-lg text-gray-300 mb-10 leading-relaxed font-light">
+              Access your partner dashboard to manage projects, track milestones, and connect with investors seamlessly.
+            </p>
+
+            {/* Features List */}
+            <div className="space-y-5">
+              {[
+                "Real-time Project Analytics",
+                "Direct Investor Communication",
+                "Secure Document Management"
+              ].map((item, index) => (
+                <div key={index} className="flex items-center gap-4 group">
+                  <div className="flex-shrink-0 w-6 h-6 rounded-full bg-orange-500/20 flex items-center justify-center group-hover:bg-orange-500 transition-colors duration-300">
+                    <CheckCircle2 className="h-4 w-4 text-orange-500 group-hover:text-white transition-colors" />
+                  </div>
+                  <span className="text-base font-medium text-gray-200">{item}</span>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+
+        {/* RIGHT PANEL: Login Form */}
+        <div className="flex-1 flex flex-col justify-center items-center p-4 lg:p-8 xl:p-12 bg-gray-50">
+
+          {/* THE CARD CONTAINER */}
+          <div className="w-full max-w-[480px] bg-white rounded-2xl shadow-[0_8px_30px_rgb(0,0,0,0.04)] border border-gray-100 overflow-hidden">
+
+            {/* Card Content */}
+            <div className="p-8 md:p-10">
+              <div className="text-left mb-8">
+                <h2 className="text-2xl md:text-3xl font-bold tracking-tight text-gray-900">
+                  <div className="inline-flex items-center justify-center w-8 h-8">
+                    <LayoutDashboard className="h-6 w-6 text-orange-500" />
+                  </div>
+                  Partner Login
+                </h2>
+                <p className="mt-2 text-sm md:text-base text-gray-500">
+                  Welcome back! Please enter your details.
+                </p>
               </div>
-              <CardTitle className="text-3xl font-bold text-gray-900">Partner Login</CardTitle>
-              <CardDescription className="text-gray-600">
-                Access your Builder Dashboard to manage projects and leads
-              </CardDescription>
-            </CardHeader>
-            <CardContent>
-              <form onSubmit={handleSubmit} className="space-y-6">
-                <div className="space-y-2">
-                  <Label htmlFor="email">Work Email</Label>
-                  <Input
-                    id="email"
-                    type="email"
-                    placeholder="contact@company.com"
-                    value={formData.email}
-                    onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-                    required
-                  />
+
+              <form onSubmit={handleSubmit} className="space-y-5">
+                <div className="space-y-4">
+                  <div className="space-y-2">
+                    <Label htmlFor="email" className="text-sm font-semibold text-gray-700">Work Email</Label>
+                    <Input
+                      id="email"
+                      type="email"
+                      placeholder="name@company.com"
+                      value={formData.email}
+                      onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+                      required
+                      className="h-11 px-4 bg-white border-gray-200 focus:bg-white focus:ring-2 focus:ring-orange-500/10 focus:border-orange-500 transition-all rounded-lg"
+                    />
+                  </div>
+
+                  <div className="space-y-2">
+                    <div className="flex items-center justify-between">
+                      <Label htmlFor="password" className="text-sm font-semibold text-gray-700">Password</Label>
+                      <button type="button" className="text-xs font-medium text-orange-600 hover:text-orange-700 hover:underline">
+                        Forgot password?
+                      </button>
+                    </div>
+                    <Input
+                      id="password"
+                      type="password"
+                      placeholder="••••••••"
+                      value={formData.password}
+                      onChange={(e) => setFormData({ ...formData, password: e.target.value })}
+                      required
+                      className="h-11 px-4 bg-white border-gray-200 focus:bg-white focus:ring-2 focus:ring-orange-500/10 focus:border-orange-500 transition-all rounded-lg"
+                    />
+                  </div>
                 </div>
 
-                <div className="space-y-2">
-                  <Label htmlFor="password">Password</Label>
-                  <Input
-                    id="password"
-                    type="password"
-                    placeholder="Enter your password"
-                    value={formData.password}
-                    onChange={(e) => setFormData({ ...formData, password: e.target.value })}
-                    required
-                  />
-                </div>
-
-                <Button type="submit" className="w-full bg-orange-600 hover:bg-orange-700 py-6 text-lg" disabled={submitting}>
-                  {submitting ? 'Verifying...' : 'Login to Dashboard'}
+                <Button
+                  type="submit"
+                  className="w-full h-11 bg-[#ea580c] hover:bg-[#c2410c] text-white font-semibold text-sm rounded-lg shadow-lg shadow-orange-500/20 transition-all mt-4"
+                  disabled={submitting}
+                >
+                  {submitting ? 'Verifying...' : 'Access Dashboard'}
+                  {!submitting && <ArrowRight className="h-4 w-4" />}
                 </Button>
 
                 <div className="text-center text-sm text-gray-600">
-                  Not a partner yet?{' '}
-                  <button
-                    type="button"
-                    onClick={() => navigate('/partner/register')}
-                    className="text-orange-600 hover:underline font-medium"
-                  >
-                    Register Company
+                  Not a partner yet?
+                  <button type="button" className="text-orange-600 hover:underline font-medium ml-2" onClick={() => navigate('/partner/register')}>
+                    Register Now
                   </button>
                 </div>
               </form>
-            </CardContent>
-          </Card>
+
+            </div>
+
+          </div>
+
+          <div className="lg:hidden mt-10">
+            <Footer />
+          </div>
         </div>
       </div>
-
-      <Footer />
     </div>
   );
 };

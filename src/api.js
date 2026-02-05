@@ -3,7 +3,7 @@ const API_BASE_URL = process.env.REACT_APP_API_BASE_URL || 'http://localhost:500
 export const apiRequest = async (endpoint, options = {}) => {
   // 1. Get the session from storage
   const session = JSON.parse(localStorage.getItem('user_session'));
-  
+
   // 2. Setup headers
   const headers = {
     'Content-Type': 'application/json',
@@ -23,7 +23,7 @@ export const apiRequest = async (endpoint, options = {}) => {
     // Handle session expiration (if token is invalid)
     if (response.status === 401) {
       localStorage.removeItem('user_session');
-      window.location.href = '/login'; 
+      window.location.href = '/login';
       return Promise.reject('Session expired');
     }
 
@@ -39,7 +39,7 @@ export const apiRequest = async (endpoint, options = {}) => {
 };
 
 // Auth / Registration
-export const loginRequest = (payload) => 
+export const loginRequest = (payload) =>
   apiRequest('/api/auth/login', {
     method: 'POST',
     body: JSON.stringify(payload),
@@ -64,29 +64,35 @@ export async function registerBuilder(payload) {
 }
 
 // Investor Registration Step 1
-export const createUserAuth = (authData) => 
+export const createUserAuth = (authData) =>
   apiRequest('/api/auth/register-step1', {
     method: 'POST',
     body: JSON.stringify(authData),
   });
 
 // Investor Registration Step 2
-export const updateInvestorProfile = (uid, profileData) => 
+export const updateInvestorProfile = (uid, profileData) =>
   apiRequest(`/api/auth/register-step2/${uid}`, {
     method: 'POST',
     body: JSON.stringify(profileData),
   });
 
 // Builder Registration Step 1
-export const createBuilderAuth = (authData) => 
+export const createBuilderAuth = (authData) =>
   apiRequest('/api/auth/builder-register-step1', {
     method: 'POST',
     body: JSON.stringify(authData),
   });
 
 // Builder Registration Step 2
-export const updateBuilderProfile = (uid, profileData) => 
+export const updateBuilderProfile = (uid, profileData) =>
   apiRequest(`/api/auth/builder-register-step2/${uid}`, {
     method: 'POST',
     body: JSON.stringify(profileData),
+  });
+
+export const adminLoginRequest = (payload) =>
+  apiRequest('/api/auth/admin-login', {
+    method: 'POST',
+    body: JSON.stringify(payload),
   });

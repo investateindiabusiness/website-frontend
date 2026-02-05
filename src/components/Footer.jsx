@@ -96,13 +96,13 @@ const Footer = () => {
               © 2025 INVESTATE INDIA. All rights reserved.
             </p>
             <div className="flex space-x-6">
-              <a href="#" className="text-sm hover:text-[#FB923C] transition-colors">
+              <a href="/privacy" className="text-sm hover:text-[#FB923C] transition-colors">
                 Privacy Policy
               </a>
-              <a href="#" className="text-sm hover:text-[#FB923C] transition-colors">
-                Terms of Service
+              <a href="/terms" className="text-sm hover:text-[#FB923C] transition-colors">
+                Terms & Conditions
               </a>
-              <a href="#" className="text-sm hover:text-[#FB923C] transition-colors">
+              <a href="/disclaimer" className="text-sm hover:text-[#FB923C] transition-colors">
                 Disclaimer
               </a>
             </div>
