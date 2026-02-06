@@ -110,16 +110,16 @@ const Header = ({ transparent = false }) => {
             {/* INVESTOR LINKS */}
             {user && user.role === 'investor' && (
               <>
-               <Link to="/dashboard" onMouseEnter={handleMouseEnter} className="font-medium text-[#08294F] hover:text-[#FB923C] transition-colors flex items-center gap-2 py-1">
-               <LayoutDashboard className="h-4 w-4" /> Dashboard
-             </Link>
-              <Link
-                to="/projects"
-                onMouseEnter={handleMouseEnter}
-                className="font-medium text-[#08294F] hover:text-[#FB923C] transition-colors py-1"
-              >
-                Browse Projects
-              </Link>
+                <Link to="/dashboard" onMouseEnter={handleMouseEnter} className="font-medium text-[#08294F] hover:text-[#FB923C] transition-colors flex items-center gap-2 py-1">
+                  <LayoutDashboard className="h-4 w-4" /> Dashboard
+                </Link>
+                <Link
+                  to="/projects"
+                  onMouseEnter={handleMouseEnter}
+                  className="font-medium text-[#08294F] hover:text-[#FB923C] transition-colors py-1"
+                >
+                  Browse Projects
+                </Link>
               </>
             )}
 
@@ -222,8 +222,8 @@ const Header = ({ transparent = false }) => {
       </div>
 
       {/* MOBILE FULL-SCREEN MENU */}
-      <div className={`md:hidden fixed inset-0 top-[60px] bg-white z-40 transition-transform duration-300 ${mobileMenuOpen ? 'translate-x-0' : 'translate-x-full'}`}>
-        <div className="flex flex-col h-[calc(100vh-60px)] p-6 space-y-8 overflow-y-auto bg-gray-50">
+      <div className={`md:hidden fixed inset-0 top-[56px] bg-white z-40 transition-transform duration-300 ${mobileMenuOpen ? 'translate-x-0' : 'translate-x-full'}`}>
+        <div className="flex flex-col h-[calc(100vh-56px)] p-6 space-y-8 overflow-y-auto bg-gray-50">
 
           {user ? (
             /* Logged In View */
@@ -291,19 +291,22 @@ const Header = ({ transparent = false }) => {
 
               <div className="pt-4 border-t border-gray-200">
                 <p className="text-xs text-gray-400 font-bold uppercase tracking-widest mb-4">Partner Portal</p>
-                <Link to="/partner/login" onClick={() => setMobileMenuOpen(false)} className="flex items-center justify-between p-4 bg-blue-900 text-white rounded-xl mb-3">
-                  <div className="flex items-center gap-3">
-                    <Briefcase className="h-5 w-5 text-orange-400" />
-                    <span className="font-bold">Partner Login</span>
-                  </div>
-                  <ChevronRight className="h-5 w-5 text-white/50" />
-                </Link>
-                <Button
-                  onClick={() => { setMobileMenuOpen(false); navigate('/partner/register'); }}
-                  className="w-full h-14 bg-orange-500 hover:bg-orange-600 text-lg font-bold rounded-xl shadow-lg"
-                >
-                  Join as a Partner
-                </Button>
+                <div className="grid grid-cols-1 gap-3">
+                  <Link to="/partner/login" onClick={() => setMobileMenuOpen(false)} className="flex items-center justify-between p-4 bg-white border rounded-xl">
+                    <div className="flex items-center gap-3">
+                      <Briefcase className="h-5 w-5 text-blue-600" />
+                      <span className="font-bold text-gray-800">Login as Partner</span>
+                    </div>
+                    <ChevronRight className="h-5 w-5 text-gray-400" />
+                  </Link>
+                  <Link to="/partner/register" onClick={() => setMobileMenuOpen(false)} className="flex items-center justify-between p-4 bg-white border rounded-xl">
+                    <div className="flex items-center gap-3">
+                      <UserPlus className="h-5 w-5 text-orange-500" />
+                      <span className="font-bold text-gray-800">Register as Partner</span>
+                    </div>
+                    <ChevronRight className="h-5 w-5 text-gray-400" />
+                  </Link>
+                </div>
               </div>
             </div>
           )}

@@ -9,13 +9,13 @@ import PrivacyPolicy from './pages/PrivacyPolicy';
 import Disclaimer from './pages/Disclaimer';
 import AboutUs from './pages/AboutUs';
 import ContactUs from './pages/ContactUs';
+import ProjectDetail from './pages/ProjectDetail';
 
 // Investor Pages
 import InvestorRegister from './pages/Investor/InvestorRegister';
 import InvestorLogin from './pages/Investor/InvestorLogin';
 import InvestorDashboard from './pages/Investor/InvestorDashboard';
 import Projects from './pages/Investor/Projects';
-import ProjectDetail from './pages/Investor/ProjectDetail';
 
 // Builder Pages
 import BuilderRegister from './pages/Partner/BuilderRegister';
@@ -53,13 +53,13 @@ function App() {
           <Route path="/terms" element={<TearmsAndCondition />} />
           <Route path="/about-us" element={<AboutUs />} />
           <Route path="/contact-us" element={<ContactUs />} />
+          <Route path="/project/:id" element={<ProjectDetail />} />
 
           {/* Investor Routes */}
           <Route path="/login" element={<InvestorLogin />} />
           <Route path="/register" element={<InvestorRegister />} />
           <Route path="/dashboard" element={<ProtectedRoute role="investor"><InvestorDashboard /></ProtectedRoute>} />
           <Route path="/projects" element={<ProtectedRoute role="investor"><Projects /></ProtectedRoute>} />
-          <Route path="/projects/:id" element={<ProtectedRoute role="investor"><ProjectDetail /></ProtectedRoute>} />
 
           {/* Partner Routes */}
           <Route path="/partner/register" element={<BuilderRegister />} />
