@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { redirect, useNavigate } from 'react-router-dom';
 import Header from '../components/Header';
 import Footer from '../components/Footer';
 import { Button } from '../components/ui/button';
@@ -179,7 +179,7 @@ const Home = () => {
         <Header />
 
         {/* Hero Section - Fixed for mobile height */}
-        <section className="relative min-h-[100vh] md:h-[calc(100vh-4rem)] mt-16 flex items-center justify-center overflow-hidden py-10 md:py-0">
+        <section className="relative md:h-[calc(100vh-4rem)] mt-[3rem] md:mt-[5rem] flex items-center justify-center overflow-hidden py-10 md:py-0">
           <div
             className="absolute inset-0 z-0"
             style={{
@@ -392,7 +392,7 @@ const Home = () => {
                 {/* 4. Search Button */}
                 <div className="p-1 w-full md:w-auto">
                   <Button
-                    className="w-full md:w-auto h-12 rounded-2xl md:rounded-full bg-orange-600 hover:bg-orange-700 text-white px-8 font-bold text-lg shadow-lg flex items-center justify-center gap-2"
+                    className="w-full md:w-auto h-12 rounded-2xl md:rounded-full bg-orange-600 hover:bg-orange-700 text-white px-8 font-bold shadow-lg flex items-center justify-center gap-2"
                   >
                     <Search className="w-5 h-5" />
                     Search
@@ -473,14 +473,6 @@ const Home = () => {
                       </Badge>
                     </div>
 
-                    {/* Like Button */}
-                    <button
-                      onClick={() => toggleShortlist(property.id)}
-                      className="absolute top-4 right-4 p-2.5 rounded-full bg-white/20 backdrop-blur-md border border-white/30 hover:bg-white transition-all group-active:scale-95"
-                    >
-                      <Heart className={`w-5 h-5 ${property.isShortlisted ? 'fill-red-500 text-red-500' : 'text-white group-hover:text-red-500'}`} />
-                    </button>
-
                     {/* Bottom Info on Image */}
                     <div className="absolute bottom-4 left-4 right-4 text-white">
                       <p className="text-xs font-medium bg-green-500/80 backdrop-blur-md inline-block px-2 py-0.5 rounded-md mb-2">
@@ -519,7 +511,7 @@ const Home = () => {
                     {/* Actions */}
                     <div className="grid grid-cols-5 gap-2 mt-auto">
                       <Button
-                        onClick={() => alert(`Contacting ${property.builder}`)}
+                        onClick={() => navigate('/partner/register')}
                         className="col-span-4 bg-[#0b264f] hover:bg-blue-900 text-white rounded-xl h-12 shadow-lg hover:shadow-blue-900/20"
                       >
                         <Phone className="w-4 h-4 mr-2" /> Contact Builder

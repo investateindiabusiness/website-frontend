@@ -167,7 +167,7 @@ const InvestorRegister = () => {
       {/* LEFT PANEL: Investor Themed */}
       <div className="hidden lg:flex lg:w-1/2 h-full relative bg-[#1a2e35] flex-col justify-center px-12 xl:px-20 text-white overflow-hidden">
         {/* Background Gradient & Image */}
-        <div className="absolute inset-0 bg-gradient-to-br from-orange-900/40 via-[#1a2e35] to-[#0f1c21] z-0"></div>
+        <div className="absolute inset-0 bg-gradient-to-br from-[#ffffff6b] via-[#1a2e35] to-[#0f1c21] z-0"></div>
         <div
           className="absolute inset-0 opacity-10 z-0"
           style={{

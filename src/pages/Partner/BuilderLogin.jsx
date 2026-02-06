@@ -87,7 +87,7 @@ const BuilderLogin = () => {
         {/* LEFT PANEL: Branding & Value Prop (Hidden on small mobile screens) */}
         <div className="hidden lg:flex w-1/2 relative bg-[#2A1B15] flex-col justify-center px-12 xl:px-20 text-white overflow-hidden">
           {/* Background Gradient Effect matching your image style */}
-          <div className="absolute inset-0 bg-gradient-to-br from-orange-900/40 via-[#2A1B15] to-[#1a100c] z-0"></div>
+          <div className="absolute inset-0 bg-gradient-to-br from-[#ffffff6b] via-[#2A1B15] to-[#1a100c] z-0"></div>
 
           {/* Subtle background pattern/image overlay */}
           <div

@@ -206,8 +206,8 @@ const TearmsAndCondition = () => {
             <p className="text-gray-600 mb-4">
               If you have any questions about these Terms, please contact us at:
             </p>
-            <a href="mailto:legal@investateindia.com" className="inline-flex items-center justify-center px-6 py-3 border border-transparent text-base font-medium rounded-md text-white bg-orange-600 hover:bg-orange-700 transition-colors">
-              legal@investateindia.com
+            <a href="mailto:info@investateindia.com" className="inline-flex items-center justify-center px-6 py-3 border border-transparent text-base font-medium rounded-md text-white bg-orange-600 hover:bg-orange-700 transition-colors">
+              info@investateindia.com
             </a>
           </section>
 

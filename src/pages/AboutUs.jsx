@@ -25,7 +25,7 @@ const AboutUs = () => {
         <Header />
 
         {/* --- Hero Section --- */}
-        <section className="relative h-[60vh] md:h-[70vh] flex items-center justify-center overflow-hidden mt-16">
+        <section className="relative h-[60vh] md:h-[70vh] flex items-center justify-center overflow-hidden mt-[3rem] md:mt-[5rem]">
           {/* Background Image with Overlay */}
           <div 
             className="absolute inset-0 z-0"

@@ -98,7 +98,7 @@ const BuilderDashboard = () => {
     <div className="min-h-screen bg-gray-50 flex flex-col font-sans overflow-x-hidden">
       <Header />
 
-      <div className="flex-grow mt-16 pb-12">
+      <div className="flex-grow mt-[3rem] md:mt-[5rem] pb-12">
         
         {/* --- HERO SECTION --- */}
         {/* FIX 2: Adjusted padding (pt-6 vs pt-10) and rounded corners for mobile */}

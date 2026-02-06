@@ -184,7 +184,7 @@ const BuilderRegister = () => {
       {/* LEFT PANEL: Fixed width, Full Height, Hidden Overflow */}
       <div className="hidden lg:flex lg:w-1/2 h-full relative bg-[#2A1B15] flex-col justify-center px-12 xl:px-20 text-white overflow-hidden">
         {/* Background Gradient & Image */}
-        <div className="absolute inset-0 bg-gradient-to-br from-orange-900/40 via-[#2A1B15] to-[#1a100c] z-0"></div>
+        <div className="absolute inset-0 bg-gradient-to-br from-[#ffffff6b] via-[#2A1B15] to-[#1a100c] z-0"></div>
         <div
           className="absolute inset-0 opacity-10 z-0"
           style={{

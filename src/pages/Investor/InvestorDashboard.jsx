@@ -132,7 +132,7 @@ const InvestorDashboard = () => {
     <div className="min-h-screen bg-gray-50 flex flex-col font-sans overflow-x-hidden">
       <Header />
 
-      <div className="flex-grow mt-16 pb-12">
+      <div className="flex-grow mt-[3rem] md:mt-[5rem] pb-12">
 
         {/* --- HERO SECTION --- */}
         <div className="bg-gradient-to-r from-[#0b264f] to-[#1a4b8c] text-white pt-6 pb-12 md:pt-10 md:pb-16 px-4 md:px-8 rounded-b-[2rem] md:rounded-b-[2.5rem] shadow-xl relative overflow-hidden">
@@ -300,14 +300,6 @@ const InvestorDashboard = () => {
                       </Badge>
                     </div>
 
-                    {/* Like Button */}
-                    <button
-                      onClick={() => toggleShortlist(property.id)}
-                      className="absolute top-4 right-4 p-2.5 rounded-full bg-white/20 backdrop-blur-md border border-white/30 hover:bg-white transition-all group-active:scale-95"
-                    >
-                      <Heart className={`w-5 h-5 ${property.isShortlisted ? 'fill-red-500 text-red-500' : 'text-white group-hover:text-red-500'}`} />
-                    </button>
-
                     {/* Bottom Info on Image */}
                     <div className="absolute bottom-4 left-4 right-4 text-white">
                       <p className="text-xs font-medium bg-green-500/90 backdrop-blur-md inline-flex items-center px-2 py-0.5 rounded-md mb-2">
@@ -346,7 +338,7 @@ const InvestorDashboard = () => {
                     {/* Actions */}
                     <div className="grid grid-cols-5 gap-2 mt-auto">
                       <Button
-                        onClick={() => alert(`Contacting ${property.builder}`)}
+                        onClick={() => navigate('/partner/register')}
                         className="col-span-4 bg-[#0b264f] hover:bg-blue-900 text-white rounded-xl h-10 md:h-12 shadow-lg hover:shadow-blue-900/20"
                       >
                         <Phone className="w-4 h-4 mr-2" /> Contact

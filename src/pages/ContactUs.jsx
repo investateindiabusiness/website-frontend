@@ -49,7 +49,7 @@ const ContactUs = () => {
         <Header />
 
         {/* --- Hero Section --- */}
-        <section className="relative h-auto flex items-center justify-center overflow-hidden mt-16 py-16">
+        <section className="relative h-auto flex items-center justify-center overflow-hidden mt-[3rem] md:mt-[5rem] py-16">
           <div 
             className="absolute inset-0 z-0"
             style={{
@@ -107,8 +107,7 @@ const ContactUs = () => {
                         </div>
                         <div>
                           <p className="text-xs text-blue-200 uppercase tracking-wider font-semibold mb-1">Email Us</p>
-                          <p className="text-lg font-medium">support@investateindia.com</p>
-                          <p className="text-sm text-blue-200">sales@investateindia.com</p>
+                          <p className="text-lg font-medium">info@investateindia.com</p>
                         </div>
                       </div>
 

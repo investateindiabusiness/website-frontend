@@ -73,7 +73,7 @@ const Header = ({ transparent = false }) => {
       className={`fixed w-full top-0 left-0 right-0 z-50 transition-transform duration-300 ${transparent ? 'bg-transparent' : 'bg-white shadow-sm'
         } ${show ? 'translate-y-0' : '-translate-y-full'}`}
     >
-      <div className="px-4 py-2">
+      <div className="px-2 py-1 md:py-2">
         <div className="container w-full mx-auto flex items-center justify-between">
 
           {/* LOGO: Responsive Handling */}
@@ -88,7 +88,7 @@ const Header = ({ transparent = false }) => {
             <img
               src="/logo-big.png"
               alt="INVESTATE INDIA"
-              className="md:hidden h-10 w-auto object-contain"
+              className="md:hidden h-12 w-auto object-contain"
             />
           </Link>
 
@@ -188,12 +188,12 @@ const Header = ({ transparent = false }) => {
                     onMouseLeave={() => setOpen(false)}
                   >
                     <Button className="bg-[#08294F] hover:bg-[#021021] text-white flex items-center gap-1">
-                      Login <ChevronDown className="h-4 w-4" />
+                      Login/Signup <ChevronDown className="h-4 w-4" />
                     </Button>
                     {open && (
                       <div className="absolute right-0 w-56 bg-white border rounded shadow-lg pt-2 pb-2">
-                        <Link to="/login" className="block px-4 py-2 hover:bg-gray-100">Login as Investor</Link>
                         <Link to="/register" className="block px-4 py-2 hover:bg-gray-100 border-b">Register as Investor</Link>
+                        <Link to="/login" className="block px-4 py-2 hover:bg-gray-100">Login as Investor</Link>
                         <Link to="/partner/login" className="block px-4 py-2 hover:bg-gray-100">Login as Partner</Link>
                       </div>
                     )}
@@ -214,7 +214,7 @@ const Header = ({ transparent = false }) => {
               onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
               className="text-[#08294F]"
             >
-              {mobileMenuOpen ? <X className="h-7 w-7" /> : <Menu className="h-7 w-7" />}
+              {mobileMenuOpen ? <X className="h-9 w-9" /> : <Menu className="h-9 w-9" />}
             </Button>
           </div>
 

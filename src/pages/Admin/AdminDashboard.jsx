@@ -117,7 +117,7 @@ const AdminDashboard = () => {
     <div className="min-h-screen bg-gray-50 flex flex-col font-sans">
       <Header />
 
-      <div className="container mx-auto px-4 py-8 flex-grow mt-16">
+      <div className="container mx-auto px-4 py-8 flex-grow mt-[3rem] md:mt-[5rem]">
         <div className="mb-8 flex flex-col md:flex-row md:items-center md:justify-between gap-4">
           <div>
             <h1 className="text-3xl font-bold text-gray-900 mb-2">Admin Dashboard</h1>

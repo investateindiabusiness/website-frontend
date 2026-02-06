@@ -76,7 +76,7 @@ const Login = () => {
       {/* LEFT PANEL: Branding & Visuals */}
       <div className="hidden lg:flex lg:w-1/2 h-full relative bg-[#1c1c1c] flex-col justify-center px-12 xl:px-20 text-white overflow-hidden">
         {/* Background Gradient & Image */}
-        <div className="absolute inset-0 bg-gradient-to-br from-orange-900/50 via-[#1c1c1c] to-[#000] z-0"></div>
+        <div className="absolute inset-0 bg-gradient-to-br from-[#ffffff6b] via-[#1c1c1c] to-[#000] z-0"></div>
         <div
           className="absolute inset-0 opacity-20 z-0"
           style={{
