@@ -18,9 +18,88 @@ import {
   Search,
   ChevronDown,
   X,
-  Briefcase
+  Briefcase,
+  ArrowUpRight,
+  Heart,
+  Phone
 } from 'lucide-react';
 import { projects, cities, testimonials, developers } from '../mockData';
+
+const AVAILABLE_PROPERTIES = [
+  {
+    id: 1,
+    title: 'Imperial Heights',
+    builder: 'Apex Constructors',
+    location: 'Mumbai, Maharashtra',
+    type: '3 BHK Luxury',
+    price: '₹2.5 Cr',
+    yield: '+12% proj. ROI',
+    image: 'https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?w=800&q=80',
+    status: 'Ready to Move',
+    isShortlisted: true
+  },
+  {
+    id: 3,
+    title: 'Cyber City Lofts',
+    builder: 'City Developers',
+    location: 'Hyderabad, Telangana',
+    type: '2 BHK Smart Home',
+    price: '₹1.1 Cr',
+    yield: 'Rental: ₹45k/mo',
+    image: 'https://images.unsplash.com/photo-1493663284031-b7e3aefcae8e?w=800&q=80',
+    status: 'Under Construction',
+    isShortlisted: true
+  },
+  {
+    id: 4,
+    title: 'Coastal Breeze',
+    builder: 'Coastal Living',
+    location: 'Kochi, Kerala',
+    type: '4 BHK Sea View',
+    price: '₹3.2 Cr',
+    yield: 'Premium Segment',
+    image: 'https://images.unsplash.com/photo-1512917774080-9991f1c4c750?w=800&q=80',
+    status: 'Ready to Move',
+    isShortlisted: false
+  },
+  {
+    id: 5,
+    title: 'Imperial Heights',
+    builder: 'Apex Constructors',
+    location: 'Mumbai, Maharashtra',
+    type: '3 BHK Luxury',
+    price: '₹2.5 Cr',
+    yield: '+12% proj. ROI',
+    image: 'https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?w=800&q=80',
+    status: 'Ready to Move',
+    isShortlisted: false
+  },
+  {
+    id: 6,
+    title: 'Cyber City Lofts',
+    builder: 'City Developers',
+    location: 'Hyderabad, Telangana',
+    type: '2 BHK Smart Home',
+    price: '₹1.1 Cr',
+    yield: 'Rental: ₹45k/mo',
+    image: 'https://images.unsplash.com/photo-1493663284031-b7e3aefcae8e?w=800&q=80',
+    status: 'Under Construction',
+    isShortlisted: false
+  },
+  {
+    id: 7,
+    title: 'Coastal Breeze',
+    builder: 'Coastal Living',
+    location: 'Kochi, Kerala',
+    type: '4 BHK Sea View',
+    price: '₹3.2 Cr',
+    yield: 'Premium Segment',
+    image: 'https://images.unsplash.com/photo-1512917774080-9991f1c4c750?w=800&q=80',
+    status: 'Ready to Move',
+    isShortlisted: false
+  },
+];
+
 
 const Home = () => {
   const navigate = useNavigate();
@@ -34,6 +113,7 @@ const Home = () => {
   const [showLocationDropdown, setShowLocationDropdown] = useState(false);
   const [showPropertyDropdown, setShowPropertyDropdown] = useState(false);
   const [showBudgetDropdown, setShowBudgetDropdown] = useState(false);
+  const [properties, setProperties] = useState(AVAILABLE_PROPERTIES);
 
   // Selection States
   const [selectedCity, setSelectedCity] = useState('');
@@ -371,111 +451,88 @@ const Home = () => {
               <h2 className="text-3xl md:text-4xl font-bold text-[#0b264f] mb-4">Featured Investment Opportunities</h2>
             </div>
 
-            {/* First Grid */}
-            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6 mt-2">
-              {featuredProjects.map((project) => (
-                <Card key={project.id} className="overflow-hidden bg-white border-none shadow-sm shadow-lg transition-all">
-                  {/* Image Container */}
-                  <div className="relative h-64 overflow-hidden rounded-2xl m-2">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8">
+              {properties.map((property) => (
+                <div key={property.id} className="group bg-white rounded-3xl overflow-hidden shadow-sm hover:shadow-xl transition-all duration-300 border border-gray-100 flex flex-col">
+
+                  {/* Image Section */}
+                  <div className="relative aspect-[4/3] overflow-hidden">
                     <img
-                      src={project.images[0]}
-                      alt={project.title}
-                      className="w-full h-full object-cover"
+                      src={property.image}
+                      alt={property.title}
+                      className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
                     />
-                    {/* Yellow Circular Badge */}
-                    {project.isNewlyLaunched && (
-                      <div className="absolute bottom-4 right-4 bg-yellow-400 text-black font-bold text-[10px] leading-tight flex items-center justify-center text-center w-14 h-14 rounded-full border-2 border-white shadow-lg uppercase px-1">
-                        Newly Launched
-                      </div>
-                    )}
+
+                    {/* Overlay Gradient */}
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-60"></div>
+
+                    {/* Top Badges */}
+                    <div className="absolute top-4 left-4 flex gap-2">
+                      <Badge className="bg-white/90 backdrop-blur text-[#0b264f] border-none font-bold shadow-sm">
+                        {property.status}
+                      </Badge>
+                    </div>
+
+                    {/* Like Button */}
+                    <button
+                      onClick={() => toggleShortlist(property.id)}
+                      className="absolute top-4 right-4 p-2.5 rounded-full bg-white/20 backdrop-blur-md border border-white/30 hover:bg-white transition-all group-active:scale-95"
+                    >
+                      <Heart className={`w-5 h-5 ${property.isShortlisted ? 'fill-red-500 text-red-500' : 'text-white group-hover:text-red-500'}`} />
+                    </button>
+
+                    {/* Bottom Info on Image */}
+                    <div className="absolute bottom-4 left-4 right-4 text-white">
+                      <p className="text-xs font-medium bg-green-500/80 backdrop-blur-md inline-block px-2 py-0.5 rounded-md mb-2">
+                        <TrendingUp className="w-3 h-3 inline mr-1" />
+                        {property.yield}
+                      </p>
+                      <h3 className="text-xl font-bold leading-tight drop-shadow-md">{property.price}</h3>
+                    </div>
                   </div>
 
-                  <CardContent className="p-4 pt-2">
-                    <div className="flex justify-between items-start">
-                      {/* Left Side: Title and Config */}
-                      <div className="flex-1">
-                        <h3 className="text-xl font-semibold text-gray-900 leading-tight">
-                          {project.title}
-                        </h3>
-                        <p className="text-gray-500 text-sm mt-1">
-                          {project.configurations}
-                        </p>
+                  {/* Content Section */}
+                  <div className="p-5 flex flex-col flex-grow">
+                    <div className="flex-grow">
+                      <div className="flex justify-between items-start mb-1">
+                        <h3 className="font-bold text-gray-900 text-lg line-clamp-1">{property.title}</h3>
+                      </div>
+                      <p className="text-sm text-gray-500 mb-3 flex items-center">
+                        <Building2 className="w-3.5 h-3.5 mr-1" /> {property.builder}
+                      </p>
+
+                      <div className="flex items-center text-xs text-gray-500 bg-gray-50 p-2.5 rounded-xl mb-4">
+                        <MapPin className="w-4 h-4 mr-2 text-orange-500" />
+                        <span className="truncate">{property.location}</span>
                       </div>
 
-                      {/* Right Side: Pricing */}
-                      <div className="text-right">
-                        <p className="text-gray-400 text-xs">Starts from</p>
-                        <p className="text-md font-bold text-gray-900">
-                          {project.priceRange}
-                        </p>
+                      <div className="flex flex-wrap gap-2 mb-4">
+                        <span className="text-xs font-semibold px-2 py-1 bg-blue-50 text-blue-700 rounded-md border border-blue-100">
+                          {property.type}
+                        </span>
+                        <span className="text-xs font-semibold px-2 py-1 bg-green-50 text-green-700 rounded-md border border-green-100 flex items-center">
+                          <CheckCircle className="w-3 h-3 mr-1" /> RERA
+                        </span>
                       </div>
                     </div>
 
-                    {/* Footer: Location */}
-                    <div className="mt-4 flex items-center text-gray-600">
-                      <MapPin className="h-4 w-4 mr-1 text-gray-400" />
-                      <span className="text-sm font-medium">{project.location}</span>
+                    {/* Actions */}
+                    <div className="grid grid-cols-5 gap-2 mt-auto">
+                      <Button
+                        onClick={() => alert(`Contacting ${property.builder}`)}
+                        className="col-span-4 bg-[#0b264f] hover:bg-blue-900 text-white rounded-xl h-12 shadow-lg hover:shadow-blue-900/20"
+                      >
+                        <Phone className="w-4 h-4 mr-2" /> Contact Builder
+                      </Button>
+                      <Button variant="outline" className="col-span-1 rounded-xl h-12 border-gray-200 hover:bg-gray-50 p-0 flex items-center justify-center">
+                        <ArrowUpRight className="w-5 h-5 text-gray-600" />
+                      </Button>
                     </div>
-
-                    <Button
-                      onClick={() => navigate('/register')}
-                      className="w-full mt-4 bg-blue-600 hover:bg-blue-700 text-white rounded-lg py-2"
-                    >
-                      Register to View Details
-                    </Button>
-                  </CardContent>
-                </Card>
+                  </div>
+                </div>
               ))}
             </div>
 
-            {/* Second Duplicate Grid as per original code */}
-            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6 mt-10">
-              {featuredProjects.map((project) => (
-                <Card key={project.id + '-dup'} className="overflow-hidden bg-white border-none shadow-sm shadow-lg transition-all">
-                  <div className="relative h-64 overflow-hidden rounded-2xl m-2">
-                    <img
-                      src={project.images[0]}
-                      alt={project.title}
-                      className="w-full h-full object-cover"
-                    />
-                    {project.isNewlyLaunched && (
-                      <div className="absolute bottom-4 right-4 bg-yellow-400 text-black font-bold text-[10px] leading-tight flex items-center justify-center text-center w-14 h-14 rounded-full border-2 border-white shadow-lg uppercase px-1">
-                        Newly Launched
-                      </div>
-                    )}
-                  </div>
-
-                  <CardContent className="p-4 pt-2">
-                    <div className="flex justify-between items-start">
-                      <div className="flex-1">
-                        <h3 className="text-xl font-semibold text-gray-900 leading-tight">
-                          {project.title}
-                        </h3>
-                        <p className="text-gray-500 text-sm mt-1">
-                          {project.configurations}
-                        </p>
-                      </div>
-                      <div className="text-right">
-                        <p className="text-gray-400 text-xs">Starts from</p>
-                        <p className="text-md font-bold text-gray-900">
-                          {project.priceRange}
-                        </p>
-                      </div>
-                    </div>
-                    <div className="mt-4 flex items-center text-gray-600">
-                      <MapPin className="h-4 w-4 mr-1 text-gray-400" />
-                      <span className="text-sm font-medium">{project.location}</span>
-                    </div>
-                    <Button
-                      onClick={() => navigate('/register')}
-                      className="w-full mt-4 bg-blue-600 hover:bg-blue-700 text-white rounded-lg py-2"
-                    >
-                      Register to View Details
-                    </Button>
-                  </CardContent>
-                </Card>
-              ))}
-            </div>
           </div>
         </section>
 

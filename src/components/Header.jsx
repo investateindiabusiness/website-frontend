@@ -109,6 +109,10 @@ const Header = ({ transparent = false }) => {
 
             {/* INVESTOR LINKS */}
             {user && user.role === 'investor' && (
+              <>
+               <Link to="/dashboard" onMouseEnter={handleMouseEnter} className="font-medium text-[#08294F] hover:text-[#FB923C] transition-colors flex items-center gap-2 py-1">
+               <LayoutDashboard className="h-4 w-4" /> Dashboard
+             </Link>
               <Link
                 to="/projects"
                 onMouseEnter={handleMouseEnter}
@@ -116,6 +120,7 @@ const Header = ({ transparent = false }) => {
               >
                 Browse Projects
               </Link>
+              </>
             )}
 
             {/* ADMIN LINKS */}

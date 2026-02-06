@@ -179,7 +179,7 @@ const InvestorRegister = () => {
 
         <div className="relative z-10 max-w-lg">
           <div className="flex items-center space-x-2 mb-8">
-            <img src="/logo-big.png" alt="INVESTATE INDIA" onClick={() => navigate('/')} className="h-24 w-auto hover:cursor-pointer" />
+          <img src="/logo-small.png" alt="INVESTATE INDIA" onClick={() => navigate('/')} className="h-24 w-auto hover:cursor-pointer" />
           </div>
 
           <h1 className="text-4xl xl:text-5xl font-bold mb-6 leading-tight">
