@@ -33,7 +33,7 @@ const Footer = () => {
 
           {/* Quick Links */}
           <div>
-            <h3 className="text-[#001A72]font-semibold mb-4">Quick Links</h3>
+            <h3 className="text-[#001A72]font-bold mb-4">Quick Links</h3>
             <ul className="space-y-2">
               <li>
                 <Link to="/" className="hover:text-[#FB923C] transition-colors text-sm">
@@ -60,7 +60,7 @@ const Footer = () => {
 
           {/* Popular Cities */}
           <div>
-            <h3 className="text-[#001A72]font-semibold mb-4">Popular Cities</h3>
+            <h3 className="text-[#001A72]font-bold mb-4">Popular Cities</h3>
             <ul className="space-y-2">
               <li className="text-sm hover:text-[#FB923C] transition-colors cursor-pointer">Bangalore</li>
               <li className="text-sm hover:text-[#FB923C] transition-colors cursor-pointer">Gurgaon</li>
@@ -72,7 +72,7 @@ const Footer = () => {
 
           {/* Contact */}
           <div>
-            <h3 className="text-[#001A72]font-semibold mb-4">Contact Us</h3>
+            <h3 className="text-[#001A72]font-bold mb-4">Contact Us</h3>
             <ul className="space-y-3">
               <li className="flex items-start space-x-3">
                 <MapPin className="h-5 w-5 text-[#001A72] flex-shrink-0 mt-0.5" />
