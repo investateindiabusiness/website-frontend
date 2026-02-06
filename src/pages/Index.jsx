@@ -512,12 +512,9 @@ const Home = () => {
                     <div className="grid grid-cols-5 gap-2 mt-auto">
                       <Button
                         onClick={() => navigate('/partner/register')}
-                        className="col-span-4 bg-[#0b264f] hover:bg-blue-900 text-white rounded-xl h-12 shadow-lg hover:shadow-blue-900/20"
+                        className="col-span-5 bg-[#0b264f] hover:bg-blue-900 text-white rounded-xl h-12 shadow-lg hover:shadow-blue-900/20"
                       >
                         <Phone className="w-4 h-4 mr-2" /> Contact Builder
-                      </Button>
-                      <Button variant="outline" className="col-span-1 rounded-xl h-12 border-gray-200 hover:bg-gray-50 p-0 flex items-center justify-center">
-                        <ArrowUpRight className="w-5 h-5 text-gray-600" />
                       </Button>
                     </div>
                   </div>
