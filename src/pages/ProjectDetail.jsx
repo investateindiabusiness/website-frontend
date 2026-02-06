@@ -297,10 +297,10 @@ const ProjectDetail = () => {
 
                   {!isLoggedIn ? (
                     <div className="text-center">
-                      <p className="text-xs text-red-500 mb-2 font-medium">Contact details hidden for privacy</p>
+                      <p className="text-xs text-[#08294F] mb-2 font-medium">Contact details hidden for privacy</p>
                       <Button
                         onClick={handleRevealContact}
-                        className="w-full bg-red-600 hover:bg-red-700 text-white font-bold h-12 shadow-md"
+                        className="w-full bg-[#08294F] hover:bg-[#08294F] text-white font-bold h-12 shadow-md"
                       >
                         Get Phone No.
                       </Button>
