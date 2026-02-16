@@ -30,20 +30,20 @@ const Header = ({ transparent = false }) => {
     navigate('/');
   };
 
-  useEffect(() => {
-    const controlHeader = () => {
-      if (typeof window !== 'undefined') {
-        if (window.scrollY > lastScrollY && window.scrollY > 100) {
-          setShow(false);
-        } else {
-          setShow(true);
-        }
-        setLastScrollY(window.scrollY);
-      }
-    };
-    window.addEventListener('scroll', controlHeader);
-    return () => window.removeEventListener('scroll', controlHeader);
-  }, [lastScrollY]);
+  // useEffect(() => {
+  //   const controlHeader = () => {
+  //     if (typeof window !== 'undefined') {
+  //       if (window.scrollY > lastScrollY && window.scrollY > 100) {
+  //         setShow(false);
+  //       } else {
+  //         setShow(true);
+  //       }
+  //       setLastScrollY(window.scrollY);
+  //     }
+  //   };
+  //   window.addEventListener('scroll', controlHeader);
+  //   return () => window.removeEventListener('scroll', controlHeader);
+  // }, [lastScrollY]);
 
   const getDashboardLink = () => {
     if (!user) return '/';
@@ -70,7 +70,7 @@ const Header = ({ transparent = false }) => {
 
   return (
     <header
-      className={`fixed w-full top-0 left-0 right-0 z-50 transition-transform duration-300 ${transparent ? 'bg-transparent' : 'bg-white shadow-sm'
+      className={`fixed w-full top-0 left-0 right-0 z-50 transition-transform duration-300 ${transparent ? 'bg-transparent' : 'bg-black shadow-sm'
         } ${show ? 'translate-y-0' : '-translate-y-full'}`}
     >
       <div className="px-2 py-1 md:py-2">
@@ -82,7 +82,7 @@ const Header = ({ transparent = false }) => {
             <img
               src="/logo-big.png"
               alt="INVESTATE INDIA"
-              className="hidden md:block h-14 lg:h-16 w-auto object-contain"
+              className="hidden md:block h-12 lg:h-12 w-auto object-contain"
             />
             {/* Mobile Logo: Smaller/Compact version if you have it, or same but scaled */}
             <img
@@ -149,9 +149,7 @@ const Header = ({ transparent = false }) => {
             {!user && (
               <>
                 {[
-                  { label: 'Properties', path: '/' },
-                  { label: 'Cities', path: '/' },
-                  { label: 'About Us', path: '/about-us' }, // ✅ custom route
+                  { label: 'About Us', path: '/about-us' },
                   { label: 'Insights', path: '/' },
                   { label: 'Contact Us', path: '/contact-us' },
                 ].map((item) => (
@@ -159,7 +157,7 @@ const Header = ({ transparent = false }) => {
                     key={item.label}
                     to={item.path}
                     onMouseEnter={handleMouseEnter}
-                    className="font-medium text-[#08294F] hover:text-[#FB923C] transition-colors py-1"
+                    className="font-medium text-[#FFFFFF] hover:text-[#FB923C] transition-colors py-1"
                   >
                     {item.label}
                   </Link>
@@ -251,8 +249,6 @@ const Header = ({ transparent = false }) => {
               <div className="flex flex-col gap-1">
                 <p className="text-xs text-gray-400 font-bold uppercase tracking-widest mb-2">Explore</p>
                 {[
-                  { label: 'Properties', path: '/' },
-                  { label: 'Cities', path: '/' },
                   { label: 'About Us', path: '/about-us' },
                   { label: 'Insights', path: '/' },
                   { label: 'Contact Us', path: '/contact-us' },

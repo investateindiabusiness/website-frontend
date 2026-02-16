@@ -1,0 +1,579 @@
+/* --- PREMIUM REAL ESTATE HERO UI --- */
+
+/* Import Premium Google Font */
+@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;600;800&display=swap');
+
+.hero-section {
+    position: relative;
+    width: 100%;
+    min-height: 100vh;
+    padding-top: 3rem !important;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: 0 24px;
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    
+    /* Premium Architectural Background with Heavy Black (#000000) Overlay */
+    background: linear-gradient(
+        to bottom,
+        rgba(0, 0, 0, 0.75), 
+        rgba(0, 0, 0, 0.95)
+    ), 
+    url('https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?q=80&w=2070&auto=format&fit=crop');
+    background-size: cover;
+    background-position: center;
+    background-attachment: fixed;
+}
+
+.hero-content {
+    position: relative;
+    z-index: 2;
+    max-width: 900px;
+    width: 100%;
+    animation: fadeIn 1.2s ease-out forwards;
+}
+
+/* Optional: Small "Eyebrow" text for a modern touch */
+.hero-badge {
+    display: inline-block;
+    color: #E6E6FA; /* Lavender */
+    font-size: 0.9rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    margin-bottom: 20px;
+    padding: 8px 16px;
+    border: 1px solid rgba(230, 230, 250, 0.2);
+    border-radius: 50px;
+    background: rgba(255, 255, 255, 0.03);
+    backdrop-filter: blur(4px);
+}
+
+.hero-headline {
+    color: #FFFFFF; /* White */
+    font-size: 2.5rem; 
+    font-weight: 800;
+    line-height: 1.2;
+    letter-spacing: -1px;
+    margin-bottom: 24px;
+}
+
+.text-accent {
+    color: #FF7300; /* Orange */
+}
+
+.hero-subheadline {
+    color: #E6E6FA; /* Lavender */
+    font-size: 1.25rem;
+    font-weight: 300;
+    line-height: 1.7;
+    margin-bottom: 48px;
+    max-width: 760px;
+    margin-left: auto;
+    margin-right: auto;
+    opacity: 0.9;
+}
+
+.hero-cta-group {
+    display: flex;
+    gap: 20px;
+    justify-content: center;
+    flex-wrap: wrap;
+}
+
+/* Professional Buttons */
+.btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 16px 36px;
+    font-size: 1.05rem;
+    font-weight: 600;
+    text-decoration: none;
+    border-radius: 8px; /* Slightly rounded for a trustworthy, solid feel */
+    transition: all 0.3s ease;
+    cursor: pointer;
+}
+
+/* Primary Button */
+.btn-primary {
+    background-color: #FF7300; /* Orange */
+    color: #FFFFFF; /* White */
+    border: 2px solid #FF7300;
+    box-shadow: 0 4px 15px rgba(255, 115, 0, 0.3);
+}
+
+.btn-primary:hover {
+    background-color: #e66600; /* Slightly darker orange on hover */
+    border-color: #e66600;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(255, 115, 0, 0.4);
+}
+
+/* Secondary Button */
+.btn-secondary {
+    background-color: rgba(255, 255, 255, 0.05);
+    color: #FFFFFF; /* White text looks better against the dark image */
+    border: 2px solid #E6E6FA; /* Lavender Border */
+    backdrop-filter: blur(4px);
+}
+
+.btn-secondary:hover {
+    background-color: #E6E6FA; /* Lavender */
+    color: #000000; /* Black */
+    transform: translateY(-2px);
+}
+
+/* Subtle fade in animation */
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+/* Responsive Adjustments */
+@media (max-width: 1024px) {
+    .hero-headline { font-size: 3.2rem; }
+}
+
+@media (max-width: 768px) {
+    .hero-headline { font-size: 2.5rem; }
+    .hero-subheadline { font-size: 1.1rem; margin-bottom: 32px; }
+}
+
+@media (max-width: 480px) {
+    .hero-badge { font-size: 0.8rem; padding: 6px 12px; }
+    .hero-headline { font-size: 2rem; }
+    .hero-cta-group { flex-direction: column; width: 100%; }
+    .btn { width: 100%; }
+}
+
+/* --- 2. INTERACTIVE CANVAS UI (100vh / 100vw) --- */
+
+.interactive-canvas-section {
+    position: relative;
+    width: 100vw;
+    height: 100vh;
+    background-color: #000000;
+    overflow: hidden; /* Strict viewport lock */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'Plus Jakarta Sans', 'Segoe UI', sans-serif;
+    box-sizing: border-box;
+}
+
+/* Layer 1: Dark Architectural Image Background */
+.interactive-canvas-section::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background-size: cover;
+    background-position: center;
+    opacity: 0.15; /* Kept very low so text remains readable */
+    filter: grayscale(100%) contrast(120%); /* Makes it blend perfectly into the dark theme */
+    z-index: 0;
+    pointer-events: none;
+}
+
+/* Layer 2: Glowing Gradients & Architectural Grid */
+.canvas-texture {
+    position: absolute;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background:
+        /* Faint overlay grid */
+        linear-gradient(rgba(230, 230, 250, 0.03) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(230, 230, 250, 0.03) 1px, transparent 1px);
+    background-size: 40px 40px, 40px 40px;
+    z-index: 1;
+    pointer-events: none;
+}
+
+/* Main Content Container */
+.canvas-container {
+    position: relative;
+    z-index: 2; /* Brings content above all the backgrounds */
+    width: 100%;
+    max-width: 1400px;
+    height: 100%;
+    display: flex;
+    flex-direction: column; 
+    justify-content: center;
+    padding: 0 4vw;
+}
+
+/* --- Top Header Area --- */
+.canvas-header {
+    text-align: center;
+    width: 100%;
+    margin-bottom: 6vh;
+}
+
+.massive-orange-title {
+    color: white; /* Vibrant Orange */
+    font-size: 2.5rem; 
+    font-weight: 800;
+    line-height: 1.1;
+    letter-spacing: -2px;
+    margin: 0;
+    text-shadow: 0 10px 40px rgba(255, 115, 0, 0.3); /* Premium soft glow */
+}
+
+.massive-orange-title-sub-part {
+    color: #FF7300; 
+}
+
+/* --- Split Layout Area --- */
+.canvas-split {
+    display: flex;
+    width: 100%;
+    align-items: center;
+    justify-content: space-between;
+    gap: 4vw;
+}
+
+/* --- Left Column: Control Menu --- */
+.canvas-menu {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.canvas-headline {
+    color: #FFFFFF;
+    font-size: 2rem;
+    font-weight: 800;
+    line-height: 1.2;
+    letter-spacing: -1px;
+    margin-top: 0;
+    margin-bottom: 5vh;
+}
+
+.text-lavender {
+    color: #E6E6FA; 
+    font-weight: 300; 
+}
+
+/* Interactive Menu Items */
+.menu-list {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5vh;
+}
+
+.menu-item {
+    position: relative;
+    display: flex;
+    align-items: center;
+    gap: 24px;
+    padding: 2vh 0;
+    cursor: pointer;
+    opacity: 0.4;
+    transition: opacity 0.3s ease, transform 0.3s ease;
+}
+
+.menu-item:hover, .menu-item.active {
+    opacity: 1;
+    transform: translateX(15px);
+}
+
+.menu-id {
+    color: #FF7300;
+    font-size: clamp(1.5rem, 2vw, 2rem);
+    font-weight: 800;
+    font-family: monospace;
+}
+
+.menu-title {
+    color: #FFFFFF;
+    font-size: clamp(1.2rem, 1.5vw, 1.8rem);
+    font-weight: 600;
+    letter-spacing: 1px;
+}
+
+.active-indicator {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 0;
+    height: 2px;
+    background-color: #FF7300;
+    transition: width 0.4s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
+.menu-item.active .active-indicator {
+    width: 100%;
+}
+
+/* --- Right Column: Cinematic Display --- */
+.canvas-display {
+    flex: 1.2;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+}
+
+.display-box {
+    position: relative;
+    width: 100%;
+    padding: 60px;
+    /* Glass effect over the background image */
+    background: rgba(10, 10, 15, 0.6); 
+    border-radius: 24px;
+    border: 1px solid rgba(230, 230, 250, 0.1);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5);
+}
+
+.display-bg-number {
+    position: absolute;
+    top: -20px;
+    right: 20px;
+    font-size: clamp(8rem, 15vw, 15rem);
+    font-weight: 900;
+    color: transparent;
+    -webkit-text-stroke: 1px rgba(255, 115, 0, 0.15);
+    font-family: monospace;
+    z-index: 0;
+    pointer-events: none;
+    animation: fadeSlideUp 0.6s cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
+}
+
+.display-text {
+    position: relative;
+    z-index: 1;
+    color: #E6E6FA;
+    font-size: clamp(1.1rem, 1.4vw, 1.4rem);
+    font-weight: 300;
+    line-height: 1.8;
+    margin: 0;
+    animation: fadeSlideUp 0.6s cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
+}
+
+@keyframes fadeSlideUp {
+    0% { opacity: 0; transform: translateY(30px); }
+    100% { opacity: 1; transform: translateY(0); }
+}
+
+/* --- Responsive Behavior --- */
+@media (max-width: 1024px) {
+    .canvas-split {
+        flex-direction: column;
+        justify-content: center;
+        gap: 4vh;
+    }
+    .canvas-menu, .canvas-display {
+        flex: none;
+        width: 100%;
+    }
+    .canvas-headline { margin-bottom: 3vh; }
+    .menu-list {
+        flex-direction: row;
+        gap: 20px;
+        overflow-x: auto;
+        padding-bottom: 10px;
+    }
+    .menu-item:hover, .menu-item.active {
+        transform: translateY(-5px);
+    }
+}
+
+@media (max-width: 768px) {
+    .interactive-canvas-section {
+        height: auto;
+        min-height: 100vh;
+        padding: 12vh 0 6vh 0;
+    }
+    .massive-orange-title { font-size: 3rem; }
+    .display-box { padding: 30px 20px; }
+    .display-bg-number { font-size: 8rem; right: 10px; top: 0; }
+    .display-text { font-size: 1rem; }
+}
+
+/* --- 3. CHALLENGES UI (100vh / 100vw) --- */
+
+.challenges-section {
+    position: relative;
+    width: 100vw;
+    height: 100vh;
+    background-color: #000000;
+    overflow: hidden; /* Strict viewport lock */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'Plus Jakarta Sans', 'Segoe UI', sans-serif;
+    box-sizing: border-box;
+    padding: 4vh 4vw; /* Tightened padding to fit 9 items */
+}
+
+/* Layer 1: Blurred Map/Abstract Background */
+.challenges-bg-image {
+    position: absolute;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background-image: url('https://images.unsplash.com/photo-1519501025264-65ba15a82390?q=80&w=2064&auto=format&fit=crop');
+    background-size: cover;
+    background-position: center;
+    opacity: 0.1; 
+    filter: grayscale(100%) blur(4px);
+    z-index: 0;
+}
+
+/* Layer 2: Glowing Gradients & Dot Matrix */
+.challenges-texture {
+    position: absolute;
+    top: 0; left: 0; right: 0; bottom: 0;
+    z-index: 1;
+}
+
+/* Main Container - Switched to Column Layout */
+.challenges-container {
+    position: relative;
+    z-index: 2;
+    width: 100%;
+    max-width: 1400px;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 4vh;
+}
+
+/* --- Top Row: Centered Header --- */
+.challenges-header-centered {
+    text-align: center;
+    max-width: 800px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.massive-centered-headline {
+    color: #FFFFFF;
+    font-size: 2.5rem; /* Massive scaling typography */
+    font-weight: 800;
+    line-height: 1.15;
+    letter-spacing: -1px;
+    margin-top: 0;
+    margin-bottom: 2vh;
+    text-shadow: 0 10px 30px rgba(0, 0, 0, 0.8); /* Pops text off the background */
+}
+
+.text-orange {
+    color: #FF7300;
+    text-shadow: 0 0 20px rgba(255, 115, 0, 0.3); /* Subtle orange glow */
+}
+
+.challenges-lead-centered {
+    color: #E6E6FA;
+    font-size: clamp(1rem, 1.2vw, 1.15rem);
+    line-height: 1.7;
+    font-weight: 300;
+    opacity: 0.9;
+    margin: 0;
+}
+
+/* --- Bottom Row: The 3x3 Grid --- */
+.challenges-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr); /* Forces 3 columns */
+    gap: 2vh 1.5vw; /* Tightened gap to fit 9 items inside 100vh */
+    width: 100%;
+}
+
+.challenge-card {
+    background: rgba(10, 10, 15, 0.5); /* Slightly more transparent to not look heavy */
+    border: 1px solid rgba(230, 230, 250, 0.08);
+    border-radius: 12px;
+    padding: clamp(1rem, 1.2vw, 1.5rem); /* Tighter padding for 9 items */
+    backdrop-filter: blur(8px);
+    transition: all 0.3s cubic-bezier(0.2, 0.8, 0.2, 1);
+    
+    opacity: 0;
+    transform: translateY(20px);
+    animation: fadeUpIn 0.5s ease forwards;
+}
+
+.challenge-card-header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 12px;
+}
+
+.challenge-number {
+    color: rgba(255, 255, 255, 0.2);
+    font-size: 1.2rem;
+    font-weight: 800;
+    font-family: monospace;
+    transition: color 0.3s ease;
+}
+
+.challenge-line {
+    flex: 1;
+    height: 1px;
+    background: linear-gradient(90deg, rgba(230, 230, 250, 0.1), transparent);
+    transition: background 0.3s ease;
+}
+
+.challenge-text {
+    color: #E6E6FA;
+    font-size: clamp(0.9rem, 0.95vw, 1rem); /* Slightly smaller text to fit securely */
+    line-height: 1.5;
+    font-weight: 300;
+    margin: 0;
+    opacity: 0.75;
+    transition: opacity 0.3s ease;
+}
+
+/* Hover Interactivity */
+.challenge-card:hover {
+    transform: translateY(-4px);
+    border-color: rgba(255, 115, 0, 0.4);
+    background: rgba(0, 0, 0, 0.8);
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.4), inset 0 0 15px rgba(255, 115, 0, 0.05);
+}
+
+.challenge-card:hover .challenge-number {
+    color: #FF7300; 
+}
+
+.challenge-card:hover .challenge-line {
+    background: linear-gradient(90deg, #FF7300, transparent);
+}
+
+.challenge-card:hover .challenge-text {
+    opacity: 1;
+    color: #FFFFFF;
+}
+
+@keyframes fadeUpIn {
+    to { opacity: 1; transform: translateY(0); }
+}
+
+/* --- Responsive Adjustments --- */
+/* For smaller screens, 9 items + 100vh is physically impossible to read. 
+   We must unlock the height on mobile/tablets to allow safe scrolling. */
+@media (max-width: 1024px) {
+    .challenges-section {
+        height: auto;
+        min-height: 100vh;
+        padding: 10vh 4vw;
+    }
+    .challenges-grid {
+        grid-template-columns: repeat(2, 1fr); /* Drops to 2 columns on tablet */
+        gap: 20px;
+    }
+}
+
+@media (max-width: 768px) {
+    .massive-centered-headline { font-size: 2.2rem; }
+    .challenges-grid {
+        grid-template-columns: 1fr; /* 1 column on mobile */
+    }
+    .challenge-card { padding: 20px; }
+}
