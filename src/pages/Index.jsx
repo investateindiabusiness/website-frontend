@@ -35,7 +35,16 @@ const Index = () => {
         { id: "07", text: "Difficulty conducting accurate, independent on-site property valuations" },
         { id: "08", text: "Complexities with cross-border taxation, capital repatriation, and FEMA compliance" },
         { id: "09", text: "Concerns over the security of funds and protection against misappropriation" }
-      ];
+    ];
+
+    const benefitsList = [
+        { title: "Pre-Verified Builders Only", desc: "Every developer undergoes our credibility assessment before being listed on the platform." },
+        { title: "Standardized Project Information", desc: "RERA details, approvals, timelines, and builder track record presented in one consistent format." },
+        { title: "Transparent Disclosures", desc: "Clear information on legal status, payment plans, construction progress, and potential project risks." },
+        { title: "Expert Guidance", desc: "Support in understanding projects, documentation requirements, and next steps throughout your journey." },
+        { title: "Single Point of Contact", desc: "One dedicated team coordinates everything from discovery to documentation, bridging the distance." },
+        { title: "Strategic Negotiation", desc: "Negotiating the best commercial terms and pricing directly with the builders on your behalf." }
+    ];
 
     return (
         <>
@@ -49,7 +58,7 @@ const Index = () => {
                         <span className="hero-badge">Investate India</span>
 
                         <h1 className="hero-headline">
-                            Your Trusted Bridge to Transparent <br/>
+                            Your Trusted Bridge to Transparent <br />
                             <span className="text-accent"> Indian Real Estate Investments</span>
                         </h1>
 
@@ -72,8 +81,13 @@ const Index = () => {
                     <div className="canvas-container">
 
                         {/* NEW: Centered, Massive Orange Title */}
-                        <div className="canvas-header">
-                            <h2 className="massive-orange-title">What Is Investate <span className='massive-orange-title-sub-part'>India?</span></h2>
+                        <div className="challenges-header-centered" style={{ margin: "0 auto 4vh auto" }}>
+                            <h2 className="massive-centered-headline">
+                                What Is Investate <span className="text-orange">India?</span>
+                            </h2>
+                            <p className="challenges-lead-centered">
+                                A specialized platform designed to simplify property investments and bring complete transparency and peace of mind to Non-Resident Indians.
+                            </p>
                         </div>
 
                         {/* The Split Content Area */}
@@ -94,8 +108,17 @@ const Index = () => {
                                             onMouseEnter={() => setActiveIndex(index)}
                                             onClick={() => setActiveIndex(index)}
                                         >
-                                            <span className="menu-id">{item.id}</span>
-                                            <span className="menu-title">{item.title}</span>
+                                            {/* Header (Always Visible) */}
+                                            <div className="menu-item-header">
+                                                <span className="menu-id">{item.id}</span>
+                                                <span className="menu-title">{item.title}</span>
+                                            </div>
+
+                                            {/* Accordion Body (Only visible on mobile) */}
+                                            <div className="mobile-accordion-body">
+                                                <p className="mobile-accordion-text">{item.text}</p>
+                                            </div>
+
                                             <div className="active-indicator"></div>
                                         </div>
                                     ))}
@@ -119,39 +142,95 @@ const Index = () => {
                 </section>
 
                 <section className="challenges-section" id="challenges">
-      
-      {/* Background Layers matching Section 2 */}
-      <div className="challenges-bg-image"></div>
-      <div className="challenges-texture"></div>
 
-      <div className="challenges-container">
-        
-        {/* TOP ROW: Centered & Attractive Header */}
-        <div className="challenges-header-centered">
-          <h2 className="massive-centered-headline">
-            Why Indian Real Estate Feels <br />
-            <span className="text-orange"> Difficult for NRIs</span>
-          </h2>
-          
-          <p className="challenges-lead-centered">
-            For NRIs, investing in Indian real estate often comes with uncertainty. Distance, information overload, and lack of on-ground visibility make it difficult to differentiate credible opportunities from risky ones.
-          </p>
-        </div>
+                    {/* Background Layers matching Section 2 */}
+                    <div className="challenges-bg-image"></div>
+                    <div className="challenges-texture"></div>
 
-        {/* BOTTOM ROW: The 9-Point (3x3) Glass Grid */}
-        <div className="challenges-grid">
-          {challengesList.map((challenge, index) => (
-            <div className="challenge-card" key={index} style={{ animationDelay: `${index * 0.05}s` }}>
-              <div className="challenge-card-header">
-                <span className="challenge-number">{challenge.id}</span>
-              <p className="challenge-text">{challenge.text}</p>
-              </div>
-            </div>
-          ))}
-        </div>
+                    <div className="challenges-container">
 
-      </div>
-    </section>
+                        {/* TOP ROW: Centered & Attractive Header */}
+                        <div className="challenges-header-centered">
+                            <h2 className="massive-centered-headline">
+                                Why Indian Real Estate Feels <br />
+                                <span className="text-orange"> Difficult for NRIs</span>
+                            </h2>
+
+                            <p className="challenges-lead-centered">
+                                For NRIs, investing in Indian real estate often comes with uncertainty. Distance, information overload, and lack of on-ground visibility make it difficult to differentiate credible opportunities from risky ones.
+                            </p>
+                        </div>
+
+                        {/* BOTTOM ROW: The 9-Point (3x3) Glass Grid */}
+                        <div className="challenges-grid">
+                            {challengesList.map((challenge, index) => (
+                                <div className="challenge-card" key={index} style={{ animationDelay: `${index * 0.05}s` }}>
+                                    <div className="challenge-card-header">
+                                        <span className="challenge-number">{challenge.id}</span>
+                                        <p className="challenge-text">{challenge.text}</p>
+                                    </div>
+                                </div>
+                            ))}
+                        </div>
+
+                    </div>
+                </section>
+
+                <section className="benefits-section" id="benefits">
+
+                    {/* 1. NEW: Pure CSS Contextual Background */}
+                    <div className="benefits-context-bg"></div>
+
+                    <div className="benefits-container">
+
+                        {/* TOP: Centered Header (Compact) */}
+                        <div className="challenges-header-centered">
+                            <h2 className="massive-centered-headline">
+                                What You Get as an <span className="text-orange">Investate Investor</span>
+                            </h2>
+                            <p className="challenges-lead-centered">
+                                Imagine having all builder credentials, RERA approvals, and payment terms in one place—no hunting across emails, no contradictory information. That's what we provide.
+                            </p>
+                        </div>
+                        {/* MIDDLE: Split Layout */}
+                        <div className="benefits-body">
+
+                            {/* Left Side: 2. NEW: Stylish 3D Image Wrapper */}
+                            <div className="benefits-image-wrapper">
+                                {/* Soft ambient backlight (matches your reference image) */}
+                                <div className="image-ambient-glow"></div>
+
+                                <img
+                                    src="/benefits-image.png"
+                                    alt="Investate Document Verification"
+                                    className="benefits-floating-illustration"
+                                />
+                            </div>
+
+                            {/* Right Side: 4. NEW: Edge-Lit Interactive List */}
+                            <div className="benefits-list">
+                                {benefitsList.map((benefit, index) => (
+                                    <div className="edge-list-item" key={index} style={{ animationDelay: `${index * 0.08}s` }}>
+
+                                        <div className="edge-check">
+                                            <svg viewBox="0 0 24 24" fill="none" stroke="var(--color-orange)" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round">
+                                                <polyline points="20 6 9 17 4 12"></polyline>
+                                            </svg>
+                                        </div>
+
+                                        <div className="edge-text">
+                                            <span className="edge-title-inline">{benefit.title}: </span>
+                                            <span className="edge-desc-inline">{benefit.desc}</span>
+                                        </div>
+
+                                    </div>
+                                ))}
+                            </div>
+
+                        </div>
+
+                    </div>
+                </section>
 
 
                 <Footer />
