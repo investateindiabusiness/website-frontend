@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
 import { Card, CardContent } from '@/components/ui/card';
@@ -20,9 +20,9 @@ const AdminBuilders = () => {
     if (user && user.token) {
       loadBuilders();
     }
-  }, [user]);
+  }, [user, loadBuilders]);
 
-  const loadBuilders = async () => {
+  const loadBuilders = useCallback(async () => {
     try {
       setLoading(true);
       const data = await fetchAllBuilders(user.token);       
@@ -36,7 +36,7 @@ const AdminBuilders = () => {
     } finally {
       setLoading(false);
     }
-  };
+  }, [user?.token]);
 
   const handleVerificationUpdate = async (builderId, status) => {
     try {
