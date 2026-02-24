@@ -20,11 +20,22 @@ export const apiRequest = async (endpoint, options = {}) => {
 
     const data = await response.json();
 
-    // Handle session expiration (if token is invalid)
+    // 3. Handle 401 Unauthorized / Session Expiration
     if (response.status === 401) {
-      localStorage.removeItem('user_session');
-      window.location.href = '/';
-      return Promise.reject('Session expired');
+      // Is this request trying to log in or sync google?
+      const isAuthRequest = endpoint.includes('/login') || 
+                            endpoint.includes('/google-sync') || 
+                            endpoint.includes('/admin-login');
+
+      if (!isAuthRequest) {
+        // If it's NOT an auth request, their session actually expired. Kick them out.
+        localStorage.removeItem('user_session');
+        window.location.href = '/';
+        return Promise.reject('Session expired');
+      } else {
+        // If it IS an auth request, just throw the error so the Dialog can display it!
+        throw new Error(data.message || 'Authentication failed');
+      }
     }
 
     if (!response.ok) {
@@ -97,20 +108,20 @@ export const adminLoginRequest = (payload) =>
     body: JSON.stringify(payload),
   });
 
-export const googleSyncRequest = async (idToken) => {
-  // We send the ID Token to backend to verify identity & get user role
+export const googleSyncRequest = async (idToken, role) => {
+  // We send the ID Token and the requested role to the backend
   return apiRequest('/api/auth/google-sync', {
     method: 'POST',
-    body: JSON.stringify({ idToken }),
+    body: JSON.stringify({ idToken, role }), // Now includes the role
   });
 };
 
 export const fetchAllBuilders = async (token) => {
-  const response = await fetch(`${API_BASE_URL}/api/builders`, { 
+  const response = await fetch(`${API_BASE_URL}/api/builders`, {
     method: 'GET',
     headers: {
       'Content-Type': 'application/json',
-      'Authorization': `Bearer ${token}` 
+      'Authorization': `Bearer ${token}`
     }
   });
 

@@ -8,7 +8,7 @@ import { Button } from '@/components/ui/button';
 import { toast } from '@/hooks/use-toast';
 import { Loader2 } from 'lucide-react';
 
-const GoogleAuthButton = ({ onSuccess, text = "Continue with Google" }) => {
+const GoogleAuthButton = ({ onSuccess, onError, text = "Continue with Google", userType }) => {
   const [loading, setLoading] = useState(false);
 
   const handleGoogleClick = async () => {
@@ -21,19 +21,27 @@ const GoogleAuthButton = ({ onSuccess, text = "Continue with Google" }) => {
       const result = await signInWithPopup(auth, provider);
       const idToken = await result.user.getIdToken();
 
-      // 2. Sync with Backend
-      const userData = await googleSyncRequest(idToken);
+      // 2. Sync with Backend (Passing the userType!)
+      const userData = await googleSyncRequest(idToken, userType);
 
       // 3. Pass data back to parent component
       onSuccess(userData);
       
     } catch (error) {
       console.error(error);
-      toast({
-        title: "Authentication Failed",
-        description: error.message,
-        variant: "destructive"
-      });
+      
+      // 4. Handle Errors (Use inline error if provided, otherwise fallback to toast)
+      const errorMessage = error.response?.data?.message || error.message || "Google authentication failed";
+      
+      if (onError) {
+        onError(errorMessage);
+      } else {
+        toast({
+          title: "Authentication Failed",
+          description: errorMessage,
+          variant: "destructive"
+        });
+      }
     } finally {
       setLoading(false);
     }
@@ -45,7 +53,7 @@ const GoogleAuthButton = ({ onSuccess, text = "Continue with Google" }) => {
       variant="outline" 
       onClick={handleGoogleClick}
       disabled={loading}
-      className="w-full h-12 bg-white hover:bg-gray-50 text-gray-700 font-semibold border-gray-200 relative mb-4"
+      className="w-full h-12 bg-white hover:bg-gray-50 text-gray-700 font-semibold border-gray-200 relative mb-2"
     >
       {loading ? (
         <Loader2 className="h-5 w-5 animate-spin" />
