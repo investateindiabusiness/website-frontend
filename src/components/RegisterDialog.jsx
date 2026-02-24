@@ -19,7 +19,7 @@ const RegisterDialog = ({ isOpen, onOpenChange, onLoginClick, initialData = {} }
 
   // Data States
   const [authData, setAuthData] = useState({ email: '', password: '', confirmPassword: '' });
-  
+
   const [investorData, setInvestorData] = useState({
     fullName: '', contactNumber: '', investorType: '', totalInvestedAmount: '', preferredProjectTypes: '',
     address: '', country: '', state: '', city: '', zip: '', kycDocuments: null, termsAccepted: false
@@ -80,7 +80,7 @@ const RegisterDialog = ({ isOpen, onOpenChange, onLoginClick, initialData = {} }
         });
         const data = await res.json();
         if (!data.error) setStates(data.data.states || []);
-      } catch (error) {} finally { setLoadingLocation(false); }
+      } catch (error) { } finally { setLoadingLocation(false); }
     }
   };
 
@@ -96,7 +96,7 @@ const RegisterDialog = ({ isOpen, onOpenChange, onLoginClick, initialData = {} }
         });
         const data = await res.json();
         if (!data.error) setCities(data.data || []);
-      } catch (error) {} finally { setLoadingLocation(false); }
+      } catch (error) { } finally { setLoadingLocation(false); }
     }
   };
 
@@ -127,7 +127,7 @@ const RegisterDialog = ({ isOpen, onOpenChange, onLoginClick, initialData = {} }
     e.preventDefault();
     const currentData = getActiveData();
     if (!currentData.termsAccepted) return toast({ title: 'Error', description: 'Please accept the terms.', variant: 'destructive' });
-    
+
     try {
       setLoading(true);
       if (userType === 'investor') {
@@ -172,7 +172,7 @@ const RegisterDialog = ({ isOpen, onOpenChange, onLoginClick, initialData = {} }
   return (
     <Dialog open={isOpen} onOpenChange={onOpenChange}>
       <DialogContent className="max-w-5xl p-0 overflow-hidden bg-white border-none shadow-2xl flex max-h-[90vh]">
-        
+
         {/* LEFT PANEL */}
         <div className="hidden lg:flex lg:w-2/5 relative bg-[#1c1c1c] flex-col justify-center px-10 text-white overflow-hidden transition-all duration-500">
           <div className="absolute inset-0 bg-gradient-to-br from-[#ffffff6b] via-[#1c1c1c] to-[#000] z-0"></div>
@@ -196,7 +196,7 @@ const RegisterDialog = ({ isOpen, onOpenChange, onLoginClick, initialData = {} }
         {/* RIGHT PANEL */}
         <div className="flex-1 overflow-y-auto relative custom-scrollbar bg-gray-50">
           <div className="p-8">
-            
+
             {submitted ? (
               <div className="text-center py-10">
                 <div className="bg-green-100 w-20 h-20 rounded-full flex items-center justify-center mx-auto mb-6">
@@ -204,7 +204,7 @@ const RegisterDialog = ({ isOpen, onOpenChange, onLoginClick, initialData = {} }
                 </div>
                 <h2 className="text-3xl font-bold text-gray-900 mb-4">Registration Complete!</h2>
                 <p className="text-gray-600 mb-8 max-w-md mx-auto">
-                  {userType === 'investor' 
+                  {userType === 'investor'
                     ? "Your profile has been created. You can now browse exclusive projects."
                     : "Our team will verify your details and contact you shortly to activate your dashboard."}
                 </p>
@@ -236,15 +236,13 @@ const RegisterDialog = ({ isOpen, onOpenChange, onLoginClick, initialData = {} }
                 {/* STEP 1: AUTH */}
                 {step === 1 && (
                   <div className="space-y-2">
-                    {userType === 'investor' && (
-                      <>
-                        <GoogleAuthButton onSuccess={handleGoogleRegisterSuccess} text="Sign up with Google" />
-                        <div className="relative">
-                          <div className="absolute inset-0 flex items-center"><span className="w-full border-t border-gray-200" /></div>
-                          <div className="relative flex justify-center text-xs uppercase"><span className="bg-white px-2 text-gray-500">Or register with email</span></div>
-                        </div>
-                      </>
-                    )}
+
+                    <GoogleAuthButton onSuccess={handleGoogleRegisterSuccess} text="Sign up with Google" />
+                    <div className="relative">
+                      <div className="absolute inset-0 flex items-center"><span className="w-full border-t border-gray-200" /></div>
+                      <div className="relative flex justify-center text-xs uppercase"><span className="bg-white px-2 text-gray-500">Or register with email</span></div>
+                    </div>
+
                     <form onSubmit={handleAuthSubmit} className="space-y-4">
                       <div className="space-y-2">
                         <Label className={labelStyle}>{userType === 'investor' ? 'Email Address' : 'Work Email'}</Label>
@@ -262,7 +260,7 @@ const RegisterDialog = ({ isOpen, onOpenChange, onLoginClick, initialData = {} }
                         {loading ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <>Register <ChevronRight className="ml-2 h-4 w-4" /></>}
                       </Button>
                       <div className="text-center text-sm text-gray-600 mt-4">
-                        Already have an account? 
+                        Already have an account?
                         <button type="button" className="text-orange-600 hover:underline font-medium ml-2" onClick={() => { onOpenChange(false); onLoginClick(); }}>Login Now</button>
                       </div>
                     </form>
@@ -272,7 +270,7 @@ const RegisterDialog = ({ isOpen, onOpenChange, onLoginClick, initialData = {} }
                 {/* STEP 2: PROFILE */}
                 {step === 2 && (
                   <form onSubmit={handleProfileSubmit} className="space-y-8 animate-in fade-in">
-                    
+
                     {/* INVESTOR SPECIFIC FIELDS */}
                     {userType === 'investor' && (
                       <div className="space-y-6">
