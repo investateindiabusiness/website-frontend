@@ -1,64 +1,45 @@
 /* --- THEME SCHEMA (theme.css) --- */
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=Manrope:wght@300;400;600;700;800&display=swap');
 
 :root {
-    /* =========================================
-       1. CORE COLORS (HEX)
-       ========================================= */
-    --color-black: #0a0a0c;
-    --color-white: #ffffff;
-    --color-orange: #ff5722;      /* Primary Brand Color */
-    --color-orange-dark: #e64a19; /* Hover State */
-    --color-lavender: #d8cfff;    /* Accent/Muted Text Color */
+    /* CORE COLORS */
+    --color-primary: #1F2937;       /* Dark Text for Light Sections */
+    --color-secondary: #F9FAFB;     /* Light Grey Background */
+    --color-white: #FFFFFF;
+    --color-black: #000000;
+    
+    --color-accent: #DF8037;        /* Orange/Bronze */
+    --color-accent-hover: #B45309;
+    --color-accent-tag: #FFB068;
+    --color-accent-light: #FFF7ED;
+    
+    --color-text-main: #111827;
+    --color-text-muted: #4B5563;
+    --color-border: #E5E7EB;
 
-    /* =========================================
-       2. RGB COLORS (For Opacity / Alpha use)
-       ========================================= */
-    --rgb-black: 10, 10, 12;
-    --rgb-white: 255, 255, 255;
-    --rgb-orange: 255, 87, 34;
-    --rgb-lavender: 216, 207, 255;
-    --rgb-glass-bg: 25, 25, 30;
+    --color-light-bg: #D9D4D0;
+    --color-white-bg: #E1DCD9;
+    --color-info-card: #EEE9E6;
+    --color-light-white: #FAFAFA;
 
-    /* =========================================
-       3. TYPOGRAPHY
-       ========================================= */
-    --font-primary: 'Inter', system-ui, -apple-system, sans-serif;
-    --font-secondary: 'Montserrat', system-ui, sans-serif;
-    --font-mono: 'Fira Code', 'Courier New', monospace;
+    --color-blue: #0A66C2;
+    --color-blue-light: #374151;
 
-    /* =========================================
-       4. ANIMATION & TIMING
-       ========================================= */
-    /* Speeds */
-    --speed-fast: 0.2s;
-    --speed-medium: 0.4s;
-    --speed-slow: 0.6s;
-    --speed-slower: 1s;
-    --speed-hero-fade: 1.2s;
+    /* TYPOGRAPHY */
+    /* --font-heading: 'Playfair Display', serif; 
+    --font-body: 'Manrope', sans-serif; */
 
-    /* Easings */
-    --ease-standard: cubic-bezier(0.4, 0, 0.2, 1);
-    --ease-out: cubic-bezier(0, 0, 0.2, 1);
-    --ease-cinematic: cubic-bezier(0.65, 0, 0.05, 1); /* Dramatic smooth ease */
+    /* LAYOUT */
+    --max-width: 1200px;
+    --radius-md: 8px;
 
-    /* =========================================
-       5. Z-INDEX SYSTEM
-       ========================================= */
-    --z-background: 0;
-    --z-texture: 10;
-    --z-content: 20;
-
-    /* =========================================
-       6. SPACING & RADII (Extracted from hardcoded values)
-       ========================================= */
-    --radius-sm: 8px;     /* Buttons */
-    --radius-md: 12px;    /* Cards */
-    --radius-lg: 24px;    /* Big Display Boxes */
-    --radius-pill: 50px;  /* Badges */
-
-    /* =========================================
-       7. MEDIA / ASSETS (CMS Ready)
-       ========================================= */
-    --bg-image-hero: url('https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?q=80&w=2070&auto=format&fit=crop');
-    --bg-image-challenges: url('https://images.unsplash.com/photo-1519501025264-65ba15a82390?q=80&w=2064&auto=format&fit=crop');
 }
+
+body {
+    margin: 0;
+    padding: 0;
+    font-family: var(--font-body);
+    overflow-x: hidden;
+}
+
+h1, h2, h3 { font-family: var(--font-heading); }

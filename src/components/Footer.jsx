@@ -4,7 +4,7 @@ import { Building2, Mail, Phone, MapPin, Facebook, Twitter, Linkedin, Instagram 
 
 const Footer = () => {
   return (
-    <footer className="bg-white text-[#001A72]">
+    <footer className="bg-[#121212] border-t border-gray-800 text-gray-300">
       <div className="container mx-auto px-4 py-12">
         <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
           {/* Brand */}
@@ -12,20 +12,20 @@ const Footer = () => {
             <div className="flex items-center space-x-2">
               <img src="/logo-big.png" alt="INVESTATE INDIA" className="h-16 w-auto" />
             </div>
-            <p className="text-sm">
+            <p className="text-sm text-gray-400">
               Connecting NRI investors to India's growth through verified real estate opportunities.
             </p>
             <div className="flex space-x-4">
-              <a href="#" className="hover:text-[#FB923C] transition-colors">
+              <a href="#" className="text-gray-400 hover:text-[#C88A58] transition-colors">
                 <Facebook className="h-5 w-5" />
               </a>
-              <a href="#" className="hover:text-[#FB923C] transition-colors">
+              <a href="#" className="text-gray-400 hover:text-[#C88A58] transition-colors">
                 <Twitter className="h-5 w-5" />
               </a>
-              <a href="#" className="hover:text-[#FB923C] transition-colors">
+              <a href="#" className="text-gray-400 hover:text-[#C88A58] transition-colors">
                 <Linkedin className="h-5 w-5" />
               </a>
-              <a href="#" className="hover:text-[#FB923C] transition-colors">
+              <a href="#" className="text-gray-400 hover:text-[#C88A58] transition-colors">
                 <Instagram className="h-5 w-5" />
               </a>
             </div>
@@ -33,25 +33,25 @@ const Footer = () => {
 
           {/* Quick Links */}
           <div>
-            <h3 className="text-[#001A72]font-bold mb-4">Quick Links</h3>
+            <h3 className="text-white font-bold mb-4">Quick Links</h3>
             <ul className="space-y-2">
               <li>
-                <Link to="/" className="hover:text-[#FB923C] transition-colors text-sm">
+                <Link to="/" className="text-gray-400 hover:text-[#C88A58] transition-colors text-sm">
                   Home
                 </Link>
               </li>
               <li>
-                <Link to="/register" className="hover:text-[#FB923C] transition-colors text-sm">
+                <Link to="/register" className="text-gray-400 hover:text-[#C88A58] transition-colors text-sm">
                   For Investors
                 </Link>
               </li>
               <li>
-                <Link to="/partner/register" className="hover:text-[#FB923C] transition-colors text-sm">
+                <Link to="/partner/register" className="text-gray-400 hover:text-[#C88A58] transition-colors text-sm">
                   For Builders
                 </Link>
               </li>
               <li>
-                <Link to="/login" className="hover:text-[#FB923C] transition-colors text-sm">
+                <Link to="/login" className="text-gray-400 hover:text-[#C88A58] transition-colors text-sm">
                   Login
                 </Link>
               </li>
@@ -60,31 +60,31 @@ const Footer = () => {
 
           {/* Popular Cities */}
           <div>
-            <h3 className="text-[#001A72]font-bold mb-4">Popular Cities</h3>
+            <h3 className="text-white font-bold mb-4">Popular Cities</h3>
             <ul className="space-y-2">
-              <li className="text-sm hover:text-[#FB923C] transition-colors cursor-pointer">Bangalore</li>
-              <li className="text-sm hover:text-[#FB923C] transition-colors cursor-pointer">Gurgaon</li>
-              <li className="text-sm hover:text-[#FB923C] transition-colors cursor-pointer">Mumbai</li>
-              <li className="text-sm hover:text-[#FB923C] transition-colors cursor-pointer">Pune</li>
-              <li className="text-sm hover:text-[#FB923C] transition-colors cursor-pointer">Hyderabad</li>
+              <li className="text-sm text-gray-400 hover:text-[#C88A58] transition-colors cursor-pointer">Bangalore</li>
+              <li className="text-sm text-gray-400 hover:text-[#C88A58] transition-colors cursor-pointer">Gurgaon</li>
+              <li className="text-sm text-gray-400 hover:text-[#C88A58] transition-colors cursor-pointer">Mumbai</li>
+              <li className="text-sm text-gray-400 hover:text-[#C88A58] transition-colors cursor-pointer">Pune</li>
+              <li className="text-sm text-gray-400 hover:text-[#C88A58] transition-colors cursor-pointer">Hyderabad</li>
             </ul>
           </div>
 
           {/* Contact */}
           <div>
-            <h3 className="text-[#001A72]font-bold mb-4">Contact Us</h3>
+            <h3 className="text-white font-bold mb-4">Contact Us</h3>
             <ul className="space-y-3">
               <li className="flex items-start space-x-3">
-                <MapPin className="h-5 w-5 text-[#001A72] flex-shrink-0 mt-0.5" />
-                <span className="text-sm">MG Road, Bangalore, India</span>
+                <MapPin className="h-5 w-5 text-[#C88A58] flex-shrink-0 mt-0.5" />
+                <span className="text-sm text-gray-400">MG Road, Bangalore, India</span>
               </li>
               <li className="flex items-center space-x-3">
-                <Phone className="h-5 w-5 text-[#001A72] flex-shrink-0" />
-                <span className="text-sm">+91-80-12345678</span>
+                <Phone className="h-5 w-5 text-[#C88A58] flex-shrink-0" />
+                <span className="text-sm text-gray-400">+91-80-12345678</span>
               </li>
               <li className="flex items-center space-x-3">
-                <Mail className="h-5 w-5 text-[#001A72] flex-shrink-0" />
-                <span className="text-sm">info@investateindia.com</span>
+                <Mail className="h-5 w-5 text-[#C88A58] flex-shrink-0" />
+                <span className="text-sm text-gray-400">info@investateindia.com</span>
               </li>
             </ul>
           </div>
@@ -92,17 +92,17 @@ const Footer = () => {
 
         <div className="border-t border-gray-800 mt-8 pt-8">
           <div className="flex flex-col md:flex-row justify-between items-center space-y-4 md:space-y-0">
-            <p className="text-sm">
+            <p className="text-sm text-gray-400">
               © 2025 INVESTATE INDIA. All rights reserved.
             </p>
             <div className="flex space-x-6">
-              <a href="/privacy" className="text-sm hover:text-[#FB923C] transition-colors">
+              <a href="/privacy" className="text-sm text-gray-400 hover:text-[#C88A58] transition-colors">
                 Privacy Policy
               </a>
-              <a href="/terms" className="text-sm hover:text-[#FB923C] transition-colors">
+              <a href="/terms" className="text-sm text-gray-400 hover:text-[#C88A58] transition-colors">
                 Terms & Conditions
               </a>
-              <a href="/disclaimer" className="text-sm hover:text-[#FB923C] transition-colors">
+              <a href="/disclaimer" className="text-sm text-gray-400 hover:text-[#C88A58] transition-colors">
                 Disclaimer
               </a>
             </div>
