@@ -1,4 +1,4 @@
-const API_BASE_URL = process.env.REACT_APP_API_BASE_URL || 'http://localhost:5000';
+const API_BASE_URL = process.env.REACT_APP_API_BASE_URL;
 
 export const apiRequest = async (endpoint, options = {}) => {
   // 1. Get the session from storage
@@ -23,7 +23,7 @@ export const apiRequest = async (endpoint, options = {}) => {
     // Handle session expiration (if token is invalid)
     if (response.status === 401) {
       localStorage.removeItem('user_session');
-      window.location.href = '/login';
+      window.location.href = '/';
       return Promise.reject('Session expired');
     }
 
@@ -96,3 +96,53 @@ export const adminLoginRequest = (payload) =>
     method: 'POST',
     body: JSON.stringify(payload),
   });
+
+export const googleSyncRequest = async (idToken) => {
+  // We send the ID Token to backend to verify identity & get user role
+  return apiRequest('/api/auth/google-sync', {
+    method: 'POST',
+    body: JSON.stringify({ idToken }),
+  });
+};
+
+export const fetchAllBuilders = async (token) => {
+  const response = await fetch(`${API_BASE_URL}/api/builders`, { 
+    method: 'GET',
+    headers: {
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer ${token}` 
+    }
+  });
+
+  // If the backend returns HTML instead of JSON (like a 404 page), this catches it
+  const contentType = response.headers.get("content-type");
+  if (!contentType || !contentType.includes("application/json")) {
+    throw new TypeError("Oops, we haven't got JSON! Check if the backend route is correct.");
+  }
+
+  if (!response.ok) {
+    const err = await response.json();
+    throw new Error(err.message || 'Failed to fetch builders');
+  }
+
+  return response.json();
+};
+
+// Toggle Verification Status
+export const verifyBuilderStatus = async (uid, isVerified, token) => {
+  const response = await fetch(`${API_BASE_URL}/api/admin/verify-builder/${uid}`, {
+    method: 'PATCH',
+    headers: {
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer ${token}`
+    },
+    body: JSON.stringify({ isVerified })
+  });
+
+  if (!response.ok) {
+    const errorData = await response.json();
+    throw new Error(errorData.message || 'Failed to update verification status');
+  }
+
+  return response.json();
+};

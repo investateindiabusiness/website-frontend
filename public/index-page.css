@@ -156,7 +156,7 @@
     font-size: 2.5rem;
     line-height: 1.1;
     font-family: var(--font-body);
-    font-weight: 800;
+    font-weight: 700;
     margin-bottom: 24px;
     color: var(--color-white);
 }
@@ -314,6 +314,7 @@
     border-radius: var(--radius-md);
     background: var(--color-light-white);
     transition: all 0.2s ease;
+    font-weight: 700;
 }
 
 .challenge-item:hover {
@@ -686,7 +687,7 @@
 
 .display-title {
     font-size: 1.8rem;
-    font-weight: 800;
+    font-weight: 700;
     color: var(--color-primary);
     margin: 0 0 12px 0;
 }
@@ -808,7 +809,7 @@
 
 .trust-title {
     font-size: 1.4rem;
-    font-weight: 800;
+    font-weight: 700;
     color: var(--color-primary);
     margin: 0;
 }
@@ -873,7 +874,7 @@
 
 .story-headline {
     font-size: 2.2rem;
-    font-weight: 800;
+    font-weight: 700;
     color: var(--color-primary);
     margin: 0 0 24px 0;
     line-height: 1.2;
@@ -981,7 +982,7 @@
 
 .profile-name {
     font-size: 1.2rem;
-    font-weight: 800;
+    font-weight: 700;
     color: var(--color-primary);
     margin: 0 0 4px 0;
 }
@@ -1052,7 +1053,7 @@
 
 .focus-heading {
     font-size: 1.6rem;
-    font-weight: 800;
+    font-weight: 700;
     color: var(--color-primary);
     margin: 0 0 24px 0;
     position: relative;
@@ -1153,7 +1154,7 @@
 
 .cta-title {
     font-size: 1.6rem;
-    font-weight: 800;
+    font-weight: 700;
     color: var(--color-white);
     margin: 0 0 16px 0;
 }
@@ -1410,7 +1411,7 @@
 
 .cta-card-title {
     font-size: 1.8rem;
-    font-weight: 800;
+    font-weight: 700;
     color: var(--color-primary);
     margin: 0 0 16px 0;
 }
@@ -1780,7 +1781,7 @@
     .builder-title-inline {
         display: inline; /* Keeps the colon connected to the title */
         font-size: 1rem;
-        font-weight: 800;
+        font-weight: 700;
         color: var(--color-primary);
     }
 

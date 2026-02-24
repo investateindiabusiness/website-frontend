@@ -1,6 +1,8 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Header from '../components/Header';
 import Footer from '../components/Footer';
+import RegisterDialog from '../components/RegisterDialog';
+import LoginDialog from '../components/LoginDialog';
 
 const Index = () => {
 
@@ -9,6 +11,34 @@ const Index = () => {
     const [activeFaq, setActiveFaq] = useState(null);
     const [activeCardIndex, setActiveCardIndex] = useState(0);
     const [activeCtaTab, setActiveCtaTab] = useState('investors');
+
+    const [isLoginOpen, setIsLoginOpen] = useState(false);
+    const [isRegisterOpen, setIsRegisterOpen] = useState(false);
+    const [hasAutoOpened, setHasAutoOpened] = useState(false);
+    const [registerInitialData, setRegisterInitialData] = useState({});
+
+    const openLogin = () => {
+        setIsRegisterOpen(false);
+        setTimeout(() => setIsLoginOpen(true), 150);
+    };
+
+    const openRegister = (data = {}) => {
+        setRegisterInitialData(data);
+        setIsLoginOpen(false);
+        setTimeout(() => setIsRegisterOpen(true), 150);
+    };
+
+    useEffect(() => {
+        const handleScroll = () => {
+            if (!hasAutoOpened && window.scrollY > 600) {
+                setIsLoginOpen(true); // Open Login instead of Register
+                setHasAutoOpened(true);
+            }
+        };
+
+        window.addEventListener('scroll', handleScroll);
+        return () => window.removeEventListener('scroll', handleScroll);
+    }, [hasAutoOpened]);
 
     const toggleFaq = (index) => {
         // If clicking the already open FAQ, close it. Otherwise, open the new one.
@@ -209,23 +239,22 @@ const Index = () => {
                     <div className="container">
                         <div className="hero-content">
                             <span className="hero-tag">Investate India</span>
-
                             <h1 className="hero-headline">
                                 Your Trusted Bridge to Transparent <br />
                                 <span className="text-accent"> Indian Real Estate Investments</span>
                             </h1>
-
                             <p className="hero-subheadline">
                                 Helping NRI investors discover credible Indian real estate opportunities through standardized information, verified builders, and transparent disclosures.
                             </p>
-
                             <div className="hero-cta-group">
-                                <a href="#investors" className="btn btn-primary">Explore Opportunities</a>
+                                {/* UPDATE: You can also hook these buttons up to open the dialog manually */}
+                                <button onClick={() => setIsRegisterOpen(true)} className="btn btn-primary">
+                                    Explore Opportunities
+                                </button>
                                 <a href="#properties" className="btn btn-secondary">Become a Partner</a>
                             </div>
                         </div>
                     </div>
-
                 </section>
 
                 {/* --- SECTION 2: WHY CHOOSE US (Light, 100vh) --- */}
@@ -611,7 +640,7 @@ const Index = () => {
                                 <div className="cta-card-side">
                                     <div className="cta-card-inner">
                                         <div className="cta-badge">Waitlist Open</div>
-                                        <h3 className="cta-title">Want Early Access?</h3>
+                                        <h3 className="cta-title">Join Our Investor Network</h3>
                                       
                                         {/* Mock Email Capture Form */}
                                         <div className="cta-form-group">
@@ -778,6 +807,19 @@ const Index = () => {
 
                 <Footer />
             </div>
+
+            <LoginDialog 
+                isOpen={isLoginOpen} 
+                onOpenChange={setIsLoginOpen} 
+                onSwitchToRegister={openRegister} 
+            />
+
+            <RegisterDialog 
+                isOpen={isRegisterOpen} 
+                onOpenChange={setIsRegisterOpen} 
+                onLoginClick={openLogin}
+                initialData={registerInitialData}
+            />
         </>
     );
 };

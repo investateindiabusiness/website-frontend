@@ -1,16 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import Header from '../components/Header';
 import Footer from '../components/Footer';
-import { 
-  Phone, 
-  Mail, 
-  MapPin, 
-  Clock, 
-  Send, 
-  MessageSquare, 
-  Globe,
-  CheckCircle
-} from 'lucide-react';
+import { Phone, Mail, MapPin, Send, Globe, CheckCircle } from 'lucide-react';
 
 const ContactUs = () => {
 
@@ -79,7 +70,9 @@ const ContactUs = () => {
                 <div className="bg-[#0b264f] p-10 md:p-14 text-white flex flex-col justify-between relative overflow-hidden">
                   {/* Decorative Circles */}
                   <div className="absolute top-0 right-0 w-64 h-64 bg-white/5 rounded-full -mr-16 -mt-16 pointer-events-none"></div>
+                  <div className="absolute top-0 right-0 w-32 h-32 bg-white/5 rounded-full mr-40 mt-40 pointer-events-none"></div>
                   <div className="absolute bottom-0 left-0 w-40 h-40 bg-orange-500/10 rounded-full -ml-10 -mb-10 pointer-events-none"></div>
+                  <div className="absolute bottom-0 left-0 w-20 h-20 bg-orange-500/10 rounded-full ml-24 mb-24 pointer-events-none"></div>
 
                   <div>
                     <h2 className="text-3xl font-bold mb-6">Contact Information</h2>
@@ -246,10 +239,10 @@ const ContactUs = () => {
         {/* --- Map Section --- */}
         <section className="h-96 w-full bg-gray-200 relative">
           <iframe 
-            src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d224345.83923192776!2d77.06889754725782!3d28.52758200617607!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x390cfd5b347eb62d%3A0x52c2b7494e204dce!2sNew%20Delhi%2C%20Delhi%2C%20India!5e0!3m2!1sen!2sus!4v1683820000000!5m2!1sen!2sus" 
+            src="https://www.google.com/maps/embed?pb=!1m14!1m8!1m3!1d3671.9119536680055!2d72.486191!3d23.0270048!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x14070c84bcea07e3%3A0xe5d0914702127182!2sFibre2Fashion!5e0!3m2!1sen!2sin!4v1770813929820!5m2!1sen!2sin" 
             width="100%" 
             height="100%" 
-            style={{ border: 0, filter: 'grayscale(100%)' }} 
+            style={{ border: 0 }} 
             allowFullScreen="" 
             loading="lazy" 
             referrerPolicy="no-referrer-when-downgrade"

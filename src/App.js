@@ -12,14 +12,10 @@ import ContactUs from './pages/ContactUs';
 import ProjectDetail from './pages/ProjectDetail';
 
 // Investor Pages
-import InvestorRegister from './pages/Investor/InvestorRegister';
-import InvestorLogin from './pages/Investor/InvestorLogin';
 import InvestorDashboard from './pages/Investor/InvestorDashboard';
 import Projects from './pages/Investor/Projects';
 
 // Builder Pages
-import BuilderRegister from './pages/Partner/BuilderRegister';
-import BuilderLogin from './pages/Partner/BuilderLogin';
 import BuilderDashboard from './pages/Partner/BuilderDashboard';
 
 // Admin Pages
@@ -34,7 +30,7 @@ import NotFound from './pages/NotFound';
 
 const ProtectedRoute = ({ children, role }) => {
   const { user } = useAuth();
-  if (!user) return <Navigate to="/login" />;
+  if (!user) return <Navigate to="/" />;
   if (role && user.role !== role) return <Navigate to="/" />;
   return children;
 };
@@ -56,14 +52,10 @@ function App() {
           <Route path="/project/:id" element={<ProjectDetail />} />
 
           {/* Investor Routes */}
-          <Route path="/login" element={<InvestorLogin />} />
-          <Route path="/register" element={<InvestorRegister />} />
           <Route path="/dashboard" element={<ProtectedRoute role="investor"><InvestorDashboard /></ProtectedRoute>} />
           <Route path="/projects" element={<ProtectedRoute role="investor"><Projects /></ProtectedRoute>} />
 
           {/* Partner Routes */}
-          <Route path="/partner/register" element={<BuilderRegister />} />
-          <Route path="/partner/login" element={<BuilderLogin />} />
           <Route path="/partner/dashboard" element={<ProtectedRoute role="builder"><BuilderDashboard /></ProtectedRoute>} />
 
           {/* Admin Routes */}

@@ -79,7 +79,7 @@ const NotFound = () => {
             
             <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 text-left">
               <div 
-                onClick={() => navigate('/login')}
+                onClick={() => navigate('/')}
                 className="group p-4 bg-white rounded-xl border border-gray-100 shadow-sm hover:shadow-md cursor-pointer transition-all"
               >
                 <div className="flex items-center gap-3">
