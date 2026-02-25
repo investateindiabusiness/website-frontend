@@ -408,7 +408,7 @@ const Index = () => {
                                         />
                                     </div>
                                     <div className="builders-closing-box">
-                                        <p>We work with builders who value transparency, disclosures, and long-term brand trust over short-term visibility or volume-based marketing.</p>
+                                        <p className='text-highlight'>We work with builders who value transparency, disclosures, and long-term brand trust over short-term visibility or volume-based marketing.</p>
                                     </div>
                                 </div>
 

@@ -1,20 +1,21 @@
-/* --- GLOBAL UTILITIES (UPDATED FOR INTERNAL SCROLLING) --- */
+/* --- GLOBAL UTILITIES (UPDATED FOR NATURAL SCROLLING) --- */
 .fullscreen-section {
     position: relative;
     width: 100vw;
-    height: calc(100vh - 4rem); /* Strict Lock */
+    /* Height is now determined by content */
+    height: auto; 
     display: flex;
     flex-direction: column;
     align-items: center;
-    overflow: hidden; /* Stops whole-page scrolling inside the section */
-    padding: 4vh 5vw; /* Consistent top and bottom padding for all sections */
+    /* Removed overflow: hidden to allow natural page scrolling */
+    padding: 40px 20px; /* Consistent top and bottom spacing for all sections */
     box-sizing: border-box;
 }
 
 .container {
     width: 100%;
     max-width: var(--max-width);
-    height: 100%; /* Must be 100% to enable internal flex scrolling */
+    /* Removed height: 100% so the container grows with the content */
     display: flex;
     justify-content: center;
     flex-direction: column;
@@ -24,8 +25,8 @@
 
 .section-heading {
     text-align: center;
-    margin-bottom: 3vh;
-    flex-shrink: 0; /* Forces the header to stay locked at the top */
+    margin-bottom: 40px; /* Changed from vh to px for consistent spacing */
+    flex-shrink: 0; 
 }
 
 .section-title {
@@ -48,14 +49,11 @@
     line-height: 1.6;
 }
 
-/* --- THE NEW MAGIC SCROLL CONTAINER --- */
+/* --- REMOVED THE INTERNAL SCROLL TRAP --- */
 .section-scrollable-body {
-    flex: 1; /* Automatically takes up all remaining height below the header */
     width: 100%;
-    overflow-y: auto; /* Adds a vertical scrollbar ONLY if content overflows */
-    min-height: 0; /* Crucial flexbox fix to prevent breaking out of container */
-    padding-right: 15px; /* Adds breathing room so text doesn't hit the scrollbar */
-    padding-bottom: 2vh;
+    /* No more overflow-y, flex: 1, or custom scrollbars needed here */
+    height: auto; 
 }
 
 /* Custom, elegant scrollbar for the internal sections */
@@ -76,17 +74,19 @@
 
 /* --- 1. HERO SECTION (Parent Container) --- */
 .hero-section {
-    position: relative; /* Essential for positioning the pseudo-layers */
+    position: relative; 
     width: 100vw;
+    /* Strict lock just for the Hero */
     height: calc(100vh - 4rem);
     display: flex;
     flex-direction: column;
-    justify-content: center; /* Center vertically */
+    justify-content: center; 
     align-items: flex-start; 
-    overflow: hidden; /* Ensures the zoomed image doesn't overflow */
+    /* Keep overflow hidden here so the background image doesn't break out */
+    overflow: hidden; 
     color: var(--color-white);
-    
-    /* REMOVED: background and transform from here to stop flipping text */
+    padding: 0 5vw; /* Override the global 100px padding so it centers perfectly */
+    margin-top: 4rem;
 }
 
 /* --- LAYER 1: The Image (Mirrored) --- */
@@ -299,11 +299,11 @@
 /* 3x3 Grid for 9 items */
 .challenges-grid {
     display: grid;
-    grid-template-columns: repeat(3, 1fr); /* Strict 3 columns */
-    grid-template-rows: repeat(3, 1fr);    /* Strict 3 rows */
+    grid-template-columns: repeat(3, 1fr); 
+    grid-template-rows: repeat(3, 1fr);  
     gap: 20px;
     width: 100%;
-    max-height: 60vh; /* Limit height to fit screen */
+    /* max-height: 60vh; <-- REMOVE THIS LINE */
 }
 
 .challenge-item {
@@ -354,9 +354,9 @@
 }
 
 .benefits-image-clean {
-    position: sticky; /* CRITICAL FIX: Keeps image in place while list scrolls */
-    top: 0;
-    height: 60vh; /* Fixed height relative to screen */
+    position: sticky; 
+    top: 120px; /* <-- ADD THIS: Gives clearance for your fixed header */
+    height: auto; 
     width: 100%;
 }
 
@@ -416,7 +416,7 @@
 .builders-wrapper {
     display: grid;
     grid-template-columns: 1.1fr 0.9fr;
-    gap: 4vw;
+    gap: 1vw;
     /* align-items: flex-start is REQUIRED for position: sticky to work below */
     align-items: flex-start; 
     width: 100%;
@@ -426,14 +426,14 @@
 .builders-list-container {
     display: flex;
     flex-direction: column;
-    gap: 16px;
+    gap: 4px;
 }
 
 .builder-row {
     display: flex;
     align-items: flex-start;
-    gap: 16px;
-    padding: 16px 20px;
+    gap: 8px;
+    padding: 8px 10px;
     background: var(--color-white);
     border: 1px solid var(--color-border);
     border-radius: var(--radius-md);
@@ -467,8 +467,8 @@
 
 /* Right Side: Sticky Visuals */
 .builders-visual-side {
-    position: sticky; /* Keeps the image and box in view while the left side scrolls */
-    top: 0; 
+    position: sticky; 
+    top: 120px; /* <-- ADD THIS: Gives clearance for your fixed header */
     display: flex;
     flex-direction: column;
     gap: 3vh;
@@ -476,7 +476,7 @@
 
 .builders-image-clean {
     width: 100%;
-    height: 35vh; /* Taller image now that we have room */
+    height: auto; /* Taller image now that we have room */
     border-radius: var(--radius-md);
     overflow: hidden;
     position: relative;
@@ -495,13 +495,14 @@
     border-radius: var(--radius-md);
     padding: 24px;
     text-align: center;
-    box-shadow: 0 4px 20px rgba(0,0,0,0.02);
+    box-shadow: 15px 15px 0px rgba(223, 128, 55, 0.1);
+    margin-top: 4vh;
 }
 
 .builders-closing-box p {
     color: var(--color-text-main);
     font-size: 1rem;
-    font-weight: 600;
+    font-weight: 700;
     line-height: 1.6;
     margin: 0;
 }
@@ -579,6 +580,7 @@
     flex-direction: column;
     border-right: 1px solid rgba(0,0,0,0.05);
     padding-right: 20px;
+    gap: 2vh;
 }
 
 .dashboard-step-btn {
@@ -586,7 +588,7 @@
     align-items: center;
     gap: 16px;
     width: 100%;
-    padding: 10px 15px;
+    padding: 15px;
     background: transparent;
     border: none;
     border-left: 3px solid transparent;
@@ -1524,7 +1526,7 @@
     #about.fullscreen-section {
         height: auto;
         min-height: fit-content;
-        padding: 30px 20px;
+        padding: 30px 20px; /* Keep the padding rule if you want smaller spacing on mobile! */
         justify-content: flex-start;
     }
 
@@ -1618,7 +1620,7 @@
     #challenges.fullscreen-section {
         height: auto;
         min-height: fit-content;
-        padding: 30px 20px;
+        padding: 30px 20px; /* Keep the padding rule if you want smaller spacing on mobile! */
         justify-content: flex-start;
     }
 
@@ -1670,7 +1672,7 @@
     #benefits.fullscreen-section {
         height: auto;
         min-height: fit-content;
-        padding: 30px 20px;
+        padding: 30px 20px; /* Keep the padding rule if you want smaller spacing on mobile! */
         justify-content: flex-start;
     }
 
@@ -1722,10 +1724,8 @@
     #builders.fullscreen-section {
         height: auto;
         min-height: fit-content;
-        padding: 30px 20px;
+        padding: 30px 20px; /* Keep the padding rule if you want smaller spacing on mobile! */
         justify-content: flex-start;
-        display: flex;
-        flex-direction: column;
     }
 
     /* 2. Adjust the headers */
@@ -1827,10 +1827,8 @@
     #process.fullscreen-section {
         height: auto;
         min-height: fit-content;
-        padding: 30px 20px;
+        padding: 30px 20px; /* Keep the padding rule if you want smaller spacing on mobile! */
         justify-content: flex-start;
-        display: flex;
-        flex-direction: column;
     }
 
     /* 2. Adjust headers to match Section 5 exactly */
@@ -1940,10 +1938,8 @@
     #trust.fullscreen-section {
         height: auto;
         min-height: fit-content;
-        padding: 30px 20px;
+        padding: 30px 20px; /* Keep the padding rule if you want smaller spacing on mobile! */
         justify-content: flex-start;
-        display: flex;
-        flex-direction: column;
     }
 
     /* 2. Adjust headers to match previous sections */
@@ -2015,10 +2011,8 @@
     #team.fullscreen-section {
         height: auto;
         min-height: fit-content;
-        padding: 30px 20px;
+        padding: 30px 20px; /* Keep the padding rule if you want smaller spacing on mobile! */
         justify-content: flex-start;
-        display: flex;
-        flex-direction: column;
     }
 
     /* 2. Unified Headers */
@@ -2101,10 +2095,8 @@
     #early-access.fullscreen-section {
         height: auto;
         min-height: fit-content;
-        padding: 30px 20px;
+        padding: 30px 20px; /* Keep the padding rule if you want smaller spacing on mobile! */
         justify-content: flex-start;
-        display: flex;
-        flex-direction: column;
     }
 
     /* 2. Unified Headers */
@@ -2204,10 +2196,8 @@
     #faq.fullscreen-section {
         height: auto;
         min-height: fit-content;
-        padding: 30px 20px;
+        padding: 30px 20px; /* Keep the padding rule if you want smaller spacing on mobile! */
         justify-content: flex-start;
-        display: flex;
-        flex-direction: column;
     }
 
     /* 2. Unified Headers */
@@ -2267,10 +2257,8 @@
     #contact.fullscreen-section {
         height: auto;
         min-height: fit-content;
-        padding: 30px 20px;
+        padding: 30px 20px; /* Keep the padding rule if you want smaller spacing on mobile! */
         justify-content: flex-start;
-        display: flex;
-        flex-direction: column;
     }
 
     #contact .section-heading { margin-bottom: 20px; }
