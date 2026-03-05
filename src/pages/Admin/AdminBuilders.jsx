@@ -15,13 +15,6 @@ const AdminBuilders = () => {
   const [loading, setLoading] = useState(true);
   const [filter, setFilter] = useState('pending'); // 'all', 'pending', 'verified'
 
-  // Wait for the user to be loaded before fetching
-  useEffect(() => {
-    if (user && user.token) {
-      loadBuilders();
-    }
-  }, [user, loadBuilders]);
-
   const loadBuilders = useCallback(async () => {
     try {
       setLoading(true);
@@ -38,7 +31,15 @@ const AdminBuilders = () => {
     }
   }, [user?.token]);
 
+  // Wait for the user to be loaded before fetching
+  useEffect(() => {
+    if (user && user.token) {
+      loadBuilders();
+    }
+  }, [user, loadBuilders]);
+
   const handleVerificationUpdate = async (builderId, status) => {
+    if (!user?.token) return;
     try {
       setBuilders(prevBuilders => 
         prevBuilders.map(b => (b.id === builderId || b.uid === builderId) ? { ...b, isVerified: status } : b)
