@@ -1,13 +1,10 @@
 const API_BASE_URL = process.env.REACT_APP_API_BASE_URL;
 
 export const apiRequest = async (endpoint, options = {}) => {
-  // 1. Get the session from storage
   const session = JSON.parse(localStorage.getItem('user_session'));
 
-  // 2. Setup headers
   const headers = {
     'Content-Type': 'application/json',
-    // Attach the token if it exists (for protected routes)
     ...(session?.token && { 'Authorization': `Bearer ${session.token}` }),
     ...options.headers,
   };
@@ -20,86 +17,106 @@ export const apiRequest = async (endpoint, options = {}) => {
 
     const data = await response.json();
 
-    // 3. Handle 401 Unauthorized / Session Expiration
     if (response.status === 401) {
-      // Is this request trying to log in or sync google?
-      const isAuthRequest = endpoint.includes('/login') || 
-                            endpoint.includes('/google-sync') || 
-                            endpoint.includes('/admin-login');
-
+      const isAuthRequest = endpoint.includes('/login') || endpoint.includes('/google-sync') || endpoint.includes('/admin-login');
       if (!isAuthRequest) {
-        // If it's NOT an auth request, their session actually expired. Kick them out.
         localStorage.removeItem('user_session');
         window.location.href = '/';
         return Promise.reject('Session expired');
       } else {
-        // If it IS an auth request, just throw the error so the Dialog can display it!
         throw new Error(data.message || 'Authentication failed');
       }
     }
 
     if (!response.ok) {
+      // --- THE FIX IS HERE ---
+      // If the backend sent ANY custom error flag, return the whole object to the component
+      if (data.error) {
+        return Promise.reject(data); 
+      }
+      
+      // Otherwise, throw a standard text error
       throw new Error(data.message || 'Something went wrong');
     }
 
     return data;
   } catch (error) {
-    console.error("API Request Error:", error.message);
+    console.error("API Request Error:", error);
     throw error;
   }
 };
 
-// Auth / Registration
+// --- Auth Endpoints ---
+
+export const submitInvestorForm1 = (uid, profileData) =>
+  apiRequest(`/api/auth/investor-form1/${uid}`, {
+    method: 'POST',
+    body: JSON.stringify(profileData),
+  });
+
+export const submitBuilderForm1 = (uid, profileData) =>
+  apiRequest(`/api/auth/builder-form1/${uid}`, {
+    method: 'POST',
+    body: JSON.stringify(profileData),
+  });
+
+// Fetch all Investors
+export const fetchAllInvestors = async (token) => {
+  const response = await fetch(`${API_BASE_URL}/api/investors`, { // Adjust URL if your route path is different
+    method: 'GET',
+    headers: {
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer ${token}`
+    }
+  });
+
+  if (!response.ok) {
+    const err = await response.json();
+    throw new Error(err.message || 'Failed to fetch investors');
+  }
+
+  return response.json();
+};
+
+export const submitRequestedChanges = (uid, data) =>
+  apiRequest(`/api/auth/submit-changes/${uid}`, {
+    method: 'POST',
+    body: JSON.stringify(data),
+  });
+
+export const submitBuilderForm2 = (uid, data) =>
+  apiRequest(`/api/auth/builder-form2/${uid}`, {
+    method: 'POST',
+    body: JSON.stringify(data),
+  });
+
+export const submitInvestorForm2 = (uid, data) =>
+  apiRequest(`/api/auth/investor-form2/${uid}`, {
+    method: 'POST',
+    body: JSON.stringify(data),
+  });
+
+
+// You can reuse the generic apiRequest for these action triggers:
+export const approveInvestorForm1 = (uid) =>
+  apiRequest(`/api/investors/approve-investor-form1/${uid}`, { method: 'POST' });
+
+export const requestInvestorChanges = (uid, fieldsRequested) =>
+  apiRequest(`/api/investors/request-investor-changes/${uid}`, {
+    method: 'POST',
+    body: JSON.stringify({ fieldsRequested })
+  });
+
+export const verifyInvestorFinal = (uid, isVerified) =>
+  apiRequest(`/api/investors/verify-investor-final/${uid}`, {
+    method: 'POST',
+    body: JSON.stringify({ isVerified })
+  });
+
 export const loginRequest = (payload) =>
   apiRequest('/api/auth/login', {
     method: 'POST',
     body: JSON.stringify(payload),
-  });
-
-export async function registerInvestor(payload) {
-  const res = await fetch(`${API_BASE_URL}/api/auth/register`, {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify(payload)
-  });
-  return handleResponse(res);
-}
-
-export async function registerBuilder(payload) {
-  const res = await fetch(`${API_BASE_URL}/api/auth/builder-register`, {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify(payload)
-  });
-  return handleResponse(res);
-}
-
-// Investor Registration Step 1
-export const createUserAuth = (authData) =>
-  apiRequest('/api/auth/register-step1', {
-    method: 'POST',
-    body: JSON.stringify(authData),
-  });
-
-// Investor Registration Step 2
-export const updateInvestorProfile = (uid, profileData) =>
-  apiRequest(`/api/auth/register-step2/${uid}`, {
-    method: 'POST',
-    body: JSON.stringify(profileData),
-  });
-
-// Builder Registration Step 1
-export const createBuilderAuth = (authData) =>
-  apiRequest('/api/auth/builder-register-step1', {
-    method: 'POST',
-    body: JSON.stringify(authData),
-  });
-
-// Builder Registration Step 2
-export const updateBuilderProfile = (uid, profileData) =>
-  apiRequest(`/api/auth/builder-register-step2/${uid}`, {
-    method: 'POST',
-    body: JSON.stringify(profileData),
   });
 
 export const adminLoginRequest = (payload) =>
@@ -109,12 +126,27 @@ export const adminLoginRequest = (payload) =>
   });
 
 export const googleSyncRequest = async (idToken, role) => {
-  // We send the ID Token and the requested role to the backend
   return apiRequest('/api/auth/google-sync', {
     method: 'POST',
-    body: JSON.stringify({ idToken, role }), // Now includes the role
+    body: JSON.stringify({ idToken, role }),
   });
 };
+
+// --- Unified Registration Endpoints ---
+
+export const registerStep1 = (authData) =>
+  apiRequest('/api/auth/register-step1', {
+    method: 'POST',
+    body: JSON.stringify(authData),
+  });
+
+export const updateProfileStep2 = (uid, profileData) =>
+  apiRequest(`/api/auth/register-step2/${uid}`, {
+    method: 'POST',
+    body: JSON.stringify(profileData),
+  });
+
+// --- Admin Data Endpoints ---
 
 export const fetchAllBuilders = async (token) => {
   const response = await fetch(`${API_BASE_URL}/api/builders`, {
@@ -125,7 +157,6 @@ export const fetchAllBuilders = async (token) => {
     }
   });
 
-  // If the backend returns HTML instead of JSON (like a 404 page), this catches it
   const contentType = response.headers.get("content-type");
   if (!contentType || !contentType.includes("application/json")) {
     throw new TypeError("Oops, we haven't got JSON! Check if the backend route is correct.");
@@ -139,7 +170,6 @@ export const fetchAllBuilders = async (token) => {
   return response.json();
 };
 
-// Toggle Verification Status
 export const verifyBuilderStatus = async (uid, isVerified, token) => {
   const response = await fetch(`${API_BASE_URL}/api/admin/verify-builder/${uid}`, {
     method: 'PATCH',

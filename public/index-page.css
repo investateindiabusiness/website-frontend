@@ -845,17 +845,17 @@
     }
 }
 
-/* --- 8. THE TEAM SECTION --- */
+/* --- 8. THE TEAM SECTION (Left/Right Layout with 3 Founders) --- */
 
 .team-wrapper {
     display: grid;
-    grid-template-columns: 1.1fr 0.9fr; /* Story text gets slightly more room */
+    grid-template-columns: 1.1fr 0.9fr; /* Story left, Cards right */
     gap: 5vw;
     width: 100%;
     max-width: 1100px;
     margin: 0 auto;
     align-items: center;
-    padding-bottom: 3vh;
+    padding-bottom: 5vh; /* Extra padding for the staggered bottom card */
 }
 
 /* --- Left Side: Story & Mission --- */
@@ -894,7 +894,6 @@
     font-weight: 700;
 }
 
-/* Premium Blockquote styling */
 .mission-quote {
     margin: 20px 0 0 0;
     padding: 24px 30px;
@@ -909,16 +908,11 @@
     box-shadow: 0 4px 15px rgba(0,0,0,0.02);
 }
 
-/* --- Right Side: Profile Cards --- */
+/* --- Right Side: Profile Cards (Pyramid Layout) --- */
 .team-cards-side {
     display: grid;
     grid-template-columns: 1fr 1fr;
     gap: 20px;
-}
-
-/* Staggers the second card downward for a premium SaaS look */
-.team-cards-side .team-profile-card:nth-child(2) {
-    transform: translateY(40px);
 }
 
 .team-profile-card {
@@ -930,29 +924,53 @@
     transition: all 0.3s ease;
 }
 
+/* Base hover effect for all cards */
 .team-profile-card:hover {
-    transform: translateY(-5px); /* Note: For the 2nd card, this overrides the stagger on hover, which looks like a cool lift effect! */
     box-shadow: 0 15px 35px rgba(0,0,0,0.06);
     border-color: rgba(223, 128, 55, 0.3);
+}
+
+/* Card 1 (Top Left) Hover */
+.team-cards-side .team-profile-card:nth-child(1):hover {
+    transform: translateY(-5px);
+}
+
+/* Card 2 (Top Right) Staggered Down */
+.team-cards-side .team-profile-card:nth-child(2) {
+    transform: translateY(20px);
+}
+.team-cards-side .team-profile-card:nth-child(2):hover {
+    transform: translateY(15px); /* Maintains hover lift while staggered */
+}
+
+/* Card 3 (Bottom Center) Spans both columns */
+.team-cards-side .team-profile-card:nth-child(3) {
+    grid-column: 1 / -1; /* Spans across both columns */
+    width: calc(50% - 10px); /* Makes it exactly the width of one card */
+    justify-self: center; /* Centers it horizontally */
+    transform: translateY(20px); /* Tucks it nicely between the top two cards */
+}
+.team-cards-side .team-profile-card:nth-child(3):hover {
+    transform: translateY(15px); /* Maintains hover lift while staggered */
 }
 
 .profile-image-wrapper {
     position: relative;
     width: 100%;
-    height: 240px;
+    height: 150px; /* Slightly shorter to fit all 3 nicely on desktop */
     overflow: hidden;
-    background: var(--color-border); /* Placeholder gray if image fails */
+    background: var(--color-border);
 }
 
 .profile-image-wrapper img {
     width: 100%;
     height: 100%;
-    object-fit: cover;
+    object-fit: contain;
     transition: transform 0.5s ease;
 }
 
 .team-profile-card:hover .profile-image-wrapper img {
-    transform: scale(1.05); /* Soft zoom on hover */
+    transform: scale(1.05);
 }
 
 .linkedin-btn {
@@ -962,7 +980,7 @@
     width: 36px;
     height: 36px;
     background: var(--color-white);
-    color: var(--color-blue); /* Official LinkedIn Blue */
+    color: var(--color-blue);
     border-radius: 50%;
     display: flex;
     align-items: center;
@@ -983,14 +1001,14 @@
 }
 
 .profile-name {
-    font-size: 1.2rem;
+    font-size: 1.1rem;
     font-weight: 700;
     color: var(--color-primary);
     margin: 0 0 4px 0;
 }
 
 .profile-role {
-    font-size: 0.95rem;
+    font-size: 0.9rem;
     font-weight: 700;
     color: var(--color-accent);
     margin: 0;
@@ -1004,33 +1022,78 @@
 }
 
 .profile-exp {
-    font-size: 0.85rem;
+    font-size: 0.8rem;
     color: var(--color-text-muted);
     margin: 0;
 }
 
-/* --- Responsive Adjustments --- */
+/* =========================================
+   MOBILE RESPONSIVENESS: SECTION 8 (TEAM)
+   ========================================= */
 @media (max-width: 1024px) {
     .team-wrapper {
-        grid-template-columns: 1fr; /* Stacks story and cards */
+        grid-template-columns: 1fr; /* Stacks story on top, cards on bottom */
         gap: 40px;
     }
     .team-cards-side {
-        max-width: 600px;
+        max-width: 700px;
         margin: 0 auto;
-    }
-    .team-cards-side .team-profile-card:nth-child(2) {
-        transform: translateY(0); /* Removes the downward stagger on mobile */
     }
 }
 
-@media (max-width: 600px) {
+@media (max-width: 768px) {
+    #team.fullscreen-section {
+        height: auto;
+        min-height: fit-content;
+        padding: 30px 20px; 
+        justify-content: flex-start;
+    }
+
+    #team .section-heading { margin-bottom: 20px; }
+    #team .section-title { font-size: 1.6rem; line-height: 1.2; }
+    #team .section-subtitle { font-size: 0.95rem; max-width: 100%; }
+
+    .team-wrapper {
+        display: flex;
+        flex-direction: column;
+        gap: 16px;
+        padding-bottom: 20px;
+    }
+
+    .story-headline { font-size: 1.8rem; }
+    .story-text-content p { font-size: 0.95rem; line-height: 1.6; margin-bottom: 16px; }
+    
+    .mission-quote {
+        margin-top: 0px;
+        padding: 12px;
+        font-size: 1.1rem; 
+    }
+
+    /* Stack all cards to a single column on mobile */
     .team-cards-side {
-        grid-template-columns: 1fr; /* Stacks the two profile cards */
+        grid-template-columns: 1fr; 
+        width: 100%;
     }
-    .story-headline {
-        font-size: 1.8rem;
+
+    /* Remove the desktop 'staggers' and specific widths so cards sit flush */
+    .team-cards-side .team-profile-card:nth-child(2),
+    .team-cards-side .team-profile-card:nth-child(3) {
+        transform: translateY(0);
+        width: 100%;
     }
+
+    /* Reset hover transforms for mobile stack */
+    .team-cards-side .team-profile-card:nth-child(1):hover,
+    .team-cards-side .team-profile-card:nth-child(2):hover,
+    .team-cards-side .team-profile-card:nth-child(3):hover {
+        transform: translateY(-5px);
+    }
+
+    .profile-image-wrapper { height: 160px; }
+    /* .profile-image-wrapper img { object-fit: cover; } */
+    .profile-name { font-size: 1.15rem; }
+    .profile-role { font-size: 0.9rem; }
+    .profile-exp { font-size: 0.85rem; }
 }
 
 /* --- 9. EARLY ACCESS & CTA SECTION --- */

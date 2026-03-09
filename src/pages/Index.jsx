@@ -16,6 +16,8 @@ const Index = () => {
     const [isRegisterOpen, setIsRegisterOpen] = useState(false);
     const [hasAutoOpened, setHasAutoOpened] = useState(false);
     const [registerInitialData, setRegisterInitialData] = useState({});
+    const [isContinueOpen, setIsContinueOpen] = useState(false);
+  const [continueData, setContinueData] = useState({});
 
     const openLogin = () => {
         setIsRegisterOpen(false);
@@ -126,18 +128,22 @@ const Index = () => {
     ];
 
     const teamMembers = [
-        { 
-            name: "[Founder Name 1]", 
-            role: "Co-Founder", 
-            exp: "[X] Years Experience", 
+        {
+            name: "[Founder Name 1]",
+            role: "Co-Founder",
             image: "https://images.unsplash.com/photo-1560250097-0b93528c311a?q=80&w=800&auto=format&fit=crop",
             linkedin: "#"
         },
-        { 
-            name: "[Founder Name 2]", 
-            role: "Co-Founder", 
-            exp: "[X] Years Experience", 
+        {
+            name: "[Founder Name 2]",
+            role: "Co-Founder",
             image: "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?q=80&w=800&auto=format&fit=crop",
+            linkedin: "#"
+        },
+        {
+            name: "[Founder Name 3]",
+            role: "Co-Founder",
+            image: "https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?q=80&w=800&auto=format&fit=crop", // Added 3rd professional image
             linkedin: "#"
         }
     ];
@@ -148,7 +154,7 @@ const Index = () => {
             answer: "No. We are a discovery and facilitation platform, not a traditional broker. Our role is to provide structured information, verify builder credentials, and facilitate transparent connections."
         },
         {
-            question: "Do you charge investors any fees?",
+            question: "Do you charge investors any registration fees?",
             answer: "Currently, registration and access to our platform is free for NRI investors. We believe in transparency from the start. We will be introducing service fees in the future and you'll be informed well in advance."
         },
         {
@@ -174,9 +180,9 @@ const Index = () => {
     ];
 
     const trustFeatures = [
-        { 
+        {
             id: "secure",
-            title: "Secure Data Handling", 
+            title: "Secure Data Handling",
             desc: "Your personal and financial information is protected with industry-standard security protocols.",
             icon: (
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
@@ -185,9 +191,9 @@ const Index = () => {
                 </svg>
             )
         },
-        { 
+        {
             id: "disclosure",
-            title: "Mandatory Disclosures", 
+            title: "Mandatory Disclosures",
             desc: "Builders must provide complete information including approvals, timelines, and financial status.",
             icon: (
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
@@ -199,9 +205,9 @@ const Index = () => {
                 </svg>
             )
         },
-        { 
+        {
             id: "network",
-            title: "Curated Builder Network", 
+            title: "Curated Builder Network",
             desc: "We work only with developers who meet our strict credibility and transparency standards.",
             icon: (
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
@@ -210,9 +216,9 @@ const Index = () => {
                 </svg>
             )
         },
-        { 
+        {
             id: "support",
-            title: "NRI-Focused Support Team", 
+            title: "NRI-Focused Support Team",
             desc: "Dedicated professionals who understand the unique challenges of investing from abroad.",
             icon: (
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
@@ -228,6 +234,12 @@ const Index = () => {
         "Onboarding select builders in key metro cities (Bangalore, Mumbai, Pune, Delhi-NCR, Hyderabad etc.)",
         "Building our NRI investor community across USA, UK, UAE and across the globe."
     ];
+
+    const handleContinueOnboarding = (dataPayload) => {
+        setIsLoginOpen(false);
+        setContinueData(dataPayload);
+        setIsContinueOpen(true);
+    };
 
     return (
         <>
@@ -268,10 +280,10 @@ const Index = () => {
                         <div className="cards-grid-3">
                             {contentDataForSection2.map((item, index) => {
                                 const isOpen = activeCardIndex === index;
-                                
+
                                 return (
-                                    <div 
-                                        key={index} 
+                                    <div
+                                        key={index}
                                         className={`info-card ${isOpen ? 'open' : ''}`}
                                         onClick={() => setActiveCardIndex(index)}
                                     >
@@ -287,7 +299,7 @@ const Index = () => {
                                                 </svg>
                                             </div>
                                         </div>
-                                        
+
                                         {/* Smooth Accordion Body */}
                                         <div className="card-text-wrapper">
                                             <div className="card-text-inner">
@@ -499,7 +511,7 @@ const Index = () => {
                 {/* --- SECTION 7: TRUST & SECURITY (White, 100vh) --- */}
                 <section className="fullscreen-section section-white" id="trust">
                     <div className="container">
-                        
+
                         {/* 1. FIXED HEADER */}
                         <div className="section-heading">
                             <h2 className="section-title">
@@ -515,11 +527,11 @@ const Index = () => {
                             <div className="trust-grid-wrapper">
                                 {trustFeatures.map((feature) => (
                                     <div className="trust-card" key={feature.id}>
-                                        
+
                                         <div className="trust-icon-badge">
                                             {feature.icon}
                                         </div>
-                                        
+
                                         <div className="trust-content">
                                             <h3 className="trust-title">{feature.title}</h3>
                                             <p className="trust-desc">{feature.desc}</p>
@@ -536,7 +548,7 @@ const Index = () => {
                 {/* --- SECTION 8: THE TEAM (Founder Story & Profiles) --- */}
                 <section className="fullscreen-section section-light" id="team">
                     <div className="container">
-                        
+
                         {/* 1. FIXED HEADER */}
                         <div className="section-heading">
                             <h2 className="section-title">
@@ -550,18 +562,18 @@ const Index = () => {
                         {/* 2. SCROLLABLE BODY */}
                         <div className="section-scrollable-body">
                             <div className="team-wrapper fade-in">
-                                
+
                                 {/* Left Side: The Founding Story */}
                                 <div className="team-story-side">
                                     <div className="story-badge">Our Story</div>
                                     <h3 className="story-headline">Built on transparency. Driven by experience.</h3>
-                                    
+
                                     <div className="story-text-content">
                                         <p>
-                                            Investate India is founded by <strong>[Name]</strong> and <strong>[Name]</strong>, professionals with over <strong>[X]</strong> years of combined experience in Indian real estate, NRI investment facilitation, and compliance management.
+                                            Investate India is founded by <strong>[Founder Name 1]</strong> and <strong>[Founder Name 2]</strong>, professionals with over <strong>[X]</strong> years of combined experience in Indian real estate, NRI investment facilitation, and compliance management.
                                         </p>
                                         <p>
-                                            Having witnessed firsthand the challenges NRIs face—and the reputation risks developers encounter—we built Investate India to create a more transparent, structured, and trustworthy marketplace.
+                                            They are joined by <strong>[Founder Name 3]</strong>, who brings specialized expertise in cross-border structuring and legal frameworks to complete the platform's secure ecosystem.
                                         </p>
                                     </div>
 
@@ -571,23 +583,21 @@ const Index = () => {
                                     </blockquote>
                                 </div>
 
-                                {/* Right Side: Founder Profile Cards */}
+                                {/* Right Side: Founder Profile Cards (Pyramid Grid) */}
                                 <div className="team-cards-side">
                                     {teamMembers.map((member, index) => (
                                         <div className="team-profile-card" key={index}>
                                             <div className="profile-image-wrapper">
                                                 <img src={member.image} alt={member.name} />
-                                                {/* Sleek LinkedIn Overlay Button */}
                                                 <a href={member.linkedin} className="linkedin-btn" aria-label="LinkedIn Profile">
                                                     <svg viewBox="0 0 24 24" fill="currentColor" width="20" height="20">
-                                                        <path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z"/>
+                                                        <path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z" />
                                                     </svg>
                                                 </a>
                                             </div>
                                             <div className="profile-info">
                                                 <h4 className="profile-name">{member.name}</h4>
                                                 <p className="profile-role">{member.role}</p>
-                                                <div className="profile-divider"></div>
                                                 <p className="profile-exp">{member.exp}</p>
                                             </div>
                                         </div>
@@ -603,7 +613,7 @@ const Index = () => {
                 {/* --- SECTION 9: EARLY ACCESS & CTA (Light Theme with Dark Card) --- */}
                 <section className="fullscreen-section section-white" id="early-access">
                     <div className="container">
-                        
+
                         {/* 1. FIXED HEADER */}
                         <div className="section-heading">
                             <h2 className="section-title">
@@ -641,13 +651,13 @@ const Index = () => {
                                     <div className="cta-card-inner">
                                         <div className="cta-badge">Waitlist Open</div>
                                         <h3 className="cta-title">Join Our Investor Network</h3>
-                                      
+
                                         {/* Mock Email Capture Form */}
                                         <div className="cta-form-group">
-                                            <input 
-                                                type="email" 
-                                                className="cta-input" 
-                                                placeholder="Enter your email address..." 
+                                            <input
+                                                type="email"
+                                                className="cta-input"
+                                                placeholder="Enter your email address..."
                                             />
                                             <button className="btn btn-primary cta-submit-btn">
                                                 Register Now
@@ -665,7 +675,7 @@ const Index = () => {
                 {/* --- SECTION 10: FAQ (White Theme, Accordion) --- */}
                 <section className="fullscreen-section section-light" id="faq">
                     <div className="container">
-                        
+
                         {/* 1. FIXED HEADER */}
                         <div className="section-heading">
                             <h2 className="section-title">
@@ -681,11 +691,11 @@ const Index = () => {
                             <div className="faq-wrapper">
                                 {faqsList.map((faq, index) => {
                                     const isOpen = activeFaq === index;
-                                    
+
                                     return (
                                         <div className={`faq-item ${isOpen ? 'open' : ''}`} key={index}>
-                                            <button 
-                                                className="faq-question-btn" 
+                                            <button
+                                                className="faq-question-btn"
                                                 onClick={() => toggleFaq(index)}
                                             >
                                                 <span className="faq-question-text">{faq.question}</span>
@@ -697,7 +707,7 @@ const Index = () => {
                                                     </svg>
                                                 </div>
                                             </button>
-                                            
+
                                             {/* Modern CSS Grid trick for smooth height animation */}
                                             <div className="faq-answer-container">
                                                 <div className="faq-answer-inner">
@@ -716,7 +726,7 @@ const Index = () => {
                 {/* --- SECTION 11: FINAL CTA (Dual Desktop, Tabbed Mobile) --- */}
                 <section className="fullscreen-section section-white" id="contact">
                     <div className="container">
-                        
+
                         {/* 1. FIXED HEADER */}
                         <div className="section-heading">
                             <h2 className="section-title">
@@ -748,7 +758,7 @@ const Index = () => {
                         {/* 3. SCROLLABLE BODY */}
                         <div className="section-scrollable-body">
                             <div className="final-cta-wrapper fade-in">
-                                
+
                                 {/* Card 1: For Investors */}
                                 <div className={`final-cta-card investor-card ${activeCtaTab === 'investors' ? 'mobile-active' : 'mobile-hidden'}`}>
                                     <div className="cta-card-icon">
@@ -760,7 +770,7 @@ const Index = () => {
                                     </div>
                                     <h3 className="cta-card-title">For Investors</h3>
                                     <p className="cta-card-text">
-                                        Interested in transparent, verified real estate opportunities in India? 
+                                        Interested in transparent, verified real estate opportunities in India?
                                     </p>
                                     <a href="#register" className="btn btn-primary cta-action-btn">
                                         Register Your Interest
@@ -808,15 +818,16 @@ const Index = () => {
                 <Footer />
             </div>
 
-            <LoginDialog 
-                isOpen={isLoginOpen} 
-                onOpenChange={setIsLoginOpen} 
-                onSwitchToRegister={openRegister} 
+            <LoginDialog
+                isOpen={isLoginOpen}
+                onOpenChange={setIsLoginOpen}
+                onSwitchToRegister={openRegister}
+                onContinueOnboarding={handleContinueOnboarding}
             />
 
-            <RegisterDialog 
-                isOpen={isRegisterOpen} 
-                onOpenChange={setIsRegisterOpen} 
+            <RegisterDialog
+                isOpen={isRegisterOpen}
+                onOpenChange={setIsRegisterOpen}
                 onLoginClick={openLogin}
                 initialData={registerInitialData}
             />

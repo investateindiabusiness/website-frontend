@@ -160,7 +160,7 @@ const Home = () => {
         <Header />
 
         {/* Hero Section - Fixed for mobile height */}
-        <section className="relative md:h-[calc(100vh-4rem)] mt-[3rem] md:mt-[5rem] flex items-center justify-center overflow-hidden py-10 md:py-0">
+        <section className="relative md:h-[calc(100vh-4rem)] mt-[2rem] md:mt-[4rem] flex items-center justify-center overflow-hidden py-10 md:py-0">
           <div
             className="absolute inset-0 z-0"
             style={{

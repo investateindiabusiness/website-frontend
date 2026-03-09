@@ -1,8 +1,6 @@
-// src/components/GoogleAuthButton.jsx
 import React, { useState } from 'react';
-import { getAuth, GoogleAuthProvider, signInWithPopup } from 'firebase/auth';
-// Make sure you have initialized firebaseApp in a config file
-import { app } from '@/firebase'; // Import your firebase initialization
+import { getAuth, GoogleAuthProvider, signInWithPopup, signOut } from 'firebase/auth'; // <-- added signOut
+import { app } from '@/firebase'; 
 import { googleSyncRequest } from '@/api';
 import { Button } from '@/components/ui/button';
 import { toast } from '@/hooks/use-toast';
@@ -12,33 +10,27 @@ const GoogleAuthButton = ({ onSuccess, onError, text = "Continue with Google", u
   const [loading, setLoading] = useState(false);
 
   const handleGoogleClick = async () => {
+    const auth = getAuth(app);
     try {
       setLoading(true);
-      const auth = getAuth(app);
       const provider = new GoogleAuthProvider();
       
-      // 1. Client-side Google Login
       const result = await signInWithPopup(auth, provider);
       const idToken = await result.user.getIdToken();
 
-      // 2. Sync with Backend (Passing the userType!)
       const userData = await googleSyncRequest(idToken, userType);
-
-      // 3. Pass data back to parent component
+      
       onSuccess(userData);
       
     } catch (error) {
-      console.error(error);
-      
-      // 4. Handle Errors (Use inline error if provided, otherwise fallback to toast)
-      const errorMessage = error.response?.data?.message || error.message || "Google authentication failed";
-      
+      await signOut(auth);
+
       if (onError) {
-        onError(errorMessage);
+        onError(error); 
       } else {
         toast({
           title: "Authentication Failed",
-          description: errorMessage,
+          description: error.message || "Google authentication failed",
           variant: "destructive"
         });
       }

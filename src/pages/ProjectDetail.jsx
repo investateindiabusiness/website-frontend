@@ -141,7 +141,7 @@ const ProjectDetail = () => {
     <div className="min-h-screen bg-[#F4F5F7] font-sans pb-10">
       <Header />
 
-      <main className="container mx-auto px-4 py-4 md:py-6 mt-[3rem] md:mt-[5rem]">
+      <main className="container mx-auto px-4 py-4 md:py-6 mt-[2rem] md:mt-[4rem]">
 
         {/* --- MAIN CONTENT GRID --- */}
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">

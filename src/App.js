@@ -27,6 +27,8 @@ import AdminInquiries from './pages/Admin/AdminInquiries';
 
 import ScrollToTop from './hooks/ScrollToTop';
 import NotFound from './pages/NotFound';
+import ProjectManager from './pages/Partner/ProjectManager';
+import AdminInvestors from './pages/Admin/AdminInvestors';
 
 const ProtectedRoute = ({ children, role }) => {
   const { user } = useAuth();
@@ -57,12 +59,14 @@ function App() {
 
           {/* Partner Routes */}
           <Route path="/partner/dashboard" element={<ProtectedRoute role="builder"><BuilderDashboard /></ProtectedRoute>} />
+          <Route path="/partner/projects" element={<ProtectedRoute role="builder"><ProjectManager /></ProtectedRoute>} />
 
           {/* Admin Routes */}
           <Route path="/admin/login" element={<AdminLogin />} />
           <Route path="/admin/dashboard" element={<ProtectedRoute role="admin"><AdminDashboard /></ProtectedRoute>} />
           <Route path="/admin/projects" element={<ProtectedRoute role="admin"><AdminProjects /></ProtectedRoute>} />
           <Route path="/admin/builders" element={<ProtectedRoute role="admin"><AdminBuilders /></ProtectedRoute>} />
+          <Route path="/admin/investors" element={<ProtectedRoute role="admin"><AdminInvestors /></ProtectedRoute>} />
           <Route path="/admin/inquiries" element={<ProtectedRoute role="admin"><AdminInquiries /></ProtectedRoute>} />
 
           

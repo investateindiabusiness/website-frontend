@@ -40,7 +40,7 @@ const ContactUs = () => {
         <Header />
 
         {/* --- Hero Section --- */}
-        <section className="relative h-auto flex items-center justify-center overflow-hidden mt-[3rem] md:mt-[5rem] py-16">
+        <section className="relative h-auto flex items-center justify-center overflow-hidden mt-[2rem] md:mt-[4rem] py-16">
           <div 
             className="absolute inset-0 z-0"
             style={{

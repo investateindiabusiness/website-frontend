@@ -38,7 +38,7 @@ const Projects = () => {
       <Header />
 
       {/* Page Header */}
-      <div className="bg-gradient-to-r from-blue-600 to-blue-800 text-white py-16 mt-[3rem] md:mt-[5rem]">
+      <div className="bg-gradient-to-r from-blue-600 to-blue-800 text-white py-16 mt-[2rem] md:mt-[4rem]">
         <div className="container mx-auto px-4">
           <h1 className="text-4xl font-bold mb-4">Investment Opportunities</h1>
           <p className="text-xl text-blue-100">
