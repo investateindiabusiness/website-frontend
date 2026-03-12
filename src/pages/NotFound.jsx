@@ -1,15 +1,7 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
-import Header from '../components/Header';
-import Footer from '../components/Footer';
 import { Button } from '../components/ui/button';
-import { 
-  Home, 
-  ArrowLeft, 
-  MapPinOff, 
-  Search,
-  Building2
-} from 'lucide-react';
+import { Home, ArrowLeft, MapPinOff, Search, Building2 } from 'lucide-react';
 
 const NotFound = () => {
   const navigate = useNavigate();

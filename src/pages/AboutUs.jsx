@@ -1,16 +1,7 @@
 import React, { useEffect } from 'react';
 import Header from '../components/Header';
 import Footer from '../components/Footer';
-import {
-  Shield,
-  Users,
-  Globe,
-  Target,
-  Award,
-  Briefcase,
-  ArrowRight,
-  CheckCircle2
-} from 'lucide-react';
+import { Shield, Users, Globe, Target, Award, Briefcase, ArrowRight, CheckCircle2 } from 'lucide-react';
 
 const AboutUs = () => {
 

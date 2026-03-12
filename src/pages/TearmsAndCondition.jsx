@@ -1,7 +1,6 @@
 import React, { useEffect } from 'react';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
-import { ScrollText, Shield, AlertCircle, Scale } from 'lucide-react';
 
 const TearmsAndCondition = () => {
 
@@ -19,13 +18,13 @@ const TearmsAndCondition = () => {
       <Header />
 
       {/* Page Header */}
-      <div className="bg-[#2A1B15] text-white py-16 md:py-24 relative overflow-hidden">
+      <div className="bg-[#2A1B15] text-white py-16 md:py-24 relative overflow-hidden mt-[2rem] md:mt-[4rem]">
         {/* Background Pattern */}
         <div className="absolute inset-0 bg-gradient-to-br from-orange-900/40 via-[#2A1B15] to-[#1a100c] z-0"></div>
         <div className="container mx-auto px-4 relative z-10 text-center">
-          <div className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-orange-500/20 mb-6 text-orange-500">
+          {/* <div className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-orange-500/20 mb-6 text-orange-500">
              <ScrollText className="h-8 w-8" />
-          </div>
+          </div> */}
           <h1 className="text-4xl md:text-5xl font-bold mb-4">Terms and Conditions</h1>
           <p className="text-lg text-gray-300 max-w-2xl mx-auto">
             Please read these terms carefully before using the Investate India platform.

@@ -10,11 +10,11 @@ import { Label } from '@/components/ui/label';
 import { Mail, Phone, ShieldCheck, ShieldAlert, CheckCircle, XCircle, Building2, Clock, FileWarning, Plus, Trash2, Eye } from 'lucide-react';
 import { toast } from '@/hooks/use-toast';
 import { useAuth } from '@/hooks/AuthContext';
-import { fetchAllBuilders, apiRequest } from '@/api'; 
+import { fetchAllBuilders, apiRequest } from '@/api';
 
 // Standard keys so we can separate them from dynamically requested fields
 const STANDARD_BUILDER_KEYS = [
-  'uid', 'email', 'role', 'createdAt', 'updatedAt', 'onboardingStatus', 'isVerified', 'adminRequests', 'password',
+  'id', 'uid', 'email', 'role', 'createdAt', 'updatedAt', 'onboardingStatus', 'isVerified', 'adminRequests', 'password',
   'companyName', 'yearsOfExperience', 'contactNameAndDesignation', 'contactPersonPhone', 'ongoingProjects', 'projectsCompleted',
   'address', 'country', 'state', 'city', 'zip', 'termsAccepted',
   'yearOfIncorporation', 'promotersOrDirectors', 'totalSqftDelivered', 'typeOfProjectsOffered', 'majorCompletedProjects',
@@ -25,7 +25,7 @@ const AdminBuilders = () => {
   const { user } = useAuth();
   const [builders, setBuilders] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [filter, setFilter] = useState('pending'); 
+  const [filter, setFilter] = useState('pending');
 
   const [isRequestModalOpen, setIsRequestModalOpen] = useState(false);
   const [selectedBuilderId, setSelectedBuilderId] = useState(null);
@@ -37,7 +37,7 @@ const AdminBuilders = () => {
   const loadBuilders = useCallback(async () => {
     try {
       setLoading(true);
-      const data = await fetchAllBuilders(user.token);       
+      const data = await fetchAllBuilders(user.token);
       setBuilders(data);
     } catch (error) {
       toast({ title: "Error", description: error.message, variant: "destructive" });
@@ -52,7 +52,7 @@ const AdminBuilders = () => {
 
   const handleApproveForm1 = async (builderId) => {
     try {
-      await apiRequest(`/api/admin/approve-form1/${builderId}`, { method: 'POST' });
+      await apiRequest(`/api/builders/approve-form1/${builderId}`, { method: 'POST' });
       toast({ title: "Success", description: "Form 1 Approved. Builder can now fill Form 2." });
       loadBuilders();
       setViewBuilderData(null); // Close modal if open
@@ -61,7 +61,7 @@ const AdminBuilders = () => {
 
   const handleFinalVerification = async (builderId, isVerified) => {
     try {
-      await apiRequest(`/api/admin/verify-final/${builderId}`, { method: 'POST', body: JSON.stringify({ isVerified }) });
+      await apiRequest(`/api/builders/verify-final/${builderId}`, { method: 'POST', body: JSON.stringify({ isVerified }) });
       toast({ title: "Success", description: `Builder has been ${isVerified ? 'Verified' : 'Rejected'}.` });
       loadBuilders();
       setViewBuilderData(null); // Close modal if open
@@ -72,7 +72,7 @@ const AdminBuilders = () => {
     const validFields = requestedFields.filter(f => f.fieldName.trim() !== '');
     if (validFields.length === 0) return toast({ title: "Error", description: "Add at least one field to request.", variant: "destructive" });
     try {
-      await apiRequest(`/api/admin/request-changes/${selectedBuilderId}`, { method: 'POST', body: JSON.stringify({ fieldsRequested: validFields }) });
+      await apiRequest(`/api/builders/request-changes/${selectedBuilderId}`, { method: 'POST', body: JSON.stringify({ fieldsRequested: validFields }) });
       toast({ title: "Success", description: "Request sent to builder." });
       setIsRequestModalOpen(false);
       setRequestedFields([{ fieldName: '', type: 'text' }]);
@@ -84,7 +84,7 @@ const AdminBuilders = () => {
     if (filter === 'pending') return builder.onboardingStatus === 'form1_pending' || builder.onboardingStatus === 'form2_pending';
     if (filter === 'changes_requested') return builder.onboardingStatus === 'form1_changes_requested';
     if (filter === 'verified') return builder.onboardingStatus === 'complete' && builder.isVerified === true;
-    return true; 
+    return true;
   });
 
   return (
@@ -109,57 +109,57 @@ const AdminBuilders = () => {
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
           {loading ? (
             <div className="col-span-full flex flex-col items-center justify-center text-gray-500 py-24">
-               <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-orange-600 mb-4"></div>
-               Loading builders...
+              <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-orange-600 mb-4"></div>
+              Loading builders...
             </div>
           ) : filteredBuilders.length === 0 ? (
-             <div className="col-span-full text-center bg-white rounded-xl p-12 border border-gray-100 shadow-sm text-gray-500">
-               No builders found in this category.
-             </div>
+            <div className="col-span-full text-center bg-white rounded-xl p-12 border border-gray-100 shadow-sm text-gray-500">
+              No builders found in this category.
+            </div>
           ) : filteredBuilders.map((builder) => {
-            const builderId = builder.uid || builder.id; 
+            const builderId = builder.uid || builder.id;
 
             const renderStatusBadge = () => {
               switch (builder.onboardingStatus) {
-                case 'form1_pending': return <Badge className="bg-yellow-100 text-yellow-700 hover:bg-yellow-100 border-none"><Clock className="w-3 h-3 mr-1"/> Form 1 Review</Badge>;
-                case 'form2_pending': return <Badge className="bg-purple-100 text-purple-700 hover:bg-purple-100 border-none"><Clock className="w-3 h-3 mr-1"/> Final Review</Badge>;
-                case 'form1_changes_requested': return <Badge className="bg-orange-100 text-orange-700 hover:bg-orange-100 border-none"><FileWarning className="w-3 h-3 mr-1"/> Changes Req.</Badge>;
-                case 'complete': return <Badge className="bg-green-100 text-green-700 hover:bg-green-100 border-none"><ShieldCheck className="w-3 h-3 mr-1"/> Verified</Badge>;
+                case 'form1_pending': return <Badge className="bg-yellow-100 text-yellow-700 hover:bg-yellow-100 border-none"><Clock className="w-3 h-3 mr-1" /> Form 1 Review</Badge>;
+                case 'form2_pending': return <Badge className="bg-purple-100 text-purple-700 hover:bg-purple-100 border-none"><Clock className="w-3 h-3 mr-1" /> Final Review</Badge>;
+                case 'form1_changes_requested': return <Badge className="bg-orange-100 text-orange-700 hover:bg-orange-100 border-none"><FileWarning className="w-3 h-3 mr-1" /> Changes Req.</Badge>;
+                case 'complete': return <Badge className="bg-green-100 text-green-700 hover:bg-green-100 border-none"><ShieldCheck className="w-3 h-3 mr-1" /> Verified</Badge>;
                 default: return <Badge className="bg-gray-100 text-gray-700 hover:bg-gray-100 border-none">Unknown</Badge>;
               }
             };
 
             return (
-            <Card key={builderId} className="border border-gray-100 shadow-lg flex flex-col relative overflow-hidden">
-              {/* Top accent line based on status */}
-              <div className={`h-1 w-full ${builder.onboardingStatus === 'complete' ? 'bg-green-500' : builder.onboardingStatus === 'form1_changes_requested' ? 'bg-orange-500' : 'bg-blue-500'}`} />
-              
-              <CardContent className="p-8 flex-1 flex flex-col">
-                <div className="flex items-start space-x-6 mb-6">
-                  <div className="w-16 h-16 flex-shrink-0 bg-orange-50 rounded-xl flex items-center justify-center">
-                    <Building2 className="h-8 w-8 text-orange-400" />
-                  </div>
-                  <div className="flex-1">
-                    <div className="flex items-start justify-between mb-2 gap-2">
-                      <h3 className="text-xl font-bold text-gray-900 truncate">{builder.companyName || builder.name || 'Unnamed Company'}</h3>
-                      {renderStatusBadge()}
+              <Card key={builderId} className="border border-gray-100 shadow-lg flex flex-col relative overflow-hidden">
+                {/* Top accent line based on status */}
+                <div className={`h-1 w-full ${builder.onboardingStatus === 'complete' ? 'bg-green-500' : builder.onboardingStatus === 'form1_changes_requested' ? 'bg-orange-500' : 'bg-blue-500'}`} />
+
+                <CardContent className="p-8 flex-1 flex flex-col">
+                  <div className="flex items-start space-x-6 mb-6">
+                    <div className="w-16 h-16 flex-shrink-0 bg-orange-50 rounded-xl flex items-center justify-center">
+                      <Building2 className="h-8 w-8 text-orange-400" />
                     </div>
-                    <p className="text-sm text-gray-500">{builder.city}, {builder.state}</p>
+                    <div className="flex-1">
+                      <div className="flex items-start justify-between mb-2 gap-2">
+                        <h3 className="text-xl font-bold text-gray-900 truncate">{builder.companyName || builder.name || 'Unnamed Company'}</h3>
+                        {renderStatusBadge()}
+                      </div>
+                      <p className="text-sm text-gray-500">{builder.city}, {builder.state}</p>
+                    </div>
                   </div>
-                </div>
 
-                <div className="flex flex-wrap items-center gap-4 text-sm text-gray-600 mb-6 border-t border-gray-100 pt-4">
-                  <a href={`mailto:${builder.email}`} className="flex items-center hover:text-orange-600"><Mail className="h-4 w-4 mr-1.5" /> Email</a>
-                  {builder.contactPersonPhone && <a href={`tel:${builder.contactPersonPhone}`} className="flex items-center hover:text-orange-600"><Phone className="h-4 w-4 mr-1.5" /> Call</a>}
-                </div>
+                  <div className="flex flex-wrap items-center gap-4 text-sm text-gray-600 mb-6 border-t border-gray-100 pt-4">
+                    <a href={`mailto:${builder.email}`} className="flex items-center hover:text-orange-600"><Mail className="h-4 w-4 mr-1.5" /> Email</a>
+                    {builder.contactPersonPhone && <a href={`tel:${builder.contactPersonPhone}`} className="flex items-center hover:text-orange-600"><Phone className="h-4 w-4 mr-1.5" /> Call</a>}
+                  </div>
 
-                <div className="mt-auto pt-4 flex gap-3">
-                  <Button onClick={() => setViewBuilderData(builder)} className="w-full bg-gray-900 hover:bg-gray-800 text-white">
-                    <Eye className="w-4 h-4 mr-2" /> View Full Profile
-                  </Button>
-                </div>
-              </CardContent>
-            </Card>
+                  <div className="mt-auto pt-4 flex gap-3">
+                    <Button onClick={() => setViewBuilderData(builder)} className="w-full bg-gray-900 hover:bg-gray-800 text-white">
+                      <Eye className="w-4 h-4 mr-2" /> View Full Profile
+                    </Button>
+                  </div>
+                </CardContent>
+              </Card>
             );
           })}
         </div>
@@ -172,10 +172,10 @@ const AdminBuilders = () => {
             <DialogTitle className="text-2xl font-bold text-gray-900">{viewBuilderData?.companyName || 'Builder Details'}</DialogTitle>
             <DialogDescription>Review the complete submission history for this partner.</DialogDescription>
           </DialogHeader>
-          
+
           {viewBuilderData && (
             <div className="p-6 space-y-8 bg-gray-50">
-              
+
               {/* Form 1 Section */}
               <div className="bg-white p-6 rounded-xl border border-gray-200 shadow-sm">
                 <h4 className="text-lg font-semibold text-gray-900 mb-4 border-b pb-2">Form 1: Initial Details</h4>
@@ -272,10 +272,10 @@ const AdminBuilders = () => {
                     <option value="file">File Upload</option>
                   </select>
                 </div>
-                <Button variant="ghost" onClick={() => { const updated = [...requestedFields]; updated.splice(idx, 1); setRequestedFields(updated); }} className="text-red-500 p-2"><Trash2 size={16}/></Button>
+                <Button variant="ghost" onClick={() => { const updated = [...requestedFields]; updated.splice(idx, 1); setRequestedFields(updated); }} className="text-red-500 p-2"><Trash2 size={16} /></Button>
               </div>
             ))}
-            <Button type="button" variant="outline" onClick={() => setRequestedFields([...requestedFields, { fieldName: '', type: 'text' }])} className="w-full mt-2 text-sm"><Plus className="w-4 h-4 mr-2"/> Add Another Field</Button>
+            <Button type="button" variant="outline" onClick={() => setRequestedFields([...requestedFields, { fieldName: '', type: 'text' }])} className="w-full mt-2 text-sm"><Plus className="w-4 h-4 mr-2" /> Add Another Field</Button>
             <Button onClick={submitChangeRequest} className="w-full bg-orange-600 hover:bg-orange-700 text-white mt-6">Send Request to Builder</Button>
           </div>
         </DialogContent>

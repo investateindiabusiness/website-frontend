@@ -1,9 +1,8 @@
 import React, { useState, useEffect } from 'react';
-import { Dialog, DialogContent } from '@/components/ui/dialog';
+import { Dialog, DialogContent, DialogTitle } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { Textarea } from '@/components/ui/textarea';
 import { Checkbox } from '@/components/ui/checkbox';
 import { toast } from '@/hooks/use-toast';
 import { CheckCircle, ChevronRight, Loader2, TrendingUp, Building, UserCheck } from 'lucide-react';
@@ -26,7 +25,7 @@ const RegisterDialog = ({ isOpen, onOpenChange, onLoginClick, initialData = {} }
     fullName: '', contactNumber: '',
     investorType: '', // Direct Investor or Financial advisor
     investmentRangeMin: '', investmentRangeMax: '',
-    address: '', country: 'India', state: '', city: '', zip: '', 
+    address: '', country: 'India', state: '', city: '', zip: '',
     termsAccepted: false
   });
 
@@ -35,7 +34,7 @@ const RegisterDialog = ({ isOpen, onOpenChange, onLoginClick, initialData = {} }
     companyName: '', yearsOfExperience: '',
     contactNameAndDesignation: '', contactPersonPhone: '',
     ongoingProjects: '', projectsCompleted: '',
-    address: '', country: 'India', state: '', city: '', zip: '', 
+    address: '', country: 'India', state: '', city: '', zip: '',
     termsAccepted: false
   });
 
@@ -53,30 +52,30 @@ const RegisterDialog = ({ isOpen, onOpenChange, onLoginClick, initialData = {} }
         .then(res => res.json())
         .then(data => { if (!data.error) setCountries(data.data || []); })
         .catch(console.error);
-        
+
       loadStatesForCountry('India');
 
       if (initialData?.userType) {
         setUserType(initialData.userType);
       }
-      
+
       if (initialData?.skipStep1 && initialData?.uid) {
         setUserId(initialData.uid);
         setAuthData(prev => ({ ...prev, email: initialData.email || '' }));
-        
+
         if (initialData.userType === 'investor') {
           setInvestorData(prev => ({ ...prev, fullName: initialData.name || '' }));
         }
-        
-        setStep(2); 
+
+        setStep(2);
       } else {
-        setStep(1); 
+        setStep(1);
       }
 
     } else {
       timer = setTimeout(() => {
-        setSubmitted(false); 
-        setUserId(null); 
+        setSubmitted(false);
+        setUserId(null);
         setStep(1);
         setAuthData({ email: '', password: '', confirmPassword: '' });
       }, 300);
@@ -183,14 +182,14 @@ const RegisterDialog = ({ isOpen, onOpenChange, onLoginClick, initialData = {} }
 
     try {
       setLoading(true);
-      
+
       // Route to correct Form 1 API based on userType
       if (userType === 'investor') {
         await submitInvestorForm1(userId, currentData);
       } else {
         await submitBuilderForm1(userId, currentData);
       }
-      
+
       setSubmitted(true);
     } catch (error) {
       toast({ title: 'Error', description: error.message || 'Failed to submit.', variant: 'destructive' });
@@ -205,11 +204,11 @@ const RegisterDialog = ({ isOpen, onOpenChange, onLoginClick, initialData = {} }
 
     setUserId(userData.uid);
     setAuthData({ ...authData, email: userData.email });
-    
+
     if (userType === 'investor') {
       setInvestorData(prev => ({ ...prev, fullName: userData.name || '' }));
     }
-    
+
     toast({ title: "Authentication Successful", description: "Please complete your details." });
     setStep(2);
   };
@@ -237,6 +236,7 @@ const RegisterDialog = ({ isOpen, onOpenChange, onLoginClick, initialData = {} }
   return (
     <Dialog open={isOpen} onOpenChange={onOpenChange}>
       <DialogContent className="max-w-5xl p-0 overflow-hidden bg-white border-none shadow-2xl flex max-h-[90vh]">
+        <DialogTitle style={{display : 'none'}}></DialogTitle>
         <div className="hidden lg:flex lg:w-2/5 relative bg-[#1c1c1c] flex-col justify-center px-10 text-white overflow-hidden transition-all duration-500">
           <div className="absolute inset-0 bg-gradient-to-br from-[#ffffff6b] via-[#1c1c1c] to-[#000] z-0"></div>
           <div className="absolute inset-0 opacity-15 z-0 transition-all duration-700" style={{ backgroundImage: `url('${content[userType].image}')`, backgroundSize: 'cover', backgroundBlendMode: 'overlay' }} />
@@ -325,7 +325,7 @@ const RegisterDialog = ({ isOpen, onOpenChange, onLoginClick, initialData = {} }
 
                 {step === 2 && (
                   <form onSubmit={handleProfileSubmit} className="space-y-8 animate-in fade-in">
-                    
+
                     {/* INVESTOR FORM 1 */}
                     {userType === 'investor' && (
                       <div className="space-y-8">
@@ -365,7 +365,7 @@ const RegisterDialog = ({ isOpen, onOpenChange, onLoginClick, initialData = {} }
                               </select>
                             </div>
                             <div><Label className={labelStyle}>{addressLabels.zip}</Label><Input value={investorData.zip} onChange={(e) => setInvestorData({ ...investorData, zip: e.target.value.replace(/\D/g, '') })} className={inputStyle} /></div>
-                            
+
                             <div>
                               <Label className={labelStyle}>{addressLabels.state} *</Label>
                               <select required className={selectStyle} value={investorData.state} onChange={handleStateChange} disabled={!investorData.country}>
@@ -396,7 +396,6 @@ const RegisterDialog = ({ isOpen, onOpenChange, onLoginClick, initialData = {} }
 
                           <div className={sectionContainerStyle}>
                             <Label className="text-base font-bold text-gray-900 border-b pb-2 block">Contact Details</Label>
-                            <p className="text-xs text-orange-600 mb-2 font-medium">Note: These details will not be shared with investors.</p>
                             <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
                               <div><Label className={labelStyle}>Name & Designation *</Label><Input required value={builderData.contactNameAndDesignation} onChange={(e) => setBuilderData({ ...builderData, contactNameAndDesignation: e.target.value })} placeholder="e.g. John Doe - CEO" className={inputStyle} /></div>
                               <div><Label className={labelStyle}>Phone Number *</Label><Input required value={builderData.contactPersonPhone} onChange={(e) => setBuilderData({ ...builderData, contactPersonPhone: e.target.value.replace(/\D/g, '') })} placeholder="Contact number" className={inputStyle} /></div>

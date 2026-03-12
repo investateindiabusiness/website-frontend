@@ -1,40 +1,16 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import {
-  Building2,
-  MapPin,
-  Search,
-  Heart,
-  Phone,
-  ArrowUpRight,
-  TrendingUp,
-  Shield,
-  CheckCircle,
-  Filter,
-  Star,
-  Trophy,
-  PieChart as PieChartIcon,
-  BarChart as BarChartIcon
-} from 'lucide-react';
-import {
-  AreaChart,
-  Area,
-  XAxis,
-  YAxis,
-  CartesianGrid,
-  Tooltip,
-  ResponsiveContainer,
-  BarChart,
-  Bar
-} from 'recharts';
+import { Building2, MapPin, Search, TrendingUp, Shield, CheckCircle, Filter, PieChart as PieChartIcon, BarChart as BarChartIcon, Loader2 } from 'lucide-react';
+import { AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, BarChart, Bar } from 'recharts';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
+import { useAuth } from '@/hooks/AuthContext';
+import { apiRequest } from '@/api';
+import { toast } from '@/hooks/use-toast';
 
-// --- MOCK DATA ---
-
-// Chart Data: Market Trends
+// --- MOCK DATA FOR CHARTS & INQUIRIES (Kept Unchanged) ---
 const MARKET_TRENDS = [
   { name: 'Q1', price: 1.2, yield: 4.5 },
   { name: 'Q2', price: 1.4, yield: 4.8 },
@@ -44,60 +20,20 @@ const MARKET_TRENDS = [
   { name: 'Q2', price: 2.4, yield: 6.2 },
 ];
 
-const AVAILABLE_PROPERTIES = [
-  {
-    id: 1,
-    title: 'Imperial Heights',
-    builder: 'Apex Constructors',
-    location: 'Mumbai, Maharashtra',
-    type: '3 BHK Luxury',
-    price: '₹2.5 Cr',
-    yield: '+12% proj. ROI',
-    image: 'https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?w=800&q=80',
-    status: 'Ready to Move',
-    isShortlisted: true
-  },
-  {
-    id: 3,
-    title: 'Cyber City Lofts',
-    builder: 'City Developers',
-    location: 'Hyderabad, Telangana',
-    type: '2 BHK Smart Home',
-    price: '₹1.1 Cr',
-    yield: 'Rental: ₹45k/mo',
-    image: 'https://images.unsplash.com/photo-1493663284031-b7e3aefcae8e?w=800&q=80',
-    status: 'Under Construction',
-    isShortlisted: true
-  },
-  {
-    id: 4,
-    title: 'Coastal Breeze',
-    builder: 'Coastal Living',
-    location: 'Kochi, Kerala',
-    type: '4 BHK Sea View',
-    price: '₹3.2 Cr',
-    yield: 'Premium Segment',
-    image: 'https://images.unsplash.com/photo-1512917774080-9991f1c4c750?w=800&q=80',
-    status: 'Ready to Move',
-    isShortlisted: false
-  },
-];
-
 const MY_INQUIRIES = [
   { id: 101, property: 'Serene Meadows', builder: 'Eco Homes', date: '2 days ago', status: 'Pending', message: 'Waiting for brochure' },
   { id: 102, property: 'Imperial Heights', builder: 'Apex Constructors', date: '1 week ago', status: 'Replied', message: 'Builder sent floor plans' },
 ];
 
 const PORTFOLIO_GROWTH = [
-  { year: '2020', invested: 1.0, value: 1.0 },
-  { year: '2021', invested: 1.0, value: 1.15 },
-  { year: '2022', invested: 1.5, value: 1.8 },
-  { year: '2023', invested: 1.5, value: 2.1 },
-  { year: '2024', invested: 2.2, value: 3.4 }, // Current
-  { year: '2025', invested: 2.2, value: 3.9 }, // Projected
+  { year: '2020', invested: 0, value: 0 },
+  { year: '2021', invested: 0, value: 0 },
+  { year: '2022', invested: 0, value: 0 },
+  { year: '2023', invested: 0, value: 0 },
+  { year: '2024', invested: 0, value: 0 },
+  { year: '2025', invested: 0, value: 0 },
 ];
 
-// Chart 2: Top Performing Indian Cities (Appreciation + Rental)
 const CITY_PERFORMANCE = [
   { city: 'Hyderabad', appreciation: 12.5, rental: 3.8 },
   { city: 'Bangalore', appreciation: 9.2, rental: 5.1 },
@@ -107,9 +43,57 @@ const CITY_PERFORMANCE = [
 
 const InvestorDashboard = () => {
   const navigate = useNavigate();
-  const [properties, setProperties] = useState(AVAILABLE_PROPERTIES);
+  const { user } = useAuth();
+
+  // Real Database States
+  const [properties, setProperties] = useState([]);
+  const [loadingProjects, setLoadingProjects] = useState(true);
+
   const [searchQuery, setSearchQuery] = useState('');
   const [locationFilter, setLocationFilter] = useState('All');
+
+  // --- FETCH REAL VERIFIED PROJECTS ---
+  useEffect(() => {
+    const loadProjects = async () => {
+      try {
+        setLoadingProjects(true);
+        // Using role=investor ensures the backend only sends approved projects
+        const data = await apiRequest('/api/projects?role=investor', {
+          method: 'GET',
+          headers: { 'Authorization': `Bearer ${user?.token}` }
+        });
+
+        // Map the backend DB structure to match the UI expectations
+        const mappedData = data
+          .filter(p => p.status === 'approved') // Extra safety check
+          .map(p => ({
+            id: p.id,
+            title: p.projectName || 'Unnamed Project',
+            builder: p.builderName || 'Unknown Builder',
+            location: p.projectLocation || 'Location TBA',
+            type: p.projectType || 'Property',
+            price: p.sellingPrice || 'Price on Request',
+            yield: p.expectedRent ? `Rent: ${p.expectedRent}` : 'High ROI',
+            // Default image if builder didn't upload one
+            image: (p.projectImages && p.projectImages.length > 0 && p.projectImages[0].startsWith('http'))
+              ? p.projectImages[0]
+              : 'https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?w=800&q=80',
+            status: p.currentConstructionStatus || 'Active',
+            isShortlisted: false
+          }));
+
+        setProperties(mappedData);
+      } catch (error) {
+        toast({ title: "Error", description: "Failed to load properties.", variant: "destructive" });
+      } finally {
+        setLoadingProjects(false);
+      }
+    };
+
+    if (user) {
+      loadProjects();
+    }
+  }, [user]);
 
   // Toggle Shortlist
   const toggleShortlist = (id) => {
@@ -126,7 +110,8 @@ const InvestorDashboard = () => {
     return matchesSearch && matchesLocation;
   });
 
-  const locations = ['All', ...new Set(AVAILABLE_PROPERTIES.map(p => p.location.split(',')[0]))];
+  // Dynamically generate location tabs based on actual available properties
+  const locations = ['All', ...new Set(properties.map(p => p.location.split(',')[0].trim()))];
 
   return (
     <div className="min-h-screen bg-gray-50 flex flex-col font-sans overflow-x-hidden">
@@ -136,7 +121,6 @@ const InvestorDashboard = () => {
 
         {/* --- HERO SECTION --- */}
         <div className="bg-gradient-to-r from-[#0b264f] to-[#1a4b8c] text-white pt-6 pb-12 md:pt-10 md:pb-16 px-4 md:px-8 rounded-b-[2rem] md:rounded-b-[2.5rem] shadow-xl relative overflow-hidden">
-          {/* Background Decorative Circles */}
           <div className="absolute top-0 right-0 w-64 h-64 bg-white/5 rounded-full -mr-16 -mt-16 blur-3xl pointer-events-none"></div>
           <div className="absolute bottom-0 left-0 w-40 h-40 bg-white/5 rounded-full -ml-10 -mb-10 blur-2xl pointer-events-none"></div>
 
@@ -146,7 +130,8 @@ const InvestorDashboard = () => {
                 <Badge className="bg-orange-500/20 text-orange-200 hover:bg-orange-500/30 border-none mb-2 backdrop-blur-sm">
                   <Shield className="w-3 h-3 mr-1" /> Verified Investor
                 </Badge>
-                <h1 className="text-2xl md:text-3xl lg:text-4xl font-bold mb-1">Welcome, Rahul</h1>
+                {/* Dynamically display user's name */}
+                <h1 className="text-2xl md:text-3xl lg:text-4xl font-bold mb-1">Welcome, {user?.name || 'Investor'}</h1>
                 <p className="text-blue-100 text-sm md:text-base opacity-90">Manage your portfolio and discover India's top realty.</p>
               </div>
 
@@ -168,10 +153,10 @@ const InvestorDashboard = () => {
         {/* --- MAIN CONTAINER --- */}
         <div className="container mx-auto px-4 -mt-6 md:-mt-8 relative z-20 space-y-6 md:space-y-10">
 
-          {/* --- NEW SECTION: ANALYTICS CHARTS --- */}
+          {/* --- ANALYTICS CHARTS --- */}
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
 
-            {/* Chart 1: Portfolio Growth (ROI Focus) */}
+            {/* Chart 1: Portfolio Growth */}
             <div className="lg:col-span-2 bg-white rounded-3xl p-5 shadow-sm border border-gray-100">
               <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-6 gap-2 sm:gap-0">
                 <div>
@@ -208,7 +193,7 @@ const InvestorDashboard = () => {
               </div>
             </div>
 
-            {/* Chart 2: High Growth Hubs (Decision Making) */}
+            {/* Chart 2: High Growth Hubs */}
             <div className="bg-white rounded-3xl p-5 shadow-sm border border-gray-100 flex flex-col">
               <h3 className="font-bold text-gray-900 text-lg mb-2 flex items-center">
                 <BarChartIcon className="w-5 h-5 mr-2 text-orange-500" /> High Growth Hubs
@@ -260,15 +245,14 @@ const InvestorDashboard = () => {
             <div className="mb-4 flex flex-col md:flex-row md:items-center justify-between gap-4">
               <h2 className="text-xl font-bold text-gray-900">Explore Opportunities</h2>
 
-              {/* Location Pills - Scrollable */}
               <div className="flex overflow-x-auto gap-2 pb-2 md:pb-0 scrollbar-hide -mx-4 px-4 md:mx-0 md:px-0">
                 {locations.map((loc) => (
                   <button
                     key={loc}
                     onClick={() => setLocationFilter(loc)}
                     className={`px-4 py-2 rounded-full text-sm font-medium whitespace-nowrap transition-all border ${locationFilter === loc
-                        ? 'bg-[#0b264f] text-white border-[#0b264f] shadow-md'
-                        : 'bg-white text-gray-600 border-gray-200 hover:bg-gray-50'
+                      ? 'bg-[#0b264f] text-white border-[#0b264f] shadow-md'
+                      : 'bg-white text-gray-600 border-gray-200 hover:bg-gray-50'
                       }`}
                   >
                     {loc}
@@ -277,80 +261,96 @@ const InvestorDashboard = () => {
               </div>
             </div>
 
-            {/* Property Grid */}
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8">
-              {filteredProperties.map((property) => (
-                <div key={property.id} className="group bg-white rounded-3xl overflow-hidden shadow-sm hover:shadow-xl transition-all duration-300 border border-gray-100 flex flex-col h-full">
-
-                  {/* Image Section */}
-                  <div className="relative aspect-[4/3] overflow-hidden">
-                    <img
-                      src={property.image}
-                      alt={property.title}
-                      className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
-                    />
-
-                    {/* Overlay Gradient */}
-                    <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-transparent opacity-80"></div>
-
-                    {/* Top Badges */}
-                    <div className="absolute top-4 left-4 flex gap-2">
-                      <Badge className="bg-white/90 backdrop-blur text-[#0b264f] border-none font-bold shadow-sm">
-                        {property.status}
-                      </Badge>
-                    </div>
-
-                    {/* Bottom Info on Image */}
-                    <div className="absolute bottom-4 left-4 right-4 text-white">
-                      <p className="text-xs font-medium bg-green-500/90 backdrop-blur-md inline-flex items-center px-2 py-0.5 rounded-md mb-2">
-                        <TrendingUp className="w-3 h-3 mr-1" />
-                        {property.yield}
-                      </p>
-                      <h3 className="text-xl font-bold leading-tight drop-shadow-md">{property.price}</h3>
-                    </div>
-                  </div>
-
-                  {/* Content Section */}
-                  <div className="p-4 md:p-5 flex flex-col flex-grow">
-                    <div className="flex-grow">
-                      <div className="flex justify-between items-start mb-1">
-                        <h3 className="font-bold text-gray-900 text-lg line-clamp-1">{property.title}</h3>
-                      </div>
-                      <p className="text-sm text-gray-500 mb-3 flex items-center">
-                        <Building2 className="w-3.5 h-3.5 mr-1" /> {property.builder}
-                      </p>
-
-                      <div className="flex items-center text-xs text-gray-500 bg-gray-50 p-2.5 rounded-xl mb-4 w-full">
-                        <MapPin className="w-4 h-4 mr-2 text-orange-500 flex-shrink-0" />
-                        <span className="truncate">{property.location}</span>
-                      </div>
-
-                      <div className="flex flex-wrap gap-2 mb-4">
-                        <span className="text-xs font-semibold px-2 py-1 bg-blue-50 text-blue-700 rounded-md border border-blue-100">
-                          {property.type}
-                        </span>
-                        <span className="text-xs font-semibold px-2 py-1 bg-green-50 text-green-700 rounded-md border border-green-100 flex items-center">
-                          <CheckCircle className="w-3 h-3 mr-1" /> RERA
-                        </span>
-                      </div>
-                    </div>
-
-                    {/* Actions */}
-                    <div className="grid grid-cols-5 gap-2 mt-auto">
-                      <Button
-                        onClick={() => navigate('/partner/register')}
-                        className="col-span-5 bg-[#0b264f] hover:bg-blue-900 text-white rounded-xl h-10 md:h-12 shadow-lg hover:shadow-blue-900/20"
-                      >
-                        <Phone className="w-4 h-4 mr-2" /> Contact
-                      </Button>
-                    </div>
-                  </div>
+            {/* Property Loading / Grid */}
+            {loadingProjects ? (
+              <div className="flex flex-col items-center justify-center py-20 text-center">
+                <Loader2 className="w-10 h-10 text-orange-600 animate-spin mb-4" />
+                <p className="text-gray-500">Loading verified projects...</p>
+              </div>
+            ) : filteredProperties.length === 0 ? (
+              <div className="flex flex-col items-center justify-center py-20 text-center bg-white rounded-3xl border border-gray-100 shadow-sm">
+                <div className="bg-gray-100 p-6 rounded-full mb-4">
+                  <Filter className="w-10 h-10 text-gray-400" />
                 </div>
-              ))}
-            </div>
+                <h3 className="text-lg font-bold text-gray-900">No Properties Found</h3>
+                <p className="text-gray-500 max-w-xs mx-auto">Try adjusting your search or filters to find what you're looking for.</p>
+                <Button onClick={() => { setSearchQuery(''); setLocationFilter('All'); }} variant="link" className="text-orange-600 font-bold mt-2">
+                  Clear Filters
+                </Button>
+              </div>
+            ) : (
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8">
+                {filteredProperties.map((property) => (
+                  <div key={property.id} className="group bg-white rounded-3xl overflow-hidden shadow-sm hover:shadow-xl transition-all duration-300 border border-gray-100 flex flex-col h-full">
+
+                    {/* Image Section */}
+                    <div className="relative aspect-[4/3] overflow-hidden bg-gray-100">
+                      <img
+                        src={property.image}
+                        alt={property.title}
+                        className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
+                        onError={(e) => { e.target.src = 'https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?w=800&q=80' }} // Fallback if link breaks
+                      />
+
+                      <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-transparent opacity-80"></div>
+
+                      <div className="absolute top-4 left-4 flex gap-2">
+                        <Badge className="bg-white/90 backdrop-blur text-[#0b264f] border-none font-bold shadow-sm">
+                          {property.status}
+                        </Badge>
+                      </div>
+
+                      <div className="absolute bottom-4 left-4 right-4 text-white">
+                        <p className="text-xs font-medium bg-green-500/90 backdrop-blur-md inline-flex items-center px-2 py-0.5 rounded-md mb-2">
+                          <TrendingUp className="w-3 h-3 mr-1" />
+                          {property.yield}
+                        </p>
+                        <h3 className="text-xl font-bold leading-tight drop-shadow-md">{property.price}</h3>
+                      </div>
+                    </div>
+
+                    {/* Content Section */}
+                    <div className="p-4 md:p-5 flex flex-col flex-grow">
+                      <div className="flex-grow">
+                        <div className="flex justify-between items-start mb-1">
+                          <h3 className="font-bold text-gray-900 text-lg line-clamp-1">{property.title}</h3>
+                        </div>
+                        <p className="text-sm text-gray-500 mb-3 flex items-center">
+                          <Building2 className="w-3.5 h-3.5 mr-1" /> {property.builder}
+                        </p>
+
+                        <div className="flex items-center text-xs text-gray-500 bg-gray-50 p-2.5 rounded-xl mb-4 w-full">
+                          <MapPin className="w-4 h-4 mr-2 text-orange-500 flex-shrink-0" />
+                          <span className="truncate">{property.location}</span>
+                        </div>
+
+                        <div className="flex flex-wrap gap-2 mb-4">
+                          <span className="text-xs font-semibold px-2 py-1 bg-blue-50 text-blue-700 rounded-md border border-blue-100">
+                            {property.type}
+                          </span>
+                          <span className="text-xs font-semibold px-2 py-1 bg-green-50 text-green-700 rounded-md border border-green-100 flex items-center">
+                            <CheckCircle className="w-3 h-3 mr-1" /> Verified
+                          </span>
+                        </div>
+                      </div>
+
+                      {/* Actions */}
+                      <div className="grid grid-cols-5 gap-2 mt-auto">
+                        <Button
+                          onClick={() => navigate(`/project/${property.id}`)}
+                          className="col-span-5 bg-[#0b264f] hover:bg-blue-900 text-white rounded-xl h-10 md:h-12 shadow-lg hover:shadow-blue-900/20"
+                        >
+                          View Full Details
+                        </Button>
+                      </div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            )}
           </div>
 
-          <div className="pt-8 pb-4">
+          {/* <div className="pt-8 pb-4">
             <div className="flex items-center justify-between px-1 mb-6">
               <h2 className="text-xl font-bold text-gray-900">Top Rated Developers</h2>
               <button className="text-sm font-semibold text-[#0b264f] hover:underline flex items-center">
@@ -393,7 +393,6 @@ const InvestorDashboard = () => {
               ].map((builder) => (
                 <div key={builder.id} className="group bg-white rounded-3xl overflow-hidden shadow-sm hover:shadow-xl transition-all duration-300 border border-gray-100 relative">
 
-                  {/* Cover Image */}
                   <div className="h-32 w-full overflow-hidden relative">
                     <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent z-10"></div>
                     <img
@@ -403,9 +402,7 @@ const InvestorDashboard = () => {
                     />
                   </div>
 
-                  {/* Profile Content */}
                   <div className="px-5 md:px-6 pb-6 relative z-20">
-                    {/* Logo - Floating up */}
                     <div className="flex justify-between items-end -mt-10 mb-3">
                       <div className="h-20 w-20 rounded-2xl border-4 border-white bg-white shadow-md overflow-hidden">
                         <img src={builder.logo} alt={builder.name} className="w-full h-full object-cover" />
@@ -416,7 +413,6 @@ const InvestorDashboard = () => {
                       </div>
                     </div>
 
-                    {/* Text Info */}
                     <div>
                       <h3 className="text-lg font-bold text-gray-900 leading-tight">{builder.name}</h3>
                       <p className="text-xs text-gray-500 flex items-center mt-1">
@@ -424,7 +420,6 @@ const InvestorDashboard = () => {
                       </p>
                     </div>
 
-                    {/* Stats Grid */}
                     <div className="grid grid-cols-2 gap-3 mt-5 mb-5">
                       <div className="bg-gray-50 p-3 rounded-xl border border-gray-100 text-center group-hover:bg-blue-50/50 transition-colors">
                         <p className="text-xs text-gray-400 uppercase tracking-wider font-bold">Projects</p>
@@ -440,7 +435,6 @@ const InvestorDashboard = () => {
                       </div>
                     </div>
 
-                    {/* Action Button */}
                     <Button className="w-full bg-white text-[#0b264f] border border-gray-200 hover:bg-[#0b264f] hover:text-white hover:border-[#0b264f] rounded-xl transition-all shadow-sm">
                       View Profile
                     </Button>
@@ -448,25 +442,7 @@ const InvestorDashboard = () => {
                 </div>
               ))}
             </div>
-          </div>
-
-          {/* Empty State */}
-          {filteredProperties.length === 0 && (
-            <div className="flex flex-col items-center justify-center py-20 text-center">
-              <div className="bg-gray-100 p-6 rounded-full mb-4">
-                <Filter className="w-10 h-10 text-gray-400" />
-              </div>
-              <h3 className="text-lg font-bold text-gray-900">No Properties Found</h3>
-              <p className="text-gray-500 max-w-xs mx-auto">Try adjusting your search or filters to find what you're looking for.</p>
-              <Button
-                onClick={() => { setSearchQuery(''); setLocationFilter('All'); }}
-                variant="link"
-                className="text-orange-600 font-bold mt-2"
-              >
-                Clear Filters
-              </Button>
-            </div>
-          )}
+          </div> */}
 
         </div>
       </div>

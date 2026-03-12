@@ -13,22 +13,23 @@ import ProjectDetail from './pages/ProjectDetail';
 
 // Investor Pages
 import InvestorDashboard from './pages/Investor/InvestorDashboard';
+import InvestorProperties from './pages/Investor/InvestorProperties';
 import Projects from './pages/Investor/Projects';
 
 // Builder Pages
 import BuilderDashboard from './pages/Partner/BuilderDashboard';
+import ProjectManager from './pages/Partner/ProjectManager';
 
 // Admin Pages
 import AdminLogin from './pages/Admin/AdminLogin';
 import AdminDashboard from './pages/Admin/AdminDashboard';
 import AdminProjects from './pages/Admin/AdminProjects';
 import AdminBuilders from './pages/Admin/AdminBuilders';
-import AdminInquiries from './pages/Admin/AdminInquiries';
+import AdminInvestors from './pages/Admin/AdminInvestors';
+import AdminLeads from './pages/Admin/AdminLeads';
 
 import ScrollToTop from './hooks/ScrollToTop';
 import NotFound from './pages/NotFound';
-import ProjectManager from './pages/Partner/ProjectManager';
-import AdminInvestors from './pages/Admin/AdminInvestors';
 
 const ProtectedRoute = ({ children, role }) => {
   const { user } = useAuth();
@@ -55,6 +56,7 @@ function App() {
 
           {/* Investor Routes */}
           <Route path="/dashboard" element={<ProtectedRoute role="investor"><InvestorDashboard /></ProtectedRoute>} />
+          <Route path="/properties" element={<ProtectedRoute role="investor"><InvestorProperties /></ProtectedRoute>} />
           <Route path="/projects" element={<ProtectedRoute role="investor"><Projects /></ProtectedRoute>} />
 
           {/* Partner Routes */}
@@ -67,7 +69,7 @@ function App() {
           <Route path="/admin/projects" element={<ProtectedRoute role="admin"><AdminProjects /></ProtectedRoute>} />
           <Route path="/admin/builders" element={<ProtectedRoute role="admin"><AdminBuilders /></ProtectedRoute>} />
           <Route path="/admin/investors" element={<ProtectedRoute role="admin"><AdminInvestors /></ProtectedRoute>} />
-          <Route path="/admin/inquiries" element={<ProtectedRoute role="admin"><AdminInquiries /></ProtectedRoute>} />
+          <Route path="/admin/leads" element={<ProtectedRoute role="admin"><AdminLeads /></ProtectedRoute>} />
 
           
           <Route path="*" element={<NotFound />} />

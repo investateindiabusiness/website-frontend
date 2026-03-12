@@ -3,6 +3,7 @@ import Header from '../components/Header';
 import Footer from '../components/Footer';
 import RegisterDialog from '../components/RegisterDialog';
 import LoginDialog from '../components/LoginDialog';
+import ContinueOnboardingDialog from '../components/ContinueOnboardingDialog'; 
 
 const Index = () => {
 
@@ -15,25 +16,16 @@ const Index = () => {
     const [isLoginOpen, setIsLoginOpen] = useState(false);
     const [isRegisterOpen, setIsRegisterOpen] = useState(false);
     const [hasAutoOpened, setHasAutoOpened] = useState(false);
-    const [registerInitialData, setRegisterInitialData] = useState({});
     const [isContinueOpen, setIsContinueOpen] = useState(false);
-  const [continueData, setContinueData] = useState({});
-
-    const openLogin = () => {
-        setIsRegisterOpen(false);
-        setTimeout(() => setIsLoginOpen(true), 150);
-    };
-
-    const openRegister = (data = {}) => {
-        setRegisterInitialData(data);
-        setIsLoginOpen(false);
-        setTimeout(() => setIsRegisterOpen(true), 150);
-    };
+    const [continueData, setContinueData] = useState({});
+    const [dialogData, setDialogData] = useState({});
+    const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+    const [open, setOpen] = useState(false);
 
     useEffect(() => {
         const handleScroll = () => {
             if (!hasAutoOpened && window.scrollY > 600) {
-                setIsLoginOpen(true); // Open Login instead of Register
+                setIsLoginOpen(true); 
                 setHasAutoOpened(true);
             }
         };
@@ -43,7 +35,6 @@ const Index = () => {
     }, [hasAutoOpened]);
 
     const toggleFaq = (index) => {
-        // If clicking the already open FAQ, close it. Otherwise, open the new one.
         setActiveFaq(activeFaq === index ? null : index);
     };
 
@@ -120,11 +111,11 @@ const Index = () => {
     const activeStepData = currentSteps[activeStepIndex];
 
     const stepImages = [
-        "https://images.unsplash.com/photo-1554224155-8d04cb21cd6c?q=80&w=1000&auto=format&fit=crop", // Step 1
-        "https://images.unsplash.com/photo-1560518883-ce09059eeffa?q=80&w=1000&auto=format&fit=crop", // Step 2
-        "https://images.unsplash.com/photo-1460925895917-afdab827c52f?q=80&w=1000&auto=format&fit=crop", // Step 3
-        "https://images.unsplash.com/photo-1573164713988-8665fc963095?q=80&w=1000&auto=format&fit=crop", // Step 4
-        "https://images.unsplash.com/photo-1521791136064-7986c2920216?q=80&w=1000&auto=format&fit=crop"  // Step 5
+        "https://images.unsplash.com/photo-1554224155-8d04cb21cd6c?q=80&w=1000&auto=format&fit=crop", 
+        "https://images.unsplash.com/photo-1560518883-ce09059eeffa?q=80&w=1000&auto=format&fit=crop", 
+        "https://images.unsplash.com/photo-1460925895917-afdab827c52f?q=80&w=1000&auto=format&fit=crop", 
+        "https://images.unsplash.com/photo-1573164713988-8665fc963095?q=80&w=1000&auto=format&fit=crop", 
+        "https://images.unsplash.com/photo-1521791136064-7986c2920216?q=80&w=1000&auto=format&fit=crop"  
     ];
 
     const teamMembers = [
@@ -143,7 +134,7 @@ const Index = () => {
         {
             name: "[Founder Name 3]",
             role: "Co-Founder",
-            image: "https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?q=80&w=800&auto=format&fit=crop", // Added 3rd professional image
+            image: "https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?q=80&w=800&auto=format&fit=crop",
             linkedin: "#"
         }
     ];
@@ -241,10 +232,46 @@ const Index = () => {
         setIsContinueOpen(true);
     };
 
+    const handleSwitchToRegister = (dataPayload) => {
+        setIsLoginOpen(false);
+        if (typeof dataPayload === 'string') {
+            setDialogData({ userType: dataPayload });
+        } else if (dataPayload) {
+            setDialogData(dataPayload);
+        }
+        setIsRegisterOpen(true);
+    };
+
+    const openLogin = (role) => {
+        if (typeof role === 'string') setDialogData({ userType: role }); 
+        setIsRegisterOpen(false);
+        setIsContinueOpen(false);
+        setIsLoginOpen(true);
+        setMobileMenuOpen(false);
+        setOpen(false);
+    };
+
+    const openRegister = (role) => {
+        if (typeof role === 'string') setDialogData({ userType: role }); 
+        setIsLoginOpen(false);
+        setIsContinueOpen(false);
+        setIsRegisterOpen(true);
+        setMobileMenuOpen(false);
+        setOpen(false);
+    };
+
+    const handleAuthClick = (action, role) => {
+        if (action === 'login') {
+            openLogin(role);
+        } else {
+            openRegister(role);
+        }
+    };
+
     return (
         <>
             <div className="w-full bg-white overflow-x-hidden">
-                <Header transparent={true} /> {/* Transparent Header for Dark Hero */}
+                <Header transparent={true} /> 
 
                 {/* --- SECTION 1: HERO (Dark, 100vh) --- */}
                 <section className="fullscreen-section hero-section">
@@ -259,11 +286,11 @@ const Index = () => {
                                 Helping NRI investors discover credible Indian real estate opportunities through standardized information, verified builders, and transparent disclosures.
                             </p>
                             <div className="hero-cta-group">
-                                {/* UPDATE: You can also hook these buttons up to open the dialog manually */}
-                                <button onClick={() => setIsRegisterOpen(true)} className="btn btn-primary">
+                                {/* FIX 1: Send 'investor' role instead of just opening dialog */}
+                                <button onClick={() => handleAuthClick('register', 'investor')} className="btn btn-primary">
                                     Explore Opportunities
                                 </button>
-                                <a href="#properties" className="btn btn-secondary">Become a Partner</a>
+                                <a className="btn btn-secondary" onClick={() => handleAuthClick('register', 'builder')} >Become a Partner</a>
                             </div>
                         </div>
                     </div>
@@ -292,7 +319,6 @@ const Index = () => {
                                                 <div className="card-number">{item.id}</div>
                                                 <h3 className="card-title">{item.title}</h3>
                                             </div>
-                                            {/* Mobile-only chevron icon */}
                                             <div className="mobile-toggle-icon">
                                                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                                                     <polyline points="6 9 12 15 18 9"></polyline>
@@ -300,7 +326,6 @@ const Index = () => {
                                             </div>
                                         </div>
 
-                                        {/* Smooth Accordion Body */}
                                         <div className="card-text-wrapper">
                                             <div className="card-text-inner">
                                                 <p className="card-text">{item.text}</p>
@@ -339,18 +364,13 @@ const Index = () => {
                 {/* --- SECTION 4: BENEFITS (Light, 100vh) --- */}
                 <section className="fullscreen-section section-light" id="benefits">
                     <div className="container">
-
-                        {/* 1. FIXED HEADER */}
                         <div className="section-heading">
                             <h2 className="section-title">What You Get as an <span className='text-highlight'> Investate Investor</span></h2>
                             <p className="section-subtitle">Imagine having all builder credentials, RERA approvals, and payment terms in one place—no hunting across emails, no contradictory information. That's what we provide.</p>
                         </div>
 
-                        {/* 2. SCROLLABLE BODY */}
                         <div className="section-scrollable-body">
                             <div className="benefits-wrapper">
-
-                                {/* Left Image (Vertical & Sticky) */}
                                 <div className="benefits-image-clean">
                                     <img
                                         src="https://images.unsplash.com/photo-1519501025264-65ba15a82390?q=80&w=2064&auto=format&fit=crop"
@@ -358,7 +378,6 @@ const Index = () => {
                                     />
                                 </div>
 
-                                {/* Right List (Scrollable) */}
                                 <div className="benefits-list-clean">
                                     {benefitsList.map((benefit, index) => (
                                         <div className="benefit-row" key={index}>
@@ -370,17 +389,14 @@ const Index = () => {
                                         </div>
                                     ))}
                                 </div>
-
                             </div>
                         </div>
-
                     </div>
                 </section>
 
+                {/* --- SECTION 5: BUILDERS --- */}
                 <section className="fullscreen-section section-white" id="builders">
                     <div className="container">
-
-                        {/* 1. FIXED HEADER */}
                         <div className="section-heading">
                             <h2 className="section-title">
                                 A Serious Platform for <span className="text-highlight">Serious Developers</span>
@@ -390,11 +406,8 @@ const Index = () => {
                             </p>
                         </div>
 
-                        {/* 2. SCROLLABLE BODY */}
                         <div className="section-scrollable-body">
                             <div className="builders-wrapper">
-
-                                {/* Left Side: Long List (Will Scroll) */}
                                 <div className="builders-list-container">
                                     {builderBenefits.map((benefit, i) => (
                                         <div className="builder-row" key={i}>
@@ -411,7 +424,6 @@ const Index = () => {
                                     ))}
                                 </div>
 
-                                {/* Right Side: Visual & Closing Box (Sticky Position) */}
                                 <div className="builders-visual-side">
                                     <div className="builders-image-clean">
                                         <img
@@ -423,18 +435,14 @@ const Index = () => {
                                         <p className='text-highlight'>We work with builders who value transparency, disclosures, and long-term brand trust over short-term visibility or volume-based marketing.</p>
                                     </div>
                                 </div>
-
                             </div>
                         </div>
-
                     </div>
                 </section>
 
-                {/* --- SECTION 6: THE PROCESS (Premium Dashboard Split-View) --- */}
+                {/* --- SECTION 6: THE PROCESS --- */}
                 <section className="fullscreen-section section-light" id="process">
                     <div className="container">
-
-                        {/* 1. FIXED HEADER */}
                         <div className="section-heading">
                             <h2 className="section-title">
                                 From Discovery to Documentation — <span className="text-highlight">We're With You</span>
@@ -444,7 +452,6 @@ const Index = () => {
                             </p>
                         </div>
 
-                        {/* 2. THE TAB TOGGLE (Moved OUTSIDE the sidebar to fix mobile!) */}
                         <div className="process-tabs-container">
                             <div className="process-tabs">
                                 <button
@@ -462,11 +469,8 @@ const Index = () => {
                             </div>
                         </div>
 
-                        {/* 3. DASHBOARD INTERFACE */}
                         <div className="section-scrollable-body">
                             <div className="dashboard-wrapper fade-in" key={activeProcessTab}>
-
-                                {/* Left Side: Horizontal Swipe Menu on Mobile */}
                                 <div className="dashboard-sidebar">
                                     {currentSteps.map((step, index) => (
                                         <button
@@ -480,11 +484,8 @@ const Index = () => {
                                     ))}
                                 </div>
 
-                                {/* Right Side: The Presentation Window */}
                                 <div className="dashboard-display-window">
-                                    {/* The key forces a smooth re-render animation when the step changes */}
                                     <div className="display-content fade-in-up" key={`${activeProcessTab}-${activeStepIndex}`}>
-
                                         <div className="display-image-box">
                                             <img
                                                 src={stepImages[activeStepIndex]}
@@ -498,21 +499,16 @@ const Index = () => {
                                             <h3 className="display-title">{activeStepData.title}</h3>
                                             <p className="display-desc">{activeStepData.text}</p>
                                         </div>
-
                                     </div>
                                 </div>
-
                             </div>
                         </div>
-
                     </div>
                 </section>
 
-                {/* --- SECTION 7: TRUST & SECURITY (White, 100vh) --- */}
+                {/* --- SECTION 7: TRUST & SECURITY --- */}
                 <section className="fullscreen-section section-white" id="trust">
                     <div className="container">
-
-                        {/* 1. FIXED HEADER */}
                         <div className="section-heading">
                             <h2 className="section-title">
                                 Why You Can Trust <span className="text-highlight">Investate India</span>
@@ -522,34 +518,27 @@ const Index = () => {
                             </p>
                         </div>
 
-                        {/* 2. SCROLLABLE BODY */}
                         <div className="section-scrollable-body">
                             <div className="trust-grid-wrapper">
                                 {trustFeatures.map((feature) => (
                                     <div className="trust-card" key={feature.id}>
-
                                         <div className="trust-icon-badge">
                                             {feature.icon}
                                         </div>
-
                                         <div className="trust-content">
                                             <h3 className="trust-title">{feature.title}</h3>
                                             <p className="trust-desc">{feature.desc}</p>
                                         </div>
-
                                     </div>
                                 ))}
                             </div>
                         </div>
-
                     </div>
                 </section>
 
-                {/* --- SECTION 8: THE TEAM (Founder Story & Profiles) --- */}
+                {/* --- SECTION 8: THE TEAM --- */}
                 <section className="fullscreen-section section-light" id="team">
                     <div className="container">
-
-                        {/* 1. FIXED HEADER */}
                         <div className="section-heading">
                             <h2 className="section-title">
                                 Meet the Team Behind <span className="text-highlight">Your Trust</span>
@@ -559,15 +548,11 @@ const Index = () => {
                             </p>
                         </div>
 
-                        {/* 2. SCROLLABLE BODY */}
                         <div className="section-scrollable-body">
                             <div className="team-wrapper fade-in">
-
-                                {/* Left Side: The Founding Story */}
                                 <div className="team-story-side">
                                     <div className="story-badge">Our Story</div>
                                     <h3 className="story-headline">Built on transparency. Driven by experience.</h3>
-
                                     <div className="story-text-content">
                                         <p>
                                             Investate India is founded by <strong>[Founder Name 1]</strong> and <strong>[Founder Name 2]</strong>, professionals with over <strong>[X]</strong> years of combined experience in Indian real estate, NRI investment facilitation, and compliance management.
@@ -576,14 +561,11 @@ const Index = () => {
                                             They are joined by <strong>[Founder Name 3]</strong>, who brings specialized expertise in cross-border structuring and legal frameworks to complete the platform's secure ecosystem.
                                         </p>
                                     </div>
-
-                                    {/* Premium Blockquote for the Mission */}
                                     <blockquote className="mission-quote">
                                         "Our mission is simple: Bridge the trust gap through information clarity."
                                     </blockquote>
                                 </div>
 
-                                {/* Right Side: Founder Profile Cards (Pyramid Grid) */}
                                 <div className="team-cards-side">
                                     {teamMembers.map((member, index) => (
                                         <div className="team-profile-card" key={index}>
@@ -603,18 +585,14 @@ const Index = () => {
                                         </div>
                                     ))}
                                 </div>
-
                             </div>
                         </div>
-
                     </div>
                 </section>
 
-                {/* --- SECTION 9: EARLY ACCESS & CTA (Light Theme with Dark Card) --- */}
+                {/* --- SECTION 9: EARLY ACCESS & CTA --- */}
                 <section className="fullscreen-section section-white" id="early-access">
                     <div className="container">
-
-                        {/* 1. FIXED HEADER */}
                         <div className="section-heading">
                             <h2 className="section-title">
                                 We're Building <span className="text-highlight">Something Different</span>
@@ -624,18 +602,14 @@ const Index = () => {
                             </p>
                         </div>
 
-                        {/* 2. SCROLLABLE BODY */}
                         <div className="section-scrollable-body">
                             <div className="early-access-wrapper">
-
-                                {/* Left Side: Current Focus */}
                                 <div className="focus-content-side">
                                     <h3 className="focus-heading">Our Current Focus</h3>
                                     <div className="focus-list">
                                         {currentFocusList.map((item, index) => (
                                             <div className="focus-list-item" key={index}>
                                                 <div className="focus-check">
-                                                    {/* Glowing pulse animation applied to this SVG via CSS */}
                                                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round">
                                                         <polyline points="20 6 9 17 4 12"></polyline>
                                                     </svg>
@@ -646,13 +620,10 @@ const Index = () => {
                                     </div>
                                 </div>
 
-                                {/* Right Side: Premium Dark CTA Card */}
                                 <div className="cta-card-side">
                                     <div className="cta-card-inner">
                                         <div className="cta-badge">Waitlist Open</div>
                                         <h3 className="cta-title">Join Our Investor Network</h3>
-
-                                        {/* Mock Email Capture Form */}
                                         <div className="cta-form-group">
                                             <input
                                                 type="email"
@@ -665,18 +636,14 @@ const Index = () => {
                                         </div>
                                     </div>
                                 </div>
-
                             </div>
                         </div>
-
                     </div>
                 </section>
 
-                {/* --- SECTION 10: FAQ (White Theme, Accordion) --- */}
+                {/* --- SECTION 10: FAQ --- */}
                 <section className="fullscreen-section section-light" id="faq">
                     <div className="container">
-
-                        {/* 1. FIXED HEADER */}
                         <div className="section-heading">
                             <h2 className="section-title">
                                 Your Questions, <span className="text-highlight">Answered</span>
@@ -686,12 +653,10 @@ const Index = () => {
                             </p>
                         </div>
 
-                        {/* 2. SCROLLABLE BODY */}
                         <div className="section-scrollable-body">
                             <div className="faq-wrapper">
                                 {faqsList.map((faq, index) => {
                                     const isOpen = activeFaq === index;
-
                                     return (
                                         <div className={`faq-item ${isOpen ? 'open' : ''}`} key={index}>
                                             <button
@@ -700,15 +665,12 @@ const Index = () => {
                                             >
                                                 <span className="faq-question-text">{faq.question}</span>
                                                 <div className="faq-icon-wrapper">
-                                                    {/* Plus/Minus Icon that animates based on state */}
                                                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="faq-icon">
                                                         <line x1="12" y1="5" x2="12" y2="19" className="icon-vertical"></line>
                                                         <line x1="5" y1="12" x2="19" y2="12"></line>
                                                     </svg>
                                                 </div>
                                             </button>
-
-                                            {/* Modern CSS Grid trick for smooth height animation */}
                                             <div className="faq-answer-container">
                                                 <div className="faq-answer-inner">
                                                     <p>{faq.answer}</p>
@@ -719,15 +681,12 @@ const Index = () => {
                                 })}
                             </div>
                         </div>
-
                     </div>
                 </section>
 
-                {/* --- SECTION 11: FINAL CTA (Dual Desktop, Tabbed Mobile) --- */}
+                {/* --- SECTION 11: FINAL CTA --- */}
                 <section className="fullscreen-section section-white" id="contact">
                     <div className="container">
-
-                        {/* 1. FIXED HEADER */}
                         <div className="section-heading">
                             <h2 className="section-title">
                                 Ready to Explore or <span className="text-highlight">Partner?</span>
@@ -737,7 +696,6 @@ const Index = () => {
                             </p>
                         </div>
 
-                        {/* 2. THE TAB TOGGLE (Hidden on Desktop, Visible on Mobile) */}
                         <div className="process-tabs-container mobile-cta-tabs">
                             <div className="process-tabs">
                                 <button
@@ -755,11 +713,9 @@ const Index = () => {
                             </div>
                         </div>
 
-                        {/* 3. SCROLLABLE BODY */}
                         <div className="section-scrollable-body">
                             <div className="final-cta-wrapper fade-in">
-
-                                {/* Card 1: For Investors */}
+                                
                                 <div className={`final-cta-card investor-card ${activeCtaTab === 'investors' ? 'mobile-active' : 'mobile-hidden'}`}>
                                     <div className="cta-card-icon">
                                         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
@@ -772,15 +728,15 @@ const Index = () => {
                                     <p className="cta-card-text">
                                         Interested in transparent, verified real estate opportunities in India?
                                     </p>
-                                    <a href="#register" className="btn btn-primary cta-action-btn">
+                                    {/* FIX 2: Change href to button and wire it up */}
+                                    <button onClick={() => handleAuthClick('register', 'investor')} className="btn btn-primary cta-action-btn">
                                         Register Your Interest
-                                    </a>
+                                    </button>
                                     <p className="cta-card-footer">
                                         We'll keep you updated as we onboard builders and projects.
                                     </p>
                                 </div>
 
-                                {/* Card 2: For Builders */}
                                 <div className={`final-cta-card builder-card ${activeCtaTab === 'builders' ? 'mobile-active' : 'mobile-hidden'}`}>
                                     <div className="cta-card-icon">
                                         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
@@ -801,9 +757,10 @@ const Index = () => {
                                     <p className="cta-card-text">
                                         Want to reach serious investors through a credible, structured platform?
                                     </p>
-                                    <a href="#apply" className="btn btn-outline cta-action-btn">
+                                    {/* FIX 3: Change href to button and wire it up */}
+                                    <button onClick={() => handleAuthClick('register', 'builder')} className="btn btn-outline cta-action-btn">
                                         Apply for Partnership
-                                    </a>
+                                    </button>
                                     <p className="cta-card-footer">
                                         Let's discuss how we can showcase your projects.
                                     </p>
@@ -811,7 +768,6 @@ const Index = () => {
 
                             </div>
                         </div>
-
                     </div>
                 </section>
 
@@ -821,15 +777,26 @@ const Index = () => {
             <LoginDialog
                 isOpen={isLoginOpen}
                 onOpenChange={setIsLoginOpen}
-                onSwitchToRegister={openRegister}
+                onSwitchToRegister={handleSwitchToRegister}
                 onContinueOnboarding={handleContinueOnboarding}
+                initialData={dialogData}
             />
 
             <RegisterDialog
                 isOpen={isRegisterOpen}
                 onOpenChange={setIsRegisterOpen}
-                onLoginClick={openLogin}
-                initialData={registerInitialData}
+                onLoginClick={() => {
+                    setIsRegisterOpen(false);
+                    setIsLoginOpen(true);
+                }}
+                initialData={dialogData}
+            />
+
+            {/* FIX 4: Add ContinueOnboardingDialog to ensure the flow doesn't break from this page */}
+            <ContinueOnboardingDialog
+                isOpen={isContinueOpen}
+                onOpenChange={setIsContinueOpen}
+                data={continueData}
             />
         </>
     );

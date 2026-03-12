@@ -32,9 +32,9 @@ export const apiRequest = async (endpoint, options = {}) => {
       // --- THE FIX IS HERE ---
       // If the backend sent ANY custom error flag, return the whole object to the component
       if (data.error) {
-        return Promise.reject(data); 
+        return Promise.reject(data);
       }
-      
+
       // Otherwise, throw a standard text error
       throw new Error(data.message || 'Something went wrong');
     }
@@ -186,4 +186,101 @@ export const verifyBuilderStatus = async (uid, isVerified, token) => {
   }
 
   return response.json();
+};
+
+export const fetchBuilderProjects = async (builderId) => {
+  return apiRequest(`/api/projects?builderId=${builderId}`, { method: 'GET' });
+};
+
+export const createProject = async (projectData) => {
+  return apiRequest('/api/projects', {
+    method: 'POST',
+    body: JSON.stringify(projectData),
+  });
+};
+
+export const updateProject = async (projectId, projectData) => {
+  return apiRequest(`/api/projects/${projectId}`, {
+    method: 'PATCH',
+    body: JSON.stringify(projectData),
+  });
+};
+
+export const deleteProject = async (projectId) => {
+  return apiRequest(`/api/projects/${projectId}`, {
+    method: 'DELETE',
+  });
+};
+
+// Fetch ALL projects (for Admin)
+export const fetchAllProjects = async (token) => {
+  // Since Admin needs to see all projects regardless of builderId, we call the base route
+  return apiRequest('/api/projects', {
+    method: 'GET',
+    headers: { 'Authorization': `Bearer ${token}` }
+  });
+};
+
+export const verifyProjectStatus = async (projectId, isVerified) => {
+  return apiRequest(`/api/projects/verify/${projectId}`, {
+    method: 'POST',
+    body: JSON.stringify({ status: isVerified ? 'approved' : 'rejected' })
+  });
+};
+
+export const requestProjectChanges = async (projectId, fieldsRequested) => {
+  return apiRequest(`/api/projects/request-changes/${projectId}`, {
+    method: 'POST',
+    body: JSON.stringify({ fieldsRequested })
+  });
+};
+
+export const submitProjectChanges = async (projectId, data) => {
+  return apiRequest(`/api/projects/submit-changes/${projectId}`, {
+    method: 'POST',
+    body: JSON.stringify(data),
+  });
+};
+
+export const appealProjectRejection = async (projectId, appealReason) => {
+  return apiRequest(`/api/projects/appeal-rejection/${projectId}`, {
+    method: 'POST',
+    body: JSON.stringify({ appealReason }),
+  });
+};
+
+export const verifyProjectEdits = async (projectId, isApproved) => {
+  return apiRequest(`/api/projects/verify/${projectId}`, {
+    method: 'POST',
+    body: JSON.stringify({ action: isApproved ? 'approve_edits' : 'reject_edits' })
+  });
+};
+
+
+export const submitProjectLead = async (projectId, payload) => {
+  return apiRequest(`/api/projects/${projectId}/lead`, {
+    method: 'POST',
+    body: JSON.stringify(payload),
+  });
+};
+
+export const checkLeadStatus = async (projectId, uid) => {
+  return apiRequest(`/api/projects/${projectId}/lead-status?uid=${uid}`);
+};
+
+export const fetchAllLeads = async () => {
+  return apiRequest('/api/leads');
+};
+
+export const updateLead = async (leadId, data) => {
+  return apiRequest(`/api/leads/${leadId}`, {
+    method: 'PATCH',
+    body: JSON.stringify(data),
+  });
+};
+
+export const deleteLead = async (leadId) => {
+  return apiRequest(`/api/leads/${leadId}`, {
+    method: 'DELETE',
+  });
 };

@@ -1,16 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { 
-  Building2, 
-  FileText, 
-  Users, 
-  Eye, 
-  MessageSquare, 
-  Search, 
-  Bell, 
-  Menu,
-  LogOut
-} from 'lucide-react';
+import { Building2, FileText, Users, Eye, MessageSquare, } from 'lucide-react';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';

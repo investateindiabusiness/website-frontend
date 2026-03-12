@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Dialog, DialogContent } from '@/components/ui/dialog';
+import { Dialog, DialogContent, DialogTitle } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -139,6 +139,7 @@ const LoginDialog = ({ isOpen, onOpenChange, onSwitchToRegister, initialData = {
   return (
     <Dialog open={isOpen} onOpenChange={onOpenChange}>
       <DialogContent className="max-w-5xl p-0 overflow-hidden bg-white border-none shadow-2xl flex max-h-[90vh]">
+        <DialogTitle style={{display : 'none'}}></DialogTitle>
         <div className="hidden lg:flex lg:w-2/5 relative bg-[#1c1c1c] flex-col justify-center px-10 text-white overflow-hidden transition-all duration-500">
           <div className="absolute inset-0 bg-gradient-to-br from-[#ffffff6b] via-[#1c1c1c] to-[#000] z-0"></div>
           <div className="absolute inset-0 opacity-20 z-0 transition-all duration-700" style={{ backgroundImage: `url('${activeContent.image}')`, backgroundSize: 'cover', backgroundBlendMode: 'overlay' }} />
@@ -224,7 +225,7 @@ const LoginDialog = ({ isOpen, onOpenChange, onSwitchToRegister, initialData = {
                 <div className="space-y-1">
                   <div className="flex items-center justify-between">
                     <Label htmlFor="password" className={labelStyle}>Password</Label>
-                    <button type="button" className="text-xs font-medium text-orange-600 hover:text-orange-700 hover:underline">Forgot password?</button>
+                    {/* <button type="button" className="text-xs font-medium text-orange-600 hover:text-orange-700 hover:underline">Forgot password?</button> */}
                   </div>
                   <Input id="password" type="password" placeholder="••••••••" value={formData.password} onChange={(e) => { setFormData({ ...formData, password: e.target.value }); setError(null); }} required className={inputStyle} />
                 </div>

@@ -1,9 +1,8 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { Button } from './ui/button';
 import { Menu, X, LogOut, UserCircle } from 'lucide-react';
 import { useAuth } from '@/hooks/AuthContext';
-
 import LoginDialog from '@/components/LoginDialog';
 import ContinueOnboardingDialog from '@/components/ContinueOnboardingDialog';
 import RegisterDialog from '@/components/RegisterDialog';
@@ -17,10 +16,10 @@ const Header = ({ transparent = false }) => {
 
   const [isLoginOpen, setIsLoginOpen] = useState(false);
   const [isRegisterOpen, setIsRegisterOpen] = useState(false);
-  const [dialogData, setDialogData] = useState({});
   const [isContinueOpen, setIsContinueOpen] = useState(false);
+  
+  const [dialogData, setDialogData] = useState({}); // Single source of truth for Dialogs
   const [continueData, setContinueData] = useState({});
-  const [authInitialData, setAuthInitialData] = useState({});
 
   const handleLogout = () => {
     logout();
@@ -29,19 +28,19 @@ const Header = ({ transparent = false }) => {
     navigate('/');
   };
 
-  // Modified to accept role from dialog internal switches
   const openLogin = (role) => {
-    if (typeof role === 'string') setAuthInitialData({ userType: role });
+    if (typeof role === 'string') setDialogData({ userType: role }); // Use dialogData
     setIsRegisterOpen(false);
+    setIsContinueOpen(false);
     setIsLoginOpen(true);
     setMobileMenuOpen(false);
     setOpen(false);
   };
 
-  // Modified to accept role from dialog internal switches
   const openRegister = (role) => {
-    if (typeof role === 'string') setAuthInitialData({ userType: role });
+    if (typeof role === 'string') setDialogData({ userType: role }); // Use dialogData
     setIsLoginOpen(false);
+    setIsContinueOpen(false);
     setIsRegisterOpen(true);
     setMobileMenuOpen(false);
     setOpen(false);
@@ -49,20 +48,15 @@ const Header = ({ transparent = false }) => {
 
   const handleSwitchToRegister = (dataPayload) => {
     setIsLoginOpen(false);
-
-    // If dataPayload is just a string (like 'investor'), format it.
-    // If it's the full object from our login error, save the whole thing!
     if (typeof dataPayload === 'string') {
       setDialogData({ userType: dataPayload });
     } else if (dataPayload) {
-      setDialogData(dataPayload); // <-- This saves the uid and skipStep1 flag!
+      setDialogData(dataPayload);
     }
-
     setIsRegisterOpen(true);
   };
 
   const handleAuthClick = (action, role) => {
-    setAuthInitialData({ userType: role });
     if (action === 'login') {
       openLogin(role);
     } else {
@@ -75,12 +69,11 @@ const Header = ({ transparent = false }) => {
       return [
         { label: 'Home', path: '/' },
         { label: 'About Us', path: '/about-us' },
-        { label: 'Insights', path: '/' },
         { label: 'Contact Us', path: '/contact-us' },
       ];
     }
     switch (user.role) {
-      case 'admin': return [{ label: 'Dashboard', path: '/admin/dashboard' }, { label: 'Builders', path: '/admin/builders' }, { label: 'Investors', path: '/admin/investors' }];
+      case 'admin': return [{ label: 'Dashboard', path: '/admin/dashboard' }, { label: 'Builders', path: '/admin/builders' }, { label: 'Investors', path: '/admin/investors' }, { label: 'Projects', path: '/admin/projects' }, { label: 'Leads', path: '/admin/leads' }];
       case 'builder': return [{ label: 'Dashboard', path: '/partner/dashboard' }, { label: 'Projects', path: '/partner/projects' }];
       case 'investor': return [{ label: 'Dashboard', path: '/dashboard' }, { label: 'Properties', path: '/properties' }];
       default: return [{ label: 'Home', path: '/' }];
@@ -90,17 +83,10 @@ const Header = ({ transparent = false }) => {
   const navLinks = getNavLinks();
 
   const handleContinueOnboarding = (dataPayload) => {
-    console.log("[3. HEADER] handleContinueOnboarding triggered with payload:", dataPayload);
     setIsLoginOpen(false);
     setContinueData(dataPayload);
     setIsContinueOpen(true);
-    console.log("[3. HEADER] State updated: isContinueOpen set to true.");
   };
-
-  // Add this temporary useEffect to watch the state change
-  useEffect(() => {
-    console.log("[4. HEADER STATE MONITOR] isContinueOpen:", isContinueOpen, "| continueData:", continueData);
-  }, [isContinueOpen, continueData]);
 
   return (
     <>
@@ -133,7 +119,7 @@ const Header = ({ transparent = false }) => {
                     <>
                       <div className="px-4 py-2 border-b border-gray-700 mb-2">
                         <p className="text-xs text-gray-500 uppercase">Signed in as</p>
-                        <p className="text-sm font-semibold text-white truncate">{user.email}</p>
+                        <p className="text-sm font-semibold text-white truncate">{user.name || user.email}</p>
                       </div>
                       <button onClick={handleLogout} className="w-full text-left px-4 py-2 text-red-400 hover:bg-gray-800 hover:text-red-300 flex items-center gap-2">
                         <LogOut className="w-4 h-4" /> Logout
