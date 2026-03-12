@@ -48,7 +48,7 @@ const ProjectManager = () => {
 
     useEffect(() => {
         if (user && user.uid) loadProjects();
-    }, [user]);
+    }, [user, loadProjects]);
 
     const loadProjects = async () => {
         try {
