@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { Plus, Search, Edit, Trash2, Eye, ArrowLeft, Save, Building2, MapPin, FileText, ShieldAlert, CheckCircle, FileWarning, Loader2, Clock, XCircle, RefreshCw, LayoutDashboard, Layers, Landmark, IndianRupee, ImagePlus, X } from 'lucide-react';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
@@ -46,18 +46,26 @@ const ProjectManager = () => {
     const [isAppealModalOpen, setIsAppealModalOpen] = useState(false);
     const [appealReason, setAppealReason] = useState('');
 
-    useEffect(() => {
-        if (user && user.uid) loadProjects();
-    }, [user, loadProjects]);
-
-    const loadProjects = async () => {
+    const loadProjects = useCallback(async () => {
+        if (!user?.uid) return;
+    
         try {
             const data = await fetchBuilderProjects(user.uid);
             setProjects(data);
         } catch (error) {
-            toast({ title: "Error loading projects", description: error.message, variant: "destructive" });
+            toast({
+                title: "Error loading projects",
+                description: error.message,
+                variant: "destructive"
+            });
         }
-    };
+    }, [user]);
+    
+    useEffect(() => {
+        if (user?.uid) {
+            loadProjects();
+        }
+    }, [user, loadProjects]);
 
     const handleInputChange = (e) => {
         const { name, value } = e.target;
