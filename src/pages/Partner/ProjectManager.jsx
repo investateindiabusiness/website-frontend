@@ -12,6 +12,10 @@ import { toast } from '@/hooks/use-toast';
 import { useAuth } from '@/hooks/AuthContext';
 import { fetchBuilderProjects, createProject, updateProject, deleteProject, submitProjectChanges, appealProjectRejection } from '@/api';
 
+// --- FIREBASE IMPORTS FOR UPLOADING ---
+import { getStorage, ref, uploadBytes, getDownloadURL } from 'firebase/storage';
+import { getFirestore, doc, collection as firestoreCollection } from 'firebase/firestore';
+
 const initialFormState = {
     projectName: '', builderName: '', projectOverview: '', projectLocation: '', projectType: 'Residential',
     totalLandArea: '', totalBuiltUpArea: '', totalUnits: '', currentConstructionStatus: '', expectedCompletionDate: '',
@@ -48,23 +52,16 @@ const ProjectManager = () => {
 
     const loadProjects = useCallback(async () => {
         if (!user?.uid) return;
-    
         try {
             const data = await fetchBuilderProjects(user.uid);
             setProjects(data);
         } catch (error) {
-            toast({
-                title: "Error loading projects",
-                description: error.message,
-                variant: "destructive"
-            });
+            toast({ title: "Error loading projects", description: error.message, variant: "destructive" });
         }
     }, [user]);
     
     useEffect(() => {
-        if (user?.uid) {
-            loadProjects();
-        }
+        if (user?.uid) loadProjects();
     }, [user, loadProjects]);
 
     const handleInputChange = (e) => {
@@ -124,17 +121,58 @@ const ProjectManager = () => {
         setIsLoading(true);
 
         try {
+            const db = getFirestore();
+            const storage = getStorage();
+
+            // 1. Determine Project ID to use as the Storage Folder Name
+            // If new, generate an ID early. If editing, use existing.
+            const projectId = isEditing ? currentProject.id : doc(firestoreCollection(db, 'projects')).id;
+
+            // 2. Upload Display Images
+            const uploadedImages = [];
+            for (const img of (currentProject.projectImages || [])) {
+                if (img instanceof File) {
+                    // Clean filename and append timestamp to prevent overwrites
+                    const safeName = img.name.replace(/[^a-zA-Z0-9.\-]/g, '_');
+                    const fileRef = ref(storage, `${projectId}/ProjectDisplayImages/${Date.now()}_${safeName}`);
+                    
+                    await uploadBytes(fileRef, img);
+                    const url = await getDownloadURL(fileRef);
+                    uploadedImages.push(url);
+                } else {
+                    uploadedImages.push(img); // Keep existing string URLs
+                }
+            }
+
+            // 3. Upload Documents
+            const uploadedDocs = [];
+            for (const docObj of (currentProject.projectDocuments || [])) {
+                if (docObj.file instanceof File) {
+                    const safeName = docObj.file.name.replace(/[^a-zA-Z0-9.\-]/g, '_');
+                    const fileRef = ref(storage, `${projectId}/ProjectDocuments/${Date.now()}_${safeName}`);
+                    
+                    await uploadBytes(fileRef, docObj.file);
+                    const url = await getDownloadURL(fileRef);
+                    
+                    uploadedDocs.push({ 
+                        docName: docObj.docName, 
+                        fileName: docObj.file.name, 
+                        url: url 
+                    });
+                } else {
+                    uploadedDocs.push(docObj); // Keep existing doc objects
+                }
+            }
+
+            // 4. Send structured JSON Payload to Backend
             const payload = {
                 ...currentProject,
+                id: projectId, // Send the ID we generated
                 builderId: user.uid,
                 updatedBy: user.email || user.name,
-                projectImages: (currentProject.projectImages || []).map(img => img.name || img),
-                projectDocuments: (currentProject.projectDocuments || []).map(doc => ({ docName: doc.docName, fileName: doc.fileName }))
+                projectImages: uploadedImages,
+                projectDocuments: uploadedDocs
             };
-
-            console.log("--- [FRONTEND] SUBMITTING PROJECT ---");
-            console.log("Is Editing?", isEditing);
-            console.log("Payload:", payload);
 
             if (isEditing) {
                 await updateProject(currentProject.id, payload);
@@ -145,11 +183,9 @@ const ProjectManager = () => {
                 toast({ title: "Success", description: "Project created. Submitted for admin verification." });
             }
 
-            console.log("--- [FRONTEND] RE-FETCHING PROJECTS ---");
             loadProjects();
             setView('list');
         } catch (error) {
-            console.error("! FRONTEND SUBMIT ERROR:", error);
             toast({ title: "Error", description: error.message || "Failed to save project.", variant: "destructive" });
         } finally {
             setIsLoading(false);
@@ -193,7 +229,6 @@ const ProjectManager = () => {
     };
 
     const handleEdit = (project) => {
-        // If they have pending edits, load those into the form instead of the live data!
         const dataToLoad = project.hasPendingEdits
             ? { ...project, ...project.pendingEdits }
             : project;
@@ -209,7 +244,6 @@ const ProjectManager = () => {
     };
 
     const handleViewDetails = (project) => {
-        // Fix: Merge initialFormState to ensure legacy DB entries don't crash the arrays
         setCurrentProject({
             ...initialFormState,
             ...project
@@ -338,7 +372,7 @@ const ProjectManager = () => {
                             <h2 className="text-xl md:text-2xl font-bold text-gray-900">{isEditing ? 'Edit Project' : 'New Project Listing'}</h2>
                             <Button type="submit" disabled={isLoading} className="bg-[#0b264f] hover:bg-[#1a4b8c] text-white">
                                 {isLoading ? <Loader2 className="w-4 h-4 mr-2 animate-spin" /> : <Save className="w-4 h-4 md:mr-2" />}
-                                <span className="hidden md:inline">{isLoading ? 'Saving...' : 'Save & Submit'}</span>
+                                <span className="hidden md:inline">{isLoading ? 'Uploading & Saving...' : 'Save & Submit'}</span>
                             </Button>
                         </div>
 
@@ -471,7 +505,7 @@ const ProjectManager = () => {
                         </div>
 
                         {/* Section 5: Media & Documents */}
-                        {/* <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-12">
+                        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-12">
 
                             <div className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden flex flex-col">
                                 <div className="bg-blue-50/50 border-b border-gray-100 px-6 py-4">
@@ -491,7 +525,9 @@ const ProjectManager = () => {
                                             <div className="max-h-40 overflow-y-auto pr-2 custom-scrollbar space-y-2">
                                                 {currentProject.projectImages.map((file, idx) => (
                                                     <div key={idx} className="flex items-center justify-between bg-gray-50 p-2 rounded-lg border border-gray-100 text-sm">
-                                                        <span className="truncate pr-4 text-gray-700">{file.name || file}</span>
+                                                        <span className="truncate pr-4 text-gray-700">
+                                                            {typeof file === 'string' ? "Uploaded Image" : file.name}
+                                                        </span>
                                                         <button type="button" onClick={() => removeImage(idx)} className="text-gray-400 hover:text-red-500 p-1"><X className="w-4 h-4" /></button>
                                                     </div>
                                                 ))}
@@ -525,9 +561,16 @@ const ProjectManager = () => {
                                                     </div>
                                                     <div className="space-y-3">
                                                         <Input placeholder="Document Name (e.g. Floor Plan)" value={doc.docName} onChange={(e) => updateDocumentName(idx, e.target.value)} className="bg-gray-50 h-9 text-sm border-gray-200" />
-                                                        <div className="flex items-center gap-2">
-                                                            <Input type="file" onChange={(e) => handleDocumentFileUpload(idx, e)} className="text-xs cursor-pointer file:mr-4 file:py-1 file:px-3 file:rounded-md file:border-0 file:text-xs file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100" />
-                                                        </div>
+                                                        
+                                                        {doc.url && !doc.file ? (
+                                                            <div className="text-xs font-medium text-green-600 bg-green-50 p-2 rounded-md border border-green-100 flex items-center">
+                                                                <CheckCircle className="w-3 h-3 mr-1" /> File Uploaded
+                                                            </div>
+                                                        ) : (
+                                                            <div className="flex items-center gap-2">
+                                                                <Input type="file" onChange={(e) => handleDocumentFileUpload(idx, e)} className="text-xs cursor-pointer file:mr-4 file:py-1 file:px-3 file:rounded-md file:border-0 file:text-xs file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100" />
+                                                            </div>
+                                                        )}
                                                     </div>
                                                 </div>
                                             ))}
@@ -536,7 +579,7 @@ const ProjectManager = () => {
                                 </div>
                             </div>
 
-                        </div> */}
+                        </div>
 
                     </form>
                 )}

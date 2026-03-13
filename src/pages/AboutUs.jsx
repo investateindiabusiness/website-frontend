@@ -225,9 +225,9 @@ const AboutUs = () => {
                     {/* Founder 1 */}
                     <div className="text-center group">
                       <div className="w-28 h-28 md:w-32 md:h-32 mx-auto rounded-full mb-4 overflow-hidden border-4 border-white shadow-md transition-transform duration-300 group-hover:scale-105">
-                        <img src="https://randomuser.me/api/portraits/men/32.jpg" alt="Pankaj Kumar Gupta" className="w-full h-full object-cover" />
+                        <img src="https://randomuser.me/api/portraits/men/32.jpg" alt="Pankaj Gupta" className="w-full h-full object-cover" />
                       </div>
-                      <h3 className="font-bold text-lg text-gray-900 leading-tight">Pankaj Kumar<br />Gupta</h3>
+                      <h3 className="font-bold text-lg text-gray-900 leading-tight">Pankaj <br />Gupta</h3>
                       <p className="text-white text-xs font-bold tracking-widest uppercase mt-2">Partner</p>
                     </div>
 
@@ -246,7 +246,12 @@ const AboutUs = () => {
                 <div className="lg:w-3/5 p-4 md:p-6 flex flex-col justify-center">
                   <div className="w-12 h-1 bg-orange-500 mb-6 rounded-full"></div>
                   <p className="text-gray-600 leading-relaxed text-[1.05rem]">
-                    We are a group of entrepreneurs united by a shared commitment to excellence and value creation across industries. <strong className="text-gray-900">Pankaj Kumar Gupta</strong> brings deep expertise in jewellery and real estate — leading Murari Cap Pvt. Ltd. in uncut diamond wholesale, founding Avik Jewels as an integrated natural and lab-grown diamond jewellery brand, and delivering landmark Hyderabad developments through Swandurga Construction LLP and Istana Realtors, including the completed Dev Istana luxury villa project and the upcoming Vann Istana farm estate. <strong className="text-gray-900">Atish Agarwal</strong> extends this vision across a dynamic multi-sector portfolio — spanning textile wholesale via Swastik Tex Hub, retail through S3-Mart, jewellery curation at Simone Jewels, men's fashion with Stitch Hub, and real estate advisory through Swastik Realty. Together as partners in Istana Realtors, they combine industry depth, operational expertise, and a forward-thinking approach to deliver trust and long-term value across every venture they lead.
+                    <strong>Pankaj Gupta</strong> has built a strong presence in the diamond and jewellery industry as a manufacturer, wholesaler and retailer through <strong>Murari Cap Pvt. Ltd.</strong> and <strong>Avik Jewels</strong>, operating across the globe. <br /> <br />
+                    He is also well known in the <strong>Hyderabad real estate market</strong> and is a partner in <strong>Swandurga Construction LLP</strong>, which has successfully completed multiple real estate developments, with several projects currently ongoing. <br /> <br />
+                    <strong>Atish Agarwal</strong> is an entrepreneur with diversified business interests across <strong>textiles, retail, fashion, jewellery, and real estate advisory.</strong> Through ventures such as <strong>Swastik Tex Hub India LLP, S3-Mart, Simone Jewels, Stitch Hub, and Swastik Realty,</strong> he has built businesses focused on operational discipline, market understanding, and long-term growth. <br /> <br />
+                    Together, <strong>Atish Agarwal and Pankaj Gupta</strong> are partners in <strong>Istana Realtors.</strong> They have successfully delivered projects such as <strong>Shree IstanaShree Istana</strong> and <strong>Dev Istana,</strong> and are currently developing new projects including <strong>Vann Istana</strong> and <strong>Green Gold Istana.</strong> <br /> <br />
+                    They are widely recognized personalities and established brand names in <strong>Hyderabad across the jewellery, textile, and real estate sectors.</strong>
+
                   </p>
                 </div>
 
@@ -274,7 +279,10 @@ const AboutUs = () => {
                 <div className="lg:w-3/5 p-4 md:p-6 flex flex-col justify-center bg-white">
                   <div className="w-12 h-1 bg-[#0b264f] mb-6 rounded-full"></div>
                   <p className="text-gray-600 leading-relaxed text-[1.05rem]">
-                    <strong className="text-gray-900">Deepak Kavadia</strong> is a New York–based entrepreneur, real estate investor, and globally recognized gemstone authority with over three decades of leadership in Manhattan's Diamond District. As Founder of Nice Gems Inc., Nice Jewels Inc., Prestige Developers LLC, and the NRI Federation — a global 501(c)(3) diaspora platform — he has built a legacy defined by integrity, innovation, and institutional impact. A passionate bridge-builder between India and the United States, Deepak champions diaspora empowerment through landmark initiatives including NRI Bhavan in Rajasthan and the Reborn Wellness healthcare expansion program. Guided by a philosophy of purposeful leadership and global economic integration, he continues to mentor entrepreneurs, engage policymakers, and shape the future of India–USA strategic partnership.
+                    <strong>Deepak Kavadia,</strong> based in <strong>New York,</strong> is an entrepreneur, real estate investor, and internationally respected gemstone authority with over <strong>three decades of leadership in Manhattan’s Diamond District. </strong> <br /> <br />
+                    He is the <strong> Founder of Nice Gems Inc., Nice Jewels Inc., and Prestige Developers LLC. </strong> <br /> <br />
+                    He is also the <strong>Founder and Chairman of the NRI Federation,</strong> a global diaspora platform dedicated to strengthening connections between Non-Resident Indians and opportunities in India. <br /> <br />
+                    Deepak brings an important international perspective to Investate India, helping NRI investors engage with Indian opportunities through a trusted global interface.
                   </p>
                 </div>
 
@@ -283,6 +291,7 @@ const AboutUs = () => {
             </div>
           </div>
         </section>
+
 
         {/* --- CTA Section --- */}
         <section className="py-20 bg-[#0b264f] relative overflow-hidden">

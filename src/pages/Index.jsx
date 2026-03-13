@@ -3,7 +3,7 @@ import Header from '../components/Header';
 import Footer from '../components/Footer';
 import RegisterDialog from '../components/RegisterDialog';
 import LoginDialog from '../components/LoginDialog';
-import ContinueOnboardingDialog from '../components/ContinueOnboardingDialog'; 
+import ContinueOnboardingDialog from '../components/ContinueOnboardingDialog';
 
 const Index = () => {
 
@@ -25,7 +25,7 @@ const Index = () => {
     useEffect(() => {
         const handleScroll = () => {
             if (!hasAutoOpened && window.scrollY > 600) {
-                setIsLoginOpen(true); 
+                setIsLoginOpen(true);
                 setHasAutoOpened(true);
             }
         };
@@ -111,11 +111,11 @@ const Index = () => {
     const activeStepData = currentSteps[activeStepIndex];
 
     const stepImages = [
-        "https://images.unsplash.com/photo-1554224155-8d04cb21cd6c?q=80&w=1000&auto=format&fit=crop", 
-        "https://images.unsplash.com/photo-1560518883-ce09059eeffa?q=80&w=1000&auto=format&fit=crop", 
-        "https://images.unsplash.com/photo-1460925895917-afdab827c52f?q=80&w=1000&auto=format&fit=crop", 
-        "https://images.unsplash.com/photo-1573164713988-8665fc963095?q=80&w=1000&auto=format&fit=crop", 
-        "https://images.unsplash.com/photo-1521791136064-7986c2920216?q=80&w=1000&auto=format&fit=crop"  
+        "https://images.unsplash.com/photo-1554224155-8d04cb21cd6c?q=80&w=1000&auto=format&fit=crop",
+        "https://images.unsplash.com/photo-1560518883-ce09059eeffa?q=80&w=1000&auto=format&fit=crop",
+        "https://images.unsplash.com/photo-1460925895917-afdab827c52f?q=80&w=1000&auto=format&fit=crop",
+        "https://images.unsplash.com/photo-1573164713988-8665fc963095?q=80&w=1000&auto=format&fit=crop",
+        "https://images.unsplash.com/photo-1521791136064-7986c2920216?q=80&w=1000&auto=format&fit=crop"
     ];
 
     const teamMembers = [
@@ -243,7 +243,7 @@ const Index = () => {
     };
 
     const openLogin = (role) => {
-        if (typeof role === 'string') setDialogData({ userType: role }); 
+        if (typeof role === 'string') setDialogData({ userType: role });
         setIsRegisterOpen(false);
         setIsContinueOpen(false);
         setIsLoginOpen(true);
@@ -252,7 +252,7 @@ const Index = () => {
     };
 
     const openRegister = (role) => {
-        if (typeof role === 'string') setDialogData({ userType: role }); 
+        if (typeof role === 'string') setDialogData({ userType: role });
         setIsLoginOpen(false);
         setIsContinueOpen(false);
         setIsRegisterOpen(true);
@@ -271,7 +271,7 @@ const Index = () => {
     return (
         <>
             <div className="w-full bg-white overflow-x-hidden">
-                <Header transparent={true} /> 
+                <Header transparent={true} />
 
                 {/* --- SECTION 1: HERO (Dark, 100vh) --- */}
                 <section className="fullscreen-section hero-section">
@@ -555,14 +555,16 @@ const Index = () => {
                                     <h3 className="story-headline">Built on transparency. Driven by experience.</h3>
                                     <div className="story-text-content">
                                         <p>
-                                            Investate India is founded by <strong>[Founder Name 1]</strong> and <strong>[Founder Name 2]</strong>, professionals with over <strong>[X]</strong> years of combined experience in Indian real estate, NRI investment facilitation, and compliance management.
-                                        </p>
-                                        <p>
-                                            They are joined by <strong>[Founder Name 3]</strong>, who brings specialized expertise in cross-border structuring and legal frameworks to complete the platform's secure ecosystem.
+                                            Investate India is led by entrepreneurs <strong>Pankaj Gupta, Atish Agarwal and Deepak Kavadia,</strong> professionals with extensive experience across real estate, jewellery, retail, and international trade. <br/>
+                                            Pankaj Gupta has built a strong presence in the diamond and jewellery industry through Murari Cap Pvt. Ltd. and Avik Jewels, while also being a well-known name in the Hyderabad real estate market through his partnership in Swandurga Construction LLP, which has delivered multiple successful developments. <br/> 
+                                            Atish Agarwal brings diversified entrepreneurial experience across textiles, retail, fashion, jewellery, and real estate advisory, building ventures focused on operational excellence and market insight.<br/>
+                                            Together, as partners in Istana Realtors, they have delivered projects such as Shree Istana and Dev Istana, with new developments including Vann Istana and Green Gold Istana underway.<br/> 
+                                            They are joined by Deepak Kavadia, a New York-based entrepreneur, real estate investor, and globally respected gemstone authority, Founder of Nice Gems Inc., Nice Jewels Inc., and Prestige Developers LLC, and Founder and Chairman of the NRI Federation, bringing a strong global perspective and trusted international connect for NRI investors.
+
                                         </p>
                                     </div>
                                     <blockquote className="mission-quote">
-                                        "Our mission is simple: Bridge the trust gap through information clarity."
+                                        "Our mission is simple: Bridge the trust gap through transparency, expertise, and global connectivity."
                                     </blockquote>
                                 </div>
 
@@ -715,7 +717,7 @@ const Index = () => {
 
                         <div className="section-scrollable-body">
                             <div className="final-cta-wrapper fade-in">
-                                
+
                                 <div className={`final-cta-card investor-card ${activeCtaTab === 'investors' ? 'mobile-active' : 'mobile-hidden'}`}>
                                     <div className="cta-card-icon">
                                         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">

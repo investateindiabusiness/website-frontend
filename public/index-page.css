@@ -957,7 +957,7 @@
 .profile-image-wrapper {
     position: relative;
     width: 100%;
-    height: 150px; /* Slightly shorter to fit all 3 nicely on desktop */
+    height: 300px; /* Slightly shorter to fit all 3 nicely on desktop */
     overflow: hidden;
     background: var(--color-border);
 }

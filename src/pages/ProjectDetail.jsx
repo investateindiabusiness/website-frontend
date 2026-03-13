@@ -5,16 +5,18 @@ import Footer from '../components/Footer';
 import { Button } from '../components/ui/button';
 import { Card, CardContent } from '../components/ui/card';
 import { Badge } from '../components/ui/badge';
+import { Dialog, DialogContent } from '@/components/ui/dialog';
 import {
   MapPin, Building2, Calendar, FileCheck,
   Ruler, Layers, TrendingUp, Phone,
   AlertCircle, CheckCircle, Mail,
-  Download, ArrowRight, ShieldCheck, Loader2
+  Download, ArrowRight, ShieldCheck, Loader2,
+  ChevronLeft, ChevronRight, X
 } from 'lucide-react';
 import { apiRequest } from '@/api';
 import { useAuth } from '@/hooks/AuthContext';
 import { toast } from '@/hooks/use-toast';
-import { submitProjectLead } from '@/api'; // <-- Import new API function
+import { submitProjectLead } from '@/api';
 
 // Mock data kept for bottom similar properties section
 const SIMILAR_PROPERTIES = [
@@ -37,6 +39,10 @@ const ProjectDetail = () => {
   const [inquiryMessage, setInquiryMessage] = useState('');
   const [isSubmittingLead, setIsSubmittingLead] = useState(false);
 
+  // --- IMAGE GALLERY STATES ---
+  const [isGalleryOpen, setIsGalleryOpen] = useState(false);
+  const [currentImageIndex, setCurrentImageIndex] = useState(0);
+
   useEffect(() => {
     if (user) setIsLoggedIn(true);
 
@@ -45,11 +51,15 @@ const ProjectDetail = () => {
         setLoading(true);
         const data = await apiRequest(`/api/projects/${id}`);
 
-        // <-- NEW: Check if user already submitted a lead
         if (user && user.uid) {
           const leadStatus = await apiRequest(`/api/projects/${id}/lead-status?uid=${user.uid}`);
           setHasSubmittedLead(leadStatus.hasSubmitted);
         }
+
+        // Extract approved documents by cross-referencing URLs
+        const visibleUrls = data.visibleDocuments || [];
+        const allDocs = data.projectDocuments || [];
+        const approvedDocs = allDocs.filter(doc => visibleUrls.includes(doc.url));
 
         setProject({
           id: data.id,
@@ -59,9 +69,13 @@ const ProjectDetail = () => {
           type: data.projectType || 'Residential',
           priceRange: data.sellingPrice || 'Price on Request',
           yield: data.expectedRent ? `Rent: ${data.expectedRent}` : 'High ROI',
-          images: (data.projectImages && data.projectImages.length > 0 && data.projectImages[0].startsWith('http'))
+          
+          images: (data.projectImages && data.projectImages.length > 0)
             ? data.projectImages
             : ['https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?w=1200&q=80'],
+          
+          approvedDocuments: approvedDocs, // <-- NEW: Store approved docs here
+          
           status: data.currentConstructionStatus || 'Active',
           rerId: data.reraRegistrationNumber || 'Pending',
 
@@ -123,7 +137,6 @@ const ProjectDetail = () => {
     }
   };
 
-  // --- HANDLE LEAD GENERATION ---
   const handleInquirySubmit = async (e, isDirectCall = false) => {
     if (e) e.preventDefault();
     if (!user) return toast({ title: "Login Required", description: "Please login to submit an inquiry.", variant: "destructive" });
@@ -139,12 +152,21 @@ const ProjectDetail = () => {
       await submitProjectLead(project.id, payload);
       toast({ title: "Success!", description: "Your request has been sent. An advisor will contact you shortly." });
       setInquiryMessage('');
-      setHasSubmittedLead(true); // <-- NEW: Lock the UI immediately
+      setHasSubmittedLead(true);
     } catch (error) {
       toast({ title: "Error", description: error.message || "Failed to submit request.", variant: "destructive" });
     } finally {
       setIsSubmittingLead(false);
     }
+  };
+
+  // --- GALLERY NAVIGATION ---
+  const nextImage = () => {
+    setCurrentImageIndex((prev) => (prev + 1) % project.images.length);
+  };
+
+  const prevImage = () => {
+    setCurrentImageIndex((prev) => (prev === 0 ? project.images.length - 1 : prev - 1));
   };
 
   if (loading) return <div className="h-screen flex items-center justify-center"><Loader2 className="animate-spin text-[#0b264f] h-10 w-10" /></div>;
@@ -180,10 +202,11 @@ const ProjectDetail = () => {
               </div>
 
               {/* Image Container */}
-              <div className="relative h-[250px] md:h-[400px] rounded-xl overflow-hidden group">
-                <img src={project.images[0]} alt={project.title} className="w-full h-full object-cover" />
+              <div className="relative h-[250px] md:h-[400px] rounded-xl overflow-hidden group cursor-pointer" onClick={() => setIsGalleryOpen(true)}>
+                <img src={project.images[0]} alt={project.title} className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" />
+                <div className="absolute inset-0 bg-black/10 group-hover:bg-transparent transition-colors"></div>
                 <div className="absolute bottom-4 left-4 flex gap-2">
-                  <Button variant="secondary" size="sm" className="bg-white/90 text-black hover:bg-white text-xs h-8">
+                  <Button variant="secondary" size="sm" className="bg-white/90 text-black hover:bg-white text-xs h-8 shadow-md">
                     <Layers className="w-3 h-3 mr-1" /> Photos ({project.images.length})
                   </Button>
                 </div>
@@ -246,15 +269,23 @@ const ProjectDetail = () => {
               )}
             </div>
 
-            {/* 4. DOWNLOADS */}
-            {/* <div className="flex flex-col sm:flex-row gap-4">
-              <Button variant="outline" className="flex-1 bg-white border-gray-300 h-12 w-full text-gray-700 hover:text-[#0b264f] hover:bg-blue-50">
-                <Download className="w-4 h-4 mr-2" /> Download Project Pitchbook
-              </Button>
-              <Button variant="outline" className="flex-1 bg-white border-gray-300 h-12 w-full text-gray-700 hover:text-[#0b264f] hover:bg-blue-50">
-                <FileCheck className="w-4 h-4 mr-2" /> View Legal Clearances
-              </Button>
-            </div> */}
+            {/* 4. DOCUMENTS (ONLY ADMIN APPROVED) */}
+            {project.approvedDocuments && project.approvedDocuments.length > 0 && (
+              <div className="bg-white p-4 md:p-6 rounded-xl shadow-sm border border-gray-200">
+                 <h2 className="text-lg font-bold text-gray-800 mb-4 flex items-center">
+                    <FileCheck className="w-5 h-5 mr-2 text-[#0b264f]"/> Official Documents
+                 </h2>
+                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                   {project.approvedDocuments.map((doc, idx) => (
+                     <a key={idx} href={doc.url} target="_blank" rel="noreferrer" className="flex items-center p-3 bg-gray-50 border border-gray-200 rounded-lg hover:bg-blue-50 hover:border-blue-200 transition-colors group">
+                       <FileCheck className="w-5 h-5 text-gray-400 group-hover:text-blue-600 mr-3" />
+                       <span className="text-sm font-medium text-gray-700 group-hover:text-blue-800 flex-1 truncate">{doc.docName || doc.fileName}</span>
+                       <Download className="w-4 h-4 text-gray-400 group-hover:text-blue-600" />
+                     </a>
+                   ))}
+                 </div>
+              </div>
+            )}
           </div>
 
           {/* --- RIGHT SIDEBAR (STICKY ON DESKTOP, STACKED ON MOBILE) --- */}
@@ -275,9 +306,9 @@ const ProjectDetail = () => {
                       <p className="font-bold text-gray-900 truncate">{project.platformInfo.name}</p>
                       <p className="text-xs text-gray-500 truncate">{project.platformInfo.contactName}</p>
                     </div>
-                  </div> */}
+                  </div>
 
-                  {/* <div className="space-y-3 mb-6">
+                  <div className="space-y-3 mb-6">
                     <div className="flex items-center justify-between p-3 bg-gray-50 rounded-lg border border-gray-100">
                       <div className="flex items-center gap-2 text-gray-700 font-medium">
                         <Phone className="w-4 h-4 text-gray-400" />
@@ -301,12 +332,12 @@ const ProjectDetail = () => {
                     </div>
                   ) : (
                     <div className="space-y-2">
-                      <Button
-                        onClick={(e) => handleInquirySubmit(e, true)}
+                      <Button 
+                        onClick={(e) => handleInquirySubmit(e, true)} 
                         disabled={isSubmittingLead || hasSubmittedLead}
                         className={`w-full font-bold h-12 shadow-md ${hasSubmittedLead ? 'bg-gray-300 text-gray-600' : 'bg-green-600 hover:bg-green-700 text-white'}`}
                       >
-                        {isSubmittingLead ? <Loader2 className="w-4 h-4 mr-2 animate-spin" /> : (hasSubmittedLead ? <CheckCircle className="w-4 h-4 mr-2" /> : <Phone className="w-4 h-4 mr-2" />)}
+                        {isSubmittingLead ? <Loader2 className="w-4 h-4 mr-2 animate-spin" /> : (hasSubmittedLead ? <CheckCircle className="w-4 h-4 mr-2"/> : <Phone className="w-4 h-4 mr-2" />)}
                         {hasSubmittedLead ? 'Request Already Sent' : isSubmittingLead ? 'Sending Request...' : 'Request a Call Back'}
                       </Button>
                     </div>
@@ -346,67 +377,52 @@ const ProjectDetail = () => {
             </div>
           </div>
         </div>
+      </main>
 
-        {/* --- SIMILAR PROPERTIES (MOCK) --- */}
-        {/* <div className="mt-12">
-          <div className="flex justify-between items-end mb-6">
-            <div>
-              <h2 className="text-xl md:text-2xl font-bold text-gray-900">Similar Properties</h2>
-              <p className="text-sm text-gray-500 mt-1">Other projects in your preferred area</p>
-            </div>
-            <Button variant="ghost" className="text-[#0b264f] hover:bg-blue-50 font-semibold hidden md:flex">
-              View All <ArrowRight className="w-4 h-4 ml-2" />
-            </Button>
+      {/* --- IMAGE GALLERY MODAL --- */}
+      <Dialog open={isGalleryOpen} onOpenChange={setIsGalleryOpen}>
+        <DialogContent className="max-w-5xl bg-white border-none p-0 overflow-hidden text-white flex flex-col justify-center items-center h-[90vh]">
+          
+          <button onClick={() => setIsGalleryOpen(false)} className="absolute top-4 right-4 p-2 bg-white/10 hover:bg-white/20 rounded-full transition-colors z-50">
+            <X className="w-6 h-6 text-white" />
+          </button>
+
+          <div className="relative w-full h-full flex items-center justify-center p-4">
+            {project.images.length > 1 && (
+              <button onClick={prevImage} className="absolute left-4 p-3 bg-black/50 hover:bg-black/80 rounded-full transition-colors z-10">
+                <ChevronLeft className="w-8 h-8" />
+              </button>
+            )}
+
+            <img 
+              src={project.images[currentImageIndex]} 
+              alt={`Property image ${currentImageIndex + 1}`} 
+              className="max-h-full max-w-full object-contain rounded-lg shadow-2xl"
+            />
+
+            {project.images.length > 1 && (
+              <button onClick={nextImage} className="absolute right-4 p-3 bg-black/50 hover:bg-black/80 rounded-full transition-colors z-10">
+                <ChevronRight className="w-8 h-8" />
+              </button>
+            )}
           </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
-            {SIMILAR_PROPERTIES.map((prop) => (
-              <div
-                key={prop.id}
-                className="group bg-white rounded-xl border border-gray-200 overflow-hidden hover:shadow-lg transition-shadow cursor-pointer"
-                onClick={() => navigate(`/project/${prop.id}`)}
+          {/* Thumbnail Strip */}
+          <div className="absolute bottom-4 flex gap-2 overflow-x-auto max-w-3xl px-4 scrollbar-hide">
+            {project.images.map((img, idx) => (
+              <button 
+                key={idx} 
+                onClick={() => setCurrentImageIndex(idx)}
+                className={`h-16 w-24 flex-shrink-0 rounded-md overflow-hidden border-2 transition-all ${idx === currentImageIndex ? 'border-white opacity-100' : 'border-transparent opacity-50 hover:opacity-100'}`}
               >
-                <div className="relative h-48 overflow-hidden">
-                  <img
-                    src={prop.image}
-                    alt={prop.title}
-                    className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
-                  />
-                  <div className="absolute top-3 left-3">
-                    <Badge className="bg-white/90 text-gray-800 hover:bg-white text-xs font-semibold shadow-sm backdrop-blur-sm">
-                      {prop.status}
-                    </Badge>
-                  </div>
-                  <div className="absolute bottom-3 right-3">
-                    <div className="bg-[#0b264f]/90 text-white text-xs px-2 py-1 rounded shadow-md backdrop-blur-sm">
-                      {prop.price}
-                    </div>
-                  </div>
-                </div>
-
-                <div className="p-4">
-                  <h3 className="font-bold text-gray-900 text-lg mb-1 truncate group-hover:text-[#0b264f] transition-colors">
-                    {prop.title}
-                  </h3>
-                  <div className="flex items-center text-sm text-gray-500 mb-3">
-                    <MapPin className="w-3.5 h-3.5 mr-1" />
-                    {prop.location}
-                  </div>
-                  <div className="flex items-center justify-between pt-3 border-t border-gray-100">
-                    <span className="text-xs font-semibold px-2 py-1 bg-blue-50 text-blue-700 rounded border border-blue-100">
-                      {prop.type}
-                    </span>
-                    <span className="text-xs text-gray-400 font-medium hover:text-[#0b264f]">
-                      View Details &rarr;
-                    </span>
-                  </div>
-                </div>
-              </div>
+                <img src={img} alt="Thumbnail" className="w-full h-full object-cover" />
+              </button>
             ))}
           </div>
-        </div> */}
 
-      </main>
+        </DialogContent>
+      </Dialog>
+
       <Footer />
     </div>
   );

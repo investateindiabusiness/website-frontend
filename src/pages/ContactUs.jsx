@@ -40,7 +40,7 @@ const ContactUs = () => {
         <Header />
 
         {/* --- Hero Section --- */}
-        <section className="relative h-auto flex items-center justify-center overflow-hidden mt-[2rem] md:mt-[4rem] py-16">
+        <section className="relative h-auto flex items-center justify-center bg-[#d9d4d0] overflow-hidden mt-[2rem] md:mt-[4rem] py-16">
           <div 
             className="absolute inset-0 z-0"
             style={{
@@ -49,25 +49,25 @@ const ContactUs = () => {
               backgroundPosition: 'center',
             }}
           >
-            <div className="absolute inset-0 bg-[#0b264f]/85"></div>
+            {/* <div className="absolute inset-0 bg-[#0b264f]/85"></div> */}
           </div>
 
           <div className="container mx-auto px-4 relative z-10 text-center text-white">
-            <h1 className="text-4xl md:text-6xl font-bold mb-4">Get in Touch</h1>
-            <p className="text-lg md:text-xl max-w-2xl mx-auto text-gray-300">
+            <h1 className="text-4xl md:text-6xl font-bold mb-4 text-[#1f2937]">Get in Touch</h1>
+            <p className="text-lg md:text-xl max-w-2xl mx-auto text-[#4b5563]">
               Have questions about investing in India? Our expert team is here to guide you through every step.
             </p>
           </div>
         </section>
 
         {/* --- Main Content --- */}
-        <section className="py-16 bg-gray-50 relative z-20">
+        <section className="p-16 bg-[#e1dcd9] relative z-20">
           <div className="container mx-auto px-4">
             <div className="bg-white rounded-3xl shadow-xl overflow-hidden border border-gray-100">
               <div className="grid grid-cols-1 lg:grid-cols-2">
 
                 {/* Left Side: Contact Info */}
-                <div className="bg-[#0b264f] p-10 md:p-14 text-white flex flex-col justify-between relative overflow-hidden">
+                <div className="bg-[#1f2937] p-10 md:p-14 text-white flex flex-col justify-between relative overflow-hidden">
                   {/* Decorative Circles */}
                   <div className="absolute top-0 right-0 w-64 h-64 bg-white/5 rounded-full -mr-16 -mt-16 pointer-events-none"></div>
                   <div className="absolute top-0 right-0 w-32 h-32 bg-white/5 rounded-full mr-40 mt-40 pointer-events-none"></div>
