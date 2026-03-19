@@ -4,6 +4,9 @@ import Footer from '../components/Footer';
 import RegisterDialog from '../components/RegisterDialog';
 import LoginDialog from '../components/LoginDialog';
 import ContinueOnboardingDialog from '../components/ContinueOnboardingDialog';
+import { toast } from '@/hooks/use-toast';
+import { subscribeToNewsletter } from '@/api'; // <-- Import the API
+import { Loader2 } from 'lucide-react'; // <-- Import loader icon
 
 const Index = () => {
 
@@ -22,9 +25,13 @@ const Index = () => {
     const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
     const [open, setOpen] = useState(false);
 
+    // --- NEW: Newsletter States ---
+    const [newsletterEmail, setNewsletterEmail] = useState('');
+    const [isSubscribing, setIsSubscribing] = useState(false);
+
     useEffect(() => {
         const handleScroll = () => {
-            if (!hasAutoOpened && window.scrollY > 600) {
+            if (!hasAutoOpened && window.scrollY > 1200) {
                 setIsLoginOpen(true);
                 setHasAutoOpened(true);
             }
@@ -36,6 +43,23 @@ const Index = () => {
 
     const toggleFaq = (index) => {
         setActiveFaq(activeFaq === index ? null : index);
+    };
+
+    // --- NEW: Newsletter Submit Handler ---
+    const handleNewsletterSubmit = async (e) => {
+        e.preventDefault();
+        if (!newsletterEmail.trim()) return;
+
+        setIsSubscribing(true);
+        try {
+            await subscribeToNewsletter(newsletterEmail);
+            toast({ title: "Success!", description: "You've been added to our waitlist." });
+            setNewsletterEmail(''); // Clear the input
+        } catch (error) {
+            toast({ title: "Registration Failed", description: error.message, variant: "destructive" });
+        } finally {
+            setIsSubscribing(false);
+        }
     };
 
     const contentDataForSection2 = [
@@ -58,10 +82,10 @@ const Index = () => {
 
     const challengesList = [
         { id: "01", text: "Unverified or inconsistent project information" },
-        { id: "02", text: "Difficulty assessing builder credibility from abroad" },
+        { id: "02", text: "Dependence on fragmented intermediaries" },
         { id: "03", text: "Lack of standardized disclosures across projects" },
         { id: "04", text: "Unclear legal, regulatory, and compliance processes" },
-        { id: "05", text: "Dependence on fragmented intermediaries" },
+        { id: "05", text: "Difficulty assessing builder credibility from abroad" },
         { id: "06", text: "Time zone barriers and lack of on-ground representation" },
         { id: "07", text: "Difficulty conducting accurate, independent on-site property valuations" },
         { id: "08", text: "Complexities with cross-border taxation, capital repatriation, and FEMA compliance" },
@@ -120,22 +144,19 @@ const Index = () => {
 
     const teamMembers = [
         {
-            name: "[Founder Name 1]",
+            name: "Pankaj Gupta",
             role: "Co-Founder",
-            image: "https://images.unsplash.com/photo-1560250097-0b93528c311a?q=80&w=800&auto=format&fit=crop",
-            linkedin: "#"
+            image: "/pankaj.png",
         },
         {
-            name: "[Founder Name 2]",
+            name: "Atish Agarwal",
             role: "Co-Founder",
-            image: "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?q=80&w=800&auto=format&fit=crop",
-            linkedin: "#"
+            image: "/atish.png",
         },
         {
-            name: "[Founder Name 3]",
+            name: "Deepak Kavadia",
             role: "Co-Founder",
-            image: "https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?q=80&w=800&auto=format&fit=crop",
-            linkedin: "#"
+            image: "/deepak.png",
         }
     ];
 
@@ -286,7 +307,6 @@ const Index = () => {
                                 Helping NRI investors discover credible Indian real estate opportunities through standardized information, verified builders, and transparent disclosures.
                             </p>
                             <div className="hero-cta-group">
-                                {/* FIX 1: Send 'investor' role instead of just opening dialog */}
                                 <button onClick={() => handleAuthClick('register', 'investor')} className="btn btn-primary">
                                     Explore Opportunities
                                 </button>
@@ -555,29 +575,27 @@ const Index = () => {
                                     <h3 className="story-headline">Built on transparency. Driven by experience.</h3>
                                     <div className="story-text-content">
                                         <p>
-                                            Investate India is led by entrepreneurs <strong>Pankaj Gupta, Atish Agarwal and Deepak Kavadia,</strong> professionals with extensive experience across real estate, jewellery, retail, and international trade. <br/>
-                                            Pankaj Gupta has built a strong presence in the diamond and jewellery industry through Murari Cap Pvt. Ltd. and Avik Jewels, while also being a well-known name in the Hyderabad real estate market through his partnership in Swandurga Construction LLP, which has delivered multiple successful developments. <br/> 
-                                            Atish Agarwal brings diversified entrepreneurial experience across textiles, retail, fashion, jewellery, and real estate advisory, building ventures focused on operational excellence and market insight.<br/>
-                                            Together, as partners in Istana Realtors, they have delivered projects such as Shree Istana and Dev Istana, with new developments including Vann Istana and Green Gold Istana underway.<br/> 
+                                            Investate India is led by entrepreneurs <strong>Pankaj Gupta, Atish Agarwal and Deepak Kavadia,</strong> professionals with extensive experience across real estate, jewellery, retail, and international trade. <br />
+                                            Pankaj Gupta has built a strong presence in the diamond and jewellery industry through Murari Cap Pvt. Ltd. and Avik Jewels, while also being a well-known name in the Hyderabad real estate market through his partnership in Swandurga Construction LLP, which has delivered multiple successful developments. <br />
+                                            Atish Agarwal brings diversified entrepreneurial experience across textiles, retail, fashion, jewellery, and real estate advisory, building ventures focused on operational excellence and market insight.<br />
+                                            Together, as partners in Istana Realtors, they have delivered projects such as Shree Istana and Dev Istana, with new developments including Vann Istana and Green Gold Istana underway.<br />
                                             They are joined by Deepak Kavadia, a New York-based entrepreneur, real estate investor, and globally respected gemstone authority, Founder of Nice Gems Inc., Nice Jewels Inc., and Prestige Developers LLC, and Founder and Chairman of the NRI Federation, bringing a strong global perspective and trusted international connect for NRI investors.
-
                                         </p>
                                     </div>
-                                    <blockquote className="mission-quote">
-                                        "Our mission is simple: Bridge the trust gap through transparency, expertise, and global connectivity."
-                                    </blockquote>
                                 </div>
 
                                 <div className="team-cards-side">
                                     {teamMembers.map((member, index) => (
                                         <div className="team-profile-card" key={index}>
                                             <div className="profile-image-wrapper">
-                                                <img src={member.image} alt={member.name} />
-                                                <a href={member.linkedin} className="linkedin-btn" aria-label="LinkedIn Profile">
-                                                    <svg viewBox="0 0 24 24" fill="currentColor" width="20" height="20">
-                                                        <path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z" />
-                                                    </svg>
-                                                </a>
+                                                <img style={{objectFit: 'cover'}} src={member.image} alt={member.name} />
+                                                {member.linkedin &&
+                                                    <a href={member.linkedin} className="linkedin-btn" aria-label="LinkedIn Profile">
+                                                        <svg viewBox="0 0 24 24" fill="currentColor" width="20" height="20">
+                                                            <path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z" />
+                                                        </svg>
+                                                    </a>
+                                                }
                                             </div>
                                             <div className="profile-info">
                                                 <h4 className="profile-name">{member.name}</h4>
@@ -586,6 +604,10 @@ const Index = () => {
                                             </div>
                                         </div>
                                     ))}
+
+                                    <blockquote className="mission-quote">
+                                        "Our mission is simple: Bridge the trust gap through transparency, expertise, and global connectivity."
+                                    </blockquote>
                                 </div>
                             </div>
                         </div>
@@ -626,16 +648,23 @@ const Index = () => {
                                     <div className="cta-card-inner">
                                         <div className="cta-badge">Waitlist Open</div>
                                         <h3 className="cta-title">Join Our Investor Network</h3>
-                                        <div className="cta-form-group">
-                                            <input
-                                                type="email"
-                                                className="cta-input"
-                                                placeholder="Enter your email address..."
-                                            />
-                                            <button className="btn btn-primary cta-submit-btn">
-                                                Register Now
-                                            </button>
-                                        </div>
+                                        {/* --- UPDATED NEWSLETTER FORM --- */}
+                                        <form onSubmit={handleNewsletterSubmit}>
+                                            <div className="cta-form-group">
+                                                <input
+                                                    type="email"
+                                                    required
+                                                    value={newsletterEmail}
+                                                    onChange={(e) => setNewsletterEmail(e.target.value)}
+                                                    className="cta-input"
+                                                    placeholder="Enter your email address..."
+                                                />
+                                                <button disabled={isSubscribing} className="btn btn-primary cta-submit-btn flex justify-center items-center gap-2" type='submit'>
+                                                    {isSubscribing ? <Loader2 className="w-4 h-4 animate-spin" /> : null}
+                                                    {isSubscribing ? 'Registering...' : 'Register Now'}
+                                                </button>
+                                            </div>
+                                        </form>
                                     </div>
                                 </div>
                             </div>
@@ -730,7 +759,6 @@ const Index = () => {
                                     <p className="cta-card-text">
                                         Interested in transparent, verified real estate opportunities in India?
                                     </p>
-                                    {/* FIX 2: Change href to button and wire it up */}
                                     <button onClick={() => handleAuthClick('register', 'investor')} className="btn btn-primary cta-action-btn">
                                         Register Your Interest
                                     </button>
@@ -759,7 +787,6 @@ const Index = () => {
                                     <p className="cta-card-text">
                                         Want to reach serious investors through a credible, structured platform?
                                     </p>
-                                    {/* FIX 3: Change href to button and wire it up */}
                                     <button onClick={() => handleAuthClick('register', 'builder')} className="btn btn-outline cta-action-btn">
                                         Apply for Partnership
                                     </button>
@@ -794,7 +821,6 @@ const Index = () => {
                 initialData={dialogData}
             />
 
-            {/* FIX 4: Add ContinueOnboardingDialog to ensure the flow doesn't break from this page */}
             <ContinueOnboardingDialog
                 isOpen={isContinueOpen}
                 onOpenChange={setIsContinueOpen}

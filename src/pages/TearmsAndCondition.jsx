@@ -35,7 +35,7 @@ const TearmsAndCondition = () => {
       {/* Content Container */}
       <div className="flex-grow container mx-auto px-4 py-12 -mt-10 relative z-20">
         <div className="max-w-4xl mx-auto bg-white rounded-xl shadow-xl border border-gray-100 p-8 md:p-12">
-          
+
           <div className="border-b border-gray-100 pb-6 mb-8">
             <p className="text-sm text-gray-500 italic">
               Last Updated: {new Date().toLocaleDateString('en-IN', { year: 'numeric', month: 'long', day: 'numeric' })}
@@ -51,7 +51,7 @@ const TearmsAndCondition = () => {
             <p className={paragraphStyle}>
               Investate India is a technology platform only.
             </p>
-            
+
             <div className="grid md:grid-cols-2 gap-6 my-6">
               <div className="bg-green-50 p-6 rounded-lg border border-green-100">
                 <h3 className="font-bold text-green-800 mb-3">We Do:</h3>
@@ -205,8 +205,8 @@ const TearmsAndCondition = () => {
             <p className="text-gray-600 mb-4">
               If you have any questions about these Terms, please contact us at:
             </p>
-            <a href="mailto:info@investateindia.com" className="inline-flex items-center justify-center px-6 py-3 border border-transparent text-base font-medium rounded-md text-white bg-orange-600 hover:bg-orange-700 transition-colors">
-              info@investateindia.com
+            <a href="mailto:investateindia.business@gmail.com" className="inline-flex items-center justify-center px-6 py-3 border border-transparent text-base font-medium rounded-md text-white bg-orange-600 hover:bg-orange-700 transition-colors">
+              investateindia.business@gmail.com
             </a>
           </section>
 

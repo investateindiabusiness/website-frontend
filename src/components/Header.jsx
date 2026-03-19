@@ -73,7 +73,7 @@ const Header = ({ transparent = false }) => {
       ];
     }
     switch (user.role) {
-      case 'admin': return [{ label: 'Dashboard', path: '/admin/dashboard' }, { label: 'Builders', path: '/admin/builders' }, { label: 'Investors', path: '/admin/investors' }, { label: 'Projects', path: '/admin/projects' }, { label: 'Leads', path: '/admin/leads' }];
+      case 'admin': return [{ label: 'Dashboard', path: '/admin/dashboard' }, { label: 'Builders', path: '/admin/builders' }, { label: 'Investors', path: '/admin/investors' }, { label: 'Projects', path: '/admin/projects' }, { label: 'Leads', path: '/admin/leads' }, { label: 'Inquiries', path: '/admin/inquiries' }, { label: 'Newsletter', path: '/admin/newsletter' }];
       case 'builder': return [{ label: 'Dashboard', path: '/partner/dashboard' }, { label: 'Projects', path: '/partner/projects' }];
       case 'investor': return [{ label: 'Dashboard', path: '/dashboard' }, { label: 'Properties', path: '/properties' }];
       default: return [{ label: 'Home', path: '/' }];
@@ -99,7 +99,7 @@ const Header = ({ transparent = false }) => {
             </Link>
           </div>
 
-          <nav className="hidden md:flex items-center flex-1 mx-32">
+          <nav className="hidden md:flex items-center flex-1">
             <ul className="flex items-center justify-center w-full text-md font-medium text-gray-400">
               {navLinks.map((link, index) => (
                 <React.Fragment key={link.label}>

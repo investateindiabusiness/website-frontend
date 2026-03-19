@@ -284,3 +284,51 @@ export const deleteLead = async (leadId) => {
     method: 'DELETE',
   });
 };
+
+export const submitContactInquiry = async (data) => {
+  return apiRequest('/api/inquiries', {
+    method: 'POST',
+    body: JSON.stringify(data),
+  });
+};
+
+export const fetchAllInquiries = async () => {
+  return apiRequest('/api/inquiries');
+};
+
+export const updateInquiry = async (inquiryId, data) => {
+  return apiRequest(`/api/inquiries/${inquiryId}`, {
+    method: 'PATCH',
+    body: JSON.stringify(data),
+  });
+};
+
+export const deleteInquiry = async (inquiryId) => {
+  return apiRequest(`/api/inquiries/${inquiryId}`, {
+    method: 'DELETE',
+  });
+};
+
+export const subscribeToNewsletter = async (email) => {
+  return apiRequest('/api/newsletter', {
+    method: 'POST',
+    body: JSON.stringify({ email }),
+  });
+};
+
+export const fetchAllNewsletterSubscribers = async () => {
+  return apiRequest('/api/newsletter');
+};
+
+export const updateNewsletterSubscriber = async (id, data) => {
+  return apiRequest(`/api/newsletter/${id}`, {
+    method: 'PATCH',
+    body: JSON.stringify(data),
+  });
+};
+
+export const deleteNewsletterSubscriber = async (id) => {
+  return apiRequest(`/api/newsletter/${id}`, {
+    method: 'DELETE',
+  });
+};

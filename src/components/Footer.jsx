@@ -15,20 +15,6 @@ const Footer = () => {
             <p className="text-sm text-gray-400">
               Connecting NRI investors to India's growth through verified real estate opportunities.
             </p>
-            <div className="flex space-x-4">
-              <a href="#" className="text-gray-400 hover:text-[#C88A58] transition-colors">
-                <Facebook className="h-5 w-5" />
-              </a>
-              <a href="#" className="text-gray-400 hover:text-[#C88A58] transition-colors">
-                <Twitter className="h-5 w-5" />
-              </a>
-              <a href="#" className="text-gray-400 hover:text-[#C88A58] transition-colors">
-                <Linkedin className="h-5 w-5" />
-              </a>
-              <a href="#" className="text-gray-400 hover:text-[#C88A58] transition-colors">
-                <Instagram className="h-5 w-5" />
-              </a>
-            </div>
           </div>
 
           {/* Quick Links */}
@@ -41,6 +27,16 @@ const Footer = () => {
                 </Link>
               </li>
               <li>
+                <Link to="/about-us" className="text-gray-400 hover:text-[#C88A58] transition-colors text-sm">
+                  About Us
+                </Link>
+              </li>
+              <li>
+                <Link to="/contact-us" className="text-gray-400 hover:text-[#C88A58] transition-colors text-sm">
+                  Contact Us
+                </Link>
+              </li>
+              {/* <li>
                 <Link to="/register" className="text-gray-400 hover:text-[#C88A58] transition-colors text-sm">
                   For Investors
                 </Link>
@@ -54,7 +50,7 @@ const Footer = () => {
                 <Link to="/" className="text-gray-400 hover:text-[#C88A58] transition-colors text-sm">
                   Login
                 </Link>
-              </li>
+              </li> */}
             </ul>
           </div>
 
@@ -70,21 +66,43 @@ const Footer = () => {
             </ul>
           </div>
 
+          {/* <div>
+            <h3 className="text-white font-bold mb-4">Follow Us</h3>
+            <ul className="space-y-3">
+              <li className="flex items-start space-x-3">
+                <Facebook className="h-5 w-5 text-[#C88A58] flex-shrink-0 mt-0.5" />
+                <span className="text-sm text-gray-400">Facebook</span>
+              </li>
+              <li className="flex items-center space-x-3">
+                <Twitter className="h-5 w-5 text-[#C88A58] flex-shrink-0 mt-0.5" />
+                <span className="text-sm text-gray-400">Twitter</span>
+              </li>
+              <li className="flex items-center space-x-3">
+                <Linkedin className="h-5 w-5 text-[#C88A58] flex-shrink-0 mt-0.5" />
+                <span className="text-sm text-gray-400">Linkedin</span>
+              </li>
+              <li className="flex items-center space-x-3">
+                <Instagram className="h-5 w-5 text-[#C88A58] flex-shrink-0 mt-0.5" />
+                <span className="text-sm text-gray-400">Instagram</span>
+              </li>
+            </ul>
+          </div> */}
+
           {/* Contact */}
           <div>
             <h3 className="text-white font-bold mb-4">Contact Us</h3>
             <ul className="space-y-3">
               <li className="flex items-start space-x-3">
                 <MapPin className="h-5 w-5 text-[#C88A58] flex-shrink-0 mt-0.5" />
-                <span className="text-sm text-gray-400">MG Road, Bangalore, India</span>
+                <span className="text-sm text-gray-400">Hyderabad (IN) & New York (USA)</span>
               </li>
-              <li className="flex items-center space-x-3">
+              {/* <li className="flex items-center space-x-3">
                 <Phone className="h-5 w-5 text-[#C88A58] flex-shrink-0" />
                 <span className="text-sm text-gray-400">+91-80-12345678</span>
-              </li>
+              </li> */}
               <li className="flex items-center space-x-3">
                 <Mail className="h-5 w-5 text-[#C88A58] flex-shrink-0" />
-                <span className="text-sm text-gray-400">info@investateindia.com</span>
+                <span className="text-sm text-gray-400">investateindia.business@gmail.com</span>
               </li>
             </ul>
           </div>

@@ -225,7 +225,7 @@ const AboutUs = () => {
                     {/* Founder 1 */}
                     <div className="text-center group">
                       <div className="w-28 h-28 md:w-32 md:h-32 mx-auto rounded-full mb-4 overflow-hidden border-4 border-white shadow-md transition-transform duration-300 group-hover:scale-105">
-                        <img src="https://randomuser.me/api/portraits/men/32.jpg" alt="Pankaj Gupta" className="w-full h-full object-cover" />
+                        <img src="/pankaj.png" alt="Pankaj Gupta" className="w-full h-full object-cover" />
                       </div>
                       <h3 className="font-bold text-lg text-gray-900 leading-tight">Pankaj <br />Gupta</h3>
                       <p className="text-white text-xs font-bold tracking-widest uppercase mt-2">Partner</p>
@@ -234,7 +234,7 @@ const AboutUs = () => {
                     {/* Founder 2 */}
                     <div className="text-center group">
                       <div className="w-28 h-28 md:w-32 md:h-32 mx-auto rounded-full mb-4 overflow-hidden border-4 border-white shadow-md transition-transform duration-300 group-hover:scale-105">
-                        <img src="https://randomuser.me/api/portraits/men/85.jpg" alt="Atish Agarwal" className="w-full h-full object-cover" />
+                        <img src="/atish.png" alt="Atish Agarwal" className="w-full h-full object-cover" />
                       </div>
                       <h3 className="font-bold text-lg text-gray-900 leading-tight">Atish<br />Agarwal</h3>
                       <p className="text-white text-xs font-bold tracking-widest uppercase mt-2">Partner</p>
@@ -267,7 +267,7 @@ const AboutUs = () => {
 
                   <div className="text-center group relative z-10">
                     <div className="w-32 h-32 md:w-40 md:h-40 mx-auto rounded-full mb-6 overflow-hidden border-4 border-blue-800/50 shadow-xl transition-transform duration-300 group-hover:scale-105">
-                      <img src="https://randomuser.me/api/portraits/men/44.jpg" alt="Deepak Kavadia" className="w-full h-full object-cover" />
+                      <img src="/deepak.png" alt="Deepak Kavadia" className="w-full h-full object-cover" />
                     </div>
                     <h3 className="font-bold text-2xl text-white mb-1">Deepak Kavadia</h3>
                     <p className="text-orange-400 text-xs font-bold tracking-widest uppercase mt-2">Partner</p>
