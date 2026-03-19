@@ -30,7 +30,7 @@ const AdminNewsletter = () => {
     };
 
     const handleToggleStatus = async (subscriber) => {
-        const newStatus = subscriber.status === 'Active' ? 'Deactive' : 'Active';
+        const newStatus = subscriber.status === 'Active' ? 'Inactive' : 'Active';
         try {
             await updateNewsletterSubscriber(subscriber.id, { status: newStatus });
             toast({ title: "Success", description: `Subscriber marked as ${newStatus}.` });
@@ -87,7 +87,7 @@ const AdminNewsletter = () => {
                         >
                             <option value="All">All Statuses</option>
                             <option value="Active">Active</option>
-                            <option value="Deactive">Deactive</option>
+                            <option value="Inactive">Inactive</option>
                         </select>
                     </div>
                 </div>
