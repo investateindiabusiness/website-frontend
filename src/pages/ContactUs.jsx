@@ -97,13 +97,13 @@ const ContactUs = () => {
         </section>
 
         {/* --- Main Content --- */}
-        <section className="p-16 bg-[#e1dcd9] relative z-20">
+        <section className="p-2 md:p-16 bg-[#e1dcd9] relative z-20">
           <div className="container mx-auto px-4">
             <div className="bg-white rounded-3xl shadow-xl overflow-hidden border border-gray-100">
               <div className="grid grid-cols-1 lg:grid-cols-2">
 
                 {/* Left Side: Contact Info */}
-                <div className="bg-[#1f2937] p-10 md:p-14 text-white flex flex-col justify-between relative overflow-hidden">
+                <div className="bg-[#1f2937] p-4 md:p-10 md:p-14 text-white flex flex-col justify-between relative overflow-hidden">
                   <div className="absolute top-0 right-0 w-64 h-64 bg-white/5 rounded-full -mr-16 -mt-16 pointer-events-none"></div>
                   <div className="absolute top-0 right-0 w-32 h-32 bg-white/5 rounded-full mr-40 mt-40 pointer-events-none"></div>
                   <div className="absolute bottom-0 left-0 w-40 h-40 bg-orange-500/10 rounded-full -ml-10 -mb-10 pointer-events-none"></div>

@@ -588,7 +588,7 @@ const Index = () => {
                                     {teamMembers.map((member, index) => (
                                         <div className="team-profile-card" key={index}>
                                             <div className="profile-image-wrapper">
-                                                <img style={{objectFit: 'cover'}} src={member.image} alt={member.name} />
+                                                <img src={member.image} alt={member.name} />
                                                 {member.linkedin &&
                                                     <a href={member.linkedin} className="linkedin-btn" aria-label="LinkedIn Profile">
                                                         <svg viewBox="0 0 24 24" fill="currentColor" width="20" height="20">

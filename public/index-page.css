@@ -3,12 +3,13 @@
     position: relative;
     width: 100vw;
     /* Height is now determined by content */
-    height: auto; 
+    height: auto;
     display: flex;
     flex-direction: column;
     align-items: center;
     /* Removed overflow: hidden to allow natural page scrolling */
-    padding: 40px 20px; /* Consistent top and bottom spacing for all sections */
+    padding: 40px 20px;
+    /* Consistent top and bottom spacing for all sections */
     box-sizing: border-box;
 }
 
@@ -25,8 +26,9 @@
 
 .section-heading {
     text-align: center;
-    margin-bottom: 40px; /* Changed from vh to px for consistent spacing */
-    flex-shrink: 0; 
+    margin-bottom: 40px;
+    /* Changed from vh to px for consistent spacing */
+    flex-shrink: 0;
 }
 
 .section-title {
@@ -53,46 +55,52 @@
 .section-scrollable-body {
     width: 100%;
     /* No more overflow-y, flex: 1, or custom scrollbars needed here */
-    height: auto; 
+    height: auto;
 }
 
 /* Custom, elegant scrollbar for the internal sections */
 .section-scrollable-body::-webkit-scrollbar {
     width: 6px;
 }
+
 .section-scrollable-body::-webkit-scrollbar-track {
     background: rgba(0, 0, 0, 0.03);
     border-radius: 10px;
 }
+
 .section-scrollable-body::-webkit-scrollbar-thumb {
-    background: rgba(223, 128, 55, 0.5); /* Semi-transparent Accent Color */
+    background: rgba(223, 128, 55, 0.5);
+    /* Semi-transparent Accent Color */
     border-radius: 10px;
 }
+
 .section-scrollable-body::-webkit-scrollbar-thumb:hover {
     background: var(--color-accent);
 }
 
 /* --- 1. HERO SECTION (Parent Container) --- */
 .hero-section {
-    position: relative; 
+    position: relative;
     width: 100vw;
     /* Strict lock just for the Hero */
     height: calc(100vh - 4rem);
     display: flex;
     flex-direction: column;
-    justify-content: center; 
-    align-items: flex-start; 
+    justify-content: center;
+    align-items: flex-start;
     /* Keep overflow hidden here so the background image doesn't break out */
-    overflow: hidden; 
+    overflow: hidden;
     color: var(--color-white);
-    padding: 0 5vw; /* Override the global 100px padding so it centers perfectly */
+    padding: 0 5vw;
+    /* Override the global 100px padding so it centers perfectly */
     margin-top: 4rem;
 }
 
 /* --- LAYER 1: The Image (Mirrored) --- */
 /* 1. The Container */
 .hero-section {
-    position: relative; /* Creates the stacking context */
+    position: relative;
+    /* Creates the stacking context */
     width: 100vw;
     height: calc(100vh - 4rem);
     display: flex;
@@ -109,28 +117,34 @@
 .hero-section::before {
     content: "";
     position: absolute;
-    top: 0; left: 0; width: 100%; height: 100%;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
     background: url('/hero-image-bg-3.jpg') center/cover;
-    transform: scaleX(-1); 
-    z-index: 0; 
+    transform: scaleX(-1);
+    z-index: 0;
 }
 
 /* Layer 2 (Middle): Dark Gradient */
 .hero-section::after {
     content: "";
     position: absolute;
-    top: 0; left: 0; width: 100%; height: 100%;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
     /* Darker on the left (0.9), lighter on the right (0.2) */
-    background: 
-      linear-gradient(to right, rgb(0 0 0 / 70%) 50%, rgb(0 0 0 / 47%) 60%, rgb(0 0 0 / 20%) 70%, rgb(0 0 0 / 8%) 100%);
+    background:
+        linear-gradient(to right, rgb(0 0 0 / 70%) 50%, rgb(0 0 0 / 47%) 60%, rgb(0 0 0 / 20%) 70%, rgb(0 0 0 / 8%) 100%);
     z-index: 1;
 }
 
 /* 3. The Content (Text & Buttons) - THE FIX */
 .hero-content {
     /* CRITICAL: This lifts the text above the absolute layers */
-    position: relative; 
-    z-index: 2; 
+    position: relative;
+    z-index: 2;
 
     max-width: var(--max-width);
     width: 100%;
@@ -140,7 +154,7 @@
 
 .hero-tag {
     background: rgba(255, 255, 255, 0.1);
-    border: 1px solid rgba(255,255,255,0.3);
+    border: 1px solid rgba(255, 255, 255, 0.3);
     color: var(--color-accent-tag);
     padding: 8px 16px;
     text-transform: uppercase;
@@ -198,7 +212,7 @@
 }
 
 .btn-secondary {
-    background: rgba(255,255,255,0.1);
+    background: rgba(255, 255, 255, 0.1);
     border: 2px solid var(--color-accent);
     color: var(--color-white);
     backdrop-filter: blur(4px);
@@ -210,12 +224,13 @@
     bottom: 0;
     left: 0;
     width: 100%;
-    background: rgba(0,0,0,0.8);
+    background: rgba(0, 0, 0, 0.8);
     backdrop-filter: blur(10px);
-    border-top: 1px solid rgba(255,255,255,0.1);
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
     padding: 3vh 0;
     z-index: 10;
 }
+
 .stats-container {
     display: flex;
     justify-content: space-around;
@@ -223,9 +238,24 @@
     margin: 0 auto;
     width: 100%;
 }
-.stat-item { text-align: center; }
-.stat-number { font-size: 1.8rem; font-weight: 700; color: var(--color-accent); font-family: var(--font-heading); }
-.stat-label { font-size: 0.9rem; color: rgba(255,255,255,0.7); text-transform: uppercase; letter-spacing: 1px; }
+
+.stat-item {
+    text-align: center;
+}
+
+.stat-number {
+    font-size: 1.8rem;
+    font-weight: 700;
+    color: var(--color-accent);
+    font-family: var(--font-heading);
+}
+
+.stat-label {
+    font-size: 0.9rem;
+    color: rgba(255, 255, 255, 0.7);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
 
 
 /* --- 2. WHY CHOOSE US (Light Theme, 100vh) --- */
@@ -244,10 +274,11 @@
     background: var(--color-info-card);
     padding: 20px 30px;
     border-radius: var(--radius-md);
-    box-shadow: 0 4px 20px rgba(0,0,0,0.03);
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.03);
     border-top: 4px solid transparent;
     transition: transform 0.3s ease;
-    height: 100%; /* Fill grid height */
+    height: 100%;
+    /* Fill grid height */
     display: flex;
     flex-direction: column;
 }
@@ -261,10 +292,11 @@
 .card-number {
     font-size: 4rem;
     font-weight: 900;
-    color: var(--color-accent); /* Very subtle watermark number */
+    color: var(--color-accent);
+    /* Very subtle watermark number */
     line-height: 1;
-    margin-bottom: -20px; 
-    margin-top: -20px; 
+    margin-bottom: -20px;
+    margin-top: -20px;
     font-family: var(--font-heading);
     z-index: 0;
 }
@@ -286,9 +318,17 @@
     z-index: 1;
 }
 
-.card-header-left { display: block; }
-.mobile-toggle-icon { display: none; }
-.card-text-wrapper { display: block; }
+.card-header-left {
+    display: block;
+}
+
+.mobile-toggle-icon {
+    display: none;
+}
+
+.card-text-wrapper {
+    display: block;
+}
 
 
 /* --- 3. CHALLENGES (White Theme, 100vh) --- */
@@ -299,8 +339,8 @@
 /* 3x3 Grid for 9 items */
 .challenges-grid {
     display: grid;
-    grid-template-columns: repeat(3, 1fr); 
-    grid-template-rows: repeat(3, 1fr);  
+    grid-template-columns: repeat(3, 1fr);
+    grid-template-rows: repeat(3, 1fr);
     gap: 20px;
     width: 100%;
     /* max-height: 60vh; <-- REMOVE THIS LINE */
@@ -319,7 +359,8 @@
 
 .challenge-item:hover {
     border-color: var(--color-accent);
-    background: var(--color-accent-light); /* Light orange tint on hover */
+    background: var(--color-accent-light);
+    /* Light orange tint on hover */
 }
 
 .challenge-icon {
@@ -347,16 +388,19 @@
 /* --- 4. BENEFITS (Light Theme, 100vh) --- */
 .benefits-wrapper {
     display: grid;
-    grid-template-columns: 0.8fr 1.2fr; /* Image smaller, List wider */
+    grid-template-columns: 0.8fr 1.2fr;
+    /* Image smaller, List wider */
     gap: 5vw;
-    align-items: flex-start; /* CRITICAL FIX: Changed from center to allow sticky scrolling */
+    align-items: flex-start;
+    /* CRITICAL FIX: Changed from center to allow sticky scrolling */
     width: 100%;
 }
 
 .benefits-image-clean {
-    position: sticky; 
-    top: 120px; /* <-- ADD THIS: Gives clearance for your fixed header */
-    height: auto; 
+    position: sticky;
+    top: 120px;
+    /* <-- ADD THIS: Gives clearance for your fixed header */
+    height: auto;
     width: 100%;
 }
 
@@ -365,13 +409,15 @@
     height: 100%;
     object-fit: cover;
     border-radius: var(--radius-md);
-    box-shadow: 20px 20px 0px rgba(0,0,0,0.05); /* Subtle decoration */
+    box-shadow: 20px 20px 0px rgba(0, 0, 0, 0.05);
+    /* Subtle decoration */
 }
 
 .benefits-list-clean {
     display: flex;
     flex-direction: column;
-    gap: 1vh; /* Responsive gap */
+    gap: 1vh;
+    /* Responsive gap */
     justify-content: center;
 }
 
@@ -402,13 +448,44 @@
 
 /* --- RESPONSIVE FIXES --- */
 @media (max-width: 1024px) {
-    .hero-headline { font-size: 2.8rem; }
-    .cards-grid-3 { grid-template-columns: 1fr; overflow-y: auto; max-height: 50vh; display: block; }
-    .info-card { margin-bottom: 20px; }
-    .challenges-grid { grid-template-columns: 1fr; overflow-y: auto; max-height: 50vh; display: flex; flex-direction: column; }
-    .benefits-wrapper { grid-template-columns: 1fr; }
-    .benefits-image-clean { display: none; } /* Hide image on tablet to save space */
-    .fullscreen-section { height: auto; min-height: calc(100vh - 4rem); } /* Unlock height on mobile */
+    .hero-headline {
+        font-size: 2.8rem;
+    }
+
+    .cards-grid-3 {
+        grid-template-columns: 1fr;
+        overflow-y: auto;
+        max-height: 50vh;
+        display: block;
+    }
+
+    .info-card {
+        margin-bottom: 20px;
+    }
+
+    .challenges-grid {
+        grid-template-columns: 1fr;
+        overflow-y: auto;
+        max-height: 50vh;
+        display: flex;
+        flex-direction: column;
+    }
+
+    .benefits-wrapper {
+        grid-template-columns: 1fr;
+    }
+
+    .benefits-image-clean {
+        display: none;
+    }
+
+    /* Hide image on tablet to save space */
+    .fullscreen-section {
+        height: auto;
+        min-height: calc(100vh - 4rem);
+    }
+
+    /* Unlock height on mobile */
 }
 
 /* --- 5. BUILDERS SECTION (Scrollable Architecture) --- */
@@ -418,7 +495,7 @@
     grid-template-columns: 1.1fr 0.9fr;
     gap: 1vw;
     /* align-items: flex-start is REQUIRED for position: sticky to work below */
-    align-items: flex-start; 
+    align-items: flex-start;
     width: 100%;
 }
 
@@ -467,8 +544,9 @@
 
 /* Right Side: Sticky Visuals */
 .builders-visual-side {
-    position: sticky; 
-    top: 120px; /* <-- ADD THIS: Gives clearance for your fixed header */
+    position: sticky;
+    top: 120px;
+    /* <-- ADD THIS: Gives clearance for your fixed header */
     display: flex;
     flex-direction: column;
     gap: 3vh;
@@ -476,11 +554,12 @@
 
 .builders-image-clean {
     width: 100%;
-    height: auto; /* Taller image now that we have room */
+    height: auto;
+    /* Taller image now that we have room */
     border-radius: var(--radius-md);
     overflow: hidden;
     position: relative;
-    box-shadow: 15px 15px 0px rgba(223, 128, 55, 0.1); 
+    box-shadow: 15px 15px 0px rgba(223, 128, 55, 0.1);
 }
 
 .builders-image-clean img {
@@ -512,11 +591,15 @@
     .builders-wrapper {
         grid-template-columns: 1fr;
     }
+
     .builders-visual-side {
-        position: relative; /* Disables sticky on mobile */
+        position: relative;
+        /* Disables sticky on mobile */
     }
+
     .builders-image-clean {
-        display: none; /* Hide image on mobile */
+        display: none;
+        /* Hide image on mobile */
     }
 }
 
@@ -538,7 +621,7 @@
     padding: 3px;
     border-radius: 50px;
     border: 1px solid var(--color-border);
-    box-shadow: 0 4px 15px rgba(0,0,0,0.03);
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.03);
 }
 
 .process-tab {
@@ -568,9 +651,12 @@
     width: 100%;
     max-width: 1100px;
     margin: 0 auto;
-    height: auto; /* Changed from 55vh */
-    min-height: 100%; /* Ensures it fills available space */
-    padding-bottom: 2vh; /* Adds breathing room at the bottom */
+    height: auto;
+    /* Changed from 55vh */
+    min-height: 100%;
+    /* Ensures it fills available space */
+    padding-bottom: 2vh;
+    /* Adds breathing room at the bottom */
 }
 
 /* Left Sidebar Menu */
@@ -578,7 +664,7 @@
     flex: 0.8;
     display: flex;
     flex-direction: column;
-    border-right: 1px solid rgba(0,0,0,0.05);
+    border-right: 1px solid rgba(0, 0, 0, 0.05);
     padding-right: 20px;
     gap: 2vh;
 }
@@ -599,13 +685,13 @@
 }
 
 .dashboard-step-btn:hover {
-    background: rgba(0,0,0,0.02);
+    background: rgba(0, 0, 0, 0.02);
 }
 
 .dashboard-step-btn.active {
     background: var(--color-white);
     border-left-color: var(--color-accent);
-    box-shadow: 0 4px 15px rgba(0,0,0,0.03);
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.03);
 }
 
 .step-btn-number {
@@ -642,7 +728,7 @@
     border: 1px solid var(--color-border);
     border-radius: var(--radius-md);
     overflow: hidden;
-    box-shadow: 0 10px 40px rgba(0,0,0,0.04);
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.04);
     display: flex;
     flex-direction: column;
 }
@@ -656,7 +742,7 @@
 .display-image-box {
     position: relative;
     width: 100%;
-    height: 20vh; 
+    height: 20vh;
     flex-shrink: 0;
 }
 
@@ -669,7 +755,8 @@
 .image-inner-shadow {
     position: absolute;
     inset: 0;
-    box-shadow: inset 0 -20px 20px -10px var(--color-white); /* Fades the image into the white box below */
+    box-shadow: inset 0 -20px 20px -10px var(--color-white);
+    /* Fades the image into the white box below */
 }
 
 .display-text-box {
@@ -702,11 +789,35 @@
 }
 
 /* Animations */
-.fade-in { animation: fadeIn 0.4s ease-out forwards; }
-.fade-in-up { animation: fadeInUp 0.4s ease-out forwards; }
+.fade-in {
+    animation: fadeIn 0.4s ease-out forwards;
+}
 
-@keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
-@keyframes fadeInUp { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+.fade-in-up {
+    animation: fadeInUp 0.4s ease-out forwards;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+
+    to {
+        opacity: 1;
+    }
+}
+
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
 
 /* --- Responsive Adjustments --- */
 @media (max-width: 1024px) {
@@ -715,13 +826,16 @@
         height: auto;
         gap: 20px;
     }
+
     .dashboard-sidebar {
         flex-direction: row;
         border-right: none;
         padding-right: 0;
-        overflow-x: auto; /* Horizontal scroll for buttons on tablet */
+        overflow-x: auto;
+        /* Horizontal scroll for buttons on tablet */
         padding-bottom: 10px;
     }
+
     .dashboard-step-btn {
         width: auto;
         border-left: none;
@@ -729,14 +843,17 @@
         border-radius: var(--radius-md) var(--radius-md) 0 0;
         white-space: nowrap;
     }
+
     .dashboard-step-btn.active {
         border-bottom-color: var(--color-accent);
     }
 }
+
 @media (max-width: 768px) {
     .display-text-box {
         padding: 24px 20px;
     }
+
     .display-title {
         font-size: 1.5rem;
     }
@@ -746,7 +863,8 @@
 
 .trust-grid-wrapper {
     display: grid;
-    grid-template-columns: repeat(2, 1fr); /* 2x2 Grid */
+    grid-template-columns: repeat(2, 1fr);
+    /* 2x2 Grid */
     gap: 1vw;
     width: 100%;
     max-width: 1100px;
@@ -758,19 +876,20 @@
     display: flex;
     align-items: flex-start;
     gap: 24px;
-    background: var(--color-secondary); /* Uses the soft light grey from your theme */
+    background: var(--color-secondary);
+    /* Uses the soft light grey from your theme */
     border: 1px solid var(--color-border);
     border-radius: var(--radius-md);
     padding: 20px 20px;
     transition: all 0.3s ease;
-    box-shadow: 0 4px 15px rgba(0,0,0,0.02);
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.02);
 }
 
 .trust-card:hover {
     background: var(--color-white);
     border-color: var(--color-accent);
     transform: translateY(-5px);
-    box-shadow: 0 15px 35px rgba(0,0,0,0.05), 0 5px 15px rgba(223, 128, 55, 0.08);
+    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.05), 0 5px 15px rgba(223, 128, 55, 0.08);
 }
 
 /* The Glowing Circular Badge for the Icons */
@@ -779,13 +898,14 @@
     height: 64px;
     flex-shrink: 0;
     background: var(--color-white);
-    border: 2px solid rgba(223, 128, 55, 0.2); /* Soft orange border */
+    border: 2px solid rgba(223, 128, 55, 0.2);
+    /* Soft orange border */
     color: var(--color-accent);
     border-radius: 50%;
     display: flex;
     align-items: center;
     justify-content: center;
-    box-shadow: 0 8px 20px rgba(0,0,0,0.04);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.04);
     transition: all 0.3s ease;
 }
 
@@ -806,7 +926,8 @@
     display: flex;
     flex-direction: column;
     gap: 10px;
-    margin-top: 4px; /* Aligns the title visually with the center of the icon */
+    margin-top: 4px;
+    /* Aligns the title visually with the center of the icon */
 }
 
 .trust-title {
@@ -828,18 +949,27 @@
     .trust-grid-wrapper {
         gap: 20px;
     }
+
     .trust-card {
         padding: 30px 24px;
         gap: 20px;
     }
-    .trust-title { font-size: 1.25rem; }
-    .trust-desc { font-size: 0.95rem; }
+
+    .trust-title {
+        font-size: 1.25rem;
+    }
+
+    .trust-desc {
+        font-size: 0.95rem;
+    }
 }
 
 @media (max-width: 768px) {
     .trust-grid-wrapper {
-        grid-template-columns: 1fr; /* Stacks to 1 column on mobile phones */
+        grid-template-columns: 1fr;
+        /* Stacks to 1 column on mobile phones */
     }
+
     .trust-card {
         padding: 24px 20px;
     }
@@ -849,13 +979,15 @@
 
 .team-wrapper {
     display: grid;
-    grid-template-columns: 1.1fr 0.9fr; /* Story left, Cards right */
+    grid-template-columns: 1.1fr 0.9fr;
+    /* Story left, Cards right */
     gap: 1vw;
     width: 100%;
     max-width: 1100px;
     margin: 0 auto;
     align-items: center;
-    padding-bottom: 5vh; /* Extra padding for the staggered bottom card */
+    padding-bottom: 5vh;
+    /* Extra padding for the staggered bottom card */
 }
 
 /* --- Left Side: Story & Mission --- */
@@ -905,7 +1037,7 @@
     font-weight: 600;
     font-style: italic;
     color: var(--color-primary);
-    box-shadow: 0 4px 15px rgba(0,0,0,0.02);
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.02);
 }
 
 /* --- Right Side: Profile Cards (Pyramid Layout) --- */
@@ -920,7 +1052,7 @@
     border: 1px solid var(--color-border);
     border-radius: var(--radius-md);
     overflow: hidden;
-    box-shadow: 0 10px 30px rgba(0,0,0,0.03);
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.03);
     transition: all 0.3s ease;
     margin-left: 5%;
     margin-right: 5%;
@@ -929,7 +1061,7 @@
 
 /* Base hover effect for all cards */
 .team-profile-card:hover {
-    box-shadow: 0 15px 35px rgba(0,0,0,0.06);
+    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.06);
     border-color: rgba(223, 128, 55, 0.3);
 }
 
@@ -942,30 +1074,41 @@
 .team-cards-side .team-profile-card:nth-child(2) {
     transform: translateY(20px);
 }
+
 .team-cards-side .team-profile-card:nth-child(2):hover {
-    transform: translateY(15px); /* Maintains hover lift while staggered */
+    transform: translateY(15px);
+    /* Maintains hover lift while staggered */
 }
 
 /* Card 3 (Bottom Center) Spans both columns */
 .team-cards-side .team-profile-card:nth-child(3) {
-    grid-column: 1 / -1; /* Spans across both columns */
-    width: calc(45%); /* Makes it exactly the width of one card */
-    justify-self: center; /* Centers it horizontally */
-    transform: translateY(20px); /* Tucks it nicely between the top two cards */
+    grid-column: 1 / -1;
+    /* Spans across both columns */
+    width: calc(45%);
+    /* Makes it exactly the width of one card */
+    justify-self: center;
+    /* Centers it horizontally */
+    transform: translateY(20px);
+    /* Tucks it nicely between the top two cards */
 }
+
 .team-cards-side .team-profile-card:nth-child(3):hover {
-    transform: translateY(15px); /* Maintains hover lift while staggered */
+    transform: translateY(15px);
+    /* Maintains hover lift while staggered */
 }
 
 .team-cards-side .mission-quote {
-    grid-column: 1 / -1; /* Forces the quote to span across both columns */
-    margin-top: 20px; /* Adds breathing room to account for the staggered cards above */
+    grid-column: 1 / -1;
+    /* Forces the quote to span across both columns */
+    margin-top: 20px;
+    /* Adds breathing room to account for the staggered cards above */
 }
 
 .profile-image-wrapper {
     position: relative;
     width: 100%;
-    height: 150px; /* Slightly shorter to fit all 3 nicely on desktop */
+    height: 150px;
+    /* Slightly shorter to fit all 3 nicely on desktop */
     overflow: hidden;
     background: var(--color-border);
 }
@@ -973,7 +1116,10 @@
 .profile-image-wrapper img {
     width: 100%;
     height: 100%;
-    object-fit: contain;
+    object-fit: cover;
+    /* Moved from JSX to here. 'cover' usually looks best for profile cards */
+    object-position: top center;
+    /* Ensures the head/face stays in the frame if cropped */
     transition: transform 0.5s ease;
 }
 
@@ -993,7 +1139,7 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    box-shadow: 0 4px 10px rgba(0,0,0,0.15);
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
     transition: all 0.2s ease;
 }
 
@@ -1040,9 +1186,10 @@
    ========================================= */
 @media (max-width: 1024px) {
     .team-wrapper {
-        grid-template-columns: 1fr; /* Stacks story on top, cards on bottom */
+        grid-template-columns: 1fr;
         gap: 40px;
     }
+
     .team-cards-side {
         max-width: 700px;
         margin: 0 auto;
@@ -1053,13 +1200,23 @@
     #team.fullscreen-section {
         height: auto;
         min-height: fit-content;
-        padding: 30px 20px; 
+        padding: 30px 20px;
         justify-content: flex-start;
     }
 
-    #team .section-heading { margin-bottom: 20px; }
-    #team .section-title { font-size: 1.6rem; line-height: 1.2; }
-    #team .section-subtitle { font-size: 0.95rem; max-width: 100%; }
+    #team .section-heading {
+        margin-bottom: 20px;
+    }
+
+    #team .section-title {
+        font-size: 1.6rem;
+        line-height: 1.2;
+    }
+
+    #team .section-subtitle {
+        font-size: 0.95rem;
+        max-width: 100%;
+    }
 
     .team-wrapper {
         display: flex;
@@ -1068,26 +1225,38 @@
         padding-bottom: 20px;
     }
 
-    .story-headline { font-size: 1.8rem; }
-    .story-text-content p { font-size: 0.95rem; line-height: 1.6; margin-bottom: 16px; }
-    
+    .story-headline {
+        font-size: 1.8rem;
+    }
+
+    .story-text-content p {
+        font-size: 0.95rem;
+        line-height: 1.6;
+        margin-bottom: 16px;
+    }
+
     .mission-quote {
         margin-top: 0px;
         padding: 12px;
-        font-size: 1.1rem; 
+        font-size: 1.1rem;
     }
 
     /* Stack all cards to a single column on mobile */
     .team-cards-side {
-        grid-template-columns: 1fr; 
+        grid-template-columns: 1fr;
         width: 100%;
     }
 
-    /* Remove the desktop 'staggers' and specific widths so cards sit flush */
+    /* Reset desktop margins and staggers so mobile cards sit flush and full width */
+    .team-cards-side .team-profile-card {
+        margin-left: 0;
+        margin-right: 0;
+        width: 100% !important;
+    }
+
     .team-cards-side .team-profile-card:nth-child(2),
     .team-cards-side .team-profile-card:nth-child(3) {
         transform: translateY(0);
-        width: 100%;
     }
 
     /* Reset hover transforms for mobile stack */
@@ -1097,23 +1266,38 @@
         transform: translateY(-5px);
     }
 
-    .profile-image-wrapper { height: 160px; }
-    /* .profile-image-wrapper img { object-fit: cover; } */
-    .profile-name { font-size: 1.15rem; }
-    .profile-role { font-size: 0.9rem; }
-    .profile-exp { font-size: 0.85rem; }
+    /* FIX FOR MOBILE IMAGES */
+    .profile-image-wrapper {
+        height: 280px;
+        /* Increased from 160px so it looks like a proper portrait photo */
+        /* Alternatively, you can use: aspect-ratio: 4/3; height: auto; */
+    }
+
+    .profile-name {
+        font-size: 1.15rem;
+    }
+
+    .profile-role {
+        font-size: 0.9rem;
+    }
+
+    .profile-exp {
+        font-size: 0.85rem;
+    }
 }
 
 /* --- 9. EARLY ACCESS & CTA SECTION --- */
 
 .early-access-wrapper {
     display: grid;
-    grid-template-columns: 1fr 1fr; /* Perfect 50/50 split */
+    grid-template-columns: 1fr 1fr;
+    /* Perfect 50/50 split */
     gap: 4vw;
     width: 100%;
     max-width: 1100px;
     margin: 0 auto;
-    align-items: center; /* Centers everything vertically */
+    align-items: center;
+    /* Centers everything vertically */
     padding-bottom: 2vh;
 }
 
@@ -1159,7 +1343,7 @@
     padding: 20px 24px;
     border: 1px solid var(--color-border);
     border-radius: var(--radius-md);
-    box-shadow: 0 4px 15px rgba(0,0,0,0.02);
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.02);
     transition: transform 0.2s ease, border-color 0.2s ease;
 }
 
@@ -1185,10 +1369,11 @@
 
 /* --- Right Side: Dark VIP CTA Card --- */
 .cta-card-side {
-    background: var(--color-primary); /* Dark Navy/Black */
+    background: var(--color-primary);
+    /* Dark Navy/Black */
     border-radius: var(--radius-md);
     padding: 40px 45px;
-    box-shadow: 0 20px 40px rgba(0,0,0,0.15), inset 0 1px 1px rgba(255,255,255,0.1);
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15), inset 0 1px 1px rgba(255, 255, 255, 0.1);
     position: relative;
     overflow: hidden;
 }
@@ -1234,7 +1419,8 @@
 
 .cta-desc {
     font-size: 1rem;
-    color: var(--color-blue-light); /* Light Gray */
+    color: var(--color-blue-light);
+    /* Light Gray */
     line-height: 1.6;
     margin: 0 0 30px 0;
 }
@@ -1250,8 +1436,8 @@
     width: 100%;
     padding: 14px 20px;
     border-radius: 6px;
-    border: 1px solid rgba(255,255,255,0.2);
-    background: rgba(0,0,0,0.2);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    background: rgba(0, 0, 0, 0.2);
     color: var(--color-white);
     font-size: 1rem;
     font-family: var(--font-body);
@@ -1265,7 +1451,7 @@
 
 .cta-input:focus {
     border-color: var(--color-accent);
-    background: rgba(0,0,0,0.4);
+    background: rgba(0, 0, 0, 0.4);
     box-shadow: 0 0 0 3px rgba(223, 128, 55, 0.2);
 }
 
@@ -1281,9 +1467,11 @@
 /* --- Responsive Adjustments --- */
 @media (max-width: 1024px) {
     .early-access-wrapper {
-        grid-template-columns: 1fr; /* Stacks vertically */
+        grid-template-columns: 1fr;
+        /* Stacks vertically */
         gap: 40px;
     }
+
     .focus-content-side {
         padding-right: 0;
     }
@@ -1293,7 +1481,10 @@
     .cta-card-side {
         padding: 30px 24px;
     }
-    .cta-title { font-size: 1.6rem; }
+
+    .cta-title {
+        font-size: 1.6rem;
+    }
 }
 
 /* --- 10. FAQ SECTION (Accordion) --- */
@@ -1304,7 +1495,8 @@
     width: 100%;
     max-width: 900px;
     margin: 0 auto;
-    padding-bottom: 4vh; /* Breathing room at the bottom of the scroll */
+    padding-bottom: 4vh;
+    /* Breathing room at the bottom of the scroll */
 }
 
 .faq-item {
@@ -1368,20 +1560,23 @@
 }
 
 .faq-answer-inner {
-    overflow: hidden; /* Crucial: hides the text when grid row is 0fr */
+    overflow: hidden;
+    /* Crucial: hides the text when grid row is 0fr */
 }
 
 .faq-answer-inner p {
     font-size: 1.05rem;
     color: var(--color-text-muted);
     line-height: 1.7;
-    margin: 0 0 24px 0; /* Margin only at the bottom for spacing */
+    margin: 0 0 24px 0;
+    /* Margin only at the bottom for spacing */
     max-width: 800px;
 }
 
 /* --- Active/Open State --- */
 .faq-item.open {
-    border-color: rgba(223, 128, 55, 0.3); /* Subtle orange border when open */
+    border-color: rgba(223, 128, 55, 0.3);
+    /* Subtle orange border when open */
 }
 
 .faq-item.open .faq-question-text {
@@ -1398,7 +1593,7 @@
 }
 
 .faq-item.open .icon-vertical {
-    opacity: 0; 
+    opacity: 0;
 }
 
 /* Opens the accordion */
@@ -1411,9 +1606,11 @@
     .faq-question-btn {
         padding: 20px 0;
     }
+
     .faq-question-text {
         font-size: 1.05rem;
     }
+
     .faq-answer-inner p {
         font-size: 0.95rem;
         margin: 0 0 20px 0;
@@ -1446,7 +1643,7 @@
     flex-direction: column;
     align-items: center;
     text-align: center;
-    box-shadow: 0 4px 20px rgba(0,0,0,0.03);
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.03);
     border: 1px solid var(--color-border);
     transition: all 0.3s ease;
     position: relative;
@@ -1455,11 +1652,16 @@
 
 .final-cta-card:hover {
     transform: translateY(-5px);
-    box-shadow: 0 15px 35px rgba(0,0,0,0.06);
+    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.06);
 }
 
-.investor-card { border-top: 4px solid var(--color-accent); }
-.builder-card { border-top: 4px solid var(--color-accent); }
+.investor-card {
+    border-top: 4px solid var(--color-accent);
+}
+
+.builder-card {
+    border-top: 4px solid var(--color-accent);
+}
 
 .cta-card-icon {
     width: 64px;
@@ -1480,7 +1682,10 @@
     color: var(--color-primary);
 }
 
-.cta-card-icon svg { width: 32px; height: 32px; }
+.cta-card-icon svg {
+    width: 32px;
+    height: 32px;
+}
 
 .cta-card-title {
     font-size: 1.8rem;
@@ -1531,15 +1736,16 @@
    MOBILE RESPONSIVENESS: SECTION 1 (HERO)
    ========================================= */
 @media (max-width: 768px) {
+
     /* 1. FIX THE TOP SPACING */
     .hero-section {
-        margin-top: 4rem; 
+        margin-top: 4rem;
         justify-content: center;
     }
 
     /* 2. Make the background gradient black on mobile */
     .hero-section::after {
-        background: linear-gradient(to bottom, rgba(0,0,0,0.85) 60%, rgba(0,0,0,0.85) 60%);
+        background: linear-gradient(to bottom, rgba(0, 0, 0, 0.85) 60%, rgba(0, 0, 0, 0.85) 60%);
     }
 
     /* 3. Center the content */
@@ -1552,13 +1758,13 @@
 
     /* 4. Make fonts smaller and more refined */
     .hero-tag {
-        font-size: 0.75rem; 
+        font-size: 0.75rem;
         padding: 6px 12px;
         margin-bottom: 20px;
     }
 
     .hero-headline {
-        font-size: 1.8rem; 
+        font-size: 1.8rem;
         line-height: 1;
         margin-bottom: 20px;
     }
@@ -1569,7 +1775,7 @@
     }
 
     .hero-subheadline {
-        font-size: 0.9rem; 
+        font-size: 0.9rem;
         text-align: center;
         margin-bottom: 30px;
     }
@@ -1584,7 +1790,7 @@
     .hero-cta-group .btn {
         width: 100%;
         text-align: center;
-        font-size: 1rem; 
+        font-size: 1rem;
         padding: 12px 20px;
     }
 }
@@ -1592,18 +1798,30 @@
 /* =========================================
    MOBILE RESPONSIVENESS: SECTION 2 (ABOUT)
    ========================================= */
-   @media (max-width: 768px) {
+@media (max-width: 768px) {
+
     /* 1. Unlock section height */
     #about.fullscreen-section {
         height: auto;
         min-height: fit-content;
-        padding: 30px 20px; /* Keep the padding rule if you want smaller spacing on mobile! */
+        padding: 30px 20px;
+        /* Keep the padding rule if you want smaller spacing on mobile! */
         justify-content: flex-start;
     }
 
-    #about .section-heading { margin-bottom: 10px; }
-    #about .section-title { font-size: 1.6rem; line-height: 1; }
-    #about .section-subtitle { font-size: 0.95rem; max-width: 100%; }
+    #about .section-heading {
+        margin-bottom: 10px;
+    }
+
+    #about .section-title {
+        font-size: 1.6rem;
+        line-height: 1;
+    }
+
+    #about .section-subtitle {
+        font-size: 0.95rem;
+        max-width: 100%;
+    }
 
     /* 2. Format Grid into a Column */
     .cards-grid-3 {
@@ -1626,7 +1844,7 @@
         justify-content: space-between;
         align-items: center;
     }
-    
+
     .card-header-left {
         display: flex;
         align-items: center;
@@ -1636,7 +1854,7 @@
     /* Remove the watermark effect on mobile so it sits cleanly next to the title */
     .card-number {
         font-size: 2.2rem;
-        margin: 0; 
+        margin: 0;
         line-height: 1;
     }
 
@@ -1686,24 +1904,26 @@
 /* =========================================
    MOBILE RESPONSIVENESS: SECTION 3 (CHALLENGES)
    ========================================= */
-   @media (max-width: 768px) {
+@media (max-width: 768px) {
+
     /* 1. Unlock the section height so it naturally fits all 9 items */
     #challenges.fullscreen-section {
         height: auto;
         min-height: fit-content;
-        padding: 30px 20px; /* Keep the padding rule if you want smaller spacing on mobile! */
+        padding: 30px 20px;
+        /* Keep the padding rule if you want smaller spacing on mobile! */
         justify-content: flex-start;
     }
 
     #challenges .section-heading {
         margin-bottom: 10px;
     }
-    
+
     #challenges .section-title {
         font-size: 1.6rem;
         line-height: 1;
     }
-    
+
     #challenges .section-subtitle {
         font-size: 0.95rem;
         max-width: 100%;
@@ -1713,23 +1933,26 @@
     .challenges-grid {
         display: grid;
         grid-template-columns: 1fr;
-        gap: 12px; /* Tighter gap to save vertical space */
-        max-height: none; /* Kills the internal scroll trap */
+        gap: 12px;
+        /* Tighter gap to save vertical space */
+        max-height: none;
+        /* Kills the internal scroll trap */
         overflow-y: visible;
     }
 
     /* 3. Streamline the cards for mobile */
     .challenge-item {
-        padding: 16px; /* Slightly tighter padding */
+        padding: 16px;
+        /* Slightly tighter padding */
     }
-    
+
     .challenge-icon {
         min-width: 28px;
         height: 28px;
         font-size: 0.85rem;
         margin-right: 12px;
     }
-    
+
     .challenge-text {
         font-size: 0.95rem;
     }
@@ -1738,12 +1961,14 @@
 /* =========================================
    MOBILE RESPONSIVENESS: SECTION 4 (BENEFITS)
    ========================================= */
-   @media (max-width: 768px) {
+@media (max-width: 768px) {
+
     /* 1. Unlock the section height */
     #benefits.fullscreen-section {
         height: auto;
         min-height: fit-content;
-        padding: 30px 20px; /* Keep the padding rule if you want smaller spacing on mobile! */
+        padding: 30px 20px;
+        /* Keep the padding rule if you want smaller spacing on mobile! */
         justify-content: flex-start;
     }
 
@@ -1751,12 +1976,12 @@
     #benefits .section-heading {
         margin-bottom: 10px;
     }
-    
+
     #benefits .section-title {
         font-size: 1.6rem;
         line-height: 1;
     }
-    
+
     #benefits .section-subtitle {
         font-size: 0.95rem;
         max-width: 100%;
@@ -1769,7 +1994,8 @@
     }
 
     .benefit-row {
-        gap: 12px; /* Brings the checkmark slightly closer to the text */
+        gap: 12px;
+        /* Brings the checkmark slightly closer to the text */
     }
 
     .check-mark {
@@ -1790,12 +2016,14 @@
 /* =========================================
    MOBILE RESPONSIVENESS: SECTION 5 (BUILDERS)
    ========================================= */
-   @media (max-width: 768px) {
+@media (max-width: 768px) {
+
     /* 1. Unlock the section height to prevent cutoffs */
     #builders.fullscreen-section {
         height: auto;
         min-height: fit-content;
-        padding: 30px 20px; /* Keep the padding rule if you want smaller spacing on mobile! */
+        padding: 30px 20px;
+        /* Keep the padding rule if you want smaller spacing on mobile! */
         justify-content: flex-start;
     }
 
@@ -1808,7 +2036,7 @@
         font-size: 1.6rem;
         line-height: 1;
     }
-    
+
     #builders .section-subtitle {
         font-size: 0.95rem;
         max-width: 100%;
@@ -1850,7 +2078,8 @@
     }
 
     .builder-title-inline {
-        display: inline; /* Keeps the colon connected to the title */
+        display: inline;
+        /* Keeps the colon connected to the title */
         font-size: 1rem;
         font-weight: 700;
         color: var(--color-primary);
@@ -1870,7 +2099,8 @@
     }
 
     .builders-image-clean {
-        display: none; /* Hide the image on mobile to save screen space */
+        display: none;
+        /* Hide the image on mobile to save screen space */
     }
 
     /* Style the closing box like a premium highlight */
@@ -1881,7 +2111,7 @@
         background: var(--color-white);
         border-left: 4px solid var(--color-accent);
         border-radius: 0 var(--radius-md) var(--radius-md) 0;
-        box-shadow: 0 4px 15px rgba(0,0,0,0.03);
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.03);
     }
 
     .builders-closing-box p {
@@ -1893,12 +2123,14 @@
 /* =========================================
    MOBILE RESPONSIVENESS: SECTION 6 (PROCESS)
    ========================================= */
-   @media (max-width: 768px) {
+@media (max-width: 768px) {
+
     /* 1. Match the tight section spacing from Section 5 */
     #process.fullscreen-section {
         height: auto;
         min-height: fit-content;
-        padding: 30px 20px; /* Keep the padding rule if you want smaller spacing on mobile! */
+        padding: 30px 20px;
+        /* Keep the padding rule if you want smaller spacing on mobile! */
         justify-content: flex-start;
     }
 
@@ -1919,9 +2151,9 @@
 
     /* 3. Tighten the main Tab toggles */
     .process-tabs-container {
-        margin-bottom: 15px; 
+        margin-bottom: 15px;
     }
-    
+
     .process-tab {
         padding: 8px 16px;
         font-size: 0.85rem;
@@ -1930,7 +2162,7 @@
     /* 4. Dashboard layout adjustments */
     .dashboard-wrapper {
         flex-direction: column;
-        gap: 12px; 
+        gap: 12px;
     }
 
     /* 5. Horizontal scroll for step buttons */
@@ -1939,8 +2171,9 @@
         flex-direction: row;
         border-right: none;
         padding-right: 0;
-        overflow-x: auto; /* Allows swiping left/right */
-        padding-bottom: 5px; 
+        overflow-x: auto;
+        /* Allows swiping left/right */
+        padding-bottom: 5px;
         gap: 8px;
     }
 
@@ -1952,11 +2185,12 @@
     /* Make step buttons compact and stop them from squishing */
     .dashboard-step-btn {
         width: auto;
-        flex-shrink: 0; /* CRITICAL FIX: Stops buttons from disappearing */
+        flex-shrink: 0;
+        /* CRITICAL FIX: Stops buttons from disappearing */
         border-left: none;
-        border-bottom: 2px solid transparent; 
+        border-bottom: 2px solid transparent;
         border-radius: var(--radius-md) var(--radius-md) 0 0;
-        white-space: nowrap; 
+        white-space: nowrap;
         padding: 8px 12px;
         gap: 8px;
     }
@@ -1970,19 +2204,19 @@
     .step-btn-number {
         font-size: 1rem;
     }
-    
+
     .step-btn-title {
         font-size: 0.9rem;
     }
 
     /* 6. Display window adjustments */
     .display-image-box {
-        height: 20vh; 
+        height: 20vh;
         min-height: 150px;
     }
 
     .display-text-box {
-        padding: 16px 20px; 
+        padding: 16px 20px;
     }
 
     .display-step-badge {
@@ -1991,7 +2225,7 @@
     }
 
     .display-title {
-        font-size: 1.4rem; 
+        font-size: 1.4rem;
         margin-bottom: 8px;
     }
 
@@ -2004,12 +2238,14 @@
 /* =========================================
    MOBILE RESPONSIVENESS: SECTION 7 (TRUST)
    ========================================= */
-   @media (max-width: 768px) {
+@media (max-width: 768px) {
+
     /* 1. Match the unified section spacing */
     #trust.fullscreen-section {
         height: auto;
         min-height: fit-content;
-        padding: 30px 20px; /* Keep the padding rule if you want smaller spacing on mobile! */
+        padding: 30px 20px;
+        /* Keep the padding rule if you want smaller spacing on mobile! */
         justify-content: flex-start;
     }
 
@@ -2035,14 +2271,17 @@
 
     /* 3. Refine the Grid and Cards for smaller screens */
     .trust-grid-wrapper {
-        grid-template-columns: 1fr; /* Ensures 1 column */
-        gap: 16px; /* Tighter gap between cards */
+        grid-template-columns: 1fr;
+        /* Ensures 1 column */
+        gap: 16px;
+        /* Tighter gap between cards */
         padding-bottom: 0px;
     }
 
     .trust-card {
         padding: 12px;
-        gap: 8px; /* Tighter gap between icon and text */
+        gap: 8px;
+        /* Tighter gap between icon and text */
         align-items: flex-start;
     }
 
@@ -2077,12 +2316,14 @@
 /* =========================================
    MOBILE RESPONSIVENESS: SECTION 8 (TEAM)
    ========================================= */
-   @media (max-width: 768px) {
+@media (max-width: 768px) {
+
     /* 1. Match the unified section spacing */
     #team.fullscreen-section {
         height: auto;
         min-height: fit-content;
-        padding: 30px 20px; /* Keep the padding rule if you want smaller spacing on mobile! */
+        padding: 30px 20px;
+        /* Keep the padding rule if you want smaller spacing on mobile! */
         justify-content: flex-start;
     }
 
@@ -2124,13 +2365,15 @@
     .mission-quote {
         margin-top: 0px;
         padding: 12px;
-        font-size: 1.1rem; /* Shrunk the massive quote */
+        font-size: 1.1rem;
+        /* Shrunk the massive quote */
     }
 
     /* 5. Fix the Founder Cards */
     .team-cards-side {
         display: grid;
-        grid-template-columns: 1fr; /* Force 1 column on all phones */
+        grid-template-columns: 1fr;
+        /* Force 1 column on all phones */
         gap: 20px;
         width: 100%;
     }
@@ -2142,17 +2385,17 @@
 
     /* Slightly shorter images to save screen space */
     .profile-image-wrapper {
-        height: 220px; 
+        height: 220px;
     }
 
     .profile-name {
         font-size: 1.15rem;
     }
-    
+
     .profile-role {
         font-size: 0.9rem;
     }
-    
+
     .profile-exp {
         font-size: 0.85rem;
     }
@@ -2161,12 +2404,14 @@
 /* =========================================
    MOBILE RESPONSIVENESS: SECTION 9 (EARLY ACCESS)
    ========================================= */
-   @media (max-width: 768px) {
+@media (max-width: 768px) {
+
     /* 1. Match the unified section spacing */
     #early-access.fullscreen-section {
         height: auto;
         min-height: fit-content;
-        padding: 30px 20px; /* Keep the padding rule if you want smaller spacing on mobile! */
+        padding: 30px 20px;
+        /* Keep the padding rule if you want smaller spacing on mobile! */
         justify-content: flex-start;
     }
 
@@ -2224,7 +2469,8 @@
 
     /* 5. Right Side: Dark CTA Card */
     .cta-card-side {
-        padding: 24px 20px; /* Reduces the massive desktop padding */
+        padding: 24px 20px;
+        /* Reduces the massive desktop padding */
     }
 
     .cta-badge {
@@ -2234,7 +2480,8 @@
     }
 
     .cta-title {
-        font-size: 1.6rem; /* Scaled down to fit phones nicely */
+        font-size: 1.6rem;
+        /* Scaled down to fit phones nicely */
         margin-bottom: 12px;
     }
 
@@ -2262,12 +2509,14 @@
 /* =========================================
    MOBILE RESPONSIVENESS: SECTION 10 (FAQ)
    ========================================= */
-   @media (max-width: 768px) {
+@media (max-width: 768px) {
+
     /* 1. Match the unified section spacing */
     #faq.fullscreen-section {
         height: auto;
         min-height: fit-content;
-        padding: 30px 20px; /* Keep the padding rule if you want smaller spacing on mobile! */
+        padding: 30px 20px;
+        /* Keep the padding rule if you want smaller spacing on mobile! */
         justify-content: flex-start;
     }
 
@@ -2293,12 +2542,14 @@
 
     /* 4. Adjust the Question Button to fit mobile thumbs */
     .faq-question-btn {
-        padding: 16px 0; /* Tighter padding for mobile */
+        padding: 16px 0;
+        /* Tighter padding for mobile */
         gap: 16px;
     }
 
     .faq-question-text {
-        font-size: 1.05rem; /* Scaled down slightly so long questions don't wrap awkwardly */
+        font-size: 1.05rem;
+        /* Scaled down slightly so long questions don't wrap awkwardly */
         line-height: 1.4;
     }
 
@@ -2316,7 +2567,8 @@
     /* 5. Adjust the Answer Text */
     .faq-answer-inner p {
         font-size: 0.95rem;
-        margin: 0 0 16px 0; /* Tighter bottom margin before the next line */
+        margin: 0 0 16px 0;
+        /* Tighter bottom margin before the next line */
         line-height: 1.6;
     }
 }
@@ -2324,17 +2576,28 @@
 /* =========================================
    MOBILE RESPONSIVENESS: SECTION 11 (FINAL CTA)
    ========================================= */
-   @media (max-width: 768px) {
+@media (max-width: 768px) {
     #contact.fullscreen-section {
         height: auto;
         min-height: fit-content;
-        padding: 30px 20px; /* Keep the padding rule if you want smaller spacing on mobile! */
+        padding: 30px 20px;
+        /* Keep the padding rule if you want smaller spacing on mobile! */
         justify-content: flex-start;
     }
 
-    #contact .section-heading { margin-bottom: 20px; }
-    #contact .section-title { font-size: 1.6rem; line-height: 1.2; }
-    #contact .section-subtitle { font-size: 0.95rem; max-width: 100%; }
+    #contact .section-heading {
+        margin-bottom: 20px;
+    }
+
+    #contact .section-title {
+        font-size: 1.6rem;
+        line-height: 1.2;
+    }
+
+    #contact .section-subtitle {
+        font-size: 0.95rem;
+        max-width: 100%;
+    }
 
     /* Show the toggle tabs on mobile */
     .mobile-cta-tabs {
@@ -2361,13 +2624,37 @@
 
     /* Make the active card look perfect on mobile */
     .final-cta-card {
-        padding: 12px; 
+        padding: 12px;
     }
 
-    .cta-card-icon { width: 56px; height: 56px; margin-bottom: 0px; }
-    .cta-card-icon svg { width: 28px; height: 28px; }
-    .cta-card-title { font-size: 1.5rem; margin-bottom: 0px; }
-    .cta-card-text { font-size: 1rem; margin-bottom: 10px; }
-    .cta-action-btn { padding: 10px; font-size: 1rem; margin-bottom: 16px; }
-    .cta-card-footer { font-size: 0.85rem; }
+    .cta-card-icon {
+        width: 56px;
+        height: 56px;
+        margin-bottom: 0px;
+    }
+
+    .cta-card-icon svg {
+        width: 28px;
+        height: 28px;
+    }
+
+    .cta-card-title {
+        font-size: 1.5rem;
+        margin-bottom: 0px;
+    }
+
+    .cta-card-text {
+        font-size: 1rem;
+        margin-bottom: 10px;
+    }
+
+    .cta-action-btn {
+        padding: 10px;
+        font-size: 1rem;
+        margin-bottom: 16px;
+    }
+
+    .cta-card-footer {
+        font-size: 0.85rem;
+    }
 }
