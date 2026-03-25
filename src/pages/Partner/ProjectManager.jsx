@@ -437,7 +437,8 @@ const ProjectManager = () => {
                                 <div>
                                     <Label className={labelStyle}>Bank Approvals *</Label>
                                     <select required name="bankApprovals" value={currentProject.bankApprovals} onChange={handleInputChange} className={selectStyle}>
-                                        <option value="No">No</option><option value="Yes">Yes</option>
+                                        <option value="No">No</option>
+<option value="Yes">Yes</option>
                                     </select>
                                 </div>
                                 {currentProject.bankApprovals === 'Yes' && (
@@ -447,7 +448,8 @@ const ProjectManager = () => {
                                 <div>
                                     <Label className={labelStyle}>Existing Borrowings *</Label>
                                     <select required name="existingBorrowings" value={currentProject.existingBorrowings} onChange={handleInputChange} className={selectStyle}>
-                                        <option value="No">No</option><option value="Yes">Yes</option>
+                                        <option value="No">No</option>
+<option value="Yes">Yes</option>
                                     </select>
                                 </div>
                                 {currentProject.existingBorrowings === 'Yes' && (
@@ -480,7 +482,8 @@ const ProjectManager = () => {
                                 <div>
                                     <Label className={labelStyle}>Buyback Guarantee? *</Label>
                                     <select required name="buybackGuarantee" value={currentProject.buybackGuarantee} onChange={handleInputChange} className={selectStyle}>
-                                        <option value="No">No</option><option value="Yes">Yes</option>
+                                        <option value="No">No</option>
+<option value="Yes">Yes</option>
                                     </select>
                                 </div>
                                 {currentProject.buybackGuarantee === 'Yes' && (
@@ -490,7 +493,8 @@ const ProjectManager = () => {
                                 <div>
                                     <Label className={labelStyle}>Available for Rent? *</Label>
                                     <select required name="availableForRent" value={currentProject.availableForRent} onChange={handleInputChange} className={selectStyle}>
-                                        <option value="No">No</option><option value="Yes">Yes</option>
+                                        <option value="No">No</option>
+<option value="Yes">Yes</option>
                                     </select>
                                 </div>
                                 {currentProject.availableForRent === 'Yes' && (

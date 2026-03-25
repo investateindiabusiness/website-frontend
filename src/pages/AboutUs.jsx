@@ -88,7 +88,7 @@ const AboutUs = () => {
                 <div className="absolute -top-4 -left-4 w-24 h-24 bg-orange-100 rounded-full -z-10"></div>
                 <div className="absolute -bottom-4 -right-4 w-32 h-32 bg-blue-100 rounded-full -z-10"></div>
                 <img
-                  src="https://images.unsplash.com/photo-1556761175-5973dc0f32e7?ixlib=rb-4.0.3&auto=format&fit=crop&w=1632&q=80"
+                  src="/about-us.jpeg?ixlib=rb-4.0.3&auto=format&fit=crop&w=1632&q=80"
                   alt="Team meeting in modern office"
                   className="rounded-2xl shadow-2xl w-full h-auto object-cover"
                 />
@@ -99,7 +99,7 @@ const AboutUs = () => {
         </section>
 
         {/* --- Stats Counter --- */}
-        <section className="py-12 bg-[#0b264f] text-white">
+        {/* <section className="py-12 bg-[#0b264f] text-white">
           <div className="container mx-auto px-4">
             <div className="grid grid-cols-2 md:grid-cols-4 gap-8 text-center divide-x divide-blue-800/50">
               <div className="p-4">
@@ -120,7 +120,7 @@ const AboutUs = () => {
               </div>
             </div>
           </div>
-        </section>
+        </section> */}
 
         {/* --- Core Values --- */}
         <section className="py-16 md:py-24 bg-gray-50">
@@ -193,7 +193,7 @@ const AboutUs = () => {
               <div className="order-1 md:order-2">
                 {/*  */}
                 <img
-                  src="https://images.unsplash.com/photo-1560518883-ce09059eeffa?ixlib=rb-4.0.3&auto=format&fit=crop&w=1073&q=80"
+                  src="/about-us2.jpg?ixlib=rb-4.0.3&auto=format&fit=crop&w=1073&q=80"
                   alt="Modern Apartment Building"
                   className="rounded-2xl shadow-xl w-full h-[400px] object-cover"
                 />
@@ -249,7 +249,7 @@ const AboutUs = () => {
                     <strong>Pankaj Gupta</strong> has built a strong presence in the diamond and jewellery industry as a manufacturer, wholesaler and retailer through <strong>Murari Cap Pvt. Ltd.</strong> and <strong>Avik Jewels</strong>, operating across the globe. <br /> <br />
                     He is also well known in the <strong>Hyderabad real estate market</strong> and is a partner in <strong>Swandurga Construction LLP</strong>, which has successfully completed multiple real estate developments, with several projects currently ongoing. <br /> <br />
                     <strong>Atish Agarwal</strong> is an entrepreneur with diversified business interests across <strong>textiles, retail, fashion, jewellery, and real estate advisory.</strong> Through ventures such as <strong>Swastik Tex Hub India LLP, S3-Mart, Simone Jewels, Stitch Hub, and Swastik Realty,</strong> he has built businesses focused on operational discipline, market understanding, and long-term growth. <br /> <br />
-                    Together, <strong>Atish Agarwal and Pankaj Gupta</strong> are partners in <strong>Istana Realtors.</strong> They have successfully delivered projects such as <strong>Shree IstanaShree Istana</strong> and <strong>Dev Istana,</strong> and are currently developing new projects including <strong>Vann Istana</strong> and <strong>Green Gold Istana.</strong> <br /> <br />
+                    Together, <strong>Atish Agarwal and Pankaj Gupta</strong> are partners in <strong>Istana Realtors.</strong> They have successfully delivered projects such as <strong>Shree Istana</strong> and <strong>Dev Istana,</strong> and are currently developing new projects including <strong>Vann Istana</strong> and <strong>Green Gold Istana.</strong> <br /> <br />
                     They are widely recognized personalities and established brand names in <strong>Hyderabad across the jewellery, textile, and real estate sectors.</strong>
 
                   </p>

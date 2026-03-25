@@ -173,7 +173,7 @@ const ProjectDetail = () => {
   if (!project) return null;
 
   return (
-    <div className="min-h-screen bg-[#F4F5F7] font-sans pb-10">
+    <div className="min-h-screen bg-[#F4F5F7] font-sans">
       <Header />
 
       <main className="container mx-auto px-4 py-4 md:py-6 mt-[2rem] md:mt-[4rem]">
@@ -231,7 +231,7 @@ const ProjectDetail = () => {
             <div className="bg-white p-4 md:p-6 rounded-xl shadow-sm border border-gray-200">
               <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-6 gap-2">
                 <h2 className="text-lg font-bold text-[#0b264f]">Financial & Legal Due Diligence</h2>
-                <Badge variant="outline" className="border-orange-200 bg-orange-50 text-orange-700">Verified Data</Badge>
+                <Badge variant="outline" className="border-green-200 bg-green-50 text-green-700">Verified Data</Badge>
               </div>
 
               <div className="divide-y divide-gray-100">

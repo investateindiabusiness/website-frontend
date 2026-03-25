@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Building2, MapPin, Search, Users, TrendingUp, MoreVertical, Wallet, HardHat, PieChart as PieChartIcon, Loader2 } from 'lucide-react';
+import { Building2, MapPin, Search, Users, TrendingUp, MoreVertical, Wallet, HardHat, PieChart as PieChartIcon, Loader2, Plus } from 'lucide-react';
 import { AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
@@ -12,12 +12,12 @@ import { toast } from '@/hooks/use-toast';
 
 // --- MOCK DATA (Analytics kept mock until DB supports historical sales data) ---
 const ANALYTICS_DATA = [
-  { name: 'Sep', leads: 40, sales: 24 },
-  { name: 'Oct', leads: 30, sales: 13 },
-  { name: 'Nov', leads: 60, sales: 38 },
-  { name: 'Dec', leads: 90, sales: 55 },
-  { name: 'Jan', leads: 65, sales: 40 },
-  { name: 'Feb', leads: 85, sales: 68 },
+  { name: 'Sep', leads: 0, sales: 0 },
+  { name: 'Oct', leads: 0, sales: 0 },
+  { name: 'Nov', leads: 0, sales: 0 },
+  { name: 'Dec', leads: 0, sales: 0 },
+  { name: 'Jan', leads: 0, sales: 0 },
+  { name: 'Feb', leads: 0, sales: 0 },
 ];
 
 const BuilderDashboard = () => {

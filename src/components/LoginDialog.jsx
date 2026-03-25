@@ -10,7 +10,7 @@ import { loginRequest } from '@/api';
 import { Loader2, LogIn, ArrowRight, LayoutDashboard, ShieldCheck, Building2, AlertCircle } from 'lucide-react';
 import GoogleAuthButton from '@/components/GoogleAuthButton';
 
-const LoginDialog = ({ isOpen, onOpenChange, onSwitchToRegister, initialData = {}, onContinueOnboarding }) => {
+const LoginDialog = ({ isOpen, onOpenChange, onSwitchToRegister, initialData = {} }) => {
   const navigate = useNavigate();
   const { login } = useAuth();
 
@@ -59,21 +59,38 @@ const LoginDialog = ({ isOpen, onOpenChange, onSwitchToRegister, initialData = {
 
       if (err.error === 'STEP2_PENDING') {
         toast({ title: 'Profile Incomplete', description: 'Please complete your initial profile details.' });
-        onOpenChange(false); 
+        onOpenChange(false);
         setTimeout(() => {
           onSwitchToRegister({ uid: err.uid, email: err.email, name: err.name, skipStep1: true, userType: userType });
         }, 300);
 
-      } else if (err.error === 'CHANGES_REQUESTED' || err.error === 'FORM2_PENDING') {
-        console.log("[1. LOGIN DIALOG] Detected CHANGES_REQUESTED. Closing login modal and starting 300ms timer...");
-        toast({ title: 'Action Required', description: err.message });
-        onOpenChange(false); 
-
+      } else if (err.error === 'CHANGES_REQUESTED') {
+        // --- NEW: Route to Register Dialog with Update Data ---
+        toast({ title: 'Update Required', description: err.message });
+        onOpenChange(false);
         setTimeout(() => {
-          console.log("[2. LOGIN DIALOG] 300ms timer finished. Calling onContinueOnboarding...");
-          onContinueOnboarding(err); 
+          onSwitchToRegister({
+            uid: err.uid,
+            userType: userType,
+            skipStep1: true,
+            phase: 'CHANGES_REQUESTED',
+            adminRequests: err.adminRequests,
+            userData: err.userData
+          });
         }, 300);
 
+      } else if (err.error === 'FORM2_PENDING') {
+        toast({ title: 'Action Required', description: err.message });
+        onOpenChange(false);
+        setTimeout(() => {
+          onSwitchToRegister({
+            uid: err.uid,
+            userType: userType,
+            skipStep1: true,
+            phase: 'FORM2_PENDING', // Tell RegisterDialog to open Form 2
+            userData: err.userData  // Pass user data for read-only fields
+          });
+        }, 300);
       } else if (err.error === 'ACCOUNT_UNDER_REVIEW') {
         setError('Your account is currently under review by our administration team.');
       } else {
@@ -104,11 +121,33 @@ const LoginDialog = ({ isOpen, onOpenChange, onSwitchToRegister, initialData = {
       setTimeout(() => {
         onSwitchToRegister({ uid: err.uid, email: err.email, name: err.name, skipStep1: true, userType: userType });
       }, 300);
-    } else if (err.error === 'CHANGES_REQUESTED' || err.error === 'FORM2_PENDING') {
+
+    } else if (err.error === 'CHANGES_REQUESTED') {
+      // --- NEW: Route to Register Dialog with Update Data ---
+      toast({ title: 'Update Required', description: err.message });
+      onOpenChange(false);
+      setTimeout(() => {
+        onSwitchToRegister({
+          uid: err.uid,
+          userType: userType,
+          skipStep1: true,
+          phase: 'CHANGES_REQUESTED',
+          adminRequests: err.adminRequests,
+          userData: err.userData
+        });
+      }, 300);
+
+    } else if (err.error === 'FORM2_PENDING') {
       toast({ title: 'Action Required', description: err.message });
       onOpenChange(false);
       setTimeout(() => {
-        onContinueOnboarding(err); 
+        onSwitchToRegister({
+          uid: err.uid,
+          userType: userType,
+          skipStep1: true,
+          phase: 'FORM2_PENDING', // Tell RegisterDialog to open Form 2
+          userData: err.userData  // Pass user data for read-only fields
+        });
       }, 300);
     } else if (err.error === 'ACCOUNT_UNDER_REVIEW') {
       setError('Your account is currently under review by our administration team.');
@@ -139,7 +178,7 @@ const LoginDialog = ({ isOpen, onOpenChange, onSwitchToRegister, initialData = {
   return (
     <Dialog open={isOpen} onOpenChange={onOpenChange}>
       <DialogContent className="max-w-5xl p-0 overflow-hidden bg-white border-none shadow-2xl flex max-h-[90vh]">
-        <DialogTitle style={{display : 'none'}}></DialogTitle>
+        <DialogTitle style={{ display: 'none' }}></DialogTitle>
         <div className="hidden lg:flex lg:w-2/5 relative bg-[#1c1c1c] flex-col justify-center px-10 text-white overflow-hidden transition-all duration-500">
           <div className="absolute inset-0 bg-gradient-to-br from-[#ffffff6b] via-[#1c1c1c] to-[#000] z-0"></div>
           <div className="absolute inset-0 opacity-20 z-0 transition-all duration-700" style={{ backgroundImage: `url('${activeContent.image}')`, backgroundSize: 'cover', backgroundBlendMode: 'overlay' }} />
@@ -173,7 +212,7 @@ const LoginDialog = ({ isOpen, onOpenChange, onSwitchToRegister, initialData = {
                 onClick={() => {
                   setUserType('investor');
                   setFormData({ email: '', password: '' })
-                  setError(null); // Clears the error when switching
+                  setError(null);
                 }}
                 className={`flex-1 py-2 text-sm font-semibold rounded-lg transition-all ${userType === 'investor' ? 'bg-white shadow-sm text-orange-600' : 'text-gray-500 hover:text-gray-700'}`}
               >
@@ -183,7 +222,7 @@ const LoginDialog = ({ isOpen, onOpenChange, onSwitchToRegister, initialData = {
                 onClick={() => {
                   setUserType('builder');
                   setFormData({ email: '', password: '' })
-                  setError(null); // Clears the error when switching
+                  setError(null);
                 }}
                 className={`flex-1 py-2 text-sm font-semibold rounded-lg transition-all ${userType === 'builder' ? 'bg-white shadow-sm text-orange-600' : 'text-gray-500 hover:text-gray-700'}`}
               >
@@ -225,7 +264,6 @@ const LoginDialog = ({ isOpen, onOpenChange, onSwitchToRegister, initialData = {
                 <div className="space-y-1">
                   <div className="flex items-center justify-between">
                     <Label htmlFor="password" className={labelStyle}>Password</Label>
-                    {/* <button type="button" className="text-xs font-medium text-orange-600 hover:text-orange-700 hover:underline">Forgot password?</button> */}
                   </div>
                   <Input id="password" type="password" placeholder="••••••••" value={formData.password} onChange={(e) => { setFormData({ ...formData, password: e.target.value }); setError(null); }} required className={inputStyle} />
                 </div>

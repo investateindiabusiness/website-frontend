@@ -157,7 +157,7 @@ const InvestorDashboard = () => {
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
 
             {/* Chart 1: Portfolio Growth */}
-            <div className="lg:col-span-2 bg-white rounded-3xl p-5 shadow-sm border border-gray-100">
+            {/* <div className="lg:col-span-2 bg-white rounded-3xl p-5 shadow-sm border border-gray-100">
               <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-6 gap-2 sm:gap-0">
                 <div>
                   <h3 className="font-bold text-gray-900 text-lg flex items-center">
@@ -191,10 +191,10 @@ const InvestorDashboard = () => {
                   </AreaChart>
                 </ResponsiveContainer>
               </div>
-            </div>
+            </div> */}
 
             {/* Chart 2: High Growth Hubs */}
-            <div className="bg-white rounded-3xl p-5 shadow-sm border border-gray-100 flex flex-col">
+            {/* <div className="bg-white rounded-3xl p-5 shadow-sm border border-gray-100 flex flex-col">
               <h3 className="font-bold text-gray-900 text-lg mb-2 flex items-center">
                 <BarChartIcon className="w-5 h-5 mr-2 text-orange-500" /> High Growth Hubs
               </h3>
@@ -220,11 +220,11 @@ const InvestorDashboard = () => {
                 <div className="flex items-center"><div className="w-2 h-2 rounded-full bg-[#0b264f] mr-1"></div> Appreciation</div>
                 <div className="flex items-center"><div className="w-2 h-2 rounded-full bg-orange-500 mr-1"></div> Rental Yield</div>
               </div>
-            </div>
+            </div> */}
           </div>
 
           {/* --- SEARCH BAR (Responsive) --- */}
-          <div className="bg-white rounded-2xl shadow-lg p-2 flex flex-col sm:flex-row items-center gap-2 max-w-3xl mx-auto border border-gray-100">
+          <div className="bg-white rounded-2xl !mt-0 shadow-lg p-2 flex flex-col sm:flex-row items-center gap-2 max-w-3xl mx-auto border border-gray-100">
             <div className="pl-4 hidden sm:block">
               <Search className="text-gray-400 w-5 h-5" />
             </div>

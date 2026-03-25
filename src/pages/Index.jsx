@@ -3,7 +3,6 @@ import Header from '../components/Header';
 import Footer from '../components/Footer';
 import RegisterDialog from '../components/RegisterDialog';
 import LoginDialog from '../components/LoginDialog';
-import ContinueOnboardingDialog from '../components/ContinueOnboardingDialog';
 import { toast } from '@/hooks/use-toast';
 import { subscribeToNewsletter } from '@/api'; // <-- Import the API
 import { Loader2 } from 'lucide-react'; // <-- Import loader icon
@@ -119,16 +118,16 @@ const Index = () => {
         { id: "1", title: "Register", text: "Share your investment preferences, budget range, and location interests through our simple online form & one Relationship Manager will be assigned to you to take you through entire journey." },
         { id: "2", title: "Discover", text: "Browse pre-verified builders and projects with complete disclosures, RERA details, and transparent timelines." },
         { id: "3", title: "Evaluate", text: "Get expert support to understand projects, documentation requirements, and legal considerations & Evaluate best suitable investment & profitable oppotunities" },
-        { id: "4", title: "Connect", text: "We facilitate direct introductions with builders and coordinate meetings, site visits, or virtual tours." },
-        { id: "5", title: "Decide", text: "Make informed decisions with complete transparency and ongoing support throughout the process." }
+        // { id: "4", title: "Connect", text: "We facilitate direct introductions with builders and coordinate meetings, site visits, or virtual tours." },
+        { id: "4", title: "Decide", text: "Make informed decisions with complete transparency and ongoing support throughout the process." }
     ];
 
     const builderSteps = [
         { id: "1", title: "Apply", text: "Submit your company profile, past projects, and current development details through our structured application." },
         { id: "2", title: "Get Verified", text: "Our team reviews your credentials, track record, and compliance status to ensure quality standards." },
         { id: "3", title: "Go Live", text: "Your approved projects are professionally presented to our growing NRI investor network in a standardized format." },
-        { id: "4", title: "Engage", text: "We coordinate with serious, pre-qualified investors and manage initial inquiries on your behalf." },
-        { id: "5", title: "Close Deals", text: "Build lasting relationships with investors based on transparent terms and mutual trust." }
+        // { id: "4", title: "Engage", text: "We coordinate with serious, pre-qualified investors and manage initial inquiries on your behalf." },
+        { id: "4", title: "Close Deals", text: "Build lasting relationships with investors based on transparent terms and mutual trust." }
     ];
 
     const currentSteps = activeProcessTab === 'investors' ? investorSteps : builderSteps;
@@ -246,12 +245,6 @@ const Index = () => {
         "Onboarding select builders in key metro cities (Bangalore, Mumbai, Pune, Delhi-NCR, Hyderabad etc.)",
         "Building our NRI investor community across USA, UK, UAE and across the globe."
     ];
-
-    const handleContinueOnboarding = (dataPayload) => {
-        setIsLoginOpen(false);
-        setContinueData(dataPayload);
-        setIsContinueOpen(true);
-    };
 
     const handleSwitchToRegister = (dataPayload) => {
         setIsLoginOpen(false);
@@ -393,7 +386,7 @@ const Index = () => {
                             <div className="benefits-wrapper">
                                 <div className="benefits-image-clean">
                                     <img
-                                        src="https://images.unsplash.com/photo-1519501025264-65ba15a82390?q=80&w=2064&auto=format&fit=crop"
+                                        src="InvestateInvestor.png?q=80&w=2064&auto=format&fit=crop"
                                         alt="Benefits Illustration"
                                     />
                                 </div>
@@ -447,7 +440,7 @@ const Index = () => {
                                 <div className="builders-visual-side">
                                     <div className="builders-image-clean">
                                         <img
-                                            src="https://images.unsplash.com/photo-1503387762-592deb58ef4e?q=80&w=1000&auto=format&fit=crop"
+                                            src="/SeriousDevelopers.jfif"
                                             alt="Modern Architecture Construction"
                                         />
                                     </div>
@@ -575,11 +568,11 @@ const Index = () => {
                                     <h3 className="story-headline">Built on transparency. Driven by experience.</h3>
                                     <div className="story-text-content">
                                         <p>
-                                            Investate India is led by entrepreneurs <strong>Pankaj Gupta, Atish Agarwal and Deepak Kavadia,</strong> professionals with extensive experience across real estate, jewellery, retail, and international trade. <br />
-                                            Pankaj Gupta has built a strong presence in the diamond and jewellery industry through Murari Cap Pvt. Ltd. and Avik Jewels, while also being a well-known name in the Hyderabad real estate market through his partnership in Swandurga Construction LLP, which has delivered multiple successful developments. <br />
-                                            Atish Agarwal brings diversified entrepreneurial experience across textiles, retail, fashion, jewellery, and real estate advisory, building ventures focused on operational excellence and market insight.<br />
-                                            Together, as partners in Istana Realtors, they have delivered projects such as Shree Istana and Dev Istana, with new developments including Vann Istana and Green Gold Istana underway.<br />
-                                            They are joined by Deepak Kavadia, a New York-based entrepreneur, real estate investor, and globally respected gemstone authority, Founder of Nice Gems Inc., Nice Jewels Inc., and Prestige Developers LLC, and Founder and Chairman of the NRI Federation, bringing a strong global perspective and trusted international connect for NRI investors.
+                                            Investate India is led by Pankaj Gupta, Atish Agarwal, and Deepak Kavadia, bringing together on-ground real estate expertise and global perspective. <br />
+                                            Pankaj Gupta has built a strong presence in the diamond and jewellery industry and is an established name in Hyderabad real estate, with experience in project development and execution. <br />
+                                            Atish Agarwal brings diversified entrepreneurial experience across textiles, retail, jewellery, and real estate advisory, with a focus on operations and structuring investment opportunities. <br />
+                                            Together, they lead Istana Realtors, having delivered plotted and residential developments while expanding into new asset classes, including farm-based and structured investments. <br />
+                                            Deepak Kavadia, based in New York, adds an international dimension, helping global investors—especially NRIs—access Indian real estate opportunities with greater clarity.
                                         </p>
                                     </div>
                                 </div>
@@ -807,7 +800,6 @@ const Index = () => {
                 isOpen={isLoginOpen}
                 onOpenChange={setIsLoginOpen}
                 onSwitchToRegister={handleSwitchToRegister}
-                onContinueOnboarding={handleContinueOnboarding}
                 initialData={dialogData}
             />
 
@@ -819,12 +811,6 @@ const Index = () => {
                     setIsLoginOpen(true);
                 }}
                 initialData={dialogData}
-            />
-
-            <ContinueOnboardingDialog
-                isOpen={isContinueOpen}
-                onOpenChange={setIsContinueOpen}
-                data={continueData}
             />
         </>
     );

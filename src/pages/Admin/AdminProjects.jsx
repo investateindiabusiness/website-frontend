@@ -8,9 +8,9 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } f
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Checkbox } from '@/components/ui/checkbox';
-import { 
-    Building2, Clock, FileWarning, Plus, Trash2, Eye, ShieldCheck, 
-    ShieldAlert, CheckCircle, XCircle, MapPin, RefreshCw, Image as ImageIcon, FileText, Download 
+import {
+  Building2, Clock, FileWarning, Plus, Trash2, Eye, ShieldCheck,
+  ShieldAlert, CheckCircle, XCircle, MapPin, RefreshCw, Image as ImageIcon, FileText, Download
 } from 'lucide-react';
 import { toast } from '@/hooks/use-toast';
 import { useAuth } from '@/hooks/AuthContext';
@@ -36,7 +36,7 @@ const AdminProjects = () => {
 
   // --- Approval Modal States ---
   const [isApprovalModalOpen, setIsApprovalModalOpen] = useState(false);
-  const [selectedDocs, setSelectedDocs] = useState([]); 
+  const [selectedDocs, setSelectedDocs] = useState([]);
 
   const loadProjects = useCallback(async () => {
     try {
@@ -58,21 +58,21 @@ const AdminProjects = () => {
   // 🐛 DEBUG CONSOLE LOGGER
   // ==========================================
   useEffect(() => {
-      if (viewProjectData) {
-          console.log("\n=============================================");
-          console.log("🔎 DEBUG: VIEW PROJECT DATA OPENED");
-          console.log("=============================================");
-          console.log("1. Full Project Object:", viewProjectData);
-          console.log("2. Base projectImages:", viewProjectData.projectImages);
-          console.log("3. Base projectDocuments:", viewProjectData.projectDocuments);
-          console.log("4. hasPendingEdits:", viewProjectData.hasPendingEdits);
-          if (viewProjectData.hasPendingEdits && viewProjectData.pendingEdits) {
-              console.log("5. pendingEdits object:", viewProjectData.pendingEdits);
-              console.log("6. pendingEdits.projectImages:", viewProjectData.pendingEdits.projectImages);
-              console.log("7. pendingEdits.projectDocuments:", viewProjectData.pendingEdits.projectDocuments);
-          }
-          console.log("=============================================\n");
+    if (viewProjectData) {
+      console.log("\n=============================================");
+      console.log("🔎 DEBUG: VIEW PROJECT DATA OPENED");
+      console.log("=============================================");
+      console.log("1. Full Project Object:", viewProjectData);
+      console.log("2. Base projectImages:", viewProjectData.projectImages);
+      console.log("3. Base projectDocuments:", viewProjectData.projectDocuments);
+      console.log("4. hasPendingEdits:", viewProjectData.hasPendingEdits);
+      if (viewProjectData.hasPendingEdits && viewProjectData.pendingEdits) {
+        console.log("5. pendingEdits object:", viewProjectData.pendingEdits);
+        console.log("6. pendingEdits.projectImages:", viewProjectData.pendingEdits.projectImages);
+        console.log("7. pendingEdits.projectDocuments:", viewProjectData.pendingEdits.projectDocuments);
       }
+      console.log("=============================================\n");
+    }
   }, [viewProjectData]);
 
   const handleRejection = async (projectId) => {
@@ -86,41 +86,41 @@ const AdminProjects = () => {
 
   // Open Approval Modal
   const openApprovalModal = (project) => {
-    const docsToApprove = (project.hasPendingEdits && project.pendingEdits?.projectDocuments?.length > 0) 
-        ? project.pendingEdits.projectDocuments 
-        : project.projectDocuments;
+    const docsToApprove = (project.hasPendingEdits && project.pendingEdits?.projectDocuments?.length > 0)
+      ? project.pendingEdits.projectDocuments
+      : project.projectDocuments;
 
     if (docsToApprove && docsToApprove.length > 0) {
-        setSelectedDocs(docsToApprove.map(doc => doc.url));
+      setSelectedDocs(docsToApprove.map(doc => doc.url));
     } else {
-        setSelectedDocs([]);
+      setSelectedDocs([]);
     }
-    
+
     setViewProjectData(project);
     setIsApprovalModalOpen(true);
   };
 
   const toggleDocSelection = (url) => {
-      setSelectedDocs(prev => 
-          prev.includes(url) ? prev.filter(item => item !== url) : [...prev, url]
-      );
+    setSelectedDocs(prev =>
+      prev.includes(url) ? prev.filter(item => item !== url) : [...prev, url]
+    );
   };
 
   const submitFinalApproval = async () => {
-      try {
-        await fetch(`http://localhost:5000/api/projects/verify/${viewProjectData.id}`, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${user.token}` },
-            body: JSON.stringify({ 
-                status: 'approved',
-                visibleDocuments: selectedDocs
-            })
-        });
-        toast({ title: "Success", description: "Project Approved and Published!" });
-        setIsApprovalModalOpen(false);
-        setViewProjectData(null);
-        loadProjects();
-      } catch (err) { toast({ title: "Error", description: err.message, variant: "destructive" }); }
+    try {
+      await fetch(`http://localhost:5000/api/projects/verify/${viewProjectData.id}`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${user.token}` },
+        body: JSON.stringify({
+          status: 'approved',
+          visibleDocuments: selectedDocs
+        })
+      });
+      toast({ title: "Success", description: "Project Approved and Published!" });
+      setIsApprovalModalOpen(false);
+      setViewProjectData(null);
+      loadProjects();
+    } catch (err) { toast({ title: "Error", description: err.message, variant: "destructive" }); }
   };
 
   const handleEditVerification = async (projectId, isApproved) => {
@@ -159,6 +159,80 @@ const AdminProjects = () => {
     } catch (err) { toast({ title: "Error", description: err.message, variant: "destructive" }); }
   };
 
+  // Add this function inside AdminProjects component
+  const downloadCSV = () => {
+    if (!projects || projects.length === 0) {
+      toast({ title: "Export Failed", description: "No projects available to export.", variant: "destructive" });
+      return;
+    }
+
+    // List of fields to exclude from the CSV
+    const EXCLUDED_FIELDS = [
+      'id', 'builderId', 'createdBy', 'createdAt', 'hasPendingEdits',
+      'pendingEdits', 'updatedAt', 'projectDocuments', 'projectImages',
+      'visibleDocuments', 'updatedBy', 'views'
+    ];
+
+    // 1. Get all unique keys from all projects, then filter out the excluded ones
+    const allKeys = new Set();
+    projects.forEach(project => Object.keys(project).forEach(key => allKeys.add(key)));
+
+    // These are the original object keys (e.g., 'totalBuiltUpArea')
+    const headers = Array.from(allKeys).filter(key => !EXCLUDED_FIELDS.includes(key));
+
+    // 2. Map data to rows
+    const csvRows = [];
+
+    // FORMAT THE HEADERS for the first row (e.g., 'totalBuiltUpArea' -> 'Total Built Up Area')
+    const formattedHeaders = headers.map(key => {
+      return key.replace(/([A-Z])/g, ' $1').replace(/^./, str => str.toUpperCase());
+    });
+
+    // Add the formatted header row
+    csvRows.push(formattedHeaders.join(','));
+
+    // Add data rows
+    projects.forEach(project => {
+      const row = headers.map(header => {
+        // We use the ORIGINAL 'header' variable here to pull the correct data
+        let val = project[header];
+
+        // Handle undefined, null, and empty values
+        if (val === null || val === undefined) {
+          val = '';
+        }
+        // Handle nested objects/arrays (if any other objects remain after filtering)
+        else if (typeof val === 'object') {
+          val = JSON.stringify(val);
+        }
+
+        // Convert to string and escape quotes and commas for CSV compatibility
+        let strVal = String(val);
+        if (strVal.includes(',') || strVal.includes('"') || strVal.includes('\n')) {
+          strVal = `"${strVal.replace(/"/g, '""')}"`;
+        }
+
+        return strVal;
+      });
+
+      csvRows.push(row.join(','));
+    });
+
+    // 3. Create a Blob and trigger the download
+    const csvString = csvRows.join('\n');
+    const blob = new Blob([csvString], { type: 'text/csv;charset=utf-8;' });
+    const url = URL.createObjectURL(blob);
+
+    const link = document.createElement('a');
+    link.href = url;
+    link.setAttribute('download', `all_projects_export_${new Date().toISOString().split('T')[0]}.csv`);
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+
+    toast({ title: "Success", description: "Projects exported successfully!" });
+  };
+
   const filteredProjects = projects.filter(project => {
     if (filter === 'pending') return project.status === 'pending' || project.hasPendingEdits;
     if (filter === 'changes_requested') return project.status === 'changes_requested';
@@ -174,18 +248,18 @@ const AdminProjects = () => {
   let displayDocs = viewProjectData?.projectDocuments || [];
 
   if (viewProjectData?.hasPendingEdits && viewProjectData?.pendingEdits) {
-      if (viewProjectData.pendingEdits.projectImages && viewProjectData.pendingEdits.projectImages.length > 0) {
-          displayImages = viewProjectData.pendingEdits.projectImages;
-      }
-      if (viewProjectData.pendingEdits.projectDocuments && viewProjectData.pendingEdits.projectDocuments.length > 0) {
-          displayDocs = viewProjectData.pendingEdits.projectDocuments;
-      }
+    if (viewProjectData.pendingEdits.projectImages && viewProjectData.pendingEdits.projectImages.length > 0) {
+      displayImages = viewProjectData.pendingEdits.projectImages;
+    }
+    if (viewProjectData.pendingEdits.projectDocuments && viewProjectData.pendingEdits.projectDocuments.length > 0) {
+      displayDocs = viewProjectData.pendingEdits.projectDocuments;
+    }
   }
 
   // Console log what we are actually feeding to the UI
   if (viewProjectData) {
-      console.log("=> FINAL Calculated displayImages array:", displayImages);
-      console.log("=> FINAL Calculated displayDocs array:", displayDocs);
+    console.log("=> FINAL Calculated displayImages array:", displayImages);
+    console.log("=> FINAL Calculated displayDocs array:", displayDocs);
   }
 
   return (
@@ -199,12 +273,21 @@ const AdminProjects = () => {
             <p className="text-gray-600">Review, verify, and approve builder project listings.</p>
           </div>
 
-          <div className="flex bg-gray-200/50 p-1 rounded-lg flex-wrap">
-            <button onClick={() => setFilter('all')} className={`px-4 py-2 text-sm font-semibold rounded-md transition-all ${filter === 'all' ? 'bg-white shadow-sm text-blue-600' : 'text-gray-600'}`}>All</button>
-            <button onClick={() => setFilter('pending')} className={`px-4 py-2 text-sm font-semibold rounded-md transition-all ${filter === 'pending' ? 'bg-white shadow-sm text-orange-600' : 'text-gray-600'}`}>Pending Review</button>
-            <button onClick={() => setFilter('changes_requested')} className={`px-4 py-2 text-sm font-semibold rounded-md transition-all ${filter === 'changes_requested' ? 'bg-white shadow-sm text-yellow-600' : 'text-gray-600'}`}>Awaiting Changes</button>
-            <button onClick={() => setFilter('approved')} className={`px-4 py-2 text-sm font-semibold rounded-md transition-all ${filter === 'approved' ? 'bg-white shadow-sm text-green-600' : 'text-gray-600'}`}>Approved</button>
-            <button onClick={() => setFilter('rejected')} className={`px-4 py-2 text-sm font-semibold rounded-md transition-all ${filter === 'rejected' ? 'bg-white shadow-sm text-red-600' : 'text-gray-600'}`}>Rejected</button>
+          <div className="flex flex-col gap-3 items-start md:items-end">
+            <div className="flex bg-gray-200/50 p-1 rounded-lg flex-wrap">
+              <button onClick={() => setFilter('all')} className={`px-4 py-2 text-sm font-semibold rounded-md transition-all ${filter === 'all' ? 'bg-white shadow-sm text-blue-600' : 'text-gray-600'}`}>All</button>
+              <button onClick={() => setFilter('pending')} className={`px-4 py-2 text-sm font-semibold rounded-md transition-all ${filter === 'pending' ? 'bg-white shadow-sm text-orange-600' : 'text-gray-600'}`}>Pending Review</button>
+              <button onClick={() => setFilter('changes_requested')} className={`px-4 py-2 text-sm font-semibold rounded-md transition-all ${filter === 'changes_requested' ? 'bg-white shadow-sm text-yellow-600' : 'text-gray-600'}`}>Awaiting Changes</button>
+              <button onClick={() => setFilter('approved')} className={`px-4 py-2 text-sm font-semibold rounded-md transition-all ${filter === 'approved' ? 'bg-white shadow-sm text-green-600' : 'text-gray-600'}`}>Approved</button>
+              <button onClick={() => setFilter('rejected')} className={`px-4 py-2 text-sm font-semibold rounded-md transition-all ${filter === 'rejected' ? 'bg-white shadow-sm text-red-600' : 'text-gray-600'}`}>Rejected</button>
+              <Button
+              onClick={downloadCSV}
+              variant="outline"
+              className="bg-white border-green-600 text-green-700 hover:bg-green-50 shadow-sm"
+            >
+              <Download className="w-4 h-4 mr-2" /> Export
+            </Button>
+            </div>
           </div>
         </div>
 
@@ -303,39 +386,39 @@ const AdminProjects = () => {
 
               {/* --- MEDIA & DOCUMENTS DISPLAY --- */}
               <div className="bg-white p-6 rounded-xl border border-gray-200 shadow-sm space-y-6">
-                 {/* Display Images */}
-                 <div>
-                    <h4 className="text-lg font-bold text-[#0b264f] mb-3 flex items-center"><ImageIcon className="w-5 h-5 mr-2"/> Project Images</h4>
-                    {displayImages.length > 0 ? (
-                        <div className="flex gap-4 overflow-x-auto pb-2 custom-scrollbar">
-                            {displayImages.map((img, i) => (
-                                <a key={i} href={img} target="_blank" rel="noreferrer" className="flex-shrink-0">
-                                    <img src={img} alt={`Project visual ${i}`} className="h-32 w-48 object-cover rounded-xl border border-gray-200 shadow-sm hover:opacity-80 transition-opacity" />
-                                </a>
-                            ))}
-                        </div>
-                    ) : (
-                        <p className="text-sm text-gray-500 italic">No images uploaded.</p>
-                    )}
-                 </div>
+                {/* Display Images */}
+                <div>
+                  <h4 className="text-lg font-bold text-[#0b264f] mb-3 flex items-center"><ImageIcon className="w-5 h-5 mr-2" /> Project Images</h4>
+                  {displayImages.length > 0 ? (
+                    <div className="flex gap-4 overflow-x-auto pb-2 custom-scrollbar">
+                      {displayImages.map((img, i) => (
+                        <a key={i} href={img} target="_blank" rel="noreferrer" className="flex-shrink-0">
+                          <img src={img} alt={`Project visual ${i}`} className="h-32 w-48 object-cover rounded-xl border border-gray-200 shadow-sm hover:opacity-80 transition-opacity" />
+                        </a>
+                      ))}
+                    </div>
+                  ) : (
+                    <p className="text-sm text-gray-500 italic">No images uploaded.</p>
+                  )}
+                </div>
 
-                 {/* Display Documents */}
-                 <div className="pt-4 border-t border-gray-100">
-                    <h4 className="text-lg font-bold text-[#0b264f] mb-3 flex items-center"><FileText className="w-5 h-5 mr-2"/> Official Documents</h4>
-                    {displayDocs.length > 0 ? (
-                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                            {displayDocs.map((doc, i) => (
-                                <a key={i} href={doc.url} target="_blank" rel="noreferrer" className="flex items-center p-3 bg-blue-50/50 border border-blue-100 rounded-lg hover:bg-blue-100 transition-colors group">
-                                    <FileText className="w-5 h-5 text-blue-600 mr-3" />
-                                    <span className="text-sm font-medium text-gray-800 flex-1 truncate">{doc.docName || doc.fileName}</span>
-                                    <Download className="w-4 h-4 text-gray-400 group-hover:text-blue-600" />
-                                </a>
-                            ))}
-                        </div>
-                    ) : (
-                        <p className="text-sm text-gray-500 italic">No documents uploaded.</p>
-                    )}
-                 </div>
+                {/* Display Documents */}
+                <div className="pt-4 border-t border-gray-100">
+                  <h4 className="text-lg font-bold text-[#0b264f] mb-3 flex items-center"><FileText className="w-5 h-5 mr-2" /> Official Documents</h4>
+                  {displayDocs.length > 0 ? (
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                      {displayDocs.map((doc, i) => (
+                        <a key={i} href={doc.url} target="_blank" rel="noreferrer" className="flex items-center p-3 bg-blue-50/50 border border-blue-100 rounded-lg hover:bg-blue-100 transition-colors group">
+                          <FileText className="w-5 h-5 text-blue-600 mr-3" />
+                          <span className="text-sm font-medium text-gray-800 flex-1 truncate">{doc.docName || doc.fileName}</span>
+                          <Download className="w-4 h-4 text-gray-400 group-hover:text-blue-600" />
+                        </a>
+                      ))}
+                    </div>
+                  ) : (
+                    <p className="text-sm text-gray-500 italic">No documents uploaded.</p>
+                  )}
+                </div>
               </div>
 
               <div className="bg-white p-6 rounded-xl border border-gray-200 shadow-sm">
@@ -453,31 +536,31 @@ const AdminProjects = () => {
             <DialogDescription>Select which documents should be visible to investors. Unchecked documents will remain hidden for internal use only.</DialogDescription>
           </DialogHeader>
           <div className="py-4 space-y-4">
-              {displayDocs?.length > 0 ? (
-                  <div className="space-y-3 bg-gray-50 p-4 rounded-lg border border-gray-200 max-h-[300px] overflow-y-auto">
-                      {displayDocs.map((doc, idx) => (
-                          <div key={idx} className="flex items-center space-x-3 bg-white p-3 rounded border border-gray-100 shadow-sm">
-                              <Checkbox 
-                                id={`doc-${idx}`} 
-                                checked={selectedDocs.includes(doc.url)}
-                                onCheckedChange={() => toggleDocSelection(doc.url)}
-                              />
-                              <Label htmlFor={`doc-${idx}`} className="flex-1 cursor-pointer text-sm font-medium text-gray-700">
-                                  {doc.docName || doc.fileName}
-                              </Label>
-                              <a href={doc.url} target="_blank" rel="noreferrer" className="text-blue-500 hover:text-blue-700">
-                                <Eye className="w-4 h-4"/>
-                              </a>
-                          </div>
-                      ))}
+            {displayDocs?.length > 0 ? (
+              <div className="space-y-3 bg-gray-50 p-4 rounded-lg border border-gray-200 max-h-[300px] overflow-y-auto">
+                {displayDocs.map((doc, idx) => (
+                  <div key={idx} className="flex items-center space-x-3 bg-white p-3 rounded border border-gray-100 shadow-sm">
+                    <Checkbox
+                      id={`doc-${idx}`}
+                      checked={selectedDocs.includes(doc.url)}
+                      onCheckedChange={() => toggleDocSelection(doc.url)}
+                    />
+                    <Label htmlFor={`doc-${idx}`} className="flex-1 cursor-pointer text-sm font-medium text-gray-700">
+                      {doc.docName || doc.fileName}
+                    </Label>
+                    <a href={doc.url} target="_blank" rel="noreferrer" className="text-blue-500 hover:text-blue-700">
+                      <Eye className="w-4 h-4" />
+                    </a>
                   </div>
-              ) : (
-                  <p className="text-sm text-gray-500 italic bg-gray-50 p-4 rounded-lg">No documents available to share.</p>
-              )}
+                ))}
+              </div>
+            ) : (
+              <p className="text-sm text-gray-500 italic bg-gray-50 p-4 rounded-lg">No documents available to share.</p>
+            )}
 
-              <Button onClick={submitFinalApproval} className="w-full bg-green-600 hover:bg-green-700 text-white mt-4 h-12 text-md">
-                  <CheckCircle className="w-5 h-5 mr-2"/> Confirm & Publish Project
-              </Button>
+            <Button onClick={submitFinalApproval} className="w-full bg-green-600 hover:bg-green-700 text-white mt-4 h-12 text-md">
+              <CheckCircle className="w-5 h-5 mr-2" /> Confirm & Publish Project
+            </Button>
           </div>
         </DialogContent>
       </Dialog>

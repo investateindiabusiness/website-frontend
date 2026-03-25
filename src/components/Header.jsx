@@ -4,7 +4,6 @@ import { Button } from './ui/button';
 import { Menu, X, LogOut, UserCircle } from 'lucide-react';
 import { useAuth } from '@/hooks/AuthContext';
 import LoginDialog from '@/components/LoginDialog';
-import ContinueOnboardingDialog from '@/components/ContinueOnboardingDialog';
 import RegisterDialog from '@/components/RegisterDialog';
 
 const Header = ({ transparent = false }) => {
@@ -16,10 +15,8 @@ const Header = ({ transparent = false }) => {
 
   const [isLoginOpen, setIsLoginOpen] = useState(false);
   const [isRegisterOpen, setIsRegisterOpen] = useState(false);
-  const [isContinueOpen, setIsContinueOpen] = useState(false);
   
-  const [dialogData, setDialogData] = useState({}); // Single source of truth for Dialogs
-  const [continueData, setContinueData] = useState({});
+  const [dialogData, setDialogData] = useState({}); 
 
   const handleLogout = () => {
     logout();
@@ -31,7 +28,6 @@ const Header = ({ transparent = false }) => {
   const openLogin = (role) => {
     if (typeof role === 'string') setDialogData({ userType: role }); // Use dialogData
     setIsRegisterOpen(false);
-    setIsContinueOpen(false);
     setIsLoginOpen(true);
     setMobileMenuOpen(false);
     setOpen(false);
@@ -40,7 +36,6 @@ const Header = ({ transparent = false }) => {
   const openRegister = (role) => {
     if (typeof role === 'string') setDialogData({ userType: role }); // Use dialogData
     setIsLoginOpen(false);
-    setIsContinueOpen(false);
     setIsRegisterOpen(true);
     setMobileMenuOpen(false);
     setOpen(false);
@@ -82,12 +77,6 @@ const Header = ({ transparent = false }) => {
 
   const navLinks = getNavLinks();
 
-  const handleContinueOnboarding = (dataPayload) => {
-    setIsLoginOpen(false);
-    setContinueData(dataPayload);
-    setIsContinueOpen(true);
-  };
-
   return (
     <>
       <header className={`fixed w-full top-0 left-0 right-0 z-50 transition-all duration-300 bg-[#121212] border-b border-gray-800 text-gray-300`}>
@@ -117,9 +106,14 @@ const Header = ({ transparent = false }) => {
                 <div className="absolute right-0 top-full -mt-2 w-64 bg-[#1a1a1a] border border-gray-700 rounded shadow-xl z-50 text-gray-300">
                   {user ? (
                     <>
-                      <div className="px-4 py-2 border-b border-gray-700 mb-2">
+                      <div className="px-4 py-2 border-b border-gray-700">
                         <p className="text-xs text-gray-500 uppercase">Signed in as</p>
-                        <p className="text-sm font-semibold text-white truncate">{user.name || user.email}</p>
+                      </div>
+                      <div className="px-4 py-2 border-b border-gray-700">
+                        <p className="text-sm font-semibold text-white truncate">Name :- {user.name}</p>
+                      </div>
+                      <div className="px-4 py-2 border-b border-gray-700">
+                        <p className="text-sm font-semibold text-white truncate">Email :- {user.email}</p>
                       </div>
                       <button onClick={handleLogout} className="w-full text-left px-4 py-2 text-red-400 hover:bg-gray-800 hover:text-red-300 flex items-center gap-2">
                         <LogOut className="w-4 h-4" /> Logout
@@ -180,7 +174,6 @@ const Header = ({ transparent = false }) => {
         isOpen={isLoginOpen}
         onOpenChange={setIsLoginOpen}
         onSwitchToRegister={handleSwitchToRegister}
-        onContinueOnboarding={handleContinueOnboarding}
         initialData={dialogData}
       />
 
@@ -192,12 +185,6 @@ const Header = ({ transparent = false }) => {
           setIsLoginOpen(true);
         }}
         initialData={dialogData} 
-      />
-
-      <ContinueOnboardingDialog
-        isOpen={isContinueOpen}
-        onOpenChange={setIsContinueOpen}
-        data={continueData}
       />
     </>
   );
