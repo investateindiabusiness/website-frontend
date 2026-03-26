@@ -14,7 +14,7 @@ import {
 } from 'lucide-react';
 import { toast } from '@/hooks/use-toast';
 import { useAuth } from '@/hooks/AuthContext';
-import { fetchAllProjects, verifyProjectStatus, requestProjectChanges, verifyProjectEdits } from '@/api';
+import { fetchAllProjects, verifyProjectStatus, requestProjectChanges, verifyProjectEdits, revokeProjectRejection } from '@/api';
 
 const IGNORED_PROJECT_KEYS = [
   'id', 'builderId', 'status', 'createdAt', 'updatedAt', 'adminRequests', 'appealReason',
@@ -108,19 +108,24 @@ const AdminProjects = () => {
 
   const submitFinalApproval = async () => {
     try {
-      await fetch(`http://localhost:5000/api/projects/verify/${viewProjectData.id}`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${user.token}` },
-        body: JSON.stringify({
-          status: 'approved',
-          visibleDocuments: selectedDocs
-        })
+      // Pass the ID and the state variable 'selectedDocs'
+      await approveProject(viewProjectData.id, selectedDocs);
+
+      toast({
+        title: "Success",
+        description: "Project Approved and Published!"
       });
-      toast({ title: "Success", description: "Project Approved and Published!" });
+
       setIsApprovalModalOpen(false);
       setViewProjectData(null);
       loadProjects();
-    } catch (err) { toast({ title: "Error", description: err.message, variant: "destructive" }); }
+    } catch (err) {
+      toast({
+        title: "Error",
+        description: err.message || "Failed to approve project",
+        variant: "destructive"
+      });
+    }
   };
 
   const handleEditVerification = async (projectId, isApproved) => {
@@ -134,16 +139,25 @@ const AdminProjects = () => {
 
   const handleRevokeRejection = async (projectId) => {
     try {
-      await fetch(`http://localhost:5000/api/projects/verify/${projectId}`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${user.token}` },
-        body: JSON.stringify({ status: 'pending' })
+      // We await the abstracted API call
+      await revokeProjectRejection(projectId);
+
+      toast({
+        title: "Success",
+        description: "Rejection revoked. Project is pending again."
       });
-      toast({ title: "Success", description: "Rejection revoked. Project is pending again." });
+
       loadProjects();
       setViewProjectData(null);
-    } catch (err) { toast({ title: "Error", description: err.message, variant: "destructive" }); }
-  }
+    } catch (err) {
+      // If apiRequest fails, it throws an error which is caught here
+      toast({
+        title: "Error",
+        description: err.message || "Failed to revoke rejection",
+        variant: "destructive"
+      });
+    }
+  };
 
   const submitChangeRequest = async () => {
     const validFields = requestedFields.filter(f => f.fieldName.trim() !== '');
@@ -281,12 +295,12 @@ const AdminProjects = () => {
               <button onClick={() => setFilter('approved')} className={`px-4 py-2 text-sm font-semibold rounded-md transition-all ${filter === 'approved' ? 'bg-white shadow-sm text-green-600' : 'text-gray-600'}`}>Approved</button>
               <button onClick={() => setFilter('rejected')} className={`px-4 py-2 text-sm font-semibold rounded-md transition-all ${filter === 'rejected' ? 'bg-white shadow-sm text-red-600' : 'text-gray-600'}`}>Rejected</button>
               <Button
-              onClick={downloadCSV}
-              variant="outline"
-              className="bg-white border-green-600 text-green-700 hover:bg-green-50 shadow-sm"
-            >
-              <Download className="w-4 h-4 mr-2" /> Export
-            </Button>
+                onClick={downloadCSV}
+                variant="outline"
+                className="bg-white border-green-600 text-green-700 hover:bg-green-50 shadow-sm"
+              >
+                <Download className="w-4 h-4 mr-2" /> Export
+              </Button>
             </div>
           </div>
         </div>

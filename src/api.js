@@ -332,3 +332,18 @@ export const deleteNewsletterSubscriber = async (id) => {
     method: 'DELETE',
   });
 };
+
+export const revokeProjectRejection = (projectId) =>
+  apiRequest(`/api/projects/verify/${projectId}`, {
+    method: 'POST',
+    body: JSON.stringify({ status: 'pending' }),
+  });
+
+export const approveProject = (projectId, visibleDocuments) =>
+  apiRequest(`/api/projects/verify/${projectId}`, {
+    method: 'POST',
+    body: JSON.stringify({
+      status: 'approved',
+      visibleDocuments: visibleDocuments,
+    }),
+  });
