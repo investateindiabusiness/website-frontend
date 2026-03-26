@@ -14,7 +14,7 @@ import {
 } from 'lucide-react';
 import { toast } from '@/hooks/use-toast';
 import { useAuth } from '@/hooks/AuthContext';
-import { fetchAllProjects, verifyProjectStatus, requestProjectChanges, verifyProjectEdits, revokeProjectRejection } from '@/api';
+import { fetchAllProjects, verifyProjectStatus, requestProjectChanges, verifyProjectEdits, revokeProjectRejection, approveProject } from '@/api';
 
 const IGNORED_PROJECT_KEYS = [
   'id', 'builderId', 'status', 'createdAt', 'updatedAt', 'adminRequests', 'appealReason',
