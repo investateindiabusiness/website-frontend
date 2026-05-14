@@ -814,16 +814,13 @@ export default function Index() {
 
             <section className="faq-premium-section section-white" id="faq">
                 <div className="container">
-                    <div className="faq-premium-wrapper">
-                        <div className="faq-info-column">
-                            <h2 className="faq-premium-title">Frequently Asked <br /> Questions</h2>
-                            <p className="faq-premium-subtitle">
-                                Get clear answers to the most common questions about Investate India and how we help you invest with absolute confidence.
-                            </p>
-                            <div className="faq-side-image">
-                                <img src="/negotiation.png" alt="Expert Support and Consultation" />
-                            </div>
-                        </div>
+                    <div className="faq-header-full text-center mb-16">
+                        <h2 className="faq-premium-title">Frequently Asked <span className="text-highlight">Questions</span></h2>
+                        <p className="faq-premium-subtitle mx-auto">
+                            Get clear answers to the most common questions about Investate India and how we help you invest with absolute confidence.
+                        </p>
+                    </div>
+                    <div className="faq-premium-grid">
                         <div className="faq-accordion-column">
                             {faqsList.map((faq, index) => (
                                 <div
@@ -847,11 +844,19 @@ export default function Index() {
                                 </div>
                             ))}
                         </div>
+                        <div className="faq-image-column">
+                            <div className="faq-side-image-premium">
+                                <img src="/negotiation.png" alt="Expert Support and Consultation" />
+                                <div className="faq-image-overlay">
+                                    <div className="overlay-badge">Expert Support</div>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </section>
 
-            <section className="fullscreen-section section-theme py-24" id="contact">
+            <section className="fullscreen-section section-theme py-16" id="contact">
                 <div className="container text-center">
                     <div className="cta-minimal-badge mb-6">
                         <span className="cta-badge-text">GET STARTED TODAY</span>
