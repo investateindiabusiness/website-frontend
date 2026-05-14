@@ -113,7 +113,7 @@ export default function ContactUs() {
                       </div>
                       <div>
                         <p className="text-xs text-blue-200 uppercase tracking-wider font-semibold mb-1">Email Us</p>
-                        <p className="text-lg font-medium">investateindia.business@gmail.com</p>
+                        <p className="text-lg font-medium break-all">investateindia.business@gmail.com</p>
                       </div>
                     </div>
 
