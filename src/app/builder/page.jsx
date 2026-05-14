@@ -5,6 +5,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
 import RegisterDialog from '@/components/RegisterDialog';
+import { Globe, Search, ShieldCheck, Users, FileText, Activity } from 'lucide-react';
 
 const heroSlides = [
     {
@@ -30,6 +31,47 @@ const heroSlides = [
     }
 ];
 
+const builderBenefits = [
+    { title: "Qualified NRI Leads", desc: "Access to investors who've already shown serious interest and buying intent, not casual browsers.", image: "https://images.unsplash.com/photo-1570129477492-45c003edd2be?q=80&w=2070&auto=format&fit=crop" },
+    { title: "Professional Presentation", desc: "Your projects showcased in standardized, credible formats that build investor confidence.", image: "https://images.unsplash.com/photo-1512403754473-27835f7b9984?q=80&w=2070&auto=format&fit=crop" },
+    { title: "No Junk Inquiries", desc: "We pre-screen investors to ensure you're connecting with genuine buyers, saving your team time.", image: "https://images.unsplash.com/photo-1516156008625-3a9d6067fab5?q=80&w=2070&auto=format&fit=crop" },
+    { title: "Long-Term Relationships", desc: "Connect with investors looking for credible partners, not just one-time speculative deals.", image: "https://images.unsplash.com/photo-1542621334-a254cf47733d?q=80&w=2070&auto=format&fit=crop" },
+    { title: "Enhanced Credibility", desc: "Association with a transparency-focused platform strengthens your brand trust among global investors.", image: "https://images.unsplash.com/photo-1507537297725-24a1c029d3ca?q=80&w=2070&auto=format&fit=crop" },
+    { title: "Dedicated Support", desc: "We handle coordination and follow-ups, allowing you to focus on development excellence.", image: "/images/image4.png" },
+    { title: "Global Logistics Solved", desc: "Overcome communication delays and coordination challenges due to international time zones.", image: "https://images.unsplash.com/photo-1451187580459-43490279c0fa?q=80&w=2070&auto=format&fit=crop" },
+    { title: "Brand Visibility", desc: "Strengthen your reputation in international markets, expanding your reach to the global Indian diaspora.", image: "https://images.unsplash.com/photo-1497366754035-f200968a6e72?q=80&w=2070&auto=format&fit=crop" }
+];
+
+const builderChallenges = [
+    { id: "01", text: "Global Coordination", desc: "Connecting with genuine NRI buyers across different time zones remains extremely difficult.", icon: <Globe className="w-8 h-8 text-white" /> },
+    { id: "02", text: "Lead Quality", desc: "Filtering out casual inquiries to focus on serious investors with real buying intent.", icon: <Search className="w-8 h-8 text-white" /> },
+    { id: "03", text: "Distance Trust Gap", desc: "Building trust from thousands of miles away requires verified credentials and transparency.", icon: <ShieldCheck className="w-8 h-8 text-white" /> },
+    { id: "04", text: "Broker Fragmentation", desc: "Overseas broker networks are often unregulated and pass inaccurate project information.", icon: <Users className="w-8 h-8 text-white" /> },
+    { id: "05", text: "Credibility Proof", desc: "Showcasing project credibility and RERA compliance effectively to a remote audience.", icon: <FileText className="w-8 h-8 text-white" /> },
+    { id: "06", text: "Logistical Friction", desc: "Managing long sales cycles due to cross-border documentation and payment logistics.", icon: <Activity className="w-8 h-8 text-white" /> }
+];
+
+const builderSteps = [
+    { id: "1", title: "Apply", text: "Submit your company profile, past projects, and current development details through our structured application." },
+    { id: "2", title: "Get Verified", text: "Our team reviews your credentials, track record, and compliance status to ensure quality standards." },
+    { id: "3", title: "Go Live", text: "Your approved projects are professionally presented to our growing NRI investor network in a standardized format." },
+    { id: "4", title: "Close Deals", text: "Build lasting relationships with investors based on transparent terms and mutual trust." }
+];
+
+const stepImages = [
+    "https://images.unsplash.com/photo-1554224155-8d04cb21cd6c?q=80&w=1000&auto=format&fit=crop",
+    "https://images.unsplash.com/photo-1560518883-ce09059eeffa?q=80&w=1000&auto=format&fit=crop",
+    "https://images.unsplash.com/photo-1460925895917-afdab827c52f?q=80&w=1000&auto=format&fit=crop",
+    "https://images.unsplash.com/photo-1573164713988-8665fc963095?q=80&w=1000&auto=format&fit=crop"
+];
+
+const trustFeatures = [
+    { id: "secure", title: "Verified Network", desc: "We ensure both buyers and builders on our platform meet high standards of credibility.", icon: <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path></svg> },
+    { id: "disclosure", title: "Global Reach", desc: "Gain immediate visibility among a concentrated pool of Non-Resident Indians seeking properties.", icon: <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="2" y1="12" x2="22" y2="12"></line><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path></svg> },
+    { id: "support", title: "Dedicated Coordinators", desc: "Our team handles the heavy lifting of communication and scheduling to save you time.", icon: <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg> }
+];
+
+
 export default function BuilderHome() {
     const [isLoginOpen, setIsLoginOpen] = useState(false);
     const [isRegisterOpen, setIsRegisterOpen] = useState(false);
@@ -39,6 +81,18 @@ export default function BuilderHome() {
     const [hoveredBuilderCard, setHoveredBuilderCard] = useState(null);
     const [builderChallengePage, setBuilderChallengePage] = useState(0);
     const builderChallengesScrollRef = useRef(null);
+
+    const [benefitsPage, setBenefitsPage] = useState(0);
+    const benefitsPerPage = 4;
+    const totalBenefitsPages = Math.ceil(builderBenefits.length / benefitsPerPage);
+
+    const nextBenefits = () => {
+        setBenefitsPage((prev) => (prev + 1) % totalBenefitsPages);
+    };
+
+    const prevBenefits = () => {
+        setBenefitsPage((prev) => (prev - 1 + totalBenefitsPages) % totalBenefitsPages);
+    };
 
     const handleAuthClick = (action, role) => {
         if (action === 'login') {
@@ -59,49 +113,8 @@ export default function BuilderHome() {
         return () => clearInterval(timer);
     }, []);
 
-    const builderBenefits = [
-        { title: "Qualified NRI Leads", desc: "Access to investors who've already shown serious interest and buying intent, not casual browsers.", image: "https://images.unsplash.com/photo-1570129477492-45c003edd2be?q=80&w=2070&auto=format&fit=crop" },
-        { title: "Professional Project Presentation", desc: "Your projects showcased in standardized, credible formats that build investor confidence.", image: "https://images.unsplash.com/photo-1512403754473-27835f7b9984?q=80&w=2070&auto=format&fit=crop" },
-        { title: "No Junk Inquiries", desc: "We pre-screen investors to ensure you're connecting with genuine buyers, saving your team valuable time.", image: "https://images.unsplash.com/photo-1516156008625-3a9d6067fab5?q=80&w=2070&auto=format&fit=crop" },
-        { title: "Long-Term Relationships", desc: "Connect with investors looking for credible partners, not just one-time deals or speculative inquiries.", image: "https://images.unsplash.com/photo-1542621334-a254cf47733d?q=80&w=2070&auto=format&fit=crop" },
-        { title: "Enhanced Credibility", desc: "Association with a transparency-focused platform strengthens your brand trust among global investors.", image: "https://images.unsplash.com/photo-1507537297725-24a1c029d3ca?q=80&w=2070&auto=format&fit=crop" },
-        { title: "Dedicated Support", desc: "We handle coordination, follow-ups, and investor queries, allowing you to focus on what you do best.", image: "/images/image4.png" },
-        { title: "Time-Zone Challenges Solved", desc: "Overcome communication delays and coordination challenges due to international time zones.", image: "https://images.unsplash.com/photo-1451187580459-43490279c0fa?q=80&w=2070&auto=format&fit=crop" },
-        { title: "Creating brand image", desc: "Strengthen your visibility and reputation in international markets, expanding your reach.", image: "https://images.unsplash.com/photo-1497366754035-f200968a6e72?q=80&w=2070&auto=format&fit=crop" }
-    ];
-
-    const builderChallenges = [
-        { id: "01", text: "Connecting with genuine NRI buyers across different time zones", desc: "International buyers operate on different schedules, making real-time coordination and responsive communication extremely difficult without a dedicated platform.", image: "https://images.unsplash.com/photo-1508962914676-134849a727f0?q=80&w=2070&auto=format&fit=crop" },
-        { id: "02", text: "Filtering out casual inquiries to focus on serious investors", desc: "Without a screening mechanism, developer sales teams waste hours responding to non-serious leads who have no real buying intent or financial capability.", image: "/images/image2.png" },
-        { id: "03", text: "Building trust from thousands of miles away", desc: "Convincing an NRI to invest in a project they cannot physically inspect requires verified credentials, transparent disclosures, and a trusted intermediary.", image: "https://images.unsplash.com/photo-1600880292203-757bb62b4baf?q=80&w=2070&auto=format&fit=crop" },
-        { id: "04", text: "Overcoming the fragmentation of international broker networks", desc: "Overseas broker networks are inconsistent, unregulated, and often pass inaccurate project information — damaging your brand before a buyer even contacts you.", image: "https://images.unsplash.com/photo-1460467820054-c87ab43e9b59?q=80&w=2070&auto=format&fit=crop" },
-        { id: "05", text: "Showcasing project credibility and RERA compliance effectively", desc: "NRI investors specifically look for RERA registration, past delivery records, and legal approvals — information that is rarely presented in a clear, standardized format.", image: "/images/image3.png" },
-        { id: "06", text: "Managing long sales cycles due to cross-border logistics", desc: "Documentation, payments, and decision-making all take longer across borders, requiring patient coordination and clear communication at every stage.", image: "https://images.unsplash.com/photo-1450101499163-c8848c66ca85?q=80&w=2070&auto=format&fit=crop" }
-    ];
-
-    const builderSteps = [
-        { id: "1", title: "Apply", text: "Submit your company profile, past projects, and current development details through our structured application." },
-        { id: "2", title: "Get Verified", text: "Our team reviews your credentials, track record, and compliance status to ensure quality standards." },
-        { id: "3", title: "Go Live", text: "Your approved projects are professionally presented to our growing NRI investor network in a standardized format." },
-        { id: "4", title: "Close Deals", text: "Build lasting relationships with investors based on transparent terms and mutual trust." }
-    ];
 
     const activeStepData = builderSteps[activeStepIndex];
-
-    const stepImages = [
-        "https://images.unsplash.com/photo-1554224155-8d04cb21cd6c?q=80&w=1000&auto=format&fit=crop",
-        "https://images.unsplash.com/photo-1560518883-ce09059eeffa?q=80&w=1000&auto=format&fit=crop",
-        "https://images.unsplash.com/photo-1460925895917-afdab827c52f?q=80&w=1000&auto=format&fit=crop",
-        "https://images.unsplash.com/photo-1573164713988-8665fc963095?q=80&w=1000&auto=format&fit=crop"
-    ];
-
-    const trustFeatures = [
-        { id: "secure", title: "Verified Network", desc: "We ensure both buyers and builders on our platform meet high standards of credibility.", icon: <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path></svg> },
-        { id: "disclosure", title: "Global Reach", desc: "Gain immediate visibility among a concentrated pool of Non-Resident Indians seeking properties.", icon: <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="2" y1="12" x2="22" y2="12"></line><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path></svg> },
-        { id: "support", title: "Dedicated Coordinators", desc: "Our team handles the heavy lifting of communication and scheduling to save you time.", icon: <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg> }
-    ];
-
-    const builderScrollRef = useRef(null);
 
     return (
         <div className="theme-builder w-full bg-white overflow-x-hidden">
@@ -201,19 +214,23 @@ export default function BuilderHome() {
                 </div>
             </section>
 
-            {/* CHALLENGES SECTION */}
-            <section className="fullscreen-section section-theme" id="challenges">
+            <section className="fullscreen-section section-theme" id="challenges" style={{ padding: '80px 0' }}>
                 <div className="container">
-                    <div className="section-heading">
-                        <h2 className="section-title">
-                            Why Reaching NRI Buyers <br /> <span className='text-highlight'>Is Challenging</span>
-                        </h2>
-                        <p className="section-subtitle">
-                            Selling to international investors requires overcoming distance, building immense trust, and navigating complex logistics that traditional marketing struggles to solve.
-                        </p>
+                    <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '1.5rem', marginBottom: '3rem' }}>
+                        <div style={{ flex: 1, height: '1px', background: '#d1d1d1' }} />
+                        <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+                            <div style={{ width: '4px', height: '4px', borderRadius: '50%', background: '#333' }} />
+                            <div style={{ width: '4px', height: '4px', borderRadius: '50%', background: '#333' }} />
+                            <h2 style={{ fontSize: '2.5rem', fontWeight: 600, color: '#222', margin: '0 1rem', fontFamily: 'Inter, sans-serif', textAlign: 'center' }}>Overcoming <span style={{ color: '#EA580C' }}>Market Friction</span></h2>
+                            <div style={{ width: '4px', height: '4px', borderRadius: '50%', background: '#333' }} />
+                            <div style={{ width: '4px', height: '4px', borderRadius: '50%', background: '#333' }} />
+                        </div>
+                        <div style={{ flex: 1, height: '1px', background: '#d1d1d1' }} />
                     </div>
+                    <p style={{ textAlign: 'center', color: '#666', maxWidth: '850px', margin: '0 auto 1.5rem', fontSize: '1.2rem', lineHeight: 1.7 }}>
+                        Connecting with international investors requires more than traditional marketing. We solve the specific trust and logistical challenges that prevent visionary developers from reaching the global Indian diaspora.
+                    </p>
 
-                    {/* Horizontal scroll carousel */}
                     <div
                         ref={builderChallengesScrollRef}
                         style={{
@@ -231,7 +248,7 @@ export default function BuilderHome() {
                             if (builderChallengesScrollRef.current) {
                                 const el = builderChallengesScrollRef.current;
                                 const cardW = el.scrollWidth / builderChallenges.length;
-                                const page = Math.round(el.scrollLeft / (cardW * 3));
+                                const page = Math.round(el.scrollLeft / (cardW * 4));
                                 setBuilderChallengePage(page);
                             }
                         }}
@@ -241,78 +258,56 @@ export default function BuilderHome() {
                             return (
                                 <div
                                     key={challenge.id}
-                                    className="challenge-card"
+                                    className="challenge-card challenge-card-premium"
                                     onMouseEnter={() => setHoveredBuilderCard(challenge.id)}
                                     onMouseLeave={() => setHoveredBuilderCard(null)}
                                     style={{
                                         position: 'relative',
-                                        borderRadius: '0.75rem',
+                                        borderRadius: '1rem',
                                         overflow: 'hidden',
-                                        height: '300px',
+                                        height: '350px',
+                                        background: '#fff',
                                         scrollSnapAlign: 'start',
-                                        boxShadow: '0 4px 18px rgba(0,0,0,0.18)',
-                                        cursor: 'pointer'
+                                        boxShadow: isHovered
+                                            ? '0 20px 40px rgba(0,0,0,0.08)'
+                                            : '0 10px 30px rgba(0,0,0,0.04)',
+                                        cursor: 'pointer',
+                                        transition: 'all 0.4s ease',
+                                        transform: isHovered ? 'translateY(-8px)' : 'translateY(0)',
+                                        padding: '2.5rem 1.5rem',
+                                        display: 'flex',
+                                        flexDirection: 'column',
+                                        alignItems: 'center',
+                                        textAlign: 'center',
+                                        border: '1px solid rgba(0,0,0,0.03)'
                                     }}
                                 >
-                                    <img
-                                        src={challenge.image}
-                                        alt={challenge.text}
-                                        style={{
-                                            position: 'absolute', inset: 0, width: '100%', height: '100%',
-                                            objectFit: 'cover',
-                                            transform: isHovered ? 'scale(1.05)' : 'scale(1)',
-                                            transition: 'transform 0.5s ease'
-                                        }}
-                                    />
                                     <div style={{
-                                        position: 'absolute', inset: 0,
-                                        background: isHovered
-                                            ? 'linear-gradient(to top, rgba(5,15,35,0.97) 55%, rgba(5,15,35,0.65) 100%)'
-                                            : 'linear-gradient(to top, rgba(5,15,35,0.92) 40%, rgba(5,15,35,0.45) 100%)',
-                                        transition: 'background 0.4s ease'
-                                    }} />
-                                    {/* Text slides up on hover */}
-                                    <div style={{
-                                        position: 'absolute', inset: 0, padding: '1.25rem',
-                                        display: 'flex', flexDirection: 'column', justifyContent: 'flex-end',
-                                        transform: isHovered ? 'translateY(-4.5rem)' : 'translateY(0)',
-                                        transition: 'transform 0.4s ease'
+                                        width: '80px',
+                                        height: '80px',
+                                        background: 'linear-gradient(135deg, #F97316 0%, #EA580C 100%)',
+                                        borderRadius: '50%',
+                                        display: 'flex',
+                                        alignItems: 'center',
+                                        justifyContent: 'center',
+                                        marginBottom: '1.5rem',
+                                        boxShadow: '0 8px 15px rgba(234, 88, 12, 0.3)'
                                     }}>
-                                        <span style={{
-                                            fontFamily: 'monospace', fontSize: '0.7rem', letterSpacing: '0.12em',
-                                            color: 'var(--color-accent, #F97316)', fontWeight: 700,
-                                            marginBottom: '0.4rem', textTransform: 'uppercase'
-                                        }}>{challenge.id}</span>
-                                        <p className="challenge-card-title" style={{
-                                            color: '#fff', fontWeight: 600,
-                                            lineHeight: 1.4, margin: 0
-                                        }}>{challenge.text}</p>
+                                        {challenge.icon}
                                     </div>
-                                    {/* Description slides in from bottom */}
-                                    <div style={{
-                                        position: 'absolute', bottom: 0, left: 0, right: 0,
-                                        padding: '1rem 1.25rem 1.25rem',
-                                        transform: isHovered ? 'translateY(0)' : 'translateY(100%)',
-                                        opacity: isHovered ? 1 : 0,
-                                        transition: 'transform 0.4s ease, opacity 0.35s ease'
-                                    }}>
-                                        <p className="challenge-card-desc" style={{
-                                            color: 'rgba(255,255,255,0.8)',
-                                            lineHeight: 1.55, margin: 0
-                                        }}>{challenge.desc}</p>
-                                    </div>
+                                    <h3 style={{ fontSize: '1.4rem', fontWeight: 700, color: '#111', marginBottom: '1rem', lineHeight: 1.3 }}>{challenge.text}</h3>
+                                    <p style={{ fontSize: '1.05rem', color: '#555', lineHeight: 1.6, margin: 0 }}>{challenge.desc}</p>
                                 </div>
                             );
                         })}
                     </div>
 
-                    {/* Navigation bar */}
                     <div style={{ marginTop: '1.25rem' }}>
-                        <div style={{ width: '100%', height: '3px', background: 'rgba(255,255,255,0.2)', borderRadius: '9999px', marginBottom: '0.9rem', overflow: 'hidden' }}>
+                        <div style={{ width: '100%', height: '3px', background: 'rgba(0,0,0,0.1)', borderRadius: '9999px', marginBottom: '0.9rem', overflow: 'hidden' }}>
                             <div style={{
                                 height: '100%',
                                 width: `${((builderChallengePage + 1) / 2) * 100}%`,
-                                background: 'var(--color-accent, #F97316)',
+                                background: '#EA580C',
                                 borderRadius: '9999px',
                                 transition: 'width 0.3s ease'
                             }} />
@@ -326,17 +321,16 @@ export default function BuilderHome() {
                                         setBuilderChallengePage(Math.max(0, builderChallengePage - 1));
                                     }
                                 }}
-                                aria-label="Previous"
                                 style={{
                                     width: '2.25rem', height: '2.25rem', borderRadius: '50%',
-                                    border: '1.5px solid rgba(255,255,255,0.3)', background: 'rgba(255,255,255,0.1)',
+                                    border: '1.5px solid rgba(0,0,0,0.2)', background: '#fff',
                                     display: 'flex', alignItems: 'center', justifyContent: 'center',
-                                    cursor: 'pointer', color: '#fff', fontSize: '0.9rem',
+                                    cursor: 'pointer', color: '#333', fontSize: '0.9rem',
                                     opacity: builderChallengePage === 0 ? 0.35 : 1, transition: 'opacity 0.2s'
                                 }}
                             >&#8249;</button>
-                            <span style={{ fontSize: '0.85rem', color: 'rgba(255,255,255,0.7)', minWidth: '6rem' }}>
-                                {builderChallengePage === 0 ? '1' : '4'} – {builderChallengePage === 0 ? '3' : '6'} of {builderChallenges.length}
+                            <span style={{ fontSize: '0.85rem', color: '#555', minWidth: '6rem' }}>
+                                {builderChallengePage === 0 ? '1' : '5'} – {builderChallengePage === 0 ? '4' : '6'} of {builderChallenges.length}
                             </span>
                             <button
                                 onClick={() => {
@@ -346,12 +340,11 @@ export default function BuilderHome() {
                                         setBuilderChallengePage(Math.min(1, builderChallengePage + 1));
                                     }
                                 }}
-                                aria-label="Next"
                                 style={{
                                     width: '2.25rem', height: '2.25rem', borderRadius: '50%',
-                                    border: '1.5px solid rgba(255,255,255,0.3)', background: 'rgba(255,255,255,0.1)',
+                                    border: '1.5px solid rgba(0,0,0,0.2)', background: '#fff',
                                     display: 'flex', alignItems: 'center', justifyContent: 'center',
-                                    cursor: 'pointer', color: '#fff', fontSize: '0.9rem',
+                                    cursor: 'pointer', color: '#333', fontSize: '0.9rem',
                                     opacity: builderChallengePage === 1 ? 0.35 : 1, transition: 'opacity 0.2s'
                                 }}
                             >&#8250;</button>
@@ -360,61 +353,162 @@ export default function BuilderHome() {
                 </div>
             </section>
 
-            {/* BENEFITS SECTION - Integrated Carousel */}
-            <section className="benefits-section-integrated" id="benefits">
-                <div className="benefits-integrated-wrapper">
-                    <div className="benefits-text-sidebar">
-                        <h2 className="sidebar-title">A Serious Platform for <br /><span className="text-highlight">Serious Developers</span></h2>
-                        <p className="sidebar-desc">
-                            We work with builders who value transparency, disclosures, and long-term brand trust over short-term visibility or volume-based marketing.
-                        </p>
-                    </div>
-
-                    <div className="benefits-visual-area">
-                        <div className="benefits-bg-banner">
-                            <img src="https://images.unsplash.com/photo-1567157577867-05ccb1388e66?q=80&w=2000&auto=format&fit=crop" alt="Premium Development" />
-                        </div>
-                        <div
-                            id="builder-scroll-container"
-                            className="benefits-cards-row"
-                            ref={builderScrollRef}
+            <section className="fullscreen-section section-white" id="benefits" style={{ padding: '60px 0', overflow: 'hidden' }}>
+                <div className="container">
+                    <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-start">
+                        {/* Left Side: Content */}
+                        <motion.div
+                            className="flex flex-col gap-10"
+                            initial={{ x: -60, opacity: 0 }}
+                            whileInView={{ x: 0, opacity: 1 }}
+                            viewport={{ once: true, amount: 0.2 }}
+                            transition={{ duration: 0.8, ease: "easeOut" }}
                         >
-                            {builderBenefits.map((benefit, index) => (
-                                <div className="benefit-card-premium" key={index}>
-                                    <div className="benefit-card-bg">
-                                        <img src={benefit.image} alt={benefit.title} />
-                                    </div>
-                                    <div className="benefit-card-header">
-                                        <div className="benefit-icon-box">
-                                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
-                                        </div>
-                                        <div className="benefit-card-number">0{index + 1}</div>
-                                    </div>
-                                    <div className="benefit-card-body">
-                                        <h4 className="benefit-card-title">{benefit.title}</h4>
-                                        <p className="benefit-card-desc">{benefit.desc}</p>
-                                    </div>
+                            <div>
+                                {/* <div style={{
+                                    display: 'inline-block',
+                                    background: '#FFF0E6',
+                                    color: '#EA580C',
+                                    padding: '4px 12px',
+                                    borderRadius: '4px',
+                                    fontSize: '0.85rem',
+                                    fontWeight: 700,
+                                    marginBottom: '1.5rem',
+                                    borderLeft: '3px solid #EA580C'
+                                }}>
+                                    | Strategic Advantages
+                                </div> */}
+                                <h2 className="responsive-heading" style={{ color: '#111', marginBottom: '1.5rem' }}>
+                                    Elevate Your <br />
+                                    <span style={{ color: '#EA580C' }}>Global Presence</span>
+                                </h2>
+                                <p className="responsive-paragraph" style={{ color: '#555', marginBottom: '2.5rem' }}>
+                                    Position your developments within a transparency-first ecosystem that reinforces your reputation for corporate governance and delivery excellence.
+                                </p>
+
+                                <div className="relative min-h-[300px]">
+                                    <AnimatePresence mode="wait">
+                                        <motion.div
+                                            key={benefitsPage}
+                                            initial={{ opacity: 0, x: 20 }}
+                                            animate={{ opacity: 1, x: 0 }}
+                                            exit={{ opacity: 0, x: -20 }}
+                                            transition={{ duration: 0.3 }}
+                                            className="grid grid-cols-1 md:grid-cols-2 gap-x-12 gap-y-10"
+                                        >
+                                            {builderBenefits.slice(benefitsPage * benefitsPerPage, (benefitsPage + 1) * benefitsPerPage).map((benefit, index) => (
+                                                <div key={index} style={{ borderLeft: '4px solid #EA580C', paddingLeft: '1.25rem' }}>
+                                                    <h4 style={{ fontSize: '1.2rem', fontWeight: 700, color: '#111', marginBottom: '0.6rem' }}>
+                                                        {benefit.title}
+                                                    </h4>
+                                                    <p style={{ fontSize: '1.05rem', color: '#666', lineHeight: 1.6 }}>
+                                                        {benefit.desc}
+                                                    </p>
+                                                </div>
+                                            ))}
+                                        </motion.div>
+                                    </AnimatePresence>
                                 </div>
-                            ))}
-                        </div>
-                    </div>
-                </div>
-                <div className="benefits-navigation-footer">
-                    <div className="benefits-nav-btns">
-                        <button className="nav-arrow-btn prev" onClick={() => {
-                            const container = document.getElementById('builder-scroll-container');
-                            if (container) container.scrollLeft -= 410;
-                        }}>❮</button>
-                        <button className="nav-arrow-btn next" onClick={() => {
-                            const container = document.getElementById('builder-scroll-container');
-                            if (container) container.scrollLeft += 410;
-                        }}>❯</button>
+
+                                {/* Pagination Controls */}
+                                <div className="benefits-pagination">
+                                    <button
+                                        onClick={prevBenefits}
+                                        style={{
+                                            background: '#f5f5f5',
+                                            border: 'none',
+                                            width: '40px',
+                                            height: '40px',
+                                            borderRadius: '50%',
+                                            cursor: 'pointer',
+                                            display: 'flex',
+                                            alignItems: 'center',
+                                            justifyContent: 'center',
+                                            color: '#333',
+                                            transition: 'all 0.2s'
+                                        }}
+                                        onMouseEnter={(e) => e.currentTarget.style.background = '#e5e5e5'}
+                                        onMouseLeave={(e) => e.currentTarget.style.background = '#f5f5f5'}
+                                    >
+                                        ❮
+                                    </button>
+                                    <div style={{ fontSize: '0.9rem', fontWeight: 600, color: '#888' }}>
+                                        {benefitsPage + 1} / {totalBenefitsPages}
+                                    </div>
+                                    <button
+                                        onClick={nextBenefits}
+                                        style={{
+                                            background: '#f5f5f5',
+                                            border: 'none',
+                                            width: '40px',
+                                            height: '40px',
+                                            borderRadius: '50%',
+                                            cursor: 'pointer',
+                                            display: 'flex',
+                                            alignItems: 'center',
+                                            justifyContent: 'center',
+                                            color: '#333',
+                                            transition: 'all 0.2s'
+                                        }}
+                                        onMouseEnter={(e) => e.currentTarget.style.background = '#e5e5e5'}
+                                        onMouseLeave={(e) => e.currentTarget.style.background = '#f5f5f5'}
+                                    >
+                                        ❯
+                                    </button>
+                                </div>
+                            </div>
+                        </motion.div>
+
+                        {/* Right Side: Staggered Images */}
+                        <motion.div
+                            className="relative h-[350px] md:h-[450px] flex items-center justify-center mt-0 lg:mt-6 sticky top-24"
+                            initial={{ x: 60, opacity: 0 }}
+                            whileInView={{ x: 0, opacity: 1 }}
+                            viewport={{ once: true, amount: 0.2 }}
+                            transition={{ duration: 0.8, ease: "easeOut", delay: 0.1 }}
+                        >
+                            {/* Background Image (Large) */}
+                            <div style={{
+                                width: '85%',
+                                height: '85%',
+                                borderRadius: '1.5rem',
+                                overflow: 'hidden',
+                                position: 'relative',
+                                transform: 'translateX(-10%)',
+                                boxShadow: '0 20px 40px rgba(0,0,0,0.1)'
+                            }}>
+                                <img
+                                    src="/images/hero_modern_cityscape.png"
+                                    alt="Modern Cityscape"
+                                    style={{ width: '100%', height: '100%', objectFit: 'cover' }}
+                                />
+                            </div>
+                            {/* Overlapping Image (Small) */}
+                            <div style={{
+                                position: 'absolute',
+                                right: '0',
+                                bottom: '5%',
+                                width: '65%',
+                                height: '55%',
+                                borderRadius: '1.5rem',
+                                border: '12px solid #fff',
+                                overflow: 'hidden',
+                                boxShadow: '0 30px 60px rgba(0,0,0,0.15)',
+                                zIndex: 10
+                            }}>
+                                <img
+                                    src="/images/standard_verified_seal.png"
+                                    alt="Verified Seal"
+                                    style={{ width: '100%', height: '100%', objectFit: 'cover' }}
+                                />
+                            </div>
+                        </motion.div>
                     </div>
                 </div>
             </section>
 
             {/* HOW IT WORKS SECTION */}
-            <section className="fullscreen-section section-white" id="how-it-works">
+            <section className="fullscreen-section section-theme" id="how-it-works">
                 <div className="container">
                     <div className="section-heading">
                         <h2 className="section-title">
@@ -433,8 +527,8 @@ export default function BuilderHome() {
                                     ))}
                                 </div>
                                 <div className="dashboard-tabs-nav md:hidden">
-                                    <button className="tabs-nav-btn prev" onClick={() => document.getElementById('builder-tabs-row').scrollBy({left: -150, behavior: 'smooth'})}>❮</button>
-                                    <button className="tabs-nav-btn next" onClick={() => document.getElementById('builder-tabs-row').scrollBy({left: 150, behavior: 'smooth'})}>❯</button>
+                                    <button className="tabs-nav-btn prev" onClick={() => document.getElementById('builder-tabs-row').scrollBy({ left: -150, behavior: 'smooth' })}>❮</button>
+                                    <button className="tabs-nav-btn next" onClick={() => document.getElementById('builder-tabs-row').scrollBy({ left: 150, behavior: 'smooth' })}>❯</button>
                                 </div>
                             </div>
                             <div className="dashboard-display-window">
@@ -454,7 +548,7 @@ export default function BuilderHome() {
                 </div>
             </section>
 
-            <section className="fullscreen-section section-theme" id="trust">
+            <section className="fullscreen-section section-white" id="trust">
                 <div className="container">
                     <div className="trust-split-wrapper">
                         <div className="trust-info-side">
@@ -485,7 +579,7 @@ export default function BuilderHome() {
             </section>
 
             {/* CONTACT SECTION */}
-            <section className="fullscreen-section section-white py-24" id="contact">
+            <section className="fullscreen-section section-theme py-24" id="contact">
                 <div className="container text-center">
                     <div className="cta-minimal-badge mb-6">
                         <span className="cta-badge-text">GET STARTED TODAY</span>
