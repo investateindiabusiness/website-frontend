@@ -9,26 +9,26 @@ import { Globe, Search, ShieldCheck, Users, FileText, Activity } from 'lucide-re
 
 const heroSlides = [
     {
-        image: '/images/b2.jpg',
-        tag: 'Strategic Partnerships',
-        title: 'The Premier Gateway to',
-        highlight: 'High-Intent NRI Investors',
-        subtitle: 'Orchestrating direct connections between visionary developers and a pre-vetted global network of NRI investors through institutional-grade project presentation.'
+        image: 'https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?q=80&w=2070&auto=format&fit=crop',
+        tag: 'Institutional Capital Access',
+        title: 'Direct Connectivity to',
+        highlight: 'High-Net-Worth NRI Capital',
+        subtitle: 'The definitive institutional-grade platform for visionary Indian developers to engage directly with a pre-vetted global network of sophisticated NRI investors.'
     },
     {
-        image: '/images/b3.jpg',
-        tag: 'Market Authority',
-        title: 'Elevate Your Brand to',
-        highlight: 'Institutional Standards',
-        subtitle: 'Position your developments within a transparency-first ecosystem that reinforces your reputation for corporate governance and delivery excellence.'
+        image: 'https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?q=80&w=2070&auto=format&fit=crop',
+        tag: 'Global Reach & Trust',
+        title: 'Elevate Your Brand with',
+        highlight: 'Verified Institutional Credibility',
+        subtitle: 'Position your developments within a transparency-first ecosystem that reinforces your reputation for corporate governance and delivery excellence to a global audience.'
     },
-    {
-        image: '/images/build1.jpg',
-        tag: 'Global Growth',
-        title: 'Expand Your Reach with',
-        highlight: 'Validated Buyer Intent',
-        subtitle: 'Eliminate administrative overhead by connecting only with pre-screened investors who meet strict acquisition criteria. Your global sales office, simplified.'
-    }
+    /* {
+        image: 'https://images.unsplash.com/photo-1512917774080-9991f1c4c750?q=80&w=2070&auto=format&fit=crop',
+        tag: 'Sales Acceleration',
+        title: 'Transform Your Reach with',
+        highlight: 'Precision-Vetted Buyer Intent',
+        subtitle: 'Eliminate administrative friction and connect with high-intent investors who meet strict acquisition criteria. Your global sales expansion, simplified.'
+    } */
 ];
 
 const builderBenefits = [
@@ -125,7 +125,7 @@ export default function BuilderHome() {
                 <AnimatePresence mode="sync">
                     <motion.img
                         key={heroIndex}
-                        src={heroSlides[heroIndex].image}
+                        src={heroSlides[heroIndex]?.image}
                         alt="Hero background"
                         className="absolute inset-0 w-full h-full object-cover z-0"
                         initial={{ opacity: 0 }}
@@ -192,13 +192,13 @@ export default function BuilderHome() {
                                 exit={{ opacity: 0, y: -20 }}
                                 transition={{ duration: 0.6, ease: "easeOut" }}
                             >
-                                <span className="hero-tag">{heroSlides[heroIndex].tag}</span>
+                                <span className="hero-tag">{heroSlides[heroIndex]?.tag}</span>
                                 <h1 className="hero-headline">
-                                    {heroSlides[heroIndex].title} <br />
-                                    <span className="text-accent">{heroSlides[heroIndex].highlight}</span>
+                                    {heroSlides[heroIndex]?.title} <br />
+                                    <span className="text-accent">{heroSlides[heroIndex]?.highlight}</span>
                                 </h1>
                                 <p className="hero-subheadline">
-                                    {heroSlides[heroIndex].subtitle}
+                                    {heroSlides[heroIndex]?.subtitle}
                                 </p>
                             </motion.div>
                         </AnimatePresence>
