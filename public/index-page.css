@@ -93,12 +93,15 @@
     margin: 0 0 16px 0;
 }
 
-h1, h2, h3, h4, 
-.section-title, 
-.team-main-title, 
-.trust-main-title, 
-.cta-minimal-title, 
-.hero-headline, 
+h1,
+h2,
+h3,
+h4,
+.section-title,
+.team-main-title,
+.trust-main-title,
+.cta-minimal-title,
+.hero-headline,
 .display-title,
 .trust-title,
 .faq-premium-title,
@@ -4434,5 +4437,6 @@ h1, h2, h3, h4,
 }
 
 .section-theme {
-    background-color: #E0DCD9 !important; /* User defined theme background */
-}
+    background-color: #E0DCD9 !important;
+    /* User defined theme background */
+}
