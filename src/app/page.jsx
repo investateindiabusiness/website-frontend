@@ -8,7 +8,7 @@ import RegisterDialog from '@/components/RegisterDialog';
 import LoginDialog from '@/components/LoginDialog';
 import { toast } from '@/hooks/use-toast';
 import { subscribeToNewsletter } from '@/api';
-import { Loader2 } from 'lucide-react';
+import { Loader2, Search, Users, FileText, Gavel, ShieldCheck, Globe } from 'lucide-react';
 
 const heroSlides = [
     {
@@ -27,6 +27,99 @@ const heroSlides = [
     }
 ];
 
+const contentDataForSection2 = [
+    {
+        id: "01",
+        title: "The Platform",
+        text: "A structured discovery ecosystem built specifically for NRIs who seek visibility and a dependable investment process without the middleman noise.",
+        image: "/images/platform_indian_corporate.png"
+    },
+    {
+        id: "02",
+        title: "The Standard",
+        text: "We mandate standardized disclosures—including RERA compliance and financial health—ensuring you invest based on merit, not marketing.",
+        image: "/images/standard_verified_seal.png"
+    },
+    {
+        id: "03",
+        title: "The Focus",
+        text: "Presenting builder-declared information in a clean, transparent manner to empower you with the clarity needed for remote decision-making.",
+        image: "/images/focus_data_clarity.png"
+    }
+];
+
+const challengesList = [
+    { id: "01", text: "Information Asymmetry", desc: "Unverified project data and lack of transparent documentation from abroad.", icon: <Search className="w-8 h-8 text-white" /> },
+    { id: "02", text: "Fragmented Intermediaries", desc: "Heavy reliance on brokers and middlemen who often distort information.", icon: <Users className="w-8 h-8 text-white" /> },
+    { id: "03", text: "Lack of Standardized Disclosures", desc: "No uniform baseline to compare projects across different developers.", icon: <FileText className="w-8 h-8 text-white" /> },
+    { id: "04", text: "Complex Regulatory Landscape", desc: "Navigating RERA, FEMA, and state-specific property laws remotely.", icon: <Gavel className="w-8 h-8 text-white" /> },
+    { id: "05", text: "Builder Credibility Gaps", desc: "Difficulties in verifying past delivery records and financial stability.", icon: <ShieldCheck className="w-8 h-8 text-white" /> },
+    { id: "06", text: "On-Ground Hurdles", desc: "Coordinating site visits and legal vetting across various time zones.", icon: <Globe className="w-8 h-8 text-white" /> }
+];
+
+const benefitsList = [
+    { title: "Pre-Verified Builders", desc: "Rigorous credibility assessments before any developer is listed.", icon: <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path></svg> },
+    { title: "Standardized Disclosures", desc: "RERA details, approvals, and timelines in one consistent format.", icon: <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><polyline points="10 9 9 9 8 9"></polyline></svg> },
+    { title: "Transparent Progress", desc: "Real-time construction updates and payment plan clarity.", icon: <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="16" x2="12" y2="12"></line><line x1="12" y1="8" x2="12.01" y2="8"></line></svg> },
+    { title: "Expert Guidance", desc: "On-ground support to navigate documentation and legal requirements.", icon: <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg> },
+    { title: "Commercial Terms", desc: "Negotiating best-in-market pricing directly with developers.", icon: <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="8.5" cy="7" r="4"></circle><polyline points="17 11 19 13 23 9"></polyline></svg> },
+    { title: "Investor Safeguards", desc: "Structured risk mitigation designed to protect your interests.", icon: <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg> },
+    { title: "Inventory Tracking", desc: "Transparent inventory monitoring and fund flow oversight.", icon: <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><line x1="12" y1="20" x2="12" y2="10"></line><line x1="18" y1="20" x2="18" y2="4"></line><line x1="6" y1="20" x2="6" y2="16"></line></svg> },
+    { title: "Exit Strategy", desc: "Support for secondary market placement and resale planning.", icon: <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M10 22L14 18L10 14"></path><path d="M18 10L22 6L18 2"></path><path d="M22 6H12C9.79086 6 8 7.79086 8 10V22"></path></svg> }
+];
+
+const investorSteps = [
+    { id: "1", title: "Register", text: "Share your preferences. A dedicated Relationship Manager will be assigned to guide your journey." },
+    { id: "2", title: "Discover", text: "Browse pre-verified builders with complete disclosures and RERA-verified timelines." },
+    { id: "3", title: "Evaluate", text: "Receive expert support to vet documentation and identify profitable opportunities." },
+    { id: "4", title: "Decide", text: "Make informed decisions with full transparency and ongoing on-ground support." }
+];
+
+const stepImages = [
+    "/images/platform_indian_corporate.png",
+    "/images/process_discovery.png",
+    "/images/standard_verified_seal.png",
+    "/images/hero_indian_luxury.png"
+];
+
+const teamMembers = [
+    { name: "Pankaj Gupta", role: "Co-Founder", image: "/pankaj.png" },
+    { name: "Atish Agarwal", role: "Co-Founder", image: "/atish.png" },
+    { name: "Deepak Kavadia", role: "Co-Founder", image: "/deepak.png" }
+];
+
+const faqsList = [
+    {
+        question: "Is Investate India a broker?",
+        answer: "No. We are a discovery and facilitation platform. We provide structured information and verify builder credentials to ensure transparent connections."
+    },
+    {
+        question: "Is there a registration fee?",
+        answer: "Registration is currently free for NRI investors. We prioritize transparency and will inform you well in advance of any future service fees."
+    },
+    {
+        question: "How do you verify builders?",
+        answer: "We assess RERA compliance, financial health, past delivery records, and market reputation through a rigorous multi-step process."
+    },
+    {
+        question: "Which cities do you cover?",
+        answer: "We focus on major metros: Bangalore, Mumbai, Delhi-NCR, and Hyderabad, with plans to expand to quality Tier-2 developments."
+    }
+];
+
+const trustFeatures = [
+    { id: "secure", title: "Secure Data Handling", desc: "Your personal and financial information is protected with industry-standard security protocols.", icon: <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg> },
+    { id: "disclosure", title: "Mandatory Disclosures", desc: "Builders must provide complete information including approvals, timelines, and financial status.", icon: <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><polyline points="10 9 9 9 8 9"></polyline></svg> },
+    { id: "network", title: "Curated Builder Network", desc: "We work only with developers who meet our strict credibility and transparency standards.", icon: <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="8" r="7"></circle><polyline points="8.21 13.89 7 23 12 20 17 23 15.79 13.88"></polyline></svg> },
+    { id: "support", title: "NRI-Focused Support Team", desc: "Dedicated professionals who understand the unique challenges of investing from abroad.", icon: <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="2" y1="12" x2="22" y2="12"></line><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path></svg> }
+];
+
+const currentFocusList = [
+    "Onboarding select builders in key metro cities (Bangalore, Mumbai, Pune, Delhi-NCR, Hyderabad etc.)",
+    "Building our NRI investor community across USA, UK, UAE and across the globe."
+];
+
+
 export default function Index() {
     const benefitsScrollRef = useRef(null);
     const challengesScrollRef = useRef(null);
@@ -38,6 +131,17 @@ export default function Index() {
     const [heroIndex, setHeroIndex] = useState(0);
     const [isHeroPaused, setIsHeroPaused] = useState(false);
     const [challengePage, setChallengePage] = useState(0);
+    const [benefitsPage, setBenefitsPage] = useState(0);
+    const benefitsPerPage = 4;
+    const totalBenefitsPages = Math.ceil(benefitsList.length / benefitsPerPage);
+
+    const nextBenefits = () => {
+        setBenefitsPage((prev) => (prev + 1) % totalBenefitsPages);
+    };
+
+    const prevBenefits = () => {
+        setBenefitsPage((prev) => (prev - 1 + totalBenefitsPages) % totalBenefitsPages);
+    };
     const [hoveredCard, setHoveredCard] = useState(null);
 
     const [isLoginOpen, setIsLoginOpen] = useState(false);
@@ -88,100 +192,7 @@ export default function Index() {
         }
     };
 
-    const contentDataForSection2 = [
-        {
-            id: "01",
-            title: "The Platform",
-            text: "A structured discovery ecosystem built specifically for NRIs who seek visibility and a dependable investment process without the middleman noise.",
-            image: "/images/platform_indian_corporate.png"
-        },
-        {
-            id: "02",
-            title: "The Standard",
-            text: "We mandate standardized disclosures—including RERA compliance and financial health—ensuring you invest based on merit, not marketing.",
-            image: "/images/standard_verified_seal.png"
-        },
-        {
-            id: "03",
-            title: "The Focus",
-            text: "Presenting builder-declared information in a clean, transparent manner to empower you with the clarity needed for remote decision-making.",
-            image: "/images/focus_data_clarity.png"
-        }
-    ];
-
-    const challengesList = [
-        { id: "01", text: "Information Asymmetry", desc: "Unverified project data and lack of transparent documentation from abroad.", image: "/images/challenge_verified_info.png" },
-        { id: "02", text: "Fragmented Intermediaries", desc: "Heavy reliance on brokers and middlemen who often distort information.", image: "/images/challenge_intermediaries.png" },
-        { id: "03", text: "Lack of Standardized Disclosures", desc: "No uniform baseline to compare projects across different developers.", image: "/images/challenge_disclosures.png" },
-        { id: "04", text: "Complex Regulatory Landscape", desc: "Navigating RERA, FEMA, and state-specific property laws remotely.", image: "/images/challenge_legal.png" },
-        { id: "05", text: "Builder Credibility Gaps", desc: "Difficulties in verifying past delivery records and financial stability.", image: "/images/challenge_builder.png" },
-        { id: "06", text: "On-Ground Hurdles", desc: "Coordinating site visits and legal vetting across various time zones.", image: "/images/challenge_timezone.png" }
-    ];
-
-    const benefitsList = [
-        { title: "Pre-Verified Builders", desc: "Rigorous credibility assessments before any developer is listed.", icon: <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path></svg> },
-        { title: "Standardized Disclosures", desc: "RERA details, approvals, and timelines in one consistent format.", icon: <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><polyline points="10 9 9 9 8 9"></polyline></svg> },
-        { title: "Transparent Progress", desc: "Real-time construction updates and payment plan clarity.", icon: <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="16" x2="12" y2="12"></line><line x1="12" y1="8" x2="12.01" y2="8"></line></svg> },
-        { title: "Expert Guidance", desc: "On-ground support to navigate documentation and legal requirements.", icon: <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg> },
-        { title: "Commercial Terms", desc: "Negotiating best-in-market pricing directly with developers.", icon: <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="8.5" cy="7" r="4"></circle><polyline points="17 11 19 13 23 9"></polyline></svg> },
-        { title: "Investor Safeguards", desc: "Structured risk mitigation designed to protect your interests.", icon: <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg> },
-        { title: "Inventory Tracking", desc: "Transparent inventory monitoring and fund flow oversight.", icon: <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><line x1="12" y1="20" x2="12" y2="10"></line><line x1="18" y1="20" x2="18" y2="4"></line><line x1="6" y1="20" x2="6" y2="16"></line></svg> },
-        { title: "Exit Strategy", desc: "Support for secondary market placement and resale planning.", icon: <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M10 22L14 18L10 14"></path><path d="M18 10L22 6L18 2"></path><path d="M22 6H12C9.79086 6 8 7.79086 8 10V22"></path></svg> },
-        { title: "Legal Compliance", desc: "Vetting of agreements and FEMA/RERA compliance checks.", icon: <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><polyline points="10 9 9 9 8 9"></polyline></svg> },
-    ];
-
-    const investorSteps = [
-        { id: "1", title: "Register", text: "Share your preferences. A dedicated Relationship Manager will be assigned to guide your journey." },
-        { id: "2", title: "Discover", text: "Browse pre-verified builders with complete disclosures and RERA-verified timelines." },
-        { id: "3", title: "Evaluate", text: "Receive expert support to vet documentation and identify profitable opportunities." },
-        { id: "4", title: "Decide", text: "Make informed decisions with full transparency and ongoing on-ground support." }
-    ];
-
     const activeStepData = investorSteps[activeStepIndex];
-
-    const stepImages = [
-        "/images/platform_indian_corporate.png",
-        "/images/process_discovery.png",
-        "/images/standard_verified_seal.png",
-        "/images/hero_indian_luxury.png"
-    ];
-
-    const teamMembers = [
-        { name: "Pankaj Gupta", role: "Co-Founder", image: "/pankaj.png" },
-        { name: "Atish Agarwal", role: "Co-Founder", image: "/atish.png" },
-        { name: "Deepak Kavadia", role: "Co-Founder", image: "/deepak.png" }
-    ];
-
-    const faqsList = [
-        {
-            question: "Is Investate India a broker?",
-            answer: "No. We are a discovery and facilitation platform. We provide structured information and verify builder credentials to ensure transparent connections."
-        },
-        {
-            question: "Is there a registration fee?",
-            answer: "Registration is currently free for NRI investors. We prioritize transparency and will inform you well in advance of any future service fees."
-        },
-        {
-            question: "How do you verify builders?",
-            answer: "We assess RERA compliance, financial health, past delivery records, and market reputation through a rigorous multi-step process."
-        },
-        {
-            question: "Which cities do you cover?",
-            answer: "We focus on major metros: Bangalore, Mumbai, Delhi-NCR, and Hyderabad, with plans to expand to quality Tier-2 developments."
-        }
-    ];
-
-    const trustFeatures = [
-        { id: "secure", title: "Secure Data Handling", desc: "Your personal and financial information is protected with industry-standard security protocols.", icon: <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg> },
-        { id: "disclosure", title: "Mandatory Disclosures", desc: "Builders must provide complete information including approvals, timelines, and financial status.", icon: <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><polyline points="10 9 9 9 8 9"></polyline></svg> },
-        { id: "network", title: "Curated Builder Network", desc: "We work only with developers who meet our strict credibility and transparency standards.", icon: <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="8" r="7"></circle><polyline points="8.21 13.89 7 23 12 20 17 23 15.79 13.88"></polyline></svg> },
-        { id: "support", title: "NRI-Focused Support Team", desc: "Dedicated professionals who understand the unique challenges of investing from abroad.", icon: <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="2" y1="12" x2="22" y2="12"></line><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path></svg> }
-    ];
-
-    const currentFocusList = [
-        "Onboarding select builders in key metro cities (Bangalore, Mumbai, Pune, Delhi-NCR, Hyderabad etc.)",
-        "Building our NRI investor community across USA, UK, UAE and across the globe."
-    ];
 
     const handleSwitchToRegister = (dataPayload) => {
         setIsLoginOpen(false);
@@ -345,16 +356,22 @@ export default function Index() {
                 </div>
             </section>
 
-            <section className="fullscreen-section section-white" id="challenges">
+            <section className="fullscreen-section section-white" id="challenges" style={{ padding: '80px 0' }}>
                 <div className="container">
-                    <div className="section-heading">
-                        <h2 className="section-title">
-                            Overcoming the <br /> <span className='text-highlight'>Distance & Trust Gap</span>
-                        </h2>
-                        <p className="section-subtitle">
-                            For NRIs, navigating the Indian property market often entails managing information asymmetry and on-ground uncertainty. We provide the clarity needed to differentiate exceptional opportunities from market noise.
-                        </p>
+                    <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '1.5rem', marginBottom: '3rem' }}>
+                        <div style={{ flex: 1, height: '1px', background: '#d1d1d1' }} />
+                        <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+                            <div style={{ width: '4px', height: '4px', borderRadius: '50%', background: '#333' }} />
+                            <div style={{ width: '4px', height: '4px', borderRadius: '50%', background: '#333' }} />
+                            <h2 style={{ fontSize: '2.5rem', fontWeight: 600, color: '#222', margin: '0 1rem', fontFamily: 'Inter, sans-serif', textAlign: 'center' }}>Overcoming <span style={{ color: '#EA580C' }}>Distance & Trust Gap</span></h2>
+                            <div style={{ width: '4px', height: '4px', borderRadius: '50%', background: '#333' }} />
+                            <div style={{ width: '4px', height: '4px', borderRadius: '50%', background: '#333' }} />
+                        </div>
+                        <div style={{ flex: 1, height: '1px', background: '#d1d1d1' }} />
                     </div>
+                    <p style={{ textAlign: 'center', color: '#666', maxWidth: '850px', margin: '0 auto 1.5rem', fontSize: '1.2rem', lineHeight: 1.7 }}>
+                        For NRIs, navigating the Indian property market often entails managing information asymmetry and on-ground uncertainty. We provide the clarity needed to differentiate exceptional opportunities from market noise.
+                    </p>
 
                     {/* Horizontal scroll carousel */}
                     <div
@@ -384,75 +401,45 @@ export default function Index() {
                             return (
                                 <div
                                     key={challenge.id}
-                                    className="challenge-card"
+                                    className="challenge-card challenge-card-premium"
                                     onMouseEnter={() => setHoveredCard(challenge.id)}
                                     onMouseLeave={() => setHoveredCard(null)}
                                     style={{
                                         position: 'relative',
                                         borderRadius: '1rem',
                                         overflow: 'hidden',
-                                        height: '300px',
+                                        height: '350px',
+                                        background: '#fff',
                                         scrollSnapAlign: 'start',
                                         boxShadow: isHovered
-                                            ? '0 20px 50px rgba(14,88,168,0.22), 0 4px 18px rgba(0,0,0,0.12)'
-                                            : '0 6px 24px rgba(0,0,0,0.10), 0 1px 4px rgba(14,88,168,0.08)',
+                                            ? '0 20px 40px rgba(0,0,0,0.08)'
+                                            : '0 10px 30px rgba(0,0,0,0.04)',
                                         cursor: 'pointer',
-                                        transition: 'box-shadow 0.4s ease, transform 0.4s ease',
-                                        transform: isHovered ? 'translateY(-4px)' : 'translateY(0)'
+                                        transition: 'all 0.4s ease',
+                                        transform: isHovered ? 'translateY(-8px)' : 'translateY(0)',
+                                        padding: '2.5rem 1.5rem',
+                                        display: 'flex',
+                                        flexDirection: 'column',
+                                        alignItems: 'center',
+                                        textAlign: 'center',
+                                        border: '1px solid rgba(0,0,0,0.03)'
                                     }}
                                 >
-                                    <img
-                                        src={challenge.image}
-                                        alt={challenge.text}
-                                        style={{
-                                            position: 'absolute', inset: 0, width: '100%', height: '100%',
-                                            objectFit: 'cover', objectPosition: 'center',
-                                            transform: isHovered ? 'scale(1.07)' : 'scale(1)',
-                                            transition: 'transform 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94)'
-                                        }}
-                                    />
-                                    {/* White-to-blue gradient overlay — brighter on rest, slightly deeper on hover */}
                                     <div style={{
-                                        position: 'absolute', inset: 0,
-                                        background: isHovered
-                                            ? 'linear-gradient(to top, rgba(10,42,95,0.88) 45%, rgba(14,88,168,0.45) 75%, rgba(255,255,255,0.08) 100%)'
-                                            : 'linear-gradient(to top, rgba(10,42,95,0.82) 35%, rgba(14,88,168,0.38) 70%, rgba(240,247,255,0.12) 100%)',
-                                        transition: 'background 0.45s ease'
-                                    }} />
-                                    {/* Static content — slides up on hover */}
-                                    <div style={{
-                                        position: 'absolute', inset: 0, padding: '1.4rem',
-                                        display: 'flex', flexDirection: 'column', justifyContent: 'flex-end',
-                                        transform: isHovered ? 'translateY(-9rem)' : 'translateY(0)',
-                                        transition: 'transform 0.45s cubic-bezier(0.25, 0.46, 0.45, 0.94)'
+                                        width: '80px',
+                                        height: '80px',
+                                        background: 'linear-gradient(135deg, #F97316 0%, #EA580C 100%)',
+                                        borderRadius: '50%',
+                                        display: 'flex',
+                                        alignItems: 'center',
+                                        justifyContent: 'center',
+                                        marginBottom: '1.5rem',
+                                        boxShadow: '0 8px 15px rgba(249, 115, 22, 0.3)'
                                     }}>
-                                        <span style={{
-                                            fontFamily: 'monospace', fontSize: '0.68rem', letterSpacing: '0.14em',
-                                            color: '#60B8FF', fontWeight: 700,
-                                            marginBottom: '0.5rem', textTransform: 'uppercase',
-                                            textShadow: '0 1px 4px rgba(0,0,0,0.3)'
-                                        }}>{challenge.id}</span>
-                                        <p className="challenge-card-title" style={{
-                                            color: '#fff', fontWeight: 700,
-                                            lineHeight: 1.45, margin: 0,
-                                            textShadow: '0 2px 8px rgba(0,0,0,0.35)',
-                                            letterSpacing: '0.01em'
-                                        }}>{challenge.text}</p>
+                                        {challenge.icon}
                                     </div>
-                                    {/* Description — slides in from bottom on hover */}
-                                    <div style={{
-                                        position: 'absolute', bottom: 0, left: 0, right: 0,
-                                        padding: '0.8rem 1.4rem 1.4rem',
-                                        transform: isHovered ? 'translateY(0)' : 'translateY(100%)',
-                                        opacity: isHovered ? 1 : 0,
-                                        transition: 'transform 0.45s cubic-bezier(0.25, 0.46, 0.45, 0.94), opacity 0.4s ease'
-                                    }}>
-                                        <p className="challenge-card-desc" style={{
-                                            color: 'rgba(220,238,255,0.92)',
-                                            lineHeight: 1.6, margin: 0,
-                                            textShadow: '0 1px 3px rgba(0,0,0,0.2)'
-                                        }}>{challenge.desc}</p>
-                                    </div>
+                                    <h3 style={{ fontSize: '1.4rem', fontWeight: 700, color: '#111', marginBottom: '1rem', lineHeight: 1.3 }}>{challenge.text}</h3>
+                                    <p style={{ fontSize: '1.05rem', color: '#555', lineHeight: 1.6, margin: 0 }}>{challenge.desc}</p>
                                 </div>
                             );
                         })}
@@ -514,95 +501,157 @@ export default function Index() {
                 </div>
             </section>
 
-            <section className="growth-story-section">
+            <section className="fullscreen-section section-theme" id="benefits" style={{ padding: '60px 0', overflow: 'hidden' }}>
                 <div className="container">
-                    <div className="growth-header">
-                        <h2>India's Growth Story</h2>
-                    </div>
-
-                    <div className="growth-grid">
-                        <div className="map-visual-area">
-                            <svg className="india-map-svg" viewBox="0 0 500 600" xmlns="http://www.w3.org/2000/svg">
-                                <path 
-                                    d="M261.2,14.6c-2.3,0.3-4.5,1.2-6.5,2.7c-3,2.2-5.1,5.6-5.8,9.3c-0.4,1.8-0.4,4.4,0,6.2c0.6,2.8,2,5.2,4,6.9 c2,1.7,4.6,2.6,7.3,2.6c2.7,0,5.3-0.9,7.3-2.6c2-1.7,3.4-4.1,4-6.9c0.4-1.8,0.4-4.4,0-6.2c-0.6-2.8-2-5.2-4-6.9 C265.7,15.5,263.5,14.6,261.2,14.6z M167.3,31.7c-2.3,0.3-4.5,1.2-6.5,2.7c-3,2.2-5.1,5.6-5.8,9.3c-0.4,1.8-0.4,4.4,0,6.2 c0.6,2.8,2,5.2,4,6.9c2,1.7,4.6,2.6,7.3,2.6c2.7,0,5.3-0.9,7.3-2.6c2-1.7,3.4-4.1,4-6.9c0.4-1.8,0.4-4.4,0-6.2 c-0.6-2.8-2-5.2-4-6.9C171.8,32.6,169.6,31.7,167.3,31.7z M353.4,32.6c-2.3,0.3-4.5,1.2-6.5,2.7c-3,2.2-5.1,5.6-5.8,9.3 c-0.4,1.8-0.4,4.4,0,6.2c0.6,2.8,2,5.2,4,6.9c2,1.7,4.6,2.6,7.3,2.6c2.7,0,5.3-0.9,7.3-2.6c2-1.7,3.4-4.1,4-6.9 c0.4-1.8,0.4-4.4,0-6.2c-0.6-2.8-2-5.2-4-6.9C357.9,33.5,355.7,32.6,353.4,32.6z M261.2,456.7L261.2,456.7 c-27.1-2.1-51.5-16.7-65.4-40.2c-4.4-7.5-7.3-15.8-8.6-24.5c-0.3-1.8-0.4-3.6-0.4-5.5c0-44.5,36.1-80.6,80.6-80.6 s80.6,36.1,80.6,80.6c0,1.9-0.1,3.7-0.4,5.5c-1.3,8.7-4.2,17-8.6,24.5C325.1,440,300.7,454.6,273.6,456.7L261.2,456.7z"
-                                    fill="#E67E22" 
-                                />
-                                <path 
-                                    d="M240.2,46.5c-4.4,0-8,3.6-8,8s3.6,8,8,8s8-3.6,8-8S244.6,46.5,240.2,46.5z M235.2,106.5c-10,15-5,35,15,45 s30,0,45,15s15,40,30,50s45,0,55,15s0,40,15,55s45,0,55,15s0,45,10,65s40,20,50,45s-10,55,5,75s50,15,60,40s-20,60,0,85 s65,25,75,55s-30,70,0,95s80,20,95,55s-40,85,0,115s105,15,125,55s-50,105,0,145s130,5,155,55s-60,135,0,185s165-15,195,45 s-75,170,0,230s210-40,245,35s-95,200,0,270s265-75,305,15s-125,235,0,315s335-125,385-15s-165,280,0,375s420-195,480-60 s-215,335,0,455s530-290,610-120s-285,410,0,555s675-430,780-210s-385,510,0,690s865-625,1010-350s-540,665,0,900s1120-940,1330-580 s-790,920,0,1260s1515-1440,1835-1030s-1230,1350,0,1890s2215-2240,2750-1840s-2015,2215,0,3090s3425-3425,4315-3015 s-3550,4200,0,6015s5670-5670,7145-5670s-5670,5670-7145,5670z"
-                                    fill="#E67E22" 
-                                    transform="scale(0.04)"
-                                />
-                            </svg>
-
-                            <div className="map-stat-overlay stat-pos-1">
-                                <div className="stat-content">
-                                    <span className="stat-number-large">7.5%</span>
-                                    <span className="stat-label-small">GDP Growth</span>
-                                </div>
-                            </div>
-
-                            <div className="map-stat-overlay stat-pos-2">
-                                <div className="stat-content">
-                                    <span className="stat-number-large">80+</span>
-                                    <span className="stat-label-small">Smart Cities</span>
-                                </div>
-                            </div>
-
-                            <div className="map-stat-overlay stat-pos-3">
-                                <div className="stat-content">
-                                    <span className="stat-number-large">$80B</span>
-                                    <span className="stat-label-small">FDI Inflow</span>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div className="landscape-showcase">
-                            <div className="landscape-images-grid">
-                                <div className="landscape-img-box">
-                                    <img src="/images/b2.jpg" alt="Highway Infrastructure" />
-                                </div>
-                                <div className="landscape-img-box">
-                                    <img src="/images/hero_modern_cityscape.png" alt="Modern Skyscrapers" />
-                                </div>
-                            </div>
-                            <div className="landscape-footer-bar">
-                                <span className="landscape-title-text">Rising Investment Landscape</span>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </section>
-
-            <section className="benefits-section-integrated section-theme" id="benefits">
-                <div className="benefits-integrated-wrapper">
-                    <div className="benefits-text-sidebar">
-                        <h2 className="sidebar-title">Uncompromising <br /> <span className="text-highlight">Investor Safeguards</span></h2>
-                        <p className="sidebar-desc">
-                            A secure ecosystem where builder credentials and RERA compliance are consolidated for absolute peace of mind.
-                        </p>
-                    </div>
-
-                    <div className="benefits-visual-area">
-                        <div
-                            id="benefits-scroll-container"
-                            className="benefits-cards-row"
-                            ref={benefitsScrollRef}
-                            style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '1.5rem', width: '100%', overflow: 'visible' }}
+                    <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-start">
+                        {/* Left Side: Content */}
+                        <motion.div
+                            className="flex flex-col gap-10"
+                            initial={{ x: -60, opacity: 0 }}
+                            whileInView={{ x: 0, opacity: 1 }}
+                            viewport={{ once: true, amount: 0.2 }}
+                            transition={{ duration: 0.8, ease: "easeOut" }}
                         >
-                            {benefitsList.map((benefit, index) => (
-                                <div className="benefit-card-minimal" key={index} style={{
-                                    background: '#fff', padding: '2rem', borderRadius: '1rem',
-                                    border: '1px solid rgba(0,0,0,0.05)', boxShadow: '0 4px 20px rgba(0,0,0,0.03)',
-                                    display: 'flex', flexDirection: 'column', gap: '1rem'
+                            <div>
+                                {/* <div style={{
+                                    display: 'inline-block',
+                                    background: '#FFF0E6',
+                                    color: '#EA580C',
+                                    padding: '4px 12px',
+                                    borderRadius: '4px',
+                                    fontSize: '0.85rem',
+                                    fontWeight: 700,
+                                    marginBottom: '1.5rem',
+                                    borderLeft: '3px solid #EA580C'
                                 }}>
-                                    <div className="benefit-icon-box" style={{ color: 'var(--color-accent)', width: '3rem', height: '3rem' }}>
-                                        {benefit.icon}
-                                    </div>
-                                    <h4 className="benefit-card-title" style={{ fontSize: '1.25rem', fontWeight: 700, margin: 0 }}>{benefit.title}</h4>
-                                    <p className="benefit-card-desc" style={{ fontSize: '1rem', color: '#666', margin: 0, lineHeight: 1.5 }}>{benefit.desc}</p>
+                                    | Investor Safeguards
+                                </div> */}
+                                <h2 className="responsive-heading" style={{ color: '#111', marginBottom: '1.5rem' }}>
+                                    Uncompromising <br />
+                                    <span style={{ color: '#EA580C' }}>Investor Safeguards</span>
+                                </h2>
+                                <p className="responsive-paragraph" style={{ color: '#555', marginBottom: '2.5rem' }}>
+                                    A secure ecosystem where builder credentials and RERA compliance are consolidated for absolute peace of mind. We eliminate the distance gap through rigorous verification.
+                                </p>
+
+                                <div className="relative min-h-[300px]">
+                                    <AnimatePresence mode="wait">
+                                        <motion.div
+                                            key={benefitsPage}
+                                            initial={{ opacity: 0, x: 20 }}
+                                            animate={{ opacity: 1, x: 0 }}
+                                            exit={{ opacity: 0, x: -20 }}
+                                            transition={{ duration: 0.3 }}
+                                            className="grid grid-cols-1 md:grid-cols-2 gap-x-12 gap-y-10"
+                                        >
+                                            {benefitsList.slice(benefitsPage * benefitsPerPage, (benefitsPage + 1) * benefitsPerPage).map((benefit, index) => (
+                                                <div key={index} style={{ borderLeft: '4px solid #EA580C', paddingLeft: '1.25rem' }}>
+                                                    <h4 style={{ fontSize: '1.2rem', fontWeight: 700, color: '#111', marginBottom: '0.6rem' }}>
+                                                        {benefit.title}
+                                                    </h4>
+                                                    <p style={{ fontSize: '1.05rem', color: '#666', lineHeight: 1.6 }}>
+                                                        {benefit.desc}
+                                                    </p>
+                                                </div>
+                                            ))}
+                                        </motion.div>
+                                    </AnimatePresence>
                                 </div>
-                            ))}
-                        </div>
+
+                                {/* Pagination Controls */}
+                                <div className="benefits-pagination">
+                                    <button
+                                        onClick={prevBenefits}
+                                        style={{
+                                            background: '#f5f5f5',
+                                            border: 'none',
+                                            width: '40px',
+                                            height: '40px',
+                                            borderRadius: '50%',
+                                            cursor: 'pointer',
+                                            display: 'flex',
+                                            alignItems: 'center',
+                                            justifyContent: 'center',
+                                            color: '#333',
+                                            transition: 'all 0.2s'
+                                        }}
+                                        onMouseEnter={(e) => e.currentTarget.style.background = '#e5e5e5'}
+                                        onMouseLeave={(e) => e.currentTarget.style.background = '#f5f5f5'}
+                                    >
+                                        ❮
+                                    </button>
+                                    <div style={{ fontSize: '0.9rem', fontWeight: 600, color: '#888' }}>
+                                        {benefitsPage + 1} / {totalBenefitsPages}
+                                    </div>
+                                    <button
+                                        onClick={nextBenefits}
+                                        style={{
+                                            background: '#f5f5f5',
+                                            border: 'none',
+                                            width: '40px',
+                                            height: '40px',
+                                            borderRadius: '50%',
+                                            cursor: 'pointer',
+                                            display: 'flex',
+                                            alignItems: 'center',
+                                            justifyContent: 'center',
+                                            color: '#333',
+                                            transition: 'all 0.2s'
+                                        }}
+                                        onMouseEnter={(e) => e.currentTarget.style.background = '#e5e5e5'}
+                                        onMouseLeave={(e) => e.currentTarget.style.background = '#f5f5f5'}
+                                    >
+                                        ❯
+                                    </button>
+                                </div>
+                            </div>
+
+                        </motion.div>
+
+                        {/* Right Side: Staggered Images */}
+                        <motion.div
+                            className="relative h-[350px] md:h-[450px] flex items-center justify-center mt-0 lg:mt-6 sticky top-24"
+                            initial={{ x: 60, opacity: 0 }}
+                            whileInView={{ x: 0, opacity: 1 }}
+                            viewport={{ once: true, amount: 0.2 }}
+                            transition={{ duration: 0.8, ease: "easeOut", delay: 0.1 }}
+                        >
+                            {/* Background Image (Large) */}
+                            <div style={{
+                                width: '85%',
+                                height: '85%',
+                                borderRadius: '1.5rem',
+                                overflow: 'hidden',
+                                position: 'relative',
+                                transform: 'translateX(-10%)',
+                                boxShadow: '0 20px 40px rgba(0,0,0,0.1)'
+                            }}>
+                                <img
+                                    src="/images/hero_indian_luxury.png"
+                                    alt="Luxury Property"
+                                    style={{ width: '100%', height: '100%', objectFit: 'cover' }}
+                                />
+                            </div>
+                            {/* Overlapping Image (Small) */}
+                            <div style={{
+                                position: 'absolute',
+                                right: '0',
+                                bottom: '5%',
+                                width: '65%',
+                                height: '55%',
+                                borderRadius: '1.5rem',
+                                border: '12px solid #fff',
+                                overflow: 'hidden',
+                                boxShadow: '0 30px 60px rgba(0,0,0,0.15)',
+                                zIndex: 10
+                            }}>
+                                <img
+                                    src="/images/standard_verified_seal.png"
+                                    alt="Verified Seal"
+                                    style={{ width: '100%', height: '100%', objectFit: 'cover' }}
+                                />
+                            </div>
+                        </motion.div>
                     </div>
                 </div>
             </section>
@@ -824,12 +873,12 @@ export default function Index() {
 
             <Footer />
 
-            <LoginDialog
+            {/* <LoginDialog
                 isOpen={isLoginOpen}
                 onOpenChange={setIsLoginOpen}
                 onSwitchToRegister={handleSwitchToRegister}
                 initialData={dialogData}
-            />
+            /> */}
             <RegisterDialog
                 isOpen={isRegisterOpen}
                 onOpenChange={setIsRegisterOpen}

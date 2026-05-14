@@ -86,22 +86,77 @@
 }
 
 .section-title {
+    font-family: 'Inter', sans-serif !important;
     font-size: 3rem;
     font-weight: 700;
     color: var(--color-primary);
     margin: 0 0 16px 0;
 }
 
+h1, h2, h3, h4, 
+.section-title, 
+.team-main-title, 
+.trust-main-title, 
+.cta-minimal-title, 
+.hero-headline, 
+.display-title,
+.trust-title,
+.faq-premium-title,
+.focus-heading,
+.cta-title,
+.step-btn-title {
+    font-family: 'Inter', sans-serif !important;
+}
+
+.text-highlight {
+    color: #EA580C !important;
+}
+
+
+
+
 @media (max-width: 768px) {
 
     .section-title,
-    .sidebar-title {
-        font-size: 2.5rem !important;
-        /* Fix for mobile cut-off */
+    .sidebar-title,
+    .responsive-heading {
+        font-size: 2.2rem !important;
         line-height: 1.2 !important;
         word-wrap: break-word !important;
     }
+
+    .responsive-paragraph {
+        font-size: 1.05rem !important;
+        max-width: 100% !important;
+    }
+
+    .benefits-pagination {
+        justify-content: center !important;
+        margin-top: 3rem !important;
+        padding-bottom: 2rem !important;
+    }
 }
+
+.responsive-heading {
+    font-size: 3rem;
+    font-weight: 800;
+    line-height: 1.1;
+    font-family: 'Inter', sans-serif !important;
+}
+
+.responsive-paragraph {
+    font-size: 1.2rem;
+    line-height: 1.7;
+    max-width: 650px;
+}
+
+.benefits-pagination {
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+    margin-top: 2rem;
+}
+
 
 .text-highlight {
     color: var(--color-accent) !important;
@@ -4355,3 +4410,29 @@
         height: 300px;
     }
 }
+
+/* --- CHALLENGE CARD PREMIUM STYLING --- */
+.challenge-card-premium {
+    min-width: calc(33.33% - 0.7rem);
+}
+
+@media (max-width: 1024px) {
+    .challenge-card-premium {
+        min-width: calc(50% - 0.5rem);
+    }
+}
+
+@media (max-width: 640px) {
+    .challenge-card-premium {
+        min-width: calc(100% - 1rem);
+    }
+}
+
+/* --- SECTION BACKGROUNDS --- */
+.section-white {
+    background-color: #ffffff !important;
+}
+
+.section-theme {
+    background-color: #E0DCD9 !important; /* User defined theme background */
+}
