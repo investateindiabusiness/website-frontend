@@ -83,9 +83,9 @@ const stepImages = [
 ];
 
 const teamMembers = [
+    { name: "Deepak Kavadia", role: "Co-Founder", image: "/deepak.png" },
     { name: "Pankaj Gupta", role: "Co-Founder", image: "/pankaj.png" },
-    { name: "Atish Agarwal", role: "Co-Founder", image: "/atish.png" },
-    { name: "Deepak Kavadia", role: "Co-Founder", image: "/deepak.png" }
+    { name: "Atish Agarwal", role: "Co-Founder", image: "/atish.png" }
 ];
 
 const faqsList = [
@@ -846,10 +846,7 @@ export default function Index() {
                         </div>
                         <div className="faq-image-column">
                             <div className="faq-side-image-premium">
-                                <img src="/negotiation.png" alt="Expert Support and Consultation" />
-                                <div className="faq-image-overlay">
-                                    <div className="overlay-badge">Expert Support</div>
-                                </div>
+                                <img src="/images/hero_modern_cityscape.png" alt="Modern Indian Cityscape" />
                             </div>
                         </div>
                     </div>

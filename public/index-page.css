@@ -3151,13 +3151,13 @@ h4,
 .team-integrated-wrapper {
     display: flex;
     align-items: stretch;
-    min-height: 550px;
+    min-height: 450px; /* Reduced from 550px */
     width: 100%;
 }
 
 .team-text-banner {
     flex: 0 0 35%;
-    background: linear-gradient(135deg, #0077c8 0%, #004a80 100%);
+    background: linear-gradient(135deg, #EA580C 0%, #F97316 100%); /* Changed from blue to orange */
     padding: 60px;
     display: flex;
     flex-direction: column;
@@ -3170,6 +3170,10 @@ h4,
 
 .team-text-content-inner {
     max-width: 400px;
+}
+
+.team-text-banner .text-highlight {
+    color: #1a1a1a !important; /* Charcoal color for visibility on orange */
 }
 
 .team-nav-arrows-inline {
@@ -3210,7 +3214,7 @@ h4,
 }
 
 .team-card-image {
-    height: 380px;
+    height: 300px; /* Reduced from 380px */
     width: 100%;
 }
 
