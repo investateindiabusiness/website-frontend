@@ -10,7 +10,7 @@
     --color-white: #FFFFFF;
     --color-black: #000000;
 
-    --color-accent: #DF8037;
+    --color-accent: #D48035;
     /* Orange/Bronze */
     --color-accent-hover: #B45309;
     --color-accent-tag: #FFB068;
@@ -20,9 +20,10 @@
     --color-text-muted: #4B5563;
     --color-border: #E5E7EB;
 
-    --color-light-bg: #D9D4D0;
-    --color-white-bg: #E1DCD9;
-    --color-info-card: #EEE9E6;
+    --color-light-bg: #E6E1DE;
+    --color-white-bg: #E1DCD7;
+    --color-info-card: #F2F0EE;
+    --color-footer-bg: #232325;
     --color-light-white: #FAFAFA;
 
     --color-blue: #0A66C2;

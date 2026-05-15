@@ -225,7 +225,7 @@ export default function Index() {
     };
 
     return (
-        <div className="theme-investor w-full bg-white overflow-x-hidden">
+        <div className="theme-investor w-full bg-[var(--color-light-bg)] overflow-x-hidden">
             <Header transparent={true} onAuthClick={handleAuthClick} />
 
             <section
@@ -322,7 +322,7 @@ export default function Index() {
                 </div>
             </section>
 
-            <section className="fullscreen-section section-theme" id="about">
+            <section className="fullscreen-section section-light" id="about">
                 <div className="container">
                     <div className="section-heading">
                         <h2 className="section-title">The <span className='text-highlight'>Investate Standard</span></h2>
@@ -356,14 +356,14 @@ export default function Index() {
                 </div>
             </section>
 
-            <section className="fullscreen-section section-white" id="challenges" style={{ padding: '80px 0' }}>
+            <section className="fullscreen-section section-theme" id="challenges" style={{ padding: '80px 0' }}>
                 <div className="container">
                     <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '1.5rem', marginBottom: '3rem' }}>
                         <div style={{ flex: 1, height: '1px', background: '#d1d1d1' }} />
                         <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
                             <div style={{ width: '4px', height: '4px', borderRadius: '50%', background: '#333' }} />
                             <div style={{ width: '4px', height: '4px', borderRadius: '50%', background: '#333' }} />
-                            <h2 style={{ fontSize: '2.5rem', fontWeight: 600, color: '#222', margin: '0 1rem', fontFamily: 'Inter, sans-serif', textAlign: 'center' }}>Overcoming <span style={{ color: '#EA580C' }}>Distance & Trust Gap</span></h2>
+                            <h2 style={{ fontSize: '2.5rem', fontWeight: 600, color: '#222', margin: '0 1rem', fontFamily: 'Inter, sans-serif', textAlign: 'center' }}>Overcoming <span style={{ color: '#D48035' }}>Distance & Trust Gap</span></h2>
                             <div style={{ width: '4px', height: '4px', borderRadius: '50%', background: '#333' }} />
                             <div style={{ width: '4px', height: '4px', borderRadius: '50%', background: '#333' }} />
                         </div>
@@ -428,7 +428,7 @@ export default function Index() {
                                     <div style={{
                                         width: '80px',
                                         height: '80px',
-                                        background: 'linear-gradient(135deg, #F97316 0%, #EA580C 100%)',
+                                        background: 'linear-gradient(135deg, #F97316 0%, #D48035 100%)',
                                         borderRadius: '50%',
                                         display: 'flex',
                                         alignItems: 'center',
@@ -501,7 +501,7 @@ export default function Index() {
                 </div>
             </section>
 
-            <section className="fullscreen-section section-theme" id="benefits" style={{ padding: '60px 0', overflow: 'hidden' }}>
+            <section className="fullscreen-section section-light" id="benefits" style={{ padding: '60px 0', overflow: 'hidden' }}>
                 <div className="container">
                     <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-start">
                         {/* Left Side: Content */}
@@ -528,7 +528,7 @@ export default function Index() {
                                 </div> */}
                                 <h2 className="responsive-heading" style={{ color: '#111', marginBottom: '1.5rem' }}>
                                     Uncompromising <br />
-                                    <span style={{ color: '#EA580C' }}>Investor Safeguards</span>
+                                    <span style={{ color: '#D48035' }}>Investor Safeguards</span>
                                 </h2>
                                 <p className="responsive-paragraph" style={{ color: '#555', marginBottom: '2.5rem' }}>
                                     A secure ecosystem where builder credentials and RERA compliance are consolidated for absolute peace of mind. We eliminate the distance gap through rigorous verification.
@@ -545,7 +545,7 @@ export default function Index() {
                                             className="grid grid-cols-1 md:grid-cols-2 gap-x-12 gap-y-10"
                                         >
                                             {benefitsList.slice(benefitsPage * benefitsPerPage, (benefitsPage + 1) * benefitsPerPage).map((benefit, index) => (
-                                                <div key={index} style={{ borderLeft: '4px solid #EA580C', paddingLeft: '1.25rem' }}>
+                                                <div key={index} style={{ borderLeft: '4px solid #D48035', paddingLeft: '1.25rem' }}>
                                                     <h4 style={{ fontSize: '1.2rem', fontWeight: 700, color: '#111', marginBottom: '0.6rem' }}>
                                                         {benefit.title}
                                                     </h4>
@@ -656,7 +656,7 @@ export default function Index() {
                 </div>
             </section>
 
-            <section className="fullscreen-section section-white" id="process">
+            <section className="fullscreen-section section-theme" id="process">
                 <div className="container">
                     <div className="section-heading">
                         <h2 className="section-title">
@@ -696,7 +696,7 @@ export default function Index() {
                 </div>
             </section>
 
-            <section className="fullscreen-section section-theme" id="trust">
+            <section className="fullscreen-section section-light" id="trust">
                 <div className="container">
                     <div className="section-heading">
                         <h2 className="section-title">The Foundation of <span className="text-highlight">Digital Trust</span></h2>
@@ -717,7 +717,7 @@ export default function Index() {
                 </div>
             </section>
 
-            <section className="team-section-integrated section-white" id="team">
+            <section className="team-section-integrated section-theme" id="team">
                 <div className="team-integrated-wrapper">
                     <div className="team-text-banner">
                         <div className="team-text-content-inner">
@@ -772,7 +772,7 @@ export default function Index() {
                 </div>
             </section>
 
-            <section className="fullscreen-section section-theme" id="early-access">
+            <section className="fullscreen-section section-light" id="early-access">
                 <div className="container">
                     <div className="section-heading">
                         <h2 className="section-title">We're Building <span className="text-highlight">Something Different</span></h2>
@@ -812,7 +812,7 @@ export default function Index() {
                 </div>
             </section>
 
-            <section className="faq-premium-section section-white" id="faq">
+            <section className="faq-premium-section section-theme" id="faq">
                 <div className="container">
                     <div className="faq-header-full text-center mb-16">
                         <h2 className="faq-premium-title">Frequently Asked <span className="text-highlight">Questions</span></h2>
@@ -853,7 +853,7 @@ export default function Index() {
                 </div>
             </section>
 
-            <section className="fullscreen-section section-theme py-16" id="contact">
+            <section className="fullscreen-section section-light py-16" id="contact">
                 <div className="container text-center">
                     <div className="cta-minimal-badge mb-6">
                         <span className="cta-badge-text">GET STARTED TODAY</span>
