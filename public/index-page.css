@@ -537,7 +537,7 @@ h4,
 }
 
 .section-white {
-    background-color: #FFFFFF;
+    background-color: #FAFAF9;
 }
 
 /* 3x3 Grid for 9 items */
@@ -4471,10 +4471,13 @@ h4,
 
 /* --- SECTION BACKGROUNDS --- */
 .section-white {
-    background-color: #ffffff !important;
+    background-color: #FAFAF9 !important;
 }
 
 .section-theme {
-    background-color: #E0DCD9 !important;
-    /* User defined theme background */
+    background-color: var(--color-white-bg) !important;
+}
+
+.section-light {
+    background-color: var(--color-light-bg) !important;
 }
