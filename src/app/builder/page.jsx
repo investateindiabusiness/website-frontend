@@ -113,6 +113,22 @@ export default function BuilderHome() {
         return () => clearInterval(timer);
     }, []);
 
+    useEffect(() => {
+        const interval = setInterval(() => {
+            if (builderChallengesScrollRef.current) {
+                const el = builderChallengesScrollRef.current;
+                const maxScrollLeft = el.scrollWidth - el.clientWidth;
+                // Add a small margin of error (10px) to ensure we hit the end
+                if (el.scrollLeft >= maxScrollLeft - 10) {
+                    el.scrollBy({ left: -el.scrollWidth, behavior: 'smooth' });
+                } else {
+                    el.scrollBy({ left: el.offsetWidth, behavior: 'smooth' });
+                }
+            }
+        }, 4000); // Auto-scroll every 4 seconds
+        return () => clearInterval(interval);
+    }, []);
+
 
     const activeStepData = builderSteps[activeStepIndex];
 
@@ -247,14 +263,24 @@ export default function BuilderHome() {
                         onScroll={() => {
                             if (builderChallengesScrollRef.current) {
                                 const el = builderChallengesScrollRef.current;
-                                const cardW = el.scrollWidth / builderChallenges.length;
-                                const page = Math.round(el.scrollLeft / (cardW * 4));
-                                setBuilderChallengePage(page);
+                                const center = el.scrollLeft + el.clientWidth / 2;
+                                let closestIndex = 0;
+                                let minDistance = Infinity;
+                                Array.from(el.children).forEach((child, index) => {
+                                    const childCenter = child.offsetLeft + child.clientWidth / 2;
+                                    const distance = Math.abs(childCenter - center);
+                                    if (distance < minDistance) {
+                                        minDistance = distance;
+                                        closestIndex = index;
+                                    }
+                                });
+                                setBuilderChallengePage(closestIndex);
                             }
                         }}
                     >
-                        {builderChallenges.map((challenge) => {
+                        {builderChallenges.map((challenge, index) => {
                             const isHovered = hoveredBuilderCard === challenge.id;
+                            const isMiddle = builderChallengePage === index;
                             return (
                                 <div
                                     key={challenge.id}
@@ -265,21 +291,26 @@ export default function BuilderHome() {
                                         position: 'relative',
                                         borderRadius: '1rem',
                                         overflow: 'hidden',
-                                        height: '350px',
+                                        height: isMiddle ? '380px' : '350px',
+                                        minWidth: '320px',
                                         background: '#fff',
-                                        scrollSnapAlign: 'start',
-                                        boxShadow: isHovered
-                                            ? '0 20px 40px rgba(0,0,0,0.08)'
-                                            : '0 10px 30px rgba(0,0,0,0.04)',
+                                        scrollSnapAlign: 'center',
+                                        boxShadow: isMiddle
+                                            ? '0 25px 50px rgba(234, 88, 12, 0.15)'
+                                            : isHovered
+                                                ? '0 20px 40px rgba(0,0,0,0.08)'
+                                                : '0 10px 30px rgba(0,0,0,0.04)',
+                                        border: isMiddle ? '2px solid #EA580C' : '1px solid rgba(0,0,0,0.03)',
                                         cursor: 'pointer',
                                         transition: 'all 0.4s ease',
-                                        transform: isHovered ? 'translateY(-8px)' : 'translateY(0)',
+                                        transform: isMiddle ? 'scale(1.02)' : isHovered ? 'translateY(-8px)' : 'scale(0.95)',
+                                        opacity: isMiddle ? 1 : 0.6,
                                         padding: '2.5rem 1.5rem',
                                         display: 'flex',
                                         flexDirection: 'column',
                                         alignItems: 'center',
                                         textAlign: 'center',
-                                        border: '1px solid rgba(0,0,0,0.03)'
+                                        zIndex: isMiddle ? 10 : 1
                                     }}
                                 >
                                     <div style={{
@@ -306,7 +337,7 @@ export default function BuilderHome() {
                         <div style={{ width: '100%', height: '3px', background: 'rgba(0,0,0,0.1)', borderRadius: '9999px', marginBottom: '0.9rem', overflow: 'hidden' }}>
                             <div style={{
                                 height: '100%',
-                                width: `${((builderChallengePage + 1) / 2) * 100}%`,
+                                width: `${((builderChallengePage + 1) / builderChallenges.length) * 100}%`,
                                 background: '#EA580C',
                                 borderRadius: '9999px',
                                 transition: 'width 0.3s ease'
@@ -317,8 +348,8 @@ export default function BuilderHome() {
                                 onClick={() => {
                                     if (builderChallengesScrollRef.current) {
                                         const el = builderChallengesScrollRef.current;
-                                        el.scrollLeft -= el.offsetWidth;
-                                        setBuilderChallengePage(Math.max(0, builderChallengePage - 1));
+                                        const cardW = el.scrollWidth / builderChallenges.length;
+                                        el.scrollBy({ left: -cardW, behavior: 'smooth' });
                                     }
                                 }}
                                 style={{
@@ -329,15 +360,15 @@ export default function BuilderHome() {
                                     opacity: builderChallengePage === 0 ? 0.35 : 1, transition: 'opacity 0.2s'
                                 }}
                             >&#8249;</button>
-                            <span style={{ fontSize: '0.85rem', color: '#555', minWidth: '6rem' }}>
-                                {builderChallengePage === 0 ? '1' : '5'} – {builderChallengePage === 0 ? '4' : '6'} of {builderChallenges.length}
+                            <span style={{ fontSize: '0.85rem', color: '#555', minWidth: '4rem', textAlign: 'center' }}>
+                                {builderChallengePage + 1} of {builderChallenges.length}
                             </span>
                             <button
                                 onClick={() => {
                                     if (builderChallengesScrollRef.current) {
                                         const el = builderChallengesScrollRef.current;
-                                        el.scrollLeft += el.offsetWidth;
-                                        setBuilderChallengePage(Math.min(1, builderChallengePage + 1));
+                                        const cardW = el.scrollWidth / builderChallenges.length;
+                                        el.scrollBy({ left: cardW, behavior: 'smooth' });
                                     }
                                 }}
                                 style={{
@@ -345,7 +376,7 @@ export default function BuilderHome() {
                                     border: '1.5px solid rgba(0,0,0,0.2)', background: '#fff',
                                     display: 'flex', alignItems: 'center', justifyContent: 'center',
                                     cursor: 'pointer', color: '#333', fontSize: '0.9rem',
-                                    opacity: builderChallengePage === 1 ? 0.35 : 1, transition: 'opacity 0.2s'
+                                    opacity: builderChallengePage === builderChallenges.length - 1 ? 0.35 : 1, transition: 'opacity 0.2s'
                                 }}
                             >&#8250;</button>
                         </div>
