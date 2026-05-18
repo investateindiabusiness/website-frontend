@@ -539,7 +539,8 @@ h4,
 /* --- INFRASTRUCTURE MARQUEE SECTION --- */
 .infra-section {
     padding: 90px 0;
-    background-color: var(--color-white-bg); /* Restored to original elegant warm beige theme */
+    background-color: var(--color-white-bg);
+    /* Restored to original elegant warm beige theme */
     overflow: hidden;
 }
 
@@ -561,13 +562,15 @@ h4,
 .infra-pipe {
     width: 2px;
     height: 30px;
-    background-color: #D48035; /* Premium accent color */
+    background-color: #D48035;
+    /* Premium accent color */
 }
 
 .infra-title {
     font-size: clamp(1.6rem, 2.5vw, 2.2rem);
     font-weight: 700;
-    color: #0b1a30; /* Premium deep navy */
+    color: #0b1a30;
+    /* Premium deep navy */
     margin: 0;
     letter-spacing: -0.02em;
     font-family: 'Inter', sans-serif;
@@ -625,13 +628,15 @@ h4,
 }
 
 .infra-marquee-track:hover {
-    animation-play-state: paused; /* Pause on hover for interaction! */
+    animation-play-state: paused;
+    /* Pause on hover for interaction! */
 }
 
 @keyframes scrollMarquee {
     0% {
         transform: translateX(0);
     }
+
     100% {
         transform: translateX(-50%);
     }

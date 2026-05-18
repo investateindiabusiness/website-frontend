@@ -32,19 +32,19 @@ const contentDataForSection2 = [
         id: "01",
         title: "The Platform",
         text: "A structured discovery ecosystem built specifically for NRIs who seek visibility and a dependable investment process without the middleman noise.",
-        image: "/images/platform_indian_corporate.png"
+        image: "https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?q=80&w=1000&auto=format&fit=crop"
     },
     {
         id: "02",
         title: "The Standard",
         text: "We mandate standardized disclosures—including RERA compliance and financial health—ensuring you invest based on merit, not marketing.",
-        image: "/images/standard_verified_seal.png"
+        image: "https://images.unsplash.com/photo-1554224155-8d04cb21cd6c?q=80&w=1000&auto=format&fit=crop"
     },
     {
         id: "03",
         title: "The Focus",
         text: "Presenting builder-declared information in a clean, transparent manner to empower you with the clarity needed for remote decision-making.",
-        image: "/images/focus_data_clarity.png"
+        image: "https://images.unsplash.com/photo-1460925895917-afdab827c52f?q=80&w=1000&auto=format&fit=crop"
     }
 ];
 
@@ -581,7 +581,16 @@ export default function Index() {
                 </div>
             </section>
 
-            <section className="fullscreen-section section-light" id="trust">
+            <section
+                className="fullscreen-section section-light"
+                id="trust"
+                style={{
+                    background: "linear-gradient(rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.4)), url('/images/image2.png')",
+                    backgroundSize: "cover",
+                    backgroundPosition: "center",
+                    backgroundAttachment: "fixed"
+                }}
+            >
                 <div className="container">
                     <div className="section-heading">
                         <h2 className="section-title">The Foundation of <span className="text-highlight">Digital Trust</span></h2>
