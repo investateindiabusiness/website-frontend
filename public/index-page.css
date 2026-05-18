@@ -536,6 +536,172 @@ h4,
     background-color: var(--color-white-bg);
 }
 
+/* --- INFRASTRUCTURE MARQUEE SECTION --- */
+.infra-section {
+    padding: 90px 0;
+    background-color: #fdfdfd; /* Extremely premium pristine clean background */
+    overflow: hidden;
+}
+
+.infra-section-header {
+    max-width: 1200px;
+    margin: 0 auto 1.5rem;
+    padding: 0 2rem;
+    display: flex;
+    justify-content: center;
+    text-align: center;
+}
+
+.infra-logo {
+    height: 38px;
+    width: auto;
+    object-fit: contain;
+}
+
+.infra-pipe {
+    width: 2px;
+    height: 30px;
+    background-color: #D48035; /* Premium accent color */
+}
+
+.infra-title {
+    font-size: clamp(1.6rem, 2.5vw, 2.2rem);
+    font-weight: 700;
+    color: #0b1a30; /* Premium deep navy */
+    margin: 0;
+    letter-spacing: -0.02em;
+    font-family: 'Inter', sans-serif;
+    text-align: center;
+}
+
+.infra-title-accent {
+    color: #D48035;
+}
+
+.infra-subtitle {
+    max-width: 800px;
+    margin: 0 auto 3rem;
+    padding: 0 2rem;
+    font-size: clamp(0.95rem, 1.2vw, 1.1rem);
+    color: #555555;
+    line-height: 1.7;
+    text-align: center;
+}
+
+/* Infinite Marquee Track and Card Styling */
+.infra-marquee-wrapper {
+    position: relative;
+    width: 100%;
+    overflow: hidden;
+    padding: 20px 0;
+}
+
+/* Gradient shadow overlay on left and right for sleek fadeout effect */
+.infra-marquee-wrapper::before,
+.infra-marquee-wrapper::after {
+    content: "";
+    position: absolute;
+    top: 0;
+    width: 15%;
+    height: 100%;
+    z-index: 2;
+    pointer-events: none;
+}
+
+.infra-marquee-wrapper::before {
+    left: 0;
+    background: linear-gradient(to right, #fdfdfd, rgba(253, 253, 253, 0));
+}
+
+.infra-marquee-wrapper::after {
+    right: 0;
+    background: linear-gradient(to left, #fdfdfd, rgba(253, 253, 253, 0));
+}
+
+.infra-marquee-track {
+    display: flex;
+    width: max-content;
+    animation: scrollMarquee 40s linear infinite;
+}
+
+.infra-marquee-track:hover {
+    animation-play-state: paused; /* Pause on hover for interaction! */
+}
+
+@keyframes scrollMarquee {
+    0% {
+        transform: translateX(0);
+    }
+    100% {
+        transform: translateX(-50%);
+    }
+}
+
+.infra-marquee-card {
+    background: #ffffff;
+    border: 1px solid rgba(11, 26, 48, 0.05);
+    border-radius: 16px;
+    padding: 2.25rem 1.75rem;
+    width: 340px;
+    height: 310px;
+    margin: 0 15px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    box-shadow: 0 10px 30px rgba(11, 26, 48, 0.03);
+    transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.4s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.3s ease;
+    cursor: pointer;
+    flex-shrink: 0;
+}
+
+.infra-marquee-card:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 20px 45px rgba(11, 26, 48, 0.08);
+    border-color: rgba(212, 128, 53, 0.3);
+}
+
+.infra-card-icon-wrapper {
+    width: 72px;
+    height: 72px;
+    background: linear-gradient(135deg, #F97316 0%, #D48035 100%);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 1.5rem;
+    box-shadow: 0 8px 20px rgba(212, 128, 53, 0.25);
+    transition: transform 0.3s ease;
+}
+
+.infra-card-icon-wrapper svg {
+    display: block;
+    margin: 0 auto;
+    width: 32px;
+    height: 32px;
+    color: #ffffff !important;
+}
+
+.infra-marquee-card:hover .infra-card-icon-wrapper {
+    transform: scale(1.1);
+}
+
+.infra-card-title {
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: #0b1a30;
+    margin-bottom: 0.85rem;
+    line-height: 1.35;
+    font-family: 'Inter', sans-serif;
+}
+
+.infra-card-desc {
+    font-size: 0.95rem;
+    color: #606f7b;
+    line-height: 1.6;
+    margin: 0;
+}
+
 .section-white {
     background-color: #FAFAF9;
 }
@@ -3151,13 +3317,15 @@ h4,
 .team-integrated-wrapper {
     display: flex;
     align-items: stretch;
-    min-height: 450px; /* Reduced from 550px */
+    min-height: 450px;
+    /* Reduced from 550px */
     width: 100%;
 }
 
 .team-text-banner {
     flex: 0 0 35%;
-    background: linear-gradient(135deg, #EA580C 0%, #F97316 100%); /* Changed from blue to orange */
+    background: linear-gradient(135deg, #EA580C 0%, #F97316 100%);
+    /* Changed from blue to orange */
     padding: 60px;
     display: flex;
     flex-direction: column;
@@ -3173,7 +3341,8 @@ h4,
 }
 
 .team-text-banner .text-highlight {
-    color: #1a1a1a !important; /* Charcoal color for visibility on orange */
+    color: #1a1a1a !important;
+    /* Charcoal color for visibility on orange */
 }
 
 .team-nav-arrows-inline {
@@ -3214,7 +3383,8 @@ h4,
 }
 
 .team-card-image {
-    height: 300px; /* Reduced from 380px */
+    height: 300px;
+    /* Reduced from 380px */
     width: 100%;
 }
 
@@ -3711,7 +3881,8 @@ h4,
 
 /* FAQ PREMIUM SECTION */
 .faq-premium-section {
-    padding: 100px 5%; /* Changed to 5% to allow more horizontal room */
+    padding: 100px 5%;
+    /* Changed to 5% to allow more horizontal room */
     background-color: #fff;
     display: flex;
     flex-direction: column;
@@ -3725,7 +3896,8 @@ h4,
 }
 
 .faq-premium-title {
-    font-size: 3rem; /* Decreased from 3.5rem to match other headings */
+    font-size: 3rem;
+    /* Decreased from 3.5rem to match other headings */
     font-weight: 800;
     color: var(--color-primary);
     margin-bottom: 20px;
@@ -3742,7 +3914,8 @@ h4,
     display: flex !important;
     flex-direction: row !important;
     gap: 60px;
-    align-items: flex-start; /* Changed from stretch to flex-start */
+    align-items: flex-start;
+    /* Changed from stretch to flex-start */
     width: 100%;
     max-width: 1200px;
     margin: 0 auto;
@@ -3750,7 +3923,8 @@ h4,
 
 .faq-accordion-column {
     flex: 1.2;
-    min-width: 0; /* Prevents flex items from overflowing */
+    min-width: 0;
+    /* Prevents flex items from overflowing */
 }
 
 .faq-image-column {
@@ -3765,11 +3939,12 @@ h4,
 
 .faq-side-image-premium {
     position: relative;
-    height: 350px; /* Reduced fixed height as requested */
+    height: 350px;
+    /* Reduced fixed height as requested */
     width: 100%;
     border-radius: 24px;
     overflow: hidden;
-    box-shadow: 0 30px 60px rgba(0,0,0,0.1);
+    box-shadow: 0 30px 60px rgba(0, 0, 0, 0.1);
 }
 
 .faq-side-image-premium img {
@@ -3786,16 +3961,16 @@ h4,
 .faq-image-overlay {
     position: absolute;
     inset: 0;
-    background: linear-gradient(to top, rgba(0,0,0,0.4) 0%, transparent 60%);
+    background: linear-gradient(to top, rgba(0, 0, 0, 0.4) 0%, transparent 60%);
     display: flex;
     align-items: flex-end;
     padding: 30px;
 }
 
 .overlay-badge {
-    background: rgba(255,255,255,0.15);
+    background: rgba(255, 255, 255, 0.15);
     backdrop-filter: blur(10px);
-    border: 1px solid rgba(255,255,255,0.3);
+    border: 1px solid rgba(255, 255, 255, 0.3);
     color: #fff;
     padding: 8px 16px;
     border-radius: 50px;
@@ -3892,7 +4067,7 @@ h4,
     .faq-premium-grid {
         flex-direction: column !important;
     }
-    
+
     .faq-premium-title {
         font-size: 2.5rem;
     }
@@ -4480,4 +4655,109 @@ h4,
 
 .section-light {
     background-color: var(--color-light-bg) !important;
+}
+
+/* --- PREMIUM CINEMATIC SWIPER (CHALLENGES SECTION) --- */
+.challenges-swiper-container {
+    width: 100%;
+    padding: 60px 0 80px;
+    /* Padding for shadows and floating effect */
+    overflow: visible;
+    /* Allow shadows to bleed outside */
+}
+
+/* Base style for all slides */
+.challenges-swiper-container .swiper-slide {
+    width: 380px !important;
+    height: auto;
+    opacity: 0.6;
+    transform: scale(0.85);
+    transition: all 0.8s cubic-bezier(0.25, 1, 0.3, 1);
+    filter: grayscale(40%);
+}
+
+@media (max-width: 768px) {
+    .challenges-swiper-container .swiper-slide {
+        width: 320px !important;
+    }
+}
+
+/* Centered Active Slide - The Hero Focus */
+.challenges-swiper-container .swiper-slide-active {
+    opacity: 1;
+    transform: scale(1.05) translateY(-10px);
+    z-index: 10;
+    filter: grayscale(0%);
+}
+
+.challenges-swiper-container .swiper-slide-active .challenge-card-premium {
+    box-shadow: 0 30px 60px rgba(0, 0, 0, 0.12), 0 0 40px rgba(206, 127, 43, 0.15) !important;
+    border-color: var(--color-accent) !important;
+}
+
+/* Floating animation for the active card to make it feel alive */
+@keyframes cinematicFloat {
+    0% {
+        transform: translateY(0px);
+    }
+
+    50% {
+        transform: translateY(-8px);
+    }
+
+    100% {
+        transform: translateY(0px);
+    }
+}
+
+.challenges-swiper-container .swiper-slide-active>div {
+    animation: cinematicFloat 6s ease-in-out infinite;
+}
+
+/* Pagination Dots */
+.challenges-swiper-container .swiper-pagination-bullet {
+    width: 12px;
+    height: 12px;
+    background: rgba(0, 0, 0, 0.2);
+    opacity: 1;
+    transition: all 0.4s ease;
+}
+
+.challenges-swiper-container .swiper-pagination-bullet-active {
+    width: 32px;
+    border-radius: 6px;
+    background: var(--color-accent);
+    box-shadow: 0 0 10px rgba(206, 127, 43, 0.5);
+}
+
+/* --- Challenges Swiper Carousel --- */
+.challenges-swiper {
+    padding-bottom: 2.5rem !important;
+    padding-top: 0.5rem !important;
+    overflow: hidden;
+}
+
+.challenges-swiper .swiper-slide {
+    height: auto;
+    transition: transform 0.5s ease, opacity 0.5s ease;
+    opacity: 0.75;
+    transform: scale(0.97);
+}
+
+.challenges-swiper .swiper-slide-active {
+    opacity: 1;
+    transform: scale(1);
+}
+
+.challenges-swiper .swiper-pagination-bullet {
+    background: #D48035;
+    opacity: 0.4;
+    transition: all 0.3s ease;
+}
+
+.challenges-swiper .swiper-pagination-bullet-active {
+    opacity: 1;
+    width: 24px;
+    border-radius: 6px;
+    background: #D48035;
 }

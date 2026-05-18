@@ -214,141 +214,32 @@ export default function BuilderHome() {
                 </div>
             </section>
 
-            <section className="fullscreen-section section-light" id="challenges" style={{ padding: '80px 0' }}>
-                <div className="container">
-                    <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '1.5rem', marginBottom: '3rem' }}>
-                        <div style={{ flex: 1, height: '1px', background: '#d1d1d1' }} />
-                        <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-                            <div style={{ width: '4px', height: '4px', borderRadius: '50%', background: '#333' }} />
-                            <div style={{ width: '4px', height: '4px', borderRadius: '50%', background: '#333' }} />
-                            <h2 style={{ fontSize: '2.5rem', fontWeight: 600, color: '#222', margin: '0 1rem', fontFamily: 'Inter, sans-serif', textAlign: 'center' }}>Overcoming <span style={{ color: '#EA580C' }}>Market Friction</span></h2>
-                            <div style={{ width: '4px', height: '4px', borderRadius: '50%', background: '#333' }} />
-                            <div style={{ width: '4px', height: '4px', borderRadius: '50%', background: '#333' }} />
-                        </div>
-                        <div style={{ flex: 1, height: '1px', background: '#d1d1d1' }} />
-                    </div>
-                    <p style={{ textAlign: 'center', color: '#666', maxWidth: '850px', margin: '0 auto 1.5rem', fontSize: '1.2rem', lineHeight: 1.7 }}>
-                        Connecting with international investors requires more than traditional marketing. We solve the specific trust and logistical challenges that prevent visionary developers from reaching the global Indian diaspora.
-                    </p>
+            {/* ── Infrastructure-style Marquee Section ── */}
+            <section id="challenges" className="infra-section">
+                {/* ── Develite-style Header ── */}
+                <div className="infra-section-header">
+                    <h2 className="infra-title">
+                        Overcoming <span className="infra-title-accent">Market Friction</span>
+                    </h2>
+                </div>
 
-                    <div
-                        ref={builderChallengesScrollRef}
-                        style={{
-                            display: 'flex',
-                            gap: '1rem',
-                            overflowX: 'auto',
-                            scrollSnapType: 'x mandatory',
-                            scrollBehavior: 'smooth',
-                            marginTop: '2rem',
-                            paddingBottom: '0.5rem',
-                            msOverflowStyle: 'none',
-                            scrollbarWidth: 'none'
-                        }}
-                        onScroll={() => {
-                            if (builderChallengesScrollRef.current) {
-                                const el = builderChallengesScrollRef.current;
-                                const cardW = el.scrollWidth / builderChallenges.length;
-                                const page = Math.round(el.scrollLeft / (cardW * 4));
-                                setBuilderChallengePage(page);
-                            }
-                        }}
-                    >
-                        {builderChallenges.map((challenge) => {
-                            const isHovered = hoveredBuilderCard === challenge.id;
-                            return (
-                                <div
-                                    key={challenge.id}
-                                    className="challenge-card challenge-card-premium"
-                                    onMouseEnter={() => setHoveredBuilderCard(challenge.id)}
-                                    onMouseLeave={() => setHoveredBuilderCard(null)}
-                                    style={{
-                                        position: 'relative',
-                                        borderRadius: '1rem',
-                                        overflow: 'hidden',
-                                        height: '350px',
-                                        background: '#fff',
-                                        scrollSnapAlign: 'start',
-                                        boxShadow: isHovered
-                                            ? '0 20px 40px rgba(0,0,0,0.08)'
-                                            : '0 10px 30px rgba(0,0,0,0.04)',
-                                        cursor: 'pointer',
-                                        transition: 'all 0.4s ease',
-                                        transform: isHovered ? 'translateY(-8px)' : 'translateY(0)',
-                                        padding: '2.5rem 1.5rem',
-                                        display: 'flex',
-                                        flexDirection: 'column',
-                                        alignItems: 'center',
-                                        textAlign: 'center',
-                                        border: '1px solid rgba(0,0,0,0.03)'
-                                    }}
-                                >
-                                    <div style={{
-                                        width: '80px',
-                                        height: '80px',
-                                        background: 'linear-gradient(135deg, #F97316 0%, #EA580C 100%)',
-                                        borderRadius: '50%',
-                                        display: 'flex',
-                                        alignItems: 'center',
-                                        justifyContent: 'center',
-                                        marginBottom: '1.5rem',
-                                        boxShadow: '0 8px 15px rgba(234, 88, 12, 0.3)'
-                                    }}>
-                                        {challenge.icon}
-                                    </div>
-                                    <h3 style={{ fontSize: '1.4rem', fontWeight: 700, color: '#111', marginBottom: '1rem', lineHeight: 1.3 }}>{challenge.text}</h3>
-                                    <p style={{ fontSize: '1.05rem', color: '#555', lineHeight: 1.6, margin: 0 }}>{challenge.desc}</p>
+                <p className="infra-subtitle">
+                    Connecting with international investors requires more than traditional marketing. We solve the specific trust and logistical challenges that prevent visionary developers from reaching the global Indian diaspora.
+                </p>
+
+                {/* ── Infinite Marquee with Original White Cards ── */}
+                <div className="infra-marquee-wrapper">
+                    <div className="infra-marquee-track">
+                        {/* Render twice for seamless loop */}
+                        {[...builderChallenges, ...builderChallenges].map((challenge, i) => (
+                            <div key={i} className="infra-marquee-card">
+                                <div className="infra-card-icon-wrapper">
+                                    {challenge.icon}
                                 </div>
-                            );
-                        })}
-                    </div>
-
-                    <div style={{ marginTop: '1.25rem' }}>
-                        <div style={{ width: '100%', height: '3px', background: 'rgba(0,0,0,0.1)', borderRadius: '9999px', marginBottom: '0.9rem', overflow: 'hidden' }}>
-                            <div style={{
-                                height: '100%',
-                                width: `${((builderChallengePage + 1) / 2) * 100}%`,
-                                background: '#EA580C',
-                                borderRadius: '9999px',
-                                transition: 'width 0.3s ease'
-                            }} />
-                        </div>
-                        <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
-                            <button
-                                onClick={() => {
-                                    if (builderChallengesScrollRef.current) {
-                                        const el = builderChallengesScrollRef.current;
-                                        el.scrollLeft -= el.offsetWidth;
-                                        setBuilderChallengePage(Math.max(0, builderChallengePage - 1));
-                                    }
-                                }}
-                                style={{
-                                    width: '2.25rem', height: '2.25rem', borderRadius: '50%',
-                                    border: '1.5px solid rgba(0,0,0,0.2)', background: '#fff',
-                                    display: 'flex', alignItems: 'center', justifyContent: 'center',
-                                    cursor: 'pointer', color: '#333', fontSize: '0.9rem',
-                                    opacity: builderChallengePage === 0 ? 0.35 : 1, transition: 'opacity 0.2s'
-                                }}
-                            >&#8249;</button>
-                            <span style={{ fontSize: '0.85rem', color: '#555', minWidth: '6rem' }}>
-                                {builderChallengePage === 0 ? '1' : '5'} – {builderChallengePage === 0 ? '4' : '6'} of {builderChallenges.length}
-                            </span>
-                            <button
-                                onClick={() => {
-                                    if (builderChallengesScrollRef.current) {
-                                        const el = builderChallengesScrollRef.current;
-                                        el.scrollLeft += el.offsetWidth;
-                                        setBuilderChallengePage(Math.min(1, builderChallengePage + 1));
-                                    }
-                                }}
-                                style={{
-                                    width: '2.25rem', height: '2.25rem', borderRadius: '50%',
-                                    border: '1.5px solid rgba(0,0,0,0.2)', background: '#fff',
-                                    display: 'flex', alignItems: 'center', justifyContent: 'center',
-                                    cursor: 'pointer', color: '#333', fontSize: '0.9rem',
-                                    opacity: builderChallengePage === 1 ? 0.35 : 1, transition: 'opacity 0.2s'
-                                }}
-                            >&#8250;</button>
-                        </div>
+                                <h3 className="infra-card-title">{challenge.text}</h3>
+                                <p className="infra-card-desc">{challenge.desc}</p>
+                            </div>
+                        ))}
                     </div>
                 </div>
             </section>
