@@ -49,12 +49,12 @@ const contentDataForSection2 = [
 ];
 
 const challengesList = [
-    { id: "01", text: "Information Asymmetry", desc: "Unverified project data and lack of transparent documentation from abroad.", icon: <Search className="w-8 h-8 text-white" /> },
-    { id: "02", text: "Fragmented Intermediaries", desc: "Heavy reliance on brokers and middlemen who often distort information.", icon: <Users className="w-8 h-8 text-white" /> },
-    { id: "03", text: "Lack of Standardized Disclosures", desc: "No uniform baseline to compare projects across different developers.", icon: <FileText className="w-8 h-8 text-white" /> },
-    { id: "04", text: "Complex Regulatory Landscape", desc: "Navigating RERA, FEMA, and state-specific property laws remotely.", icon: <Gavel className="w-8 h-8 text-white" /> },
-    { id: "05", text: "Builder Credibility Gaps", desc: "Difficulties in verifying past delivery records and financial stability.", icon: <ShieldCheck className="w-8 h-8 text-white" /> },
-    { id: "06", text: "On-Ground Hurdles", desc: "Coordinating site visits and legal vetting across various time zones.", icon: <Globe className="w-8 h-8 text-white" /> }
+    { id: "01", text: "Information Asymmetry", desc: "Unverified project data and lack of transparent documentation from abroad.", icon: <Search className="w-8 h-8 text-white" />, image: '/images/challenge_verified_info.png' },
+    { id: "02", text: "Fragmented Intermediaries", desc: "Heavy reliance on brokers and middlemen who often distort information.", icon: <Users className="w-8 h-8 text-white" />, image: '/images/challenge_intermediaries.png' },
+    { id: "03", text: "Lack of Standardized Disclosures", desc: "No uniform baseline to compare projects across different developers.", icon: <FileText className="w-8 h-8 text-white" />, image: '/images/challenge_disclosures.png' },
+    { id: "04", text: "Complex Regulatory Landscape", desc: "Navigating RERA, FEMA, and state-specific property laws remotely.", icon: <Gavel className="w-8 h-8 text-white" />, image: '/images/challenge_legal.png' },
+    { id: "05", text: "Builder Credibility Gaps", desc: "Difficulties in verifying past delivery records and financial stability.", icon: <ShieldCheck className="w-8 h-8 text-white" />, image: '/images/challenge_builder.png' },
+    { id: "06", text: "On-Ground Hurdles", desc: "Coordinating site visits and legal vetting across various time zones.", icon: <Globe className="w-8 h-8 text-white" />, image: '/images/challenge_timezone.png' }
 ];
 
 const benefitsList = [
@@ -356,147 +356,32 @@ export default function Index() {
                 </div>
             </section>
 
-            <section className="fullscreen-section section-theme" id="challenges" style={{ padding: '80px 0' }}>
-                <div className="container">
-                    <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '1.5rem', marginBottom: '3rem' }}>
-                        <div style={{ flex: 1, height: '1px', background: '#d1d1d1' }} />
-                        <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-                            <div style={{ width: '4px', height: '4px', borderRadius: '50%', background: '#333' }} />
-                            <div style={{ width: '4px', height: '4px', borderRadius: '50%', background: '#333' }} />
-                            <h2 style={{ fontSize: '2.5rem', fontWeight: 600, color: '#222', margin: '0 1rem', fontFamily: 'Inter, sans-serif', textAlign: 'center' }}>Overcoming <span style={{ color: '#D48035' }}>Distance & Trust Gap</span></h2>
-                            <div style={{ width: '4px', height: '4px', borderRadius: '50%', background: '#333' }} />
-                            <div style={{ width: '4px', height: '4px', borderRadius: '50%', background: '#333' }} />
-                        </div>
-                        <div style={{ flex: 1, height: '1px', background: '#d1d1d1' }} />
-                    </div>
-                    <p style={{ textAlign: 'center', color: '#666', maxWidth: '850px', margin: '0 auto 1.5rem', fontSize: '1.2rem', lineHeight: 1.7 }}>
-                        For NRIs, navigating the Indian property market often entails managing information asymmetry and on-ground uncertainty. We provide the clarity needed to differentiate exceptional opportunities from market noise.
-                    </p>
+            {/* ── Infrastructure-style Marquee Section ── */}
+            <section id="challenges" className="infra-section">
+                {/* ── Develite-style Header ── */}
+                <div className="infra-section-header">
+                    <h2 className="infra-title">
+                        Overcoming <span className="infra-title-accent">Distance &amp; Trust Gap</span>
+                    </h2>
+                </div>
 
-                    {/* Horizontal scroll carousel */}
-                    <div
-                        ref={challengesScrollRef}
-                        style={{
-                            display: 'flex',
-                            gap: '1rem',
-                            overflowX: 'auto',
-                            scrollSnapType: 'x mandatory',
-                            scrollBehavior: 'smooth',
-                            marginTop: '2rem',
-                            paddingBottom: '0.5rem',
-                            msOverflowStyle: 'none',
-                            scrollbarWidth: 'none'
-                        }}
-                        onScroll={() => {
-                            if (challengesScrollRef.current) {
-                                const el = challengesScrollRef.current;
-                                const cardW = el.scrollWidth / challengesList.length;
-                                const page = Math.round(el.scrollLeft / (cardW * 4));
-                                setChallengePage(page);
-                            }
-                        }}
-                    >
-                        {challengesList.map((challenge) => {
-                            const isHovered = hoveredCard === challenge.id;
-                            return (
-                                <div
-                                    key={challenge.id}
-                                    className="challenge-card challenge-card-premium"
-                                    onMouseEnter={() => setHoveredCard(challenge.id)}
-                                    onMouseLeave={() => setHoveredCard(null)}
-                                    style={{
-                                        position: 'relative',
-                                        borderRadius: '1rem',
-                                        overflow: 'hidden',
-                                        height: '350px',
-                                        background: '#fff',
-                                        scrollSnapAlign: 'start',
-                                        boxShadow: isHovered
-                                            ? '0 20px 40px rgba(0,0,0,0.08)'
-                                            : '0 10px 30px rgba(0,0,0,0.04)',
-                                        cursor: 'pointer',
-                                        transition: 'all 0.4s ease',
-                                        transform: isHovered ? 'translateY(-8px)' : 'translateY(0)',
-                                        padding: '2.5rem 1.5rem',
-                                        display: 'flex',
-                                        flexDirection: 'column',
-                                        alignItems: 'center',
-                                        textAlign: 'center',
-                                        border: '1px solid rgba(0,0,0,0.03)'
-                                    }}
-                                >
-                                    <div style={{
-                                        width: '80px',
-                                        height: '80px',
-                                        background: 'linear-gradient(135deg, #F97316 0%, #D48035 100%)',
-                                        borderRadius: '50%',
-                                        display: 'flex',
-                                        alignItems: 'center',
-                                        justifyContent: 'center',
-                                        marginBottom: '1.5rem',
-                                        boxShadow: '0 8px 15px rgba(249, 115, 22, 0.3)'
-                                    }}>
-                                        {challenge.icon}
-                                    </div>
-                                    <h3 style={{ fontSize: '1.4rem', fontWeight: 700, color: '#111', marginBottom: '1rem', lineHeight: 1.3 }}>{challenge.text}</h3>
-                                    <p style={{ fontSize: '1.05rem', color: '#555', lineHeight: 1.6, margin: 0 }}>{challenge.desc}</p>
+                <p className="infra-subtitle">
+                    For NRIs, navigating the Indian property market often entails managing information asymmetry and on-ground uncertainty. We provide the clarity needed to differentiate exceptional opportunities from market noise.
+                </p>
+
+                {/* ── Infinite Marquee with Original White Cards ── */}
+                <div className="infra-marquee-wrapper">
+                    <div className="infra-marquee-track">
+                        {/* Render twice for seamless loop */}
+                        {[...challengesList, ...challengesList].map((challenge, i) => (
+                            <div key={i} className="infra-marquee-card">
+                                <div className="infra-card-icon-wrapper">
+                                    {challenge.icon}
                                 </div>
-                            );
-                        })}
-                    </div>
-
-                    {/* Navigation bar */}
-                    <div style={{ marginTop: '1.25rem' }}>
-                        {/* Progress track */}
-                        <div style={{ width: '100%', height: '3px', background: 'rgba(0,0,0,0.1)', borderRadius: '9999px', marginBottom: '0.9rem', overflow: 'hidden' }}>
-                            <div style={{
-                                height: '100%',
-                                width: `${((challengePage + 1) / 2) * 100}%`,
-                                background: 'var(--color-accent, #F97316)',
-                                borderRadius: '9999px',
-                                transition: 'width 0.3s ease'
-                            }} />
-                        </div>
-                        {/* Arrows + counter */}
-                        <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
-                            <button
-                                onClick={() => {
-                                    if (challengesScrollRef.current) {
-                                        const el = challengesScrollRef.current;
-                                        el.scrollLeft -= el.offsetWidth;
-                                        setChallengePage(Math.max(0, challengePage - 1));
-                                    }
-                                }}
-                                aria-label="Previous"
-                                style={{
-                                    width: '2.25rem', height: '2.25rem', borderRadius: '50%',
-                                    border: '1.5px solid rgba(0,0,0,0.2)', background: '#fff',
-                                    display: 'flex', alignItems: 'center', justifyContent: 'center',
-                                    cursor: 'pointer', color: '#333', fontSize: '0.9rem',
-                                    opacity: challengePage === 0 ? 0.35 : 1, transition: 'opacity 0.2s'
-                                }}
-                            >&#8249;</button>
-                            <span style={{ fontSize: '0.85rem', color: '#555', minWidth: '6rem' }}>
-                                {challengePage === 0 ? '1' : '5'} – {challengePage === 0 ? '4' : '8'} of {challengesList.length}
-                            </span>
-                            <button
-                                onClick={() => {
-                                    if (challengesScrollRef.current) {
-                                        const el = challengesScrollRef.current;
-                                        el.scrollLeft += el.offsetWidth;
-                                        setChallengePage(Math.min(1, challengePage + 1));
-                                    }
-                                }}
-                                aria-label="Next"
-                                style={{
-                                    width: '2.25rem', height: '2.25rem', borderRadius: '50%',
-                                    border: '1.5px solid rgba(0,0,0,0.2)', background: '#fff',
-                                    display: 'flex', alignItems: 'center', justifyContent: 'center',
-                                    cursor: 'pointer', color: '#333', fontSize: '0.9rem',
-                                    opacity: challengePage === 1 ? 0.35 : 1, transition: 'opacity 0.2s'
-                                }}
-                            >&#8250;</button>
-                        </div>
+                                <h3 className="infra-card-title">{challenge.text}</h3>
+                                <p className="infra-card-desc">{challenge.desc}</p>
+                            </div>
+                        ))}
                     </div>
                 </div>
             </section>

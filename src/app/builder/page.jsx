@@ -66,9 +66,27 @@ const stepImages = [
 ];
 
 const trustFeatures = [
-    { id: "secure", title: "Verified Network", desc: "We ensure both buyers and builders on our platform meet high standards of credibility.", icon: <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path></svg> },
-    { id: "disclosure", title: "Global Reach", desc: "Gain immediate visibility among a concentrated pool of Non-Resident Indians seeking properties.", icon: <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="2" y1="12" x2="22" y2="12"></line><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path></svg> },
-    { id: "support", title: "Dedicated Coordinators", desc: "Our team handles the heavy lifting of communication and scheduling to save you time.", icon: <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg> }
+    { 
+        id: "secure", 
+        title: "Verified Network", 
+        desc: "We ensure both buyers and builders on our platform meet high standards of credibility.", 
+        image: "https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?q=80&w=1000&auto=format&fit=crop", /* Professional partnership handshake closing a developer deal */
+        icon: <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path></svg> 
+    },
+    { 
+        id: "disclosure", 
+        title: "Global Reach", 
+        desc: "Gain immediate visibility among a concentrated pool of Non-Resident Indians seeking properties.", 
+        image: "https://images.unsplash.com/photo-1569336415962-a4bd9f69cd83?q=80&w=1000&auto=format&fit=crop", /* Stylized global network with glowing golden/orange connections */
+        icon: <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="2" y1="12" x2="22" y2="12"></line><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path></svg> 
+    },
+    { 
+        id: "support", 
+        title: "Dedicated Coordinators", 
+        desc: "Our team handles the heavy lifting of communication and scheduling to save you time.", 
+        image: "https://images.unsplash.com/photo-1600880292203-757bb62b4baf?q=80&w=1000&auto=format&fit=crop", /* Top-tier real estate advisory & coordinators */
+        icon: <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg> 
+    }
 ];
 
 
@@ -111,22 +129,6 @@ export default function BuilderHome() {
             setHeroIndex((prev) => (prev + 1) % heroSlides.length);
         }, 6000);
         return () => clearInterval(timer);
-    }, []);
-
-    useEffect(() => {
-        const interval = setInterval(() => {
-            if (builderChallengesScrollRef.current) {
-                const el = builderChallengesScrollRef.current;
-                const maxScrollLeft = el.scrollWidth - el.clientWidth;
-                // Add a small margin of error (10px) to ensure we hit the end
-                if (el.scrollLeft >= maxScrollLeft - 10) {
-                    el.scrollBy({ left: -el.scrollWidth, behavior: 'smooth' });
-                } else {
-                    el.scrollBy({ left: el.offsetWidth, behavior: 'smooth' });
-                }
-            }
-        }, 4000); // Auto-scroll every 4 seconds
-        return () => clearInterval(interval);
     }, []);
 
 
@@ -230,156 +232,32 @@ export default function BuilderHome() {
                 </div>
             </section>
 
-            <section className="fullscreen-section section-light" id="challenges" style={{ padding: '80px 0' }}>
-                <div className="container">
-                    <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '1.5rem', marginBottom: '3rem' }}>
-                        <div style={{ flex: 1, height: '1px', background: '#d1d1d1' }} />
-                        <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-                            <div style={{ width: '4px', height: '4px', borderRadius: '50%', background: '#333' }} />
-                            <div style={{ width: '4px', height: '4px', borderRadius: '50%', background: '#333' }} />
-                            <h2 style={{ fontSize: '2.5rem', fontWeight: 600, color: '#222', margin: '0 1rem', fontFamily: 'Inter, sans-serif', textAlign: 'center' }}>Overcoming <span style={{ color: '#EA580C' }}>Market Friction</span></h2>
-                            <div style={{ width: '4px', height: '4px', borderRadius: '50%', background: '#333' }} />
-                            <div style={{ width: '4px', height: '4px', borderRadius: '50%', background: '#333' }} />
-                        </div>
-                        <div style={{ flex: 1, height: '1px', background: '#d1d1d1' }} />
-                    </div>
-                    <p style={{ textAlign: 'center', color: '#666', maxWidth: '850px', margin: '0 auto 1.5rem', fontSize: '1.2rem', lineHeight: 1.7 }}>
-                        Connecting with international investors requires more than traditional marketing. We solve the specific trust and logistical challenges that prevent visionary developers from reaching the global Indian diaspora.
-                    </p>
+            {/* ── Infrastructure-style Marquee Section ── */}
+            <section id="challenges" className="infra-section">
+                {/* ── Develite-style Header ── */}
+                <div className="infra-section-header">
+                    <h2 className="infra-title">
+                        Overcoming <span className="infra-title-accent">Market Friction</span>
+                    </h2>
+                </div>
 
-                    <div
-                        ref={builderChallengesScrollRef}
-                        style={{
-                            display: 'flex',
-                            gap: '1rem',
-                            overflowX: 'auto',
-                            scrollSnapType: 'x mandatory',
-                            scrollBehavior: 'smooth',
-                            marginTop: '2rem',
-                            paddingBottom: '0.5rem',
-                            msOverflowStyle: 'none',
-                            scrollbarWidth: 'none'
-                        }}
-                        onScroll={() => {
-                            if (builderChallengesScrollRef.current) {
-                                const el = builderChallengesScrollRef.current;
-                                const center = el.scrollLeft + el.clientWidth / 2;
-                                let closestIndex = 0;
-                                let minDistance = Infinity;
-                                Array.from(el.children).forEach((child, index) => {
-                                    const childCenter = child.offsetLeft + child.clientWidth / 2;
-                                    const distance = Math.abs(childCenter - center);
-                                    if (distance < minDistance) {
-                                        minDistance = distance;
-                                        closestIndex = index;
-                                    }
-                                });
-                                setBuilderChallengePage(closestIndex);
-                            }
-                        }}
-                    >
-                        {builderChallenges.map((challenge, index) => {
-                            const isHovered = hoveredBuilderCard === challenge.id;
-                            const isMiddle = builderChallengePage === index;
-                            return (
-                                <div
-                                    key={challenge.id}
-                                    className="challenge-card challenge-card-premium"
-                                    onMouseEnter={() => setHoveredBuilderCard(challenge.id)}
-                                    onMouseLeave={() => setHoveredBuilderCard(null)}
-                                    style={{
-                                        position: 'relative',
-                                        borderRadius: '1rem',
-                                        overflow: 'hidden',
-                                        height: isMiddle ? '380px' : '350px',
-                                        minWidth: '320px',
-                                        background: '#fff',
-                                        scrollSnapAlign: 'center',
-                                        boxShadow: isMiddle
-                                            ? '0 25px 50px rgba(234, 88, 12, 0.15)'
-                                            : isHovered
-                                                ? '0 20px 40px rgba(0,0,0,0.08)'
-                                                : '0 10px 30px rgba(0,0,0,0.04)',
-                                        border: isMiddle ? '2px solid #EA580C' : '1px solid rgba(0,0,0,0.03)',
-                                        cursor: 'pointer',
-                                        transition: 'all 0.4s ease',
-                                        transform: isMiddle ? 'scale(1.02)' : isHovered ? 'translateY(-8px)' : 'scale(0.95)',
-                                        opacity: isMiddle ? 1 : 0.6,
-                                        padding: '2.5rem 1.5rem',
-                                        display: 'flex',
-                                        flexDirection: 'column',
-                                        alignItems: 'center',
-                                        textAlign: 'center',
-                                        zIndex: isMiddle ? 10 : 1
-                                    }}
-                                >
-                                    <div style={{
-                                        width: '80px',
-                                        height: '80px',
-                                        background: 'linear-gradient(135deg, #F97316 0%, #EA580C 100%)',
-                                        borderRadius: '50%',
-                                        display: 'flex',
-                                        alignItems: 'center',
-                                        justifyContent: 'center',
-                                        marginBottom: '1.5rem',
-                                        boxShadow: '0 8px 15px rgba(234, 88, 12, 0.3)'
-                                    }}>
-                                        {challenge.icon}
-                                    </div>
-                                    <h3 style={{ fontSize: '1.4rem', fontWeight: 700, color: '#111', marginBottom: '1rem', lineHeight: 1.3 }}>{challenge.text}</h3>
-                                    <p style={{ fontSize: '1.05rem', color: '#555', lineHeight: 1.6, margin: 0 }}>{challenge.desc}</p>
+                <p className="infra-subtitle">
+                    Connecting with international investors requires more than traditional marketing. We solve the specific trust and logistical challenges that prevent visionary developers from reaching the global Indian diaspora.
+                </p>
+
+                {/* ── Infinite Marquee with Original White Cards ── */}
+                <div className="infra-marquee-wrapper">
+                    <div className="infra-marquee-track">
+                        {/* Render twice for seamless loop */}
+                        {[...builderChallenges, ...builderChallenges].map((challenge, i) => (
+                            <div key={i} className="infra-marquee-card">
+                                <div className="infra-card-icon-wrapper">
+                                    {challenge.icon}
                                 </div>
-                            );
-                        })}
-                    </div>
-
-                    <div style={{ marginTop: '1.25rem' }}>
-                        <div style={{ width: '100%', height: '3px', background: 'rgba(0,0,0,0.1)', borderRadius: '9999px', marginBottom: '0.9rem', overflow: 'hidden' }}>
-                            <div style={{
-                                height: '100%',
-                                width: `${((builderChallengePage + 1) / builderChallenges.length) * 100}%`,
-                                background: '#EA580C',
-                                borderRadius: '9999px',
-                                transition: 'width 0.3s ease'
-                            }} />
-                        </div>
-                        <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
-                            <button
-                                onClick={() => {
-                                    if (builderChallengesScrollRef.current) {
-                                        const el = builderChallengesScrollRef.current;
-                                        const cardW = el.scrollWidth / builderChallenges.length;
-                                        el.scrollBy({ left: -cardW, behavior: 'smooth' });
-                                    }
-                                }}
-                                style={{
-                                    width: '2.25rem', height: '2.25rem', borderRadius: '50%',
-                                    border: '1.5px solid rgba(0,0,0,0.2)', background: '#fff',
-                                    display: 'flex', alignItems: 'center', justifyContent: 'center',
-                                    cursor: 'pointer', color: '#333', fontSize: '0.9rem',
-                                    opacity: builderChallengePage === 0 ? 0.35 : 1, transition: 'opacity 0.2s'
-                                }}
-                            >&#8249;</button>
-                            <span style={{ fontSize: '0.85rem', color: '#555', minWidth: '4rem', textAlign: 'center' }}>
-                                {builderChallengePage + 1} of {builderChallenges.length}
-                            </span>
-                            <button
-                                onClick={() => {
-                                    if (builderChallengesScrollRef.current) {
-                                        const el = builderChallengesScrollRef.current;
-                                        const cardW = el.scrollWidth / builderChallenges.length;
-                                        el.scrollBy({ left: cardW, behavior: 'smooth' });
-                                    }
-                                }}
-                                style={{
-                                    width: '2.25rem', height: '2.25rem', borderRadius: '50%',
-                                    border: '1.5px solid rgba(0,0,0,0.2)', background: '#fff',
-                                    display: 'flex', alignItems: 'center', justifyContent: 'center',
-                                    cursor: 'pointer', color: '#333', fontSize: '0.9rem',
-                                    opacity: builderChallengePage === builderChallenges.length - 1 ? 0.35 : 1, transition: 'opacity 0.2s'
-                                }}
-                            >&#8250;</button>
-                        </div>
+                                <h3 className="infra-card-title">{challenge.text}</h3>
+                                <p className="infra-card-desc">{challenge.desc}</p>
+                            </div>
+                        ))}
                     </div>
                 </div>
             </section>
@@ -595,10 +473,10 @@ export default function BuilderHome() {
                             </button>
                         </div>
                         <div className="trust-cards-side">
-                            {trustFeatures.map((feature, idx) => (
+                            {trustFeatures.map((feature) => (
                                 <div className="trust-feature-card" key={feature.id}>
                                     <div className="trust-feature-image">
-                                        <img src={idx === 0 ? "/verified-network.png" : idx === 1 ? "/global-reach.jpg" : "https://images.unsplash.com/photo-1552664730-d307ca884978?q=80&w=1000&auto=format&fit=crop"} alt={feature.title} />
+                                        <img src={feature.image} alt={feature.title} />
                                     </div>
                                     <h3 className="trust-feature-title">{feature.title}</h3>
                                     <p className="trust-feature-desc">{feature.desc}</p>
