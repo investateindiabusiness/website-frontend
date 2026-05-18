@@ -9,7 +9,7 @@ import { Globe, Search, ShieldCheck, Users, FileText, Activity } from 'lucide-re
 
 const heroSlides = [
     {
-        image: 'https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?q=80&w=2070&auto=format&fit=crop',
+        image: 'https://images.unsplash.com/photo-1541888946425-d81bb19240f5?q=80&w=2070&auto=format&fit=crop', /* Ultra-HD 4K+ stunning steel skyscraper construction with crane at golden sunset */
         tag: 'Institutional Capital Access',
         title: 'Direct Connectivity to',
         highlight: 'High-Net-Worth NRI Capital',
@@ -66,26 +66,26 @@ const stepImages = [
 ];
 
 const trustFeatures = [
-    { 
-        id: "secure", 
-        title: "Verified Network", 
-        desc: "We ensure both buyers and builders on our platform meet high standards of credibility.", 
+    {
+        id: "secure",
+        title: "Verified Network",
+        desc: "We ensure both buyers and builders on our platform meet high standards of credibility.",
         image: "https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?q=80&w=1000&auto=format&fit=crop", /* Professional partnership handshake closing a developer deal */
-        icon: <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path></svg> 
+        icon: <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path></svg>
     },
-    { 
-        id: "disclosure", 
-        title: "Global Reach", 
-        desc: "Gain immediate visibility among a concentrated pool of Non-Resident Indians seeking properties.", 
+    {
+        id: "disclosure",
+        title: "Global Reach",
+        desc: "Gain immediate visibility among a concentrated pool of Non-Resident Indians seeking properties.",
         image: "https://images.unsplash.com/photo-1569336415962-a4bd9f69cd83?q=80&w=1000&auto=format&fit=crop", /* Stylized global network with glowing golden/orange connections */
-        icon: <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="2" y1="12" x2="22" y2="12"></line><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path></svg> 
+        icon: <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="2" y1="12" x2="22" y2="12"></line><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path></svg>
     },
-    { 
-        id: "support", 
-        title: "Dedicated Coordinators", 
-        desc: "Our team handles the heavy lifting of communication and scheduling to save you time.", 
+    {
+        id: "support",
+        title: "Dedicated Coordinators",
+        desc: "Our team handles the heavy lifting of communication and scheduling to save you time.",
         image: "https://images.unsplash.com/photo-1600880292203-757bb62b4baf?q=80&w=1000&auto=format&fit=crop", /* Top-tier real estate advisory & coordinators */
-        icon: <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg> 
+        icon: <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg>
     }
 ];
 
@@ -289,7 +289,7 @@ export default function BuilderHome() {
                                 </div> */}
                                 <h2 className="responsive-heading" style={{ color: '#111', marginBottom: '1.5rem' }}>
                                     Elevate Your <br />
-                                    <span style={{ color: '#EA580C' }}>Global Presence</span>
+                                    <span style={{ color: '#D48035' }}>Global Presence</span>
                                 </h2>
                                 <p className="responsive-paragraph" style={{ color: '#555', marginBottom: '2.5rem' }}>
                                     Position your developments within a transparency-first ecosystem that reinforces your reputation for corporate governance and delivery excellence.
@@ -306,7 +306,7 @@ export default function BuilderHome() {
                                             className="grid grid-cols-1 md:grid-cols-2 gap-x-12 gap-y-10"
                                         >
                                             {builderBenefits.slice(benefitsPage * benefitsPerPage, (benefitsPage + 1) * benefitsPerPage).map((benefit, index) => (
-                                                <div key={index} style={{ borderLeft: '4px solid #EA580C', paddingLeft: '1.25rem' }}>
+                                                <div key={index} style={{ borderLeft: '4px solid #D48035', paddingLeft: '1.25rem' }}>
                                                     <h4 style={{ fontSize: '1.2rem', fontWeight: 700, color: '#111', marginBottom: '0.6rem' }}>
                                                         {benefit.title}
                                                     </h4>
@@ -406,8 +406,8 @@ export default function BuilderHome() {
                                 zIndex: 10
                             }}>
                                 <img
-                                    src="/images/standard_verified_seal.png"
-                                    alt="Verified Seal"
+                                    src="/builder-construction-hero.png"
+                                    alt="Builder Construction"
                                     style={{ width: '100%', height: '100%', objectFit: 'cover' }}
                                 />
                             </div>
