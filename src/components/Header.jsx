@@ -83,7 +83,7 @@ const Header = ({ transparent = false }) => {
 
   return (
     <>
-      <header className={`fixed w-full top-0 left-0 right-0 z-[1000] transition-all duration-300 bg-[#121212] border-b border-gray-800 text-gray-300`}>
+      <header className={`fixed w-full top-0 left-0 right-0 z-[1000] transition-all duration-300 bg-[#232325] border-b border-gray-800 text-gray-300`}>
         <div className="h-16 flex items-center justify-between mx-4">
           <div className="flex items-center shrink-0">
             <Link href="/" className="flex items-center">
@@ -112,7 +112,7 @@ const Header = ({ transparent = false }) => {
           </div>
         </div>
 
-        <div className={`md:hidden fixed inset-0 top-16 bg-[#121212] z-40 transition-transform duration-300 ${mobileMenuOpen ? 'translate-x-0' : 'translate-x-full'}`}>
+        <div className={`md:hidden fixed inset-0 top-16 bg-[#232325] z-40 transition-transform duration-300 ${mobileMenuOpen ? 'translate-x-0' : 'translate-x-full'}`}>
           <div className="flex flex-col h-full p-6 overflow-y-auto text-gray-300">
             <div className="space-y-1 mb-8">
               {navLinks.map((item) => (
@@ -132,7 +132,7 @@ const Header = ({ transparent = false }) => {
               ) : (
                 <div className="flex flex-col gap-3">
                   <Button onClick={() => handleAuthClick('login', 'investor')} className="w-full bg-gray-800 hover:bg-gray-700 text-white py-6">Login/Register as an Investor</Button>
-                  <Button onClick={() => handleAuthClick('login', 'builder')} className="w-full bg-[#C88A58] hover:bg-[#b0784a] text-white py-6">Login/Register as a Partner</Button>
+                  <Button onClick={() => handleAuthClick('login', 'builder')} className="w-full bg-[var(--color-accent,#D48035)] hover:bg-[var(--color-accent-hover,#B45309)] text-white py-6">Login/Register as a Partner</Button>
                 </div>
               )}
             </div>

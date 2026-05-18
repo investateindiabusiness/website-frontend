@@ -133,7 +133,7 @@ export default function BuilderHome() {
     const activeStepData = builderSteps[activeStepIndex];
 
     return (
-        <div className="theme-builder w-full bg-white overflow-x-hidden">
+        <div className="theme-builder w-full bg-[var(--color-light-bg)] overflow-x-hidden">
             <Header transparent={true} />
 
             {/* HERO SECTION */}
@@ -230,7 +230,7 @@ export default function BuilderHome() {
                 </div>
             </section>
 
-            <section className="fullscreen-section section-theme" id="challenges" style={{ padding: '80px 0' }}>
+            <section className="fullscreen-section section-light" id="challenges" style={{ padding: '80px 0' }}>
                 <div className="container">
                     <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '1.5rem', marginBottom: '3rem' }}>
                         <div style={{ flex: 1, height: '1px', background: '#d1d1d1' }} />
@@ -384,7 +384,7 @@ export default function BuilderHome() {
                 </div>
             </section>
 
-            <section className="fullscreen-section section-white" id="benefits" style={{ padding: '60px 0', overflow: 'hidden' }}>
+            <section className="fullscreen-section section-theme" id="benefits" style={{ padding: '60px 0', overflow: 'hidden' }}>
                 <div className="container">
                     <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-start">
                         {/* Left Side: Content */}
@@ -539,7 +539,7 @@ export default function BuilderHome() {
             </section>
 
             {/* HOW IT WORKS SECTION */}
-            <section className="fullscreen-section section-theme" id="how-it-works">
+            <section className="fullscreen-section section-light" id="how-it-works">
                 <div className="container">
                     <div className="section-heading">
                         <h2 className="section-title">
@@ -579,7 +579,7 @@ export default function BuilderHome() {
                 </div>
             </section>
 
-            <section className="fullscreen-section section-white" id="trust">
+            <section className="fullscreen-section section-theme" id="trust">
                 <div className="container">
                     <div className="trust-split-wrapper">
                         <div className="trust-info-side">
