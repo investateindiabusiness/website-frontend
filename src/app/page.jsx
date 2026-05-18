@@ -32,7 +32,7 @@ const contentDataForSection2 = [
         id: "01",
         title: "The Platform",
         text: "A structured discovery ecosystem built specifically for NRIs who seek visibility and a dependable investment process without the middleman noise.",
-        image: "https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?q=80&w=1000&auto=format&fit=crop" /* Spectacular glass and steel corporate real estate tower facade (from the outside) representing a structured institutional discovery platform */
+        image: "/images/media1.png"
     },
     {
         id: "02",
@@ -581,7 +581,16 @@ export default function Index() {
                 </div>
             </section>
 
-            <section className="fullscreen-section section-light" id="trust">
+            <section
+                className="fullscreen-section section-light"
+                id="trust"
+                style={{
+                    background: "linear-gradient(rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.4)), url('/images/image2.png')",
+                    backgroundSize: "cover",
+                    backgroundPosition: "center",
+                    backgroundAttachment: "fixed"
+                }}
+            >
                 <div className="container">
                     <div className="section-heading">
                         <h2 className="section-title">The Foundation of <span className="text-highlight">Digital Trust</span></h2>
