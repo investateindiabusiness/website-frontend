@@ -66,9 +66,27 @@ const stepImages = [
 ];
 
 const trustFeatures = [
-    { id: "secure", title: "Verified Network", desc: "We ensure both buyers and builders on our platform meet high standards of credibility.", icon: <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path></svg> },
-    { id: "disclosure", title: "Global Reach", desc: "Gain immediate visibility among a concentrated pool of Non-Resident Indians seeking properties.", icon: <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="2" y1="12" x2="22" y2="12"></line><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path></svg> },
-    { id: "support", title: "Dedicated Coordinators", desc: "Our team handles the heavy lifting of communication and scheduling to save you time.", icon: <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg> }
+    { 
+        id: "secure", 
+        title: "Verified Network", 
+        desc: "We ensure both buyers and builders on our platform meet high standards of credibility.", 
+        image: "https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?q=80&w=1000&auto=format&fit=crop", /* Professional partnership handshake closing a developer deal */
+        icon: <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path></svg> 
+    },
+    { 
+        id: "disclosure", 
+        title: "Global Reach", 
+        desc: "Gain immediate visibility among a concentrated pool of Non-Resident Indians seeking properties.", 
+        image: "https://images.unsplash.com/photo-1569336415962-a4bd9f69cd83?q=80&w=1000&auto=format&fit=crop", /* Stylized global network with glowing golden/orange connections */
+        icon: <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="2" y1="12" x2="22" y2="12"></line><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path></svg> 
+    },
+    { 
+        id: "support", 
+        title: "Dedicated Coordinators", 
+        desc: "Our team handles the heavy lifting of communication and scheduling to save you time.", 
+        image: "https://images.unsplash.com/photo-1600880292203-757bb62b4baf?q=80&w=1000&auto=format&fit=crop", /* Top-tier real estate advisory & coordinators */
+        icon: <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg> 
+    }
 ];
 
 
@@ -455,10 +473,10 @@ export default function BuilderHome() {
                             </button>
                         </div>
                         <div className="trust-cards-side">
-                            {trustFeatures.map((feature, idx) => (
+                            {trustFeatures.map((feature) => (
                                 <div className="trust-feature-card" key={feature.id}>
                                     <div className="trust-feature-image">
-                                        <img src={idx === 0 ? "/verified-network.png" : idx === 1 ? "/global-reach.jpg" : "https://images.unsplash.com/photo-1552664730-d307ca884978?q=80&w=1000&auto=format&fit=crop"} alt={feature.title} />
+                                        <img src={feature.image} alt={feature.title} />
                                     </div>
                                     <h3 className="trust-feature-title">{feature.title}</h3>
                                     <p className="trust-feature-desc">{feature.desc}</p>
