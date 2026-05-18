@@ -151,6 +151,8 @@ export default function BuilderHome() {
                         exit={{ opacity: 0 }}
                         transition={{ duration: 1.2, ease: 'easeInOut' }}
                         style={{ objectPosition: 'center' }}
+                        loading="eager"
+                        fetchPriority="high"
                     />
                 </AnimatePresence>
                 <div className="absolute inset-0 z-[1]" style={{ background: 'rgba(0,0,0,0.22)' }} />
@@ -387,9 +389,10 @@ export default function BuilderHome() {
                                 boxShadow: '0 20px 40px rgba(0,0,0,0.1)'
                             }}>
                                 <img
-                                    src="/images/hero_modern_cityscape.png"
+                                    src="/images/overlap.png"
                                     alt="Modern Cityscape"
                                     style={{ width: '100%', height: '100%', objectFit: 'cover' }}
+                                    loading="lazy"
                                 />
                             </div>
                             {/* Overlapping Image (Small) */}
@@ -406,9 +409,10 @@ export default function BuilderHome() {
                                 zIndex: 10
                             }}>
                                 <img
-                                    src="/builder-construction-hero.png"
+                                    src="/images/overlap2.png"
                                     alt="Builder Construction"
                                     style={{ width: '100%', height: '100%', objectFit: 'cover' }}
+                                    loading="lazy"
                                 />
                             </div>
                         </motion.div>
@@ -436,14 +440,14 @@ export default function BuilderHome() {
                                     ))}
                                 </div>
                                 <div className="dashboard-tabs-nav md:hidden">
-                                    <button className="tabs-nav-btn prev" onClick={() => document.getElementById('builder-tabs-row').scrollBy({ left: -150, behavior: 'smooth' })}>❮</button>
-                                    <button className="tabs-nav-btn next" onClick={() => document.getElementById('builder-tabs-row').scrollBy({ left: 150, behavior: 'smooth' })}>❯</button>
+                                    <button className="tabs-nav-btn prev" aria-label="Scroll steps left" onClick={() => document.getElementById('builder-tabs-row').scrollBy({ left: -150, behavior: 'smooth' })}>❮</button>
+                                    <button className="tabs-nav-btn next" aria-label="Scroll steps right" onClick={() => document.getElementById('builder-tabs-row').scrollBy({ left: 150, behavior: 'smooth' })}>❯</button>
                                 </div>
                             </div>
                             <div className="dashboard-display-window">
                                 <div className="display-content">
                                     <div className="display-image-box">
-                                        <img src={stepImages[activeStepIndex]} alt={`Step ${activeStepData.id}`} />
+                                        <img src={stepImages[activeStepIndex]} alt={`Step ${activeStepData.id}`} loading="lazy" />
                                     </div>
                                     <div className="display-text-box">
                                         <div className="display-step-badge">Step {activeStepData.id}</div>
@@ -476,7 +480,7 @@ export default function BuilderHome() {
                             {trustFeatures.map((feature) => (
                                 <div className="trust-feature-card" key={feature.id}>
                                     <div className="trust-feature-image">
-                                        <img src={feature.image} alt={feature.title} />
+                                        <img src={feature.image} alt={feature.title} loading="lazy" />
                                     </div>
                                     <h3 className="trust-feature-title">{feature.title}</h3>
                                     <p className="trust-feature-desc">{feature.desc}</p>

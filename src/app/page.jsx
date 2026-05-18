@@ -12,14 +12,14 @@ import { Loader2, Search, Users, FileText, Gavel, ShieldCheck, Globe } from 'luc
 
 const heroSlides = [
     {
-        image: '/images/hero_indian_luxury.png',
+        image: '/images/hero_modern_cityscape.png',
         tag: 'India\'s Most Trusted Gateway',
         title: 'Bridging Global NRIs to',
         highlight: 'Verified Indian Real Estate',
         subtitle: 'Institutional-grade transparency, verified developer credentials, and professional on-ground representation for the global Indian diaspora.'
     },
     {
-        image: '/images/hero_modern_cityscape.png',
+        image: '/images/hero_indian_luxury.png',
         tag: 'Institutional Standards',
         title: 'Secure Your Future with',
         highlight: 'Digital Trust & Integrity',
@@ -76,7 +76,7 @@ const investorSteps = [
 ];
 
 const stepImages = [
-    "https://images.unsplash.com/photo-1497366216548-37526070297c?q=80&w=1000&auto=format&fit=crop", /* Step 1 (Register): Premium, clean corporate executive meeting table / workspace with zero text */
+    "/images/register.png", /* Step 1 (Register): Newly uploaded luxury house model and paperwork signing representing safe registration and property planning */
     "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?q=80&w=1000&auto=format&fit=crop", /* Step 2 (Discover): Breathtaking sunset luxury villa facade viewed from the outside, with no repeated images */
     "https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?q=80&w=1000&auto=format&fit=crop", /* Step 3 (Evaluate): Real estate advisors evaluating project timelines and credentials with zero text/logos */
     "https://images.unsplash.com/photo-1560520653-9e0e4c89df11?q=80&w=1000&auto=format&fit=crop"  /* Step 4 (Decide): Executive handshake of trust over real estate investment plans with no brand text/logos */
@@ -244,6 +244,8 @@ export default function Index() {
                         exit={{ opacity: 0 }}
                         transition={{ duration: 1.2, ease: 'easeInOut' }}
                         style={{ objectPosition: 'center' }}
+                        loading="eager"
+                        fetchPriority="high"
                     />
                 </AnimatePresence>
                 <div className="absolute inset-0 z-[1]" style={{ background: 'rgba(0,0,0,0.22)' }} />
@@ -336,7 +338,7 @@ export default function Index() {
                                 className="accordion-card"
                             >
                                 <div className="accordion-card-bg">
-                                    <img src={item.image} alt={item.title} />
+                                    <img src={item.image} alt={item.title} loading="lazy" />
                                 </div>
                                 <div className="accordion-card-content">
                                     <div className="accordion-card-header">
@@ -515,6 +517,7 @@ export default function Index() {
                                     src="/images/image.png"
                                     alt="Global NRI Reach Map"
                                     style={{ width: '100%', height: '100%', objectFit: 'cover' }}
+                                    loading="lazy"
                                 />
                             </div>
                             {/* Overlapping Image (Small) */}
@@ -534,6 +537,7 @@ export default function Index() {
                                     src="/images/imagecopy.png"
                                     alt="Secure Premium Real Estate Asset"
                                     style={{ width: '100%', height: '100%', objectFit: 'cover' }}
+                                    loading="lazy"
                                 />
                             </div>
                         </motion.div>
@@ -560,14 +564,14 @@ export default function Index() {
                                     ))}
                                 </div>
                                 <div className="dashboard-tabs-nav md:hidden">
-                                    <button className="tabs-nav-btn prev" onClick={() => document.getElementById('dashboard-tabs-row').scrollBy({ left: -150, behavior: 'smooth' })}>❮</button>
-                                    <button className="tabs-nav-btn next" onClick={() => document.getElementById('dashboard-tabs-row').scrollBy({ left: 150, behavior: 'smooth' })}>❯</button>
+                                    <button className="tabs-nav-btn prev" aria-label="Scroll steps left" onClick={() => document.getElementById('dashboard-tabs-row').scrollBy({ left: -150, behavior: 'smooth' })}>❮</button>
+                                    <button className="tabs-nav-btn next" aria-label="Scroll steps right" onClick={() => document.getElementById('dashboard-tabs-row').scrollBy({ left: 150, behavior: 'smooth' })}>❯</button>
                                 </div>
                             </div>
                             <div className="dashboard-display-window">
                                 <div className="display-content">
                                     <div className="display-image-box">
-                                        <img src={stepImages[activeStepIndex]} alt={`Step ${activeStepData.id}`} />
+                                        <img src={stepImages[activeStepIndex]} alt={`Step ${activeStepData.id}`} loading="lazy" />
                                     </div>
                                     <div className="display-text-box">
                                         <div className="display-step-badge">Step {activeStepData.id}</div>
@@ -630,7 +634,7 @@ export default function Index() {
                         {teamMembers.map((member, index) => (
                             <div className="team-card-premium" key={index}>
                                 <div className="team-card-image">
-                                    <img src={member.image} alt={member.name} />
+                                    <img src={member.image} alt={member.name} loading="lazy" />
                                 </div>
                                 <div className="team-card-info">
                                     <h4 className="team-card-name">{member.name}</h4>
