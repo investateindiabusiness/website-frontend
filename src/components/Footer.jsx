@@ -4,7 +4,7 @@ import { Mail, Phone, MapPin, Facebook, Twitter, Linkedin, Instagram } from 'luc
 
 const Footer = () => {
   return (
-    <footer className="bg-[#121212] border-t border-gray-800 text-gray-300">
+    <footer className="bg-[#232325] border-t border-gray-800 text-gray-300">
       <div className="container mx-auto px-4 py-12">
         <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
           {/* Brand */}
@@ -22,37 +22,37 @@ const Footer = () => {
             <h3 className="text-white font-bold mb-4">Quick Links</h3>
             <ul className="space-y-2">
               <li>
-                <Link href="/" className="text-gray-400 hover:text-[#C88A58] transition-colors text-sm">
+                <Link href="/" className="text-gray-400 hover:text-[var(--color-accent,#D48035)] transition-colors text-sm">
                   Home
                 </Link>
               </li>
               <li>
-                <Link href="/builder" className="text-gray-400 hover:text-[#C88A58] transition-colors text-sm">
+                <Link href="/builder" className="text-gray-400 hover:text-[var(--color-accent,#D48035)] transition-colors text-sm">
                   Builder
                 </Link>
               </li>
               <li>
-                <Link href="/about-us" className="text-gray-400 hover:text-[#C88A58] transition-colors text-sm">
+                <Link href="/about-us" className="text-gray-400 hover:text-[var(--color-accent,#D48035)] transition-colors text-sm">
                   About Us
                 </Link>
               </li>
               <li>
-                <Link href="/contact-us" className="text-gray-400 hover:text-[#C88A58] transition-colors text-sm">
+                <Link href="/contact-us" className="text-gray-400 hover:text-[var(--color-accent,#D48035)] transition-colors text-sm">
                   Contact Us
                 </Link>
               </li>
               {/* <li>
-                <Link href="/register" className="text-gray-400 hover:text-[#C88A58] transition-colors text-sm">
+                <Link href="/register" className="text-gray-400 hover:text-[var(--color-accent,#D48035)] transition-colors text-sm">
                   For Investors
                 </Link>
               </li>
               <li>
-                <Link href="/partner/register" className="text-gray-400 hover:text-[#C88A58] transition-colors text-sm">
+                <Link href="/partner/register" className="text-gray-400 hover:text-[var(--color-accent,#D48035)] transition-colors text-sm">
                   For Builders
                 </Link>
               </li>
               <li>
-                <Link href="/" className="text-gray-400 hover:text-[#C88A58] transition-colors text-sm">
+                <Link href="/" className="text-gray-400 hover:text-[var(--color-accent,#D48035)] transition-colors text-sm">
                   Login
                 </Link>
               </li> */}
@@ -63,11 +63,11 @@ const Footer = () => {
           <div>
             <h3 className="text-white font-bold mb-4">Popular Cities</h3>
             <ul className="space-y-2">
-              <li className="text-sm text-gray-400 hover:text-[#C88A58] transition-colors cursor-pointer">Bangalore</li>
-              <li className="text-sm text-gray-400 hover:text-[#C88A58] transition-colors cursor-pointer">Gurgaon</li>
-              <li className="text-sm text-gray-400 hover:text-[#C88A58] transition-colors cursor-pointer">Mumbai</li>
-              <li className="text-sm text-gray-400 hover:text-[#C88A58] transition-colors cursor-pointer">Pune</li>
-              <li className="text-sm text-gray-400 hover:text-[#C88A58] transition-colors cursor-pointer">Hyderabad</li>
+              <li className="text-sm text-gray-400 hover:text-[var(--color-accent,#D48035)] transition-colors cursor-pointer">Bangalore</li>
+              <li className="text-sm text-gray-400 hover:text-[var(--color-accent,#D48035)] transition-colors cursor-pointer">Gurgaon</li>
+              <li className="text-sm text-gray-400 hover:text-[var(--color-accent,#D48035)] transition-colors cursor-pointer">Mumbai</li>
+              <li className="text-sm text-gray-400 hover:text-[var(--color-accent,#D48035)] transition-colors cursor-pointer">Pune</li>
+              <li className="text-sm text-gray-400 hover:text-[var(--color-accent,#D48035)] transition-colors cursor-pointer">Hyderabad</li>
             </ul>
           </div>
 
@@ -119,13 +119,13 @@ const Footer = () => {
               © 2025 INVESTATE INDIA. All rights reserved.
             </p>
             <div className="flex space-x-6">
-              <a href="/privacy" className="text-sm text-gray-400 hover:text-[#C88A58] transition-colors">
+              <a href="/privacy" className="text-sm text-gray-400 hover:text-[var(--color-accent,#D48035)] transition-colors">
                 Privacy Policy
               </a>
-              <a href="/terms" className="text-sm text-gray-400 hover:text-[#C88A58] transition-colors">
+              <a href="/terms" className="text-sm text-gray-400 hover:text-[var(--color-accent,#D48035)] transition-colors">
                 Terms & Conditions
               </a>
-              <a href="/disclaimer" className="text-sm text-gray-400 hover:text-[#C88A58] transition-colors">
+              <a href="/disclaimer" className="text-sm text-gray-400 hover:text-[var(--color-accent,#D48035)] transition-colors">
                 Disclaimer
               </a>
             </div>
