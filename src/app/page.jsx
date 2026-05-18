@@ -32,7 +32,7 @@ const contentDataForSection2 = [
         id: "01",
         title: "The Platform",
         text: "A structured discovery ecosystem built specifically for NRIs who seek visibility and a dependable investment process without the middleman noise.",
-        image: "https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?q=80&w=1000&auto=format&fit=crop"
+        image: "/images/media1.png"
     },
     {
         id: "02",
@@ -531,8 +531,8 @@ export default function Index() {
                                 zIndex: 10
                             }}>
                                 <img
-                                    src="/images/standard_verified_seal.png"
-                                    alt="Verified Seal"
+                                    src="https://images.unsplash.com/photo-1503387762-592deb58ef4e?q=80&w=1000&auto=format&fit=crop"
+                                    alt="RERA Blueprint Verification"
                                     style={{ width: '100%', height: '100%', objectFit: 'cover' }}
                                 />
                             </div>
