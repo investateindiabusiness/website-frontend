@@ -32,19 +32,19 @@ const contentDataForSection2 = [
         id: "01",
         title: "The Platform",
         text: "A structured discovery ecosystem built specifically for NRIs who seek visibility and a dependable investment process without the middleman noise.",
-        image: "/images/platform_indian_corporate.png"
+        image: "https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?q=80&w=1000&auto=format&fit=crop" /* Spectacular glass and steel corporate real estate tower facade (from the outside) representing a structured institutional discovery platform */
     },
     {
         id: "02",
         title: "The Standard",
         text: "We mandate standardized disclosures—including RERA compliance and financial health—ensuring you invest based on merit, not marketing.",
-        image: "/images/standard_verified_seal.png"
+        image: "https://images.unsplash.com/photo-1503387762-592deb58ef4e?q=80&w=1000&auto=format&fit=crop" /* Premium blueprint vetting in front of a real building facade representing RERA compliance, strict standards, and structural audits */
     },
     {
         id: "03",
         title: "The Focus",
         text: "Presenting builder-declared information in a clean, transparent manner to empower you with the clarity needed for remote decision-making.",
-        image: "/images/focus_data_clarity.png"
+        image: "https://images.unsplash.com/photo-1563986768609-322da13575f3?q=80&w=1000&auto=format&fit=crop" /* Sleek modern tablet showing premium architectural property layout, representing direct builder-declared information and remote decision-making */
     }
 ];
 
@@ -76,10 +76,10 @@ const investorSteps = [
 ];
 
 const stepImages = [
-    "/images/platform_indian_corporate.png",
-    "/images/process_discovery.png",
-    "/images/standard_verified_seal.png",
-    "/images/hero_indian_luxury.png"
+    "https://images.unsplash.com/photo-1497366216548-37526070297c?q=80&w=1000&auto=format&fit=crop", /* Step 1 (Register): Premium, clean corporate executive meeting table / workspace with zero text */
+    "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?q=80&w=1000&auto=format&fit=crop", /* Step 2 (Discover): Breathtaking sunset luxury villa facade viewed from the outside, with no repeated images */
+    "https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?q=80&w=1000&auto=format&fit=crop", /* Step 3 (Evaluate): Real estate advisors evaluating project timelines and credentials with zero text/logos */
+    "https://images.unsplash.com/photo-1560520653-9e0e4c89df11?q=80&w=1000&auto=format&fit=crop"  /* Step 4 (Decide): Executive handshake of trust over real estate investment plans with no brand text/logos */
 ];
 
 const teamMembers = [
@@ -512,8 +512,8 @@ export default function Index() {
                                 boxShadow: '0 20px 40px rgba(0,0,0,0.1)'
                             }}>
                                 <img
-                                    src="/images/hero_indian_luxury.png"
-                                    alt="Luxury Property"
+                                    src="/images/image.png"
+                                    alt="Global NRI Reach Map"
                                     style={{ width: '100%', height: '100%', objectFit: 'cover' }}
                                 />
                             </div>
@@ -531,8 +531,8 @@ export default function Index() {
                                 zIndex: 10
                             }}>
                                 <img
-                                    src="https://images.unsplash.com/photo-1503387762-592deb58ef4e?q=80&w=1000&auto=format&fit=crop"
-                                    alt="RERA Blueprint Verification"
+                                    src="/images/imagecopy.png"
+                                    alt="Secure Premium Real Estate Asset"
                                     style={{ width: '100%', height: '100%', objectFit: 'cover' }}
                                 />
                             </div>
