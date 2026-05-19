@@ -112,7 +112,7 @@ h4,
 }
 
 .text-highlight {
-    color: #EA580C !important;
+    color: #fc9862 !important;
 }
 
 
@@ -3329,8 +3329,8 @@ h4,
 
 .team-text-banner {
     flex: 0 0 35%;
-    background: linear-gradient(135deg, #EA580C 0%, #F97316 100%);
-    /* Changed from blue to orange */
+    background: linear-gradient(135deg, #FF9933 0%, #D48035 100%);
+    /* Premium Saffron gradient */
     padding: 60px;
     display: flex;
     flex-direction: column;

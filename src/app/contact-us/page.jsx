@@ -113,7 +113,9 @@ export default function ContactUs() {
                       </div>
                       <div>
                         <p className="text-xs text-blue-200 uppercase tracking-wider font-semibold mb-1">Email Us</p>
-                        <p className="text-lg font-medium">investateindia.business@gmail.com</p>
+                        <a href="mailto:investateindia.business@gmail.com" className="text-[14px] min-[375px]:text-base md:text-lg font-medium hover:text-orange-400 transition-colors whitespace-nowrap">
+                          investateindia.business@gmail.com
+                        </a>
                       </div>
                     </div>
 
