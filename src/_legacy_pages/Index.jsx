@@ -153,7 +153,7 @@ const Index = () => {
             image: "/atish.png",
         },
         {
-            name: "Deepak Kavadia",
+            name: "Deepak Pankaj Atish",
             role: "Co-Founder",
             image: "/deepak.png",
         }
@@ -568,7 +568,7 @@ const Index = () => {
                                     <h3 className="story-headline">Built on transparency. Driven by experience.</h3>
                                     <div className="story-text-content">
                                         <p>
-                                            Investate India is led by Pankaj Gupta, Atish Agarwal, and Deepak Kavadia, bringing together on-ground real estate expertise and global perspective. <br />
+                                            Investate India is led by Deepak, Pankaj, and  Atish, bringing together on-ground real estate expertise and global perspective. <br />
                                             Pankaj Gupta has built a strong presence in the diamond and jewellery industry and is an established name in Hyderabad real estate, with experience in project development and execution. <br />
                                             Atish Agarwal brings diversified entrepreneurial experience across textiles, retail, jewellery, and real estate advisory, with a focus on operations and structuring investment opportunities. <br />
                                             Together, they lead Istana Realtors, having delivered plotted and residential developments while expanding into new asset classes, including farm-based and structured investments. <br />
