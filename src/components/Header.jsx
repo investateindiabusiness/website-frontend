@@ -6,8 +6,10 @@ import { useRouter } from 'next/navigation';
 import { Button } from './ui/button';
 import { Menu, X, LogOut, UserCircle } from 'lucide-react';
 import { useAuth } from '@/hooks/AuthContext';
-import LoginDialog from '@/components/LoginDialog';
-import RegisterDialog from '@/components/RegisterDialog';
+import dynamic from 'next/dynamic';
+
+const LoginDialog = dynamic(() => import('@/components/LoginDialog'), { ssr: false });
+const RegisterDialog = dynamic(() => import('@/components/RegisterDialog'), { ssr: false });
 
 const Header = ({ transparent = false }) => {
   const { user, logout } = useAuth();

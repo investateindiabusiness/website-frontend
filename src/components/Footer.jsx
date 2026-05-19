@@ -105,9 +105,11 @@ const Footer = () => {
                 <Phone className="h-5 w-5 text-[#C88A58] flex-shrink-0" />
                 <span className="text-sm text-gray-400">+91-80-12345678</span>
               </li> */}
-              <li className="flex items-center space-x-3">
+              <li className="flex items-center space-x-3 min-w-0">
                 <Mail className="h-5 w-5 text-[#C88A58] flex-shrink-0" />
-                <span className="text-sm text-gray-400">investateindia.business@gmail.com</span>
+                <a href="mailto:investateindia.business@gmail.com" className="text-xs sm:text-sm text-gray-400 hover:text-[var(--color-accent,#D48035)] transition-colors whitespace-nowrap">
+                  investateindia.business@gmail.com
+                </a>
               </li>
             </ul>
           </div>
@@ -115,8 +117,8 @@ const Footer = () => {
 
         <div className="border-t border-gray-800 mt-8 pt-8">
           <div className="flex flex-col md:flex-row justify-between items-center space-y-4 md:space-y-0">
-            <p className="text-sm text-gray-400">
-              © 2026 INVESTATE INDIA. All rights reserved by <a href="https://brvteck.ai/" target="_blank" rel="noopener noreferrer" className="hover:text-[var(--color-accent,#D48035)] transition-colors underline">BRV Technologies PVT LTD</a>.
+            <p className="text-sm text-gray-400 text-center md:text-left leading-relaxed">
+              © 2025 INVESTATE INDIA. All rights reserved.
             </p>
             <div className="flex space-x-6">
               <a href="/privacy" className="text-sm text-gray-400 hover:text-[var(--color-accent,#D48035)] transition-colors">
@@ -130,8 +132,11 @@ const Footer = () => {
               </a>
             </div>
           </div>
-          <p className="text-xs text-gray-500 mt-4 text-center md:text-left">
+          <p className="text-xs text-gray-500 mt-4 text-center md:text-left leading-relaxed">
             Disclaimer: INVESTATE INDIA acts as a facilitator between NRI investors and verified real estate builders. All investments are subject to market risks. Please read all documents carefully before investing.
+          </p>
+          <p className="text-xs text-gray-300 mt-3 text-center">
+            Designed and Maintained by <a href="https://brvteck.ai/" target="_blank" rel="noopener noreferrer" className="text-white hover:text-[var(--color-accent,#D48035)] transition-colors underline font-medium">BRV Technologies Private Limited</a>
           </p>
         </div>
       </div>

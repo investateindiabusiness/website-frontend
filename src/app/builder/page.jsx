@@ -4,7 +4,10 @@ import React, { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
-import RegisterDialog from '@/components/RegisterDialog';
+import dynamic from 'next/dynamic';
+
+const LoginDialog = dynamic(() => import('@/components/LoginDialog'), { ssr: false });
+const RegisterDialog = dynamic(() => import('@/components/RegisterDialog'), { ssr: false });
 import { Globe, Search, ShieldCheck, Users, FileText, Activity } from 'lucide-react';
 
 const heroSlides = [
@@ -141,19 +144,21 @@ export default function BuilderHome() {
             {/* HERO SECTION */}
             <section className="fullscreen-section hero-section">
                 <AnimatePresence mode="sync">
-                    <motion.img
-                        key={heroIndex}
-                        src={heroSlides[heroIndex]?.image}
-                        alt="Hero background"
-                        className="absolute inset-0 w-full h-full object-cover z-0"
-                        initial={{ opacity: 0 }}
-                        animate={{ opacity: 1 }}
-                        exit={{ opacity: 0 }}
-                        transition={{ duration: 1.2, ease: 'easeInOut' }}
-                        style={{ objectPosition: 'center' }}
-                        loading="eager"
-                        fetchPriority="high"
-                    />
+                    <picture key={heroIndex} className="absolute inset-0 w-full h-full z-0">
+                        <source media="(max-width: 768px)" srcSet={heroSlides[heroIndex]?.image.replace('w=2070', 'w=600&q=70')} />
+                        <motion.img
+                            src={heroSlides[heroIndex]?.image.replace('w=2070', 'w=1200&q=75')}
+                            alt="Hero background"
+                            className="absolute inset-0 w-full h-full object-cover z-0"
+                            initial={{ opacity: 0 }}
+                            animate={{ opacity: 1 }}
+                            exit={{ opacity: 0 }}
+                            transition={{ duration: 1.2, ease: 'easeInOut' }}
+                            style={{ objectPosition: 'center' }}
+                            loading="eager"
+                            fetchPriority="high"
+                        />
+                    </picture>
                 </AnimatePresence>
                 <div className="absolute inset-0 z-[1]" style={{ background: 'rgba(0,0,0,0.22)' }} />
 
@@ -389,8 +394,10 @@ export default function BuilderHome() {
                                 boxShadow: '0 20px 40px rgba(0,0,0,0.1)'
                             }}>
                                 <img
-                                    src="/images/overlap.png"
+                                    src="/images/overlap_optimized.jpg"
                                     alt="Modern Cityscape"
+                                    width={800}
+                                    height={600}
                                     style={{ width: '100%', height: '100%', objectFit: 'cover' }}
                                     loading="lazy"
                                 />
@@ -409,8 +416,10 @@ export default function BuilderHome() {
                                 zIndex: 10
                             }}>
                                 <img
-                                    src="/images/overlap2.png"
+                                    src="/images/overlap2_optimized.jpg"
                                     alt="Builder Construction"
+                                    width={800}
+                                    height={600}
                                     style={{ width: '100%', height: '100%', objectFit: 'cover' }}
                                     loading="lazy"
                                 />
