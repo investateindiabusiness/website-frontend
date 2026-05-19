@@ -269,7 +269,7 @@ const AboutUs = () => {
                     <div className="w-32 h-32 md:w-40 md:h-40 mx-auto rounded-full mb-6 overflow-hidden border-4 border-blue-800/50 shadow-xl transition-transform duration-300 group-hover:scale-105">
                       <img src="/deepak.png" alt="Deepak Kavadia" className="w-full h-full object-cover" />
                     </div>
-                    <h3 className="font-bold text-2xl text-white mb-1">Deepak Kavadia</h3>
+                    <h3 className="font-bold text-2xl text-white mb-1">Deepak </h3>
                     <p className="text-orange-400 text-xs font-bold tracking-widest uppercase mt-2">Partner</p>
                     <p className="text-blue-200 text-sm mt-3">New York, USA</p>
                   </div>

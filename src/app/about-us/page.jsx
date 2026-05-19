@@ -217,7 +217,7 @@ export default function AboutUs() {
               <div className="lg:w-3/5 p-4 md:p-6 flex flex-col justify-center bg-white">
                 <div className="w-12 h-1 bg-[#0b264f] mb-6 rounded-full"></div>
                 <p className="text-gray-600 leading-relaxed text-[1.05rem]">
-                  <strong>Deepak Kavadia,</strong> based in New York, is an entrepreneur, real estate investor, and internationally respected gemstone authority. <br /> <br />
+                  <strong>Deepak,</strong> based in New York, is an entrepreneur, real estate investor, and internationally respected gemstone authority. <br /> <br />
                   He is the Founder and Chairman of the <strong>NRI Federation</strong>, a global diaspora platform dedicated to strengthening connections between Non-Resident Indians and opportunities in India. <br /> <br />
                   Deepak brings an important international perspective to Investate India, helping NRI investors engage with Indian opportunities through a trusted global interface.
                 </p>
