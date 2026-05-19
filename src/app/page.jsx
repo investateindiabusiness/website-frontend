@@ -4,8 +4,10 @@ import React, { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
-import RegisterDialog from '@/components/RegisterDialog';
-import LoginDialog from '@/components/LoginDialog';
+import dynamic from 'next/dynamic';
+
+const LoginDialog = dynamic(() => import('@/components/LoginDialog'), { ssr: false });
+const RegisterDialog = dynamic(() => import('@/components/RegisterDialog'), { ssr: false });
 import { toast } from '@/hooks/use-toast';
 import { subscribeToNewsletter } from '@/api';
 import { Loader2, Search, Users, FileText, Gavel, ShieldCheck, Globe } from 'lucide-react';
@@ -76,10 +78,10 @@ const investorSteps = [
 ];
 
 const stepImages = [
-    "/images/platform_indian_corporate.png",
-    "/images/process_discovery.png",
-    "/images/standard_verified_seal.png",
-    "/images/hero_indian_luxury.png"
+    "/images/register_optimized.jpg", /* Step 1 (Register): Newly uploaded luxury house model and paperwork signing representing safe registration and property planning */
+    "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?q=80&w=1000&auto=format&fit=crop", /* Step 2 (Discover): Breathtaking sunset luxury villa facade viewed from the outside, with no repeated images */
+    "https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?q=80&w=1000&auto=format&fit=crop", /* Step 3 (Evaluate): Real estate advisors evaluating project timelines and credentials with zero text/logos */
+    "https://images.unsplash.com/photo-1560520653-9e0e4c89df11?q=80&w=1000&auto=format&fit=crop"  /* Step 4 (Decide): Executive handshake of trust over real estate investment plans with no brand text/logos */
 ];
 
 const teamMembers = [
@@ -234,17 +236,21 @@ export default function Index() {
                 onMouseLeave={() => setIsHeroPaused(false)}
             >
                 <AnimatePresence mode="sync">
-                    <motion.img
-                        key={heroIndex}
-                        src={heroSlides[heroIndex].image}
-                        alt="Hero background"
-                        className="absolute inset-0 w-full h-full object-cover z-0"
-                        initial={{ opacity: 0 }}
-                        animate={{ opacity: 1 }}
-                        exit={{ opacity: 0 }}
-                        transition={{ duration: 1.2, ease: 'easeInOut' }}
-                        style={{ objectPosition: 'center' }}
-                    />
+                    <picture key={heroIndex} className="absolute inset-0 w-full h-full z-0">
+                        <source media="(max-width: 768px)" srcSet={heroSlides[heroIndex].image.replace('.png', '_mobile.jpg')} />
+                        <motion.img
+                            src={heroSlides[heroIndex].image}
+                            alt="Hero background"
+                            className="absolute inset-0 w-full h-full object-cover z-0"
+                            initial={{ opacity: 0 }}
+                            animate={{ opacity: 1 }}
+                            exit={{ opacity: 0 }}
+                            transition={{ duration: 1.2, ease: 'easeInOut' }}
+                            style={{ objectPosition: 'center' }}
+                            loading="eager"
+                            fetchPriority="high"
+                        />
+                    </picture>
                 </AnimatePresence>
                 <div className="absolute inset-0 z-[1]" style={{ background: 'rgba(0,0,0,0.22)' }} />
 
@@ -512,8 +518,10 @@ export default function Index() {
                                 boxShadow: '0 20px 40px rgba(0,0,0,0.1)'
                             }}>
                                 <img
-                                    src="/images/hero_indian_luxury.png"
-                                    alt="Luxury Property"
+                                    src="/images/image_optimized.jpg"
+                                    alt="Global NRI Reach Map"
+                                    width={800}
+                                    height={600}
                                     style={{ width: '100%', height: '100%', objectFit: 'cover' }}
                                     loading="lazy"
                                     decoding="async"
@@ -533,8 +541,10 @@ export default function Index() {
                                 zIndex: 10
                             }}>
                                 <img
-                                    src="https://images.unsplash.com/photo-1503387762-592deb58ef4e?q=80&w=1000&auto=format&fit=crop"
-                                    alt="RERA Blueprint Verification"
+                                    src="/images/imagecopy_optimized.jpg"
+                                    alt="Secure Premium Real Estate Asset"
+                                    width={800}
+                                    height={600}
                                     style={{ width: '100%', height: '100%', objectFit: 'cover' }}
                                     loading="lazy"
                                     decoding="async"
@@ -586,16 +596,23 @@ export default function Index() {
             </section>
 
             <section
-                className="fullscreen-section section-light"
+                className="fullscreen-section section-light relative overflow-hidden"
                 id="trust"
-                style={{
-                    background: "linear-gradient(rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.4)), url('/images/image2.png')",
-                    backgroundSize: "cover",
-                    backgroundPosition: "center",
-                    backgroundAttachment: "fixed"
-                }}
             >
-                <div className="container">
+                {/* Lazy-loaded optimized absolute background image */}
+                <div className="absolute inset-0 z-0">
+                    <img
+                        src="/images/image2_optimized.jpg"
+                        alt="Digital Trust Background"
+                        className="w-full h-full object-cover"
+                        loading="lazy"
+                        width={1200}
+                        height={800}
+                    />
+                    <div className="absolute inset-0 bg-black/40" />
+                </div>
+
+                <div className="container relative z-[2]">
                     <div className="section-heading">
                         <h2 className="section-title">The Foundation of <span className="text-highlight">Digital Trust</span></h2>
                     </div>
@@ -622,7 +639,7 @@ export default function Index() {
                             <h2 className="team-main-title">Meet the Team Behind <span className="text-highlight">Your Trust</span></h2>
                             <p className="team-main-desc">
                                 <strong>Built on transparency. Driven by experience.</strong><br />
-                                Investate India is led by Deepak Kavadia, Pankaj Gupta,and  Atish Agarwal.
+                                Investate India is led by Deepak Kavadia, Pankaj Gupta, and Atish Agarwal.
                             </p>
                             {/* <div className="team-nav-arrows-inline">
                                 <button className="team-nav-btn prev"><span>❮</span></button>
@@ -744,7 +761,14 @@ export default function Index() {
                         </div>
                         <div className="faq-image-column">
                             <div className="faq-side-image-premium">
-                                <img src="/images/hero_modern_cityscape.png" alt="Modern Indian Cityscape" loading="lazy" decoding="async" />
+                                <img
+                                    src="/images/hero_modern_cityscape_mobile.jpg"
+                                    alt="Modern Indian Cityscape"
+                                    loading="lazy"
+                                    decoding="async"
+                                    width={600}
+                                    height={400}
+                                />
                             </div>
                         </div>
                     </div>
