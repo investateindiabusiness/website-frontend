@@ -69,7 +69,9 @@ export default function ContactUs() {
                       <div className="bg-white/10 p-3 rounded-lg text-orange-400"><Mail className="w-6 h-6" /></div>
                       <div>
                         <p className="text-xs text-blue-200 uppercase font-semibold mb-1">Email Us</p>
-                        <p className="text-lg font-medium">investateindia.business@gmail.com</p>
+                        <a href="mailto:investateindia.business@gmail.com" className="text-[14px] min-[375px]:text-base md:text-lg font-medium hover:text-orange-400 transition-colors whitespace-nowrap">
+                          investateindia.business@gmail.com
+                        </a>
                       </div>
                     </div>
                     <div className="flex items-start gap-4">
