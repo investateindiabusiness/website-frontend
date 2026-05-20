@@ -154,17 +154,7 @@ export default function Index() {
     const [newsletterEmail, setNewsletterEmail] = useState('');
     const [isSubscribing, setIsSubscribing] = useState(false);
 
-    useEffect(() => {
-        const handleScroll = () => {
-            if (!hasAutoOpened && window.scrollY > 1200) {
-                setIsLoginOpen(true);
-                setHasAutoOpened(true);
-            }
-        };
 
-        window.addEventListener('scroll', handleScroll);
-        return () => window.removeEventListener('scroll', handleScroll);
-    }, [hasAutoOpened]);
 
     useEffect(() => {
         if (isHeroPaused) return;
@@ -794,12 +784,12 @@ export default function Index() {
 
             <Footer />
 
-            {/* <LoginDialog
+            <LoginDialog
                 isOpen={isLoginOpen}
                 onOpenChange={setIsLoginOpen}
                 onSwitchToRegister={handleSwitchToRegister}
                 initialData={dialogData}
-            /> */}
+            />
             <RegisterDialog
                 isOpen={isRegisterOpen}
                 onOpenChange={setIsRegisterOpen}
