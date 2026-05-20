@@ -4,6 +4,7 @@ import React, { useEffect } from 'react';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
 import { Shield, Users, Globe, Target, Award, Briefcase, ArrowRight, CheckCircle2 } from 'lucide-react';
+import { motion } from 'framer-motion';
 
 export default function AboutUs() {
   useEffect(() => {
@@ -11,7 +12,7 @@ export default function AboutUs() {
   }, []);
 
   return (
-    <div className="w-full min-h-screen bg-white overflow-x-hidden font-sans">
+    <div className="theme-investor w-full min-h-screen bg-[var(--color-light-bg)] overflow-x-hidden font-sans">
       <Header />
 
       <section className="relative h-[60vh] md:h-[70vh] flex items-center justify-center overflow-hidden mt-[2rem] md:mt-[4rem]">
@@ -23,7 +24,7 @@ export default function AboutUs() {
             backgroundPosition: 'center',
           }}
         >
-          <div className="absolute inset-0 bg-blue-900/80"></div>
+          <div className="absolute inset-0 bg-black/60"></div>
         </div>
 
         <div className="container mx-auto px-4 relative z-10 text-center text-white">
@@ -37,13 +38,23 @@ export default function AboutUs() {
         </div>
       </section>
 
-      <section className="py-16 md:py-24 bg-white">
+      <section className="py-16 md:py-24 bg-transparent">
         <div className="container mx-auto px-4">
           <div className="flex flex-col md:flex-row gap-12 items-center">
-            <div className="w-full md:w-1/2">
-              <div className="inline-block bg-blue-50 text-blue-800 px-4 py-1 rounded-full text-sm font-bold mb-4">
+            <motion.div
+              initial={{ opacity: 0, x: -50 }}
+              whileInView={{ opacity: 1, x: 0 }}
+              viewport={{ once: true, margin: "-100px" }}
+              transition={{ duration: 0.8, ease: "easeOut" }}
+              className="w-full md:w-1/2"
+            >
+              <motion.div
+                animate={{ y: [0, -30, 0] }}
+                transition={{ repeat: Infinity, duration: 3, ease: "easeInOut" }}
+                className="inline-block bg-blue-50 text-blue-800 px-4 py-1 rounded-full text-sm font-bold mb-4"
+              >
                 WHO WE ARE
-              </div>
+              </motion.div>
               <h2 className="text-3xl md:text-4xl font-bold text-[#0b264f] mb-6">
                 Pioneering Strategic Investment <br /> for the Global Diaspora
               </h2>
@@ -74,9 +85,15 @@ export default function AboutUs() {
                   </div>
                 </div>
               </div>
-            </div>
+            </motion.div>
 
-            <div className="w-full md:w-1/2 relative">
+            <motion.div
+              initial={{ opacity: 0, x: 50 }}
+              whileInView={{ opacity: 1, x: 0 }}
+              viewport={{ once: true, margin: "-100px" }}
+              transition={{ duration: 0.8, ease: "easeOut", delay: 0.2 }}
+              className="w-full md:w-1/2 relative"
+            >
               <div className="absolute -top-4 -left-4 w-24 h-24 bg-orange-100 rounded-full -z-10"></div>
               <div className="absolute -bottom-4 -right-4 w-32 h-32 bg-blue-100 rounded-full -z-10"></div>
               <img
@@ -84,12 +101,12 @@ export default function AboutUs() {
                 alt="Team meeting in modern office"
                 className="rounded-2xl shadow-2xl w-full h-auto object-cover"
               />
-            </div>
+            </motion.div>
           </div>
         </div>
       </section>
 
-      <section className="py-16 md:py-24 bg-gray-50">
+      <section className="py-16 md:py-24 bg-[rgba(0,0,0,0.02)]">
         <div className="container mx-auto px-4 text-center">
           <h2 className="text-3xl md:text-4xl font-bold text-[#0b264f] mb-4">Our Core Values</h2>
           <p className="text-gray-600 max-w-2xl mx-auto mb-16">
@@ -97,7 +114,11 @@ export default function AboutUs() {
           </p>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-8">
-            <div className="bg-white p-8 rounded-xl shadow-lg hover:shadow-xl transition-all border-b-4 border-transparent hover:border-orange-500 group">
+            <motion.div
+              animate={{ y: [0, -30, 0] }}
+              transition={{ repeat: Infinity, duration: 3.5, ease: "easeInOut", delay: 0 }}
+              className="bg-white p-8 rounded-xl shadow-lg hover:shadow-xl transition-all border-b-4 border-transparent hover:border-orange-500 group"
+            >
               <div className="w-16 h-16 bg-blue-50 rounded-full flex items-center justify-center mx-auto mb-6 group-hover:bg-blue-600 transition-colors">
                 <Shield className="w-8 h-8 text-blue-600 group-hover:text-white transition-colors" />
               </div>
@@ -105,9 +126,13 @@ export default function AboutUs() {
               <p className="text-gray-500 leading-relaxed">
                 We believe in zero hidden costs. Every document, approval, and price component is disclosed upfront.
               </p>
-            </div>
+            </motion.div>
 
-            <div className="bg-white p-8 rounded-xl shadow-lg hover:shadow-xl transition-all border-b-4 border-transparent hover:border-orange-500 group">
+            <motion.div
+              animate={{ y: [0, -30, 0] }}
+              transition={{ repeat: Infinity, duration: 3.5, ease: "easeInOut", delay: 0.2 }}
+              className="bg-white p-8 rounded-xl shadow-lg hover:shadow-xl transition-all border-b-4 border-transparent hover:border-orange-500 group"
+            >
               <div className="w-16 h-16 bg-blue-50 rounded-full flex items-center justify-center mx-auto mb-6 group-hover:bg-blue-600 transition-colors">
                 <Award className="w-8 h-8 text-blue-600 group-hover:text-white transition-colors" />
               </div>
@@ -115,9 +140,13 @@ export default function AboutUs() {
               <p className="text-gray-500 leading-relaxed">
                 We only list top-tier projects (Grade A developers) to ensure your asset appreciates over time.
               </p>
-            </div>
+            </motion.div>
 
-            <div className="bg-white p-8 rounded-xl shadow-lg hover:shadow-xl transition-all border-b-4 border-transparent hover:border-orange-500 group">
+            <motion.div
+              animate={{ y: [0, -30, 0] }}
+              transition={{ repeat: Infinity, duration: 3.5, ease: "easeInOut", delay: 0.4 }}
+              className="bg-white p-8 rounded-xl shadow-lg hover:shadow-xl transition-all border-b-4 border-transparent hover:border-orange-500 group"
+            >
               <div className="w-16 h-16 bg-blue-50 rounded-full flex items-center justify-center mx-auto mb-6 group-hover:bg-blue-600 transition-colors">
                 <Users className="w-8 h-8 text-blue-600 group-hover:text-white transition-colors" />
               </div>
@@ -125,12 +154,12 @@ export default function AboutUs() {
               <p className="text-gray-500 leading-relaxed">
                 From site visits to registration, our dedicated relationship managers are with you at every step.
               </p>
-            </div>
+            </motion.div>
           </div>
         </div>
       </section>
 
-      <section className="py-16 md:py-24 bg-white">
+      <section className="py-16 md:py-24 bg-transparent">
         <div className="container mx-auto px-4">
           <div className="grid md:grid-cols-2 gap-12 items-center">
             <div className="order-2 md:order-1">
@@ -163,50 +192,33 @@ export default function AboutUs() {
         </div>
       </section>
 
-      <section className="py-16 md:py-24 bg-gray-50">
+      <section className="py-16 md:py-24 bg-[rgba(0,0,0,0.02)]">
         <div className="container mx-auto px-4">
-          <div className="text-center mb-8">
+          <motion.div
+            initial={{ opacity: 0, y: 30 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, margin: "-50px" }}
+            transition={{ duration: 0.6, ease: "easeOut" }}
+            className="text-center mb-8"
+          >
             <h2 className="text-3xl md:text-4xl font-bold text-[#0b264f] mb-4">Meet The Leadership</h2>
             <p className="text-gray-600 max-w-2xl mx-auto">
               Driven by passion, guided by experience, and united by a shared commitment to global real estate excellence.
             </p>
-          </div>
+          </motion.div>
 
           <div className="max-w-6xl mx-auto space-y-8">
-            <div className="flex flex-col lg:flex-row bg-white rounded-3xl shadow-sm hover:shadow-md transition-shadow duration-300 border border-gray-100 overflow-hidden">
-              <div className="lg:w-2/5 bg-[#FB923C] p-4 md:p-6 flex items-center justify-center relative overflow-hidden">
-                <div className="flex flex-col sm:flex-row gap-8 md:gap-12 w-full justify-center">
-                  <div className="text-center group">
-                    <div className="w-28 h-28 md:w-32 md:h-32 mx-auto rounded-full mb-4 overflow-hidden border-4 border-white shadow-md transition-transform duration-300 group-hover:scale-105">
-                      <img src="/pankaj.png" alt="Pankaj Gupta" className="w-full h-full object-cover" />
-                    </div>
-                    <h3 className="font-bold text-lg text-gray-900 leading-tight">Pankaj <br />Gupta</h3>
-                    <p className="text-white text-xs font-bold tracking-widest uppercase mt-2">Partner</p>
-                  </div>
-                  <div className="text-center group">
-                    <div className="w-28 h-28 md:w-32 md:h-32 mx-auto rounded-full mb-4 overflow-hidden border-4 border-white shadow-md transition-transform duration-300 group-hover:scale-105">
-                      <img src="/atish.png" alt="Atish Agarwal" className="w-full h-full object-cover" />
-                    </div>
-                    <h3 className="font-bold text-lg text-gray-900 leading-tight">Atish<br />Agarwal</h3>
-                    <p className="text-white text-xs font-bold tracking-widest uppercase mt-2">Partner</p>
-                  </div>
-                </div>
-              </div>
-              <div className="lg:w-3/5 p-4 md:p-6 flex flex-col justify-center">
-                <div className="w-12 h-1 bg-orange-500 mb-6 rounded-full"></div>
-                <p className="text-gray-600 leading-relaxed text-[1.05rem]">
-                  <strong>Pankaj Gupta</strong> has built a strong presence in the diamond and jewellery industry as a manufacturer, wholesaler and retailer. He is also well known in the Hyderabad real estate market. <br /> <br />
-                  <strong>Atish Agarwal</strong> is an entrepreneur with diversified business interests across textiles, retail, fashion, jewellery, and real estate advisory. <br /> <br />
-                  Together, they are partners in <strong>Istana Realtors.</strong> They have successfully delivered multiple projects and are widely recognized personalities in Hyderabad.
-                </p>
-              </div>
-            </div>
-
-            <div className="flex flex-col lg:flex-row-reverse bg-white rounded-3xl shadow-sm hover:shadow-md transition-shadow duration-300 border border-gray-100 overflow-hidden">
+            <motion.div
+              initial={{ opacity: 0, y: 50 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true, margin: "-50px" }}
+              transition={{ duration: 0.7, ease: "easeOut" }}
+              className="flex flex-col lg:flex-row-reverse bg-white rounded-3xl shadow-sm hover:shadow-md transition-shadow duration-300 border border-gray-100 overflow-hidden"
+            >
               <div className="lg:w-2/5 bg-[#0b264f] p-4 md:p-6 flex items-center justify-center relative overflow-hidden">
                 <div className="absolute top-0 right-0 w-32 h-32 bg-blue-800 rounded-full opacity-30 -mr-16 -mt-16"></div>
                 <div className="text-center group relative z-10">
-                  <div className="w-32 h-32 md:w-40 md:h-40 mx-auto rounded-full mb-6 overflow-hidden border-4 border-blue-800/50 shadow-xl transition-transform duration-300 group-hover:scale-105">
+                  <div className="w-32 h-32 md:w-40 md:h-40 mx-auto rounded-2xl mb-6 overflow-hidden border-4 border-blue-800/50 shadow-xl transition-transform duration-300 group-hover:scale-105">
                     <img src="/deepak.png" alt="Deepak Kavadia" className="w-full h-full object-cover" />
                   </div>
                   <h3 className="font-bold text-2xl text-white mb-1">Deepak Kavadia</h3>
@@ -222,12 +234,47 @@ export default function AboutUs() {
                   Deepak brings an important international perspective to Investate India, helping NRI investors engage with Indian opportunities through a trusted global interface.
                 </p>
               </div>
-            </div>
+            </motion.div>
+
+            <motion.div
+              initial={{ opacity: 0, y: 50 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true, margin: "-50px" }}
+              transition={{ duration: 0.7, ease: "easeOut", delay: 0.2 }}
+              className="flex flex-col lg:flex-row bg-white rounded-3xl shadow-sm hover:shadow-md transition-shadow duration-300 border border-gray-100 overflow-hidden"
+            >
+              <div className="lg:w-2/5 bg-[#FB923C] p-4 md:p-6 flex items-center justify-center relative overflow-hidden">
+                <div className="flex flex-col sm:flex-row gap-8 md:gap-12 w-full justify-center">
+                  <div className="text-center group">
+                    <div className="w-28 h-28 md:w-32 md:h-32 mx-auto rounded-2xl mb-4 overflow-hidden border-4 border-white shadow-md transition-transform duration-300 group-hover:scale-105">
+                      <img src="/pankaj.png" alt="Pankaj Gupta" className="w-full h-full object-cover" />
+                    </div>
+                    <h3 className="font-bold text-lg text-gray-900 leading-tight">Pankaj <br />Gupta</h3>
+                    <p className="text-white text-xs font-bold tracking-widest uppercase mt-2">Partner</p>
+                  </div>
+                  <div className="text-center group">
+                    <div className="w-28 h-28 md:w-32 md:h-32 mx-auto rounded-2xl mb-4 overflow-hidden border-4 border-white shadow-md transition-transform duration-300 group-hover:scale-105">
+                      <img src="/atish.png" alt="Atish Agarwal" className="w-full h-full object-cover" />
+                    </div>
+                    <h3 className="font-bold text-lg text-gray-900 leading-tight">Atish<br />Agarwal</h3>
+                    <p className="text-white text-xs font-bold tracking-widest uppercase mt-2">Partner</p>
+                  </div>
+                </div>
+              </div>
+              <div className="lg:w-3/5 p-4 md:p-6 flex flex-col justify-center">
+                <div className="w-12 h-1 bg-orange-500 mb-6 rounded-full"></div>
+                <p className="text-gray-600 leading-relaxed text-[1.05rem]">
+                  <strong>Pankaj Gupta</strong> has built a strong presence in the diamond and jewellery industry as a manufacturer, wholesaler and retailer. He is also well known in the Hyderabad real estate market. <br /> <br />
+                  <strong>Atish Agarwal</strong> is an entrepreneur with diversified business interests across textiles, retail, fashion, jewellery, and real estate advisory. <br /> <br />
+                  Together, they are partners in <strong>Istana Realtors.</strong> They have successfully delivered multiple projects and are widely recognized personalities in Hyderabad.
+                </p>
+              </div>
+            </motion.div>
           </div>
         </div>
       </section>
 
-      <section className="py-20 bg-[#0b264f] relative overflow-hidden">
+      {/* <section className="py-20 bg-[#0b264f] relative overflow-hidden">
         <div className="absolute top-0 right-0 w-64 h-64 bg-blue-800 rounded-full opacity-20 -mr-32 -mt-32"></div>
         <div className="absolute bottom-0 left-0 w-64 h-64 bg-orange-600 rounded-full opacity-10 -ml-32 -mb-32"></div>
 
@@ -248,7 +295,7 @@ export default function AboutUs() {
             </button>
           </div>
         </div>
-      </section>
+      </section> */}
 
       <Footer />
     </div>

@@ -53,7 +53,7 @@ const LoginDialog = ({ isOpen, onOpenChange, onSwitchToRegister, initialData = {
       onOpenChange(false);
 
       if (userData.role === 'admin') router.push('/admin/dashboard');
-      else if (userData.role === 'builder') router.push('/partner/dashboard');
+      else if (userData.role === 'builder') router.push('/builder/dashboard');
       else router.push('/dashboard');
 
     } catch (err) {
@@ -110,7 +110,7 @@ const LoginDialog = ({ isOpen, onOpenChange, onSwitchToRegister, initialData = {
     onOpenChange(false);
 
     if (userData.role === 'admin') router.push('/admin/dashboard');
-    else if (userData.role === 'builder') router.push('/partner/dashboard');
+    else if (userData.role === 'builder') router.push('/builder/dashboard');
     else router.push('/dashboard');
   };
 
@@ -188,16 +188,16 @@ const LoginDialog = ({ isOpen, onOpenChange, onSwitchToRegister, initialData = {
         <DialogDescription className="sr-only">
           Sign in as investor or partner to access your dashboard.
         </DialogDescription>
-        
+
         {/* Vertex Inspired Sidebar - High Key & Airy */}
         <div className="hidden lg:flex lg:w-[35%] relative bg-gray-50 flex-col justify-between p-12 overflow-hidden transition-all duration-700">
           <div className="absolute inset-0 z-0">
             {/* Minimal overlay for text readability, but keeping image very clear */}
             <div className="absolute inset-0 bg-white/10 z-[1]" />
-            <img 
-              src={activeContent.image} 
-              alt="bg" 
-              className="absolute inset-0 w-full h-full object-cover opacity-[0.6] brightness-110 contrast-105 saturate-[1.1]" 
+            <img
+              src={activeContent.image}
+              alt="bg"
+              className="absolute inset-0 w-full h-full object-cover opacity-[0.6] brightness-110 contrast-105 saturate-[1.1]"
             />
             {/* Subtle Decorative Blobs */}
             <div className="absolute top-[-5%] right-[-5%] w-[40%] h-[20%] bg-orange-200/20 blur-[60px] rounded-full" />
@@ -217,26 +217,26 @@ const LoginDialog = ({ isOpen, onOpenChange, onSwitchToRegister, initialData = {
 
             {/* Repositioned Floating Chips - Moved down and simplified for a cleaner look */}
             <div className="relative h-72 mt-6 pointer-events-none">
-               <div className="absolute top-[5%] left-[5%] px-4 py-2 bg-gray-900 rounded-full shadow-xl border border-gray-800 flex items-center gap-2 animate-float-slow">
-                  <div className="w-1.5 h-1.5 rounded-full bg-orange-400 shadow-[0_0_8px_rgba(251,146,60,0.3)]" />
-                  <span className="text-[9px] font-black text-white uppercase tracking-[0.2em]">Growth Intel</span>
-               </div>
-               <div className="absolute top-[22%] right-[8%] px-4 py-2 bg-white rounded-full shadow-xl border border-gray-100 flex items-center gap-2 animate-float">
-                  <div className="w-1.5 h-1.5 rounded-full bg-green-500 shadow-[0_0_8px_rgba(34,197,94,0.3)]" />
-                  <span className="text-[9px] font-black text-gray-700 uppercase tracking-[0.2em]">Live Yield</span>
-               </div>
-               <div className="absolute top-[48%] left-[0%] px-4 py-2 bg-white/90 backdrop-blur-md rounded-full shadow-xl border border-white/50 flex items-center gap-2 animate-float-sideways">
-                  <div className="w-1.5 h-1.5 rounded-full bg-blue-500 shadow-[0_0_8px_rgba(59,130,246,0.3)]" />
-                  <span className="text-[9px] font-black text-gray-700 uppercase tracking-[0.2em]">Portfolio Live</span>
-               </div>
-               <div className="absolute top-[38%] left-[55%] px-4 py-2 bg-gray-900 rounded-full shadow-xl border border-gray-800 flex items-center gap-2 animate-float-slow">
-                  <div className="w-1.5 h-1.5 rounded-full bg-purple-400 shadow-[0_0_8px_rgba(192,132,252,0.3)]" />
-                  <span className="text-[9px] font-black text-white uppercase tracking-[0.2em]">Secure Access</span>
-               </div>
-               <div className="absolute top-[75%] left-[12%] px-4 py-2 bg-gray-900 rounded-full shadow-xl border border-gray-800 flex items-center gap-2 animate-float">
-                  <div className="w-1.5 h-1.5 rounded-full bg-cyan-400 shadow-[0_0_8px_rgba(34,211,238,0.3)]" />
-                  <span className="text-[9px] font-black text-white uppercase tracking-[0.2em]">Wealth Intel</span>
-               </div>
+              <div className="absolute top-[5%] left-[5%] px-4 py-2 bg-gray-900 rounded-full shadow-xl border border-gray-800 flex items-center gap-2 animate-float-slow">
+                <div className="w-1.5 h-1.5 rounded-full bg-orange-400 shadow-[0_0_8px_rgba(251,146,60,0.3)]" />
+                <span className="text-[9px] font-black text-white uppercase tracking-[0.2em]">Growth Intel</span>
+              </div>
+              <div className="absolute top-[22%] right-[8%] px-4 py-2 bg-white rounded-full shadow-xl border border-gray-100 flex items-center gap-2 animate-float">
+                <div className="w-1.5 h-1.5 rounded-full bg-green-500 shadow-[0_0_8px_rgba(34,197,94,0.3)]" />
+                <span className="text-[9px] font-black text-gray-700 uppercase tracking-[0.2em]">Live Yield</span>
+              </div>
+              <div className="absolute top-[48%] left-[0%] px-4 py-2 bg-white/90 backdrop-blur-md rounded-full shadow-xl border border-white/50 flex items-center gap-2 animate-float-sideways">
+                <div className="w-1.5 h-1.5 rounded-full bg-blue-500 shadow-[0_0_8px_rgba(59,130,246,0.3)]" />
+                <span className="text-[9px] font-black text-gray-700 uppercase tracking-[0.2em]">Portfolio Live</span>
+              </div>
+              <div className="absolute top-[38%] left-[55%] px-4 py-2 bg-gray-900 rounded-full shadow-xl border border-gray-800 flex items-center gap-2 animate-float-slow">
+                <div className="w-1.5 h-1.5 rounded-full bg-purple-400 shadow-[0_0_8px_rgba(192,132,252,0.3)]" />
+                <span className="text-[9px] font-black text-white uppercase tracking-[0.2em]">Secure Access</span>
+              </div>
+              <div className="absolute top-[75%] left-[12%] px-4 py-2 bg-gray-900 rounded-full shadow-xl border border-gray-800 flex items-center gap-2 animate-float">
+                <div className="w-1.5 h-1.5 rounded-full bg-cyan-400 shadow-[0_0_8px_rgba(34,211,238,0.3)]" />
+                <span className="text-[9px] font-black text-white uppercase tracking-[0.2em]">Wealth Intel</span>
+              </div>
             </div>
 
             {/* Description & Points Commented Out as requested */}
@@ -259,22 +259,22 @@ const LoginDialog = ({ isOpen, onOpenChange, onSwitchToRegister, initialData = {
 
           <div className="relative z-20 space-y-5">
             <div className="pt-8 border-t border-black/5 flex flex-col gap-4">
-               <div className="flex items-center gap-4">
-                  <div className="flex -space-x-3">
-                     {[1, 2, 3].map((i) => (
-                       <div key={i} className="w-9 h-9 rounded-full border-2 border-white bg-gray-200 overflow-hidden shadow-sm">
-                         <img src={`https://i.pravatar.cc/100?img=${i + 10}`} alt="u" className="w-full h-full object-cover" />
-                       </div>
-                     ))}
-                  </div>
-                  <div className="flex flex-col">
-                    <p className="text-[10px] font-black text-gray-900 uppercase tracking-widest">Global Network</p>
-                    <p className="text-[9px] font-bold text-gray-400 uppercase tracking-tighter">Trusted by 2k+ Professionals</p>
-                  </div>
-               </div>
-               <p className="text-[10px] text-gray-500 font-medium leading-tight max-w-[240px]">
-                 "Access to institutional-grade assets with the click of a button."
-               </p>
+              <div className="flex items-center gap-4">
+                <div className="flex -space-x-3">
+                  {[1, 2, 3].map((i) => (
+                    <div key={i} className="w-9 h-9 rounded-full border-2 border-white bg-gray-200 overflow-hidden shadow-sm">
+                      <img src={`https://i.pravatar.cc/100?img=${i + 10}`} alt="u" className="w-full h-full object-cover" />
+                    </div>
+                  ))}
+                </div>
+                <div className="flex flex-col">
+                  <p className="text-[10px] font-black text-gray-900 uppercase tracking-widest">Global Network</p>
+                  <p className="text-[9px] font-bold text-gray-400 uppercase tracking-tighter">Trusted by 2k+ Professionals</p>
+                </div>
+              </div>
+              <p className="text-[10px] text-gray-500 font-medium leading-tight max-w-[240px]">
+                "Access to institutional-grade assets with the click of a button."
+              </p>
             </div>
           </div>
         </div>
@@ -306,10 +306,10 @@ const LoginDialog = ({ isOpen, onOpenChange, onSwitchToRegister, initialData = {
             </div>
 
             <div className="text-left mb-6">
-               <h2 className="text-2xl font-black tracking-tight text-gray-900 uppercase">
-                  Log In
-               </h2>
-               <p className="text-gray-400 font-bold mt-1 tracking-wide text-xs">Welcome back!</p>
+              <h2 className="text-2xl font-black tracking-tight text-gray-900 uppercase">
+                Log In
+              </h2>
+              <p className="text-gray-400 font-bold mt-1 tracking-wide text-xs">Welcome back!</p>
             </div>
 
             {error && (
@@ -341,9 +341,9 @@ const LoginDialog = ({ isOpen, onOpenChange, onSwitchToRegister, initialData = {
                 </div>
               </div>
 
-              <Button 
-                type="submit" 
-                className="w-full h-12 bg-gray-900 hover:bg-black text-white font-black text-base rounded-[1.25rem] mt-4 shadow-2xl shadow-black/10 transition-all hover:scale-[1.02] active:scale-[0.98]" 
+              <Button
+                type="submit"
+                className="w-full h-12 bg-gray-900 hover:bg-black text-white font-black text-base rounded-[1.25rem] mt-4 shadow-2xl shadow-black/10 transition-all hover:scale-[1.02] active:scale-[0.98]"
                 disabled={submitting}
               >
                 {submitting ? <><Loader2 className="mr-2 h-5 w-5 animate-spin" /> Signing In...</> : <div className="flex items-center justify-center gap-3 text-sm uppercase tracking-wider font-black">Sign In <ArrowRight className="h-5 w-5" /></div>}
