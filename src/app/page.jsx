@@ -14,14 +14,14 @@ import { Loader2, Search, Users, FileText, Gavel, ShieldCheck, Globe } from 'luc
 
 const heroSlides = [
     {
-        image: '/images/hero_modern_cityscape.png',
+        image: '/images/hero_indian_luxury.png',
         tag: 'India\'s Most Trusted Gateway',
         title: 'Bridging Global NRIs to',
         highlight: 'Verified Indian Real Estate',
         subtitle: 'Institutional-grade transparency, verified developer credentials, and professional on-ground representation for the global Indian diaspora.'
     },
     {
-        image: '/images/hero_indian_luxury.png',
+        image: '/images/hero_modern_cityscape.png',
         tag: 'Institutional Standards',
         title: 'Secure Your Future with',
         highlight: 'Digital Trust & Integrity',
@@ -40,13 +40,13 @@ const contentDataForSection2 = [
         id: "02",
         title: "The Standard",
         text: "We mandate standardized disclosures—including RERA compliance and financial health—ensuring you invest based on merit, not marketing.",
-        image: "https://images.unsplash.com/photo-1503387762-592deb58ef4e?q=80&w=1000&auto=format&fit=crop" /* Premium blueprint vetting in front of a real building facade representing RERA compliance, strict standards, and structural audits */
+        image: "https://images.unsplash.com/photo-1554224155-8d04cb21cd6c?q=80&w=1000&auto=format&fit=crop"
     },
     {
         id: "03",
         title: "The Focus",
         text: "Presenting builder-declared information in a clean, transparent manner to empower you with the clarity needed for remote decision-making.",
-        image: "https://images.unsplash.com/photo-1563986768609-322da13575f3?q=80&w=1000&auto=format&fit=crop" /* Sleek modern tablet showing premium architectural property layout, representing direct builder-declared information and remote decision-making */
+        image: "https://images.unsplash.com/photo-1460925895917-afdab827c52f?q=80&w=1000&auto=format&fit=crop"
     }
 ];
 
@@ -332,7 +332,7 @@ export default function Index() {
                                 className="accordion-card"
                             >
                                 <div className="accordion-card-bg">
-                                    <img src={item.image} alt={item.title} loading="lazy" />
+                                    <img src={item.image} alt={item.title} loading="lazy" decoding="async" />
                                 </div>
                                 <div className="accordion-card-content">
                                     <div className="accordion-card-header">
@@ -514,6 +514,7 @@ export default function Index() {
                                     height={600}
                                     style={{ width: '100%', height: '100%', objectFit: 'cover' }}
                                     loading="lazy"
+                                    decoding="async"
                                 />
                             </div>
                             {/* Overlapping Image (Small) */}
@@ -536,6 +537,7 @@ export default function Index() {
                                     height={600}
                                     style={{ width: '100%', height: '100%', objectFit: 'cover' }}
                                     loading="lazy"
+                                    decoding="async"
                                 />
                             </div>
                         </motion.div>
@@ -562,14 +564,14 @@ export default function Index() {
                                     ))}
                                 </div>
                                 <div className="dashboard-tabs-nav md:hidden">
-                                    <button className="tabs-nav-btn prev" aria-label="Scroll steps left" onClick={() => document.getElementById('dashboard-tabs-row').scrollBy({ left: -150, behavior: 'smooth' })}>❮</button>
-                                    <button className="tabs-nav-btn next" aria-label="Scroll steps right" onClick={() => document.getElementById('dashboard-tabs-row').scrollBy({ left: 150, behavior: 'smooth' })}>❯</button>
+                                    <button className="tabs-nav-btn prev" onClick={() => document.getElementById('dashboard-tabs-row').scrollBy({ left: -150, behavior: 'smooth' })}>❮</button>
+                                    <button className="tabs-nav-btn next" onClick={() => document.getElementById('dashboard-tabs-row').scrollBy({ left: 150, behavior: 'smooth' })}>❯</button>
                                 </div>
                             </div>
                             <div className="dashboard-display-window">
                                 <div className="display-content">
                                     <div className="display-image-box">
-                                        <img src={stepImages[activeStepIndex]} alt={`Step ${activeStepData.id}`} loading="lazy" />
+                                        <img src={stepImages[activeStepIndex]} alt={`Step ${activeStepData.id}`} loading="lazy" decoding="async" />
                                     </div>
                                     <div className="display-text-box">
                                         <div className="display-step-badge">Step {activeStepData.id}</div>
@@ -627,7 +629,7 @@ export default function Index() {
                             <h2 className="team-main-title">Meet the Team Behind <span className="text-highlight">Your Trust</span></h2>
                             <p className="team-main-desc">
                                 <strong>Built on transparency. Driven by experience.</strong><br />
-                                Investate India is led by Deepak Kavadia, Pankaj Gupta, and Atish Agarwal
+                                Investate India is led by Deepak Kavadia, Pankaj Gupta, and Atish Agarwal.
                             </p>
                             {/* <div className="team-nav-arrows-inline">
                                 <button className="team-nav-btn prev"><span>❮</span></button>
@@ -639,7 +641,7 @@ export default function Index() {
                         {teamMembers.map((member, index) => (
                             <div className="team-card-premium" key={index}>
                                 <div className="team-card-image">
-                                    <img src={member.image} alt={member.name} loading="lazy" />
+                                    <img src={member.image} alt={member.name} loading="lazy" decoding="async" />
                                 </div>
                                 <div className="team-card-info">
                                     <h4 className="team-card-name">{member.name}</h4>
@@ -753,6 +755,7 @@ export default function Index() {
                                     src="/images/hero_modern_cityscape_mobile.jpg"
                                     alt="Modern Indian Cityscape"
                                     loading="lazy"
+                                    decoding="async"
                                     width={600}
                                     height={400}
                                 />
@@ -778,6 +781,55 @@ export default function Index() {
                         <button onClick={() => handleAuthClick('register', 'investor')} className="cta-minimal-btn">
                             Register Your Interest <span className="ml-2">→</span>
                         </button>
+                    </div>
+                </div>
+            </section>
+
+            <section className="fullscreen-section section-light py-20 border-t border-gray-100" id="nri-guide">
+                <div className="container max-w-4xl mx-auto">
+                    <div className="section-heading text-center mb-12">
+                        <h2 className="section-title text-3xl font-bold text-gray-900">
+                            Comprehensive Guide to <span className="text-highlight">NRI Real Estate Investment in India</span>
+                        </h2>
+                        <p className="section-subtitle text-gray-600 mt-4">
+                            Crucial insights, regulatory frameworks, and key considerations for global Indians investing in Indian property.
+                        </p>
+                    </div>
+
+                    <div className="prose prose-lg text-gray-700 space-y-8 leading-relaxed text-left">
+                        <div>
+                            <h3 className="text-xl font-semibold text-gray-900 mb-3">Understanding the FEMA Framework for NRI Investments</h3>
+                            <p>
+                                Under the Foreign Exchange Management Act (FEMA), Non-Resident Indians (NRIs) and Persons of Indian Origin (PIOs) have general permission from the Reserve Bank of India (RBI) to acquire residential and commercial properties in India. There is no limit on the number of residential or commercial properties an NRI can own. However, purchasing agricultural land, plantation property, or farmhouse land is generally restricted unless specific permission is obtained from the authorities.
+                            </p>
+                        </div>
+
+                        <div>
+                            <h3 className="text-xl font-semibold text-gray-900 mb-3">The Crucial Role of RERA (Real Estate Regulatory Authority)</h3>
+                            <p>
+                                The introduction of the Real Estate (Regulation and Development) Act, 2016 (RERA) has revolutionized the Indian property market, bringing unprecedented transparency and accountability. Every project listed on Investate India is cross-referenced with state RERA registries to verify project completion timelines, financial escrow compliance, builder credentials, and sanction plans. This helps eliminate the historical risk of project delays and builder defaults.
+                            </p>
+                        </div>
+
+                        <div>
+                            <h3 className="text-xl font-semibold text-gray-900 mb-3">Tax Implications: TDS, Capital Gains, and Repatriation</h3>
+                            <p>
+                                When purchasing a property, NRIs should be aware of Tax Deducted at Source (TDS) regulations. For secondary market transactions, the buyer must deduct TDS at the rate of 20% (plus applicable surcharges) for long-term capital gains, or 30% for short-term capital gains, unless a lower tax deduction certificate is obtained by the seller. Repatriation of sales proceeds is permitted up to USD 1 million per financial year out of NRO accounts, subject to documentation and payment of applicable taxes.
+                            </p>
+                        </div>
+
+                        <div>
+                            <h3 className="text-xl font-semibold text-gray-900 mb-3">Key Growth Metros for NRI Property Investment</h3>
+                            <p>
+                                India's primary metropolitan areas continue to drive high capital appreciation and rental yields:
+                            </p>
+                            <ul className="list-disc pl-6 space-y-2 mt-2">
+                                <li><strong>Bangalore (Bengaluru):</strong> The Silicon Valley of India, known for robust IT/ITeS sector growth, premium tech parks, and high demand for luxury villa communities and micro-markets like Whitefield and Sarjapur.</li>
+                                <li><strong>Hyderabad:</strong> Featuring state-of-the-art infrastructure, rapid growth in the IT corridor (Gachibowli, HITEC City), and highly competitive pricing per square foot compared to other Tier-1 cities.</li>
+                                <li><strong>Mumbai Metropolitan Region (MMR):</strong> The financial capital, commanding premium valuations and offering high rental yields, especially in redevelopment projects and new trans-harbor link corridors.</li>
+                                <li><strong>Delhi-NCR (Gurgaon & Noida):</strong> Commercial hubs with premium residential skyscrapers, excellent expressways, and high-end lifestyle amenities preferred by the diaspora.</li>
+                            </ul>
+                        </div>
                     </div>
                 </div>
             </section>
