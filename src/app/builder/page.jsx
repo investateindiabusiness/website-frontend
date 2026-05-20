@@ -127,6 +127,16 @@ export default function BuilderHome() {
         }
     };
 
+    const handleSwitchToRegister = (dataPayload) => {
+        setIsLoginOpen(false);
+        if (typeof dataPayload === 'string') {
+            setDialogData({ userType: dataPayload });
+        } else if (dataPayload) {
+            setDialogData(dataPayload);
+        }
+        setIsRegisterOpen(true);
+    };
+
     useEffect(() => {
         const timer = setInterval(() => {
             setHeroIndex((prev) => (prev + 1) % heroSlides.length);
@@ -523,6 +533,12 @@ export default function BuilderHome() {
 
             <Footer />
 
+            <LoginDialog
+                isOpen={isLoginOpen}
+                onOpenChange={setIsLoginOpen}
+                onSwitchToRegister={handleSwitchToRegister}
+                initialData={dialogData}
+            />
             <RegisterDialog
                 isOpen={isRegisterOpen}
                 onOpenChange={setIsRegisterOpen}

@@ -75,7 +75,7 @@ const Header = ({ transparent = false }) => {
     }
     switch (user.role) {
       case 'admin': return [{ label: 'Dashboard', path: '/admin/dashboard' }, { label: 'Builders', path: '/admin/builders' }, { label: 'Investors', path: '/admin/investors' }, { label: 'Projects', path: '/admin/projects' }, { label: 'Leads', path: '/admin/leads' }, { label: 'Inquiries', path: '/admin/inquiries' }, { label: 'Newsletter', path: '/admin/newsletter' }];
-      case 'builder': return [{ label: 'Dashboard', path: '/partner/dashboard' }, { label: 'Projects', path: '/partner/projects' }];
+      case 'builder': return [{ label: 'Dashboard', path: '/builder/dashboard' }, { label: 'Projects', path: '/builder/projects' }];
       case 'investor': return [{ label: 'Dashboard', path: '/dashboard' }, { label: 'Properties', path: '/properties' }];
       default: return [{ label: 'Home', path: '/' }];
     }
@@ -105,7 +105,22 @@ const Header = ({ transparent = false }) => {
             </ul>
           </nav>
 
-
+          {/* Desktop Auth Actions */}
+          {user ? (
+            <div className="hidden md:flex items-center gap-3 mr-4">
+              <div className="flex items-center gap-2 text-xs font-bold bg-gray-800/60 px-4.5 py-2 rounded-full border border-gray-700/50 text-gray-200 shadow-inner">
+                <UserCircle className="w-4 h-4 text-orange-500 flex-shrink-0" />
+                <span className="max-w-[120px] truncate">{user.name || user.email.split('@')[0]}</span>
+                <span className="text-[9px] uppercase tracking-wider bg-orange-500/10 text-orange-400 px-1.5 py-0.5 rounded border border-orange-500/20">{user.role}</span>
+              </div>
+              <Button 
+                onClick={handleLogout} 
+                className="h-9 px-4 text-xs font-black uppercase tracking-widest text-red-400 bg-transparent hover:text-red-300 hover:bg-red-950/20 flex items-center gap-1.5 rounded-full transition-all border border-red-900/30 hover:border-red-900/50"
+              >
+                <LogOut className="w-3.5 h-3.5" /> Logout
+              </Button>
+            </div>
+          ) : null}
 
           <div className="md:hidden flex items-center gap-4">
             <button onClick={() => setMobileMenuOpen(!mobileMenuOpen)} className="text-gray-300 hover:text-white">
