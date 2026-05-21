@@ -785,6 +785,7 @@ export default function Index() {
                 </div>
             </section>
 
+            {/* 
             <section className="fullscreen-section section-light py-20 border-t border-gray-100" id="nri-guide">
                 <div className="container max-w-4xl mx-auto">
                     <div className="section-heading text-center mb-12">
@@ -827,12 +828,13 @@ export default function Index() {
                                 <li><strong>Bangalore (Bengaluru):</strong> The Silicon Valley of India, known for robust IT/ITeS sector growth, premium tech parks, and high demand for luxury villa communities and micro-markets like Whitefield and Sarjapur.</li>
                                 <li><strong>Hyderabad:</strong> Featuring state-of-the-art infrastructure, rapid growth in the IT corridor (Gachibowli, HITEC City), and highly competitive pricing per square foot compared to other Tier-1 cities.</li>
                                 <li><strong>Mumbai Metropolitan Region (MMR):</strong> The financial capital, commanding premium valuations and offering high rental yields, especially in redevelopment projects and new trans-harbor link corridors.</li>
-                                <li><strong>Delhi-NCR (Gurgaon & Noida):</strong> Commercial hubs with premium residential skyscrapers, excellent expressways, and high-end lifestyle amenities preferred by the diaspora.</li>
+                                <li><strong>Delhi-NCR (Gurgaon & Noida):</strong> Commercial hubs with premium residential skyscrapers, expressways, and high-end lifestyle amenities preferred by the diaspora.</li>
                             </ul>
                         </div>
                     </div>
                 </div>
             </section>
+            */}
 
             <Footer />
 
