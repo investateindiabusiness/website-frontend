@@ -24,7 +24,7 @@ export const apiRequest = async (endpoint, options = {}) => {
         window.location.href = '/';
         return Promise.reject('Session expired');
       } else {
-        throw new Error(data.message || 'Authentication failed');
+        return Promise.reject({ message: data.message || 'Authentication failed', ...data });
       }
     }
 
@@ -35,13 +35,13 @@ export const apiRequest = async (endpoint, options = {}) => {
         return Promise.reject(data);
       }
 
-      // Otherwise, throw a standard text error
-      throw new Error(data.message || 'Something went wrong');
+      // Otherwise, reject with a plain object containing the message to avoid Next.js dev overlay
+      return Promise.reject({ message: data.message || 'Something went wrong', ...data });
     }
 
     return data;
   } catch (error) {
-    console.error("API Request Error:", error);
+    console.warn("API Request Error:", error);
     throw error;
   }
 };
