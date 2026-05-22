@@ -1,4 +1,14 @@
-const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL;
+const getApiBaseUrl = () => {
+  const envUrl = process.env.NEXT_PUBLIC_API_BASE_URL || '';
+  if (typeof window !== 'undefined') {
+    if (envUrl.includes('dev.investateindia.api.brvteck.com')) {
+      return '';
+    }
+  }
+  return envUrl;
+};
+
+const API_BASE_URL = getApiBaseUrl();
 
 export const apiRequest = async (endpoint, options = {}) => {
   const session = JSON.parse(localStorage.getItem('user_session'));
