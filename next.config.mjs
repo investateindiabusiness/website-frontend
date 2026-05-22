@@ -1,7 +1,14 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   reactStrictMode: true,
-  /* config options here */
+  async rewrites() {
+    return [
+      {
+        source: '/api/:path*',
+        destination: 'https://dev.investateindia.api.brvteck.com/api/:path*',
+      },
+    ];
+  },
 };
 
 export default nextConfig;
