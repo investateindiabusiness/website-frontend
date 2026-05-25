@@ -168,7 +168,7 @@ const LoginDialog = ({ isOpen, onOpenChange, onSwitchToRegister, initialData = {
     builder: {
       image: "https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?q=80&w=2070&auto=format&fit=crop",
       title: "Build the future with", highlight: "precision.",
-      desc: "Access your partner dashboard to manage projects, track milestones, and connect with investors seamlessly.",
+      desc: "Access your builder dashboard to manage projects, track milestones, and connect with investors seamlessly.",
       emailLabel: "Work Email"
     }
   };
@@ -186,7 +186,7 @@ const LoginDialog = ({ isOpen, onOpenChange, onSwitchToRegister, initialData = {
         </DialogTitle>
 
         <DialogDescription className="sr-only">
-          Sign in as investor or partner to access your dashboard.
+          Sign in as investor or builder to access your dashboard.
         </DialogDescription>
 
         {/* Vertex Inspired Sidebar - High Key & Airy */}
@@ -301,7 +301,7 @@ const LoginDialog = ({ isOpen, onOpenChange, onSwitchToRegister, initialData = {
                 }}
                 className={`flex-1 py-3.5 text-[10px] font-black uppercase tracking-widest rounded-[1rem] transition-all duration-300 ${userType === 'builder' ? 'bg-white shadow-lg text-orange-600 ring-1 ring-black/5' : 'text-gray-400 hover:text-gray-600'}`}
               >
-                Partner
+                Builder
               </button>
             </div>
 
@@ -353,7 +353,7 @@ const LoginDialog = ({ isOpen, onOpenChange, onSwitchToRegister, initialData = {
                 <p className="text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-3">Don't have an account?</p>
                 <div className="flex items-center justify-center gap-4">
                   <button type="button" onClick={() => onSwitchToRegister('investor')} className="h-9 px-5 rounded-full border border-gray-200 text-[9px] font-black uppercase tracking-widest text-gray-600 hover:bg-gray-50 hover:border-orange-200 hover:text-orange-600 transition-all">Investor</button>
-                  <button type="button" onClick={() => onSwitchToRegister('builder')} className="h-9 px-5 rounded-full border border-gray-200 text-[9px] font-black uppercase tracking-widest text-gray-600 hover:bg-gray-50 hover:border-orange-200 hover:text-orange-600 transition-all">Partner</button>
+                  <button type="button" onClick={() => onSwitchToRegister('builder')} className="h-9 px-5 rounded-full border border-gray-200 text-[9px] font-black uppercase tracking-widest text-gray-600 hover:bg-gray-50 hover:border-orange-200 hover:text-orange-600 transition-all">Builder</button>
                 </div>
               </div>
             </form>

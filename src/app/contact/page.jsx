@@ -105,7 +105,7 @@ export default function ContactUs() {
                       <select name="subject" value={formData.subject} onChange={handleChange} className="w-full px-4 py-3 rounded-lg border bg-gray-50 outline-none text-gray-600">
                         <option value="">Select an option</option>
                         <option value="Buying Property">Buying Property</option>
-                        <option value="Partnering with Investate">Partnering with Investate</option>
+                        <option value="Listing as Builder">Listing as Builder</option>
                         <option value="Other Inquiry">Other Inquiry</option>
                       </select>
                       <textarea required name="message" value={formData.message} onChange={handleChange} rows="4" className="w-full px-4 py-3 rounded-lg border bg-gray-50 outline-none resize-none" placeholder="Message"></textarea>

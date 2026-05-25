@@ -298,7 +298,7 @@ const RegisterDialog = ({ isOpen, onOpenChange, onLoginClick, initialData = {} }
       image: "https://images.unsplash.com/photo-1504307651254-35680f356dfd?q=80&w=2070&auto=format&fit=crop",
       title: isUpdateMode ? "Update your" : (isForm2Mode ? "Complete your" : "Scale your projects"),
       highlight: isUpdateMode ? "information." : (isForm2Mode ? "profile." : "without limits."),
-      desc: isUpdateMode ? "Please update the requested fields to finalize your builder verification." : (isForm2Mode ? "Almost there! Complete the final details to finalize your partner account." : "Join our exclusive network of top-tier builders. Access global investors and streamline fundraising."),
+      desc: isUpdateMode ? "Please update the requested fields to finalize your builder verification." : (isForm2Mode ? "Almost there! Complete the final details to finalize your builder account." : "Join our exclusive network of top-tier builders. Access global investors and streamline fundraising."),
       features: ["Verified Investor Network", "Automated Compliance", "Fast-track Funding"]
     }
   };
@@ -327,7 +327,7 @@ const RegisterDialog = ({ isOpen, onOpenChange, onLoginClick, initialData = {} }
           {isUpdateMode ? 'Update Account' : 'Register Account'}
         </DialogTitle>
         <DialogDescription className="sr-only">
-          {isUpdateMode ? 'Update your builder profile details.' : 'Create an account to join Investate India as an investor or partner.'}
+          {isUpdateMode ? 'Update your builder profile details.' : 'Create an account to join Investate India as an investor or builder.'}
         </DialogDescription>
         
         {/* Vertex Inspired Sidebar - High Key & Airy */}
@@ -454,14 +454,14 @@ const RegisterDialog = ({ isOpen, onOpenChange, onLoginClick, initialData = {} }
                       onClick={() => setUserType('builder')} 
                       className={`flex-1 py-3.5 text-[10px] font-black uppercase tracking-widest rounded-[1rem] transition-all duration-300 ${userType === 'builder' ? 'bg-white shadow-lg text-orange-600 ring-1 ring-black/5' : 'text-gray-400 hover:text-gray-600'}`}
                     >
-                      Partner
+                      Builder
                     </button>
                   </div>
                 )}
 
                 <div className="text-left mb-6">
                    <h2 className="text-2xl font-black tracking-tight text-gray-900 uppercase">
-                      {step === 1 ? (userType === 'investor' ? "Investor Portal" : "Partner Portal") : step === 2 ? "Basic Details" : "Verification"}
+                      {step === 1 ? (userType === 'investor' ? "Investor Portal" : "Builder Portal") : step === 2 ? "Basic Details" : "Verification"}
                    </h2>
                    <p className="text-gray-400 font-bold mt-1 tracking-wide uppercase text-[9px]">Step 0{step}</p>
                 </div>

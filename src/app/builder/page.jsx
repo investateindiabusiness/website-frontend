@@ -239,10 +239,10 @@ export default function BuilderHome() {
                         </AnimatePresence>
                         <div className="hero-cta-group">
                             <button onClick={() => handleAuthClick('register', 'builder')} className="btn btn-primary">
-                                Apply for Partnership
+                                Apply as Builder
                             </button>
                             <button onClick={() => handleAuthClick('login', 'builder')} className="btn btn-secondary">
-                                Partner Login
+                                Builder Login
                             </button>
                         </div>
                     </div>
@@ -444,7 +444,7 @@ export default function BuilderHome() {
                 <div className="container">
                     <div className="section-heading">
                         <h2 className="section-title">
-                            How Partnering <span className="text-highlight">Works</span>
+                            How Onboarding <span className="text-highlight">Works</span>
                         </h2>
                     </div>
                     <div className="section-scrollable-body mt-4">
@@ -492,7 +492,7 @@ export default function BuilderHome() {
                                 <div className="cta-icon-circle">
                                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
                                 </div>
-                                <span className="cta-text">Apply for Partnership</span>
+                                <span className="cta-text">Apply as Builder</span>
                             </button>
                         </div>
                         <div className="trust-cards-side">
@@ -525,7 +525,7 @@ export default function BuilderHome() {
                     </p>
                     <div className="flex justify-center">
                         <button onClick={() => handleAuthClick('register', 'builder')} className="cta-minimal-btn">
-                            Apply for Partnership <span className="ml-2">→</span>
+                            Apply as Builder <span className="ml-2">→</span>
                         </button>
                     </div>
                 </div>

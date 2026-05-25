@@ -65,7 +65,7 @@ export default function BuilderDashboard() {
             <div className="flex flex-col md:flex-row justify-between items-start md:items-end gap-6">
               <div className="w-full md:w-auto">
                 <Badge className="bg-blue-500/20 text-blue-100 hover:bg-blue-500/30 border-none mb-3 backdrop-blur-sm px-3 py-1">
-                  <HardHat className="w-3.5 h-3.5 mr-1.5" /> {user?.name || 'Builder Partner'}
+                  <HardHat className="w-3.5 h-3.5 mr-1.5" /> {user?.name || 'Builder'}
                 </Badge>
                 <h1 className="text-2xl md:text-3xl lg:text-4xl font-bold mb-2">Dashboard Overview</h1>
                 <p className="text-sm md:text-base text-blue-100 opacity-90">Track performance, manage inventory, and monitor leads.</p>

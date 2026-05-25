@@ -5,7 +5,7 @@ const nextConfig = {
     return [
       {
         source: '/api/:path*',
-        destination: 'https://dev.investateindia.api.brvteck.com/api/:path*',
+        destination: 'http://localhost:5001/api/:path*',
       },
     ];
   },
