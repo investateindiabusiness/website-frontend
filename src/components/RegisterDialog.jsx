@@ -442,23 +442,6 @@ const RegisterDialog = ({ isOpen, onOpenChange, onLoginClick, initialData = {} }
               </div>
             ) : (
               <div className="max-w-md mx-auto lg:mx-0 lg:max-w-none">
-                {step === 1 && (
-                  <div className="inline-flex bg-gray-100 p-1 rounded-[1.25rem] mb-6 w-full shadow-inner border border-gray-200/50">
-                    <button 
-                      onClick={() => setUserType('investor')} 
-                      className={`flex-1 py-3.5 text-[10px] font-black uppercase tracking-widest rounded-[1rem] transition-all duration-300 ${userType === 'investor' ? 'bg-white shadow-lg text-orange-600 ring-1 ring-black/5' : 'text-gray-400 hover:text-gray-600'}`}
-                    >
-                      Investor
-                    </button>
-                    <button 
-                      onClick={() => setUserType('builder')} 
-                      className={`flex-1 py-3.5 text-[10px] font-black uppercase tracking-widest rounded-[1rem] transition-all duration-300 ${userType === 'builder' ? 'bg-white shadow-lg text-orange-600 ring-1 ring-black/5' : 'text-gray-400 hover:text-gray-600'}`}
-                    >
-                      Builder
-                    </button>
-                  </div>
-                )}
-
                 <div className="text-left mb-6">
                    <h2 className="text-2xl font-black tracking-tight text-gray-900 uppercase">
                       {step === 1 ? (userType === 'investor' ? "Investor Portal" : "Builder Portal") : step === 2 ? "Basic Details" : "Verification"}

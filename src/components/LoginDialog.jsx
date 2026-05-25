@@ -281,33 +281,9 @@ const LoginDialog = ({ isOpen, onOpenChange, onSwitchToRegister, initialData = {
 
         <div className="flex-1 overflow-y-auto relative custom-scrollbar bg-white">
           <div className="p-6 md:p-12 lg:p-14 pt-12 md:pt-12">
-            {/* Vertex-style Segmented Control */}
-            <div className="inline-flex bg-gray-100 p-1 rounded-[1.25rem] mb-6 w-full shadow-inner border border-gray-200/50">
-              <button
-                onClick={() => {
-                  setUserType('investor');
-                  setFormData({ email: '', password: '' })
-                  setError(null);
-                }}
-                className={`flex-1 py-3.5 text-[10px] font-black uppercase tracking-widest rounded-[1rem] transition-all duration-300 ${userType === 'investor' ? 'bg-white shadow-lg text-orange-600 ring-1 ring-black/5' : 'text-gray-400 hover:text-gray-600'}`}
-              >
-                Investor
-              </button>
-              <button
-                onClick={() => {
-                  setUserType('builder');
-                  setFormData({ email: '', password: '' })
-                  setError(null);
-                }}
-                className={`flex-1 py-3.5 text-[10px] font-black uppercase tracking-widest rounded-[1rem] transition-all duration-300 ${userType === 'builder' ? 'bg-white shadow-lg text-orange-600 ring-1 ring-black/5' : 'text-gray-400 hover:text-gray-600'}`}
-              >
-                Builder
-              </button>
-            </div>
-
             <div className="text-left mb-6">
               <h2 className="text-2xl font-black tracking-tight text-gray-900 uppercase">
-                Log In
+                {userType === 'investor' ? 'Investor Login' : 'Builder Login'}
               </h2>
               <p className="text-gray-400 font-bold mt-1 tracking-wide text-xs">Welcome back!</p>
             </div>
