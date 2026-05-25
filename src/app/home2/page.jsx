@@ -47,7 +47,7 @@ export default function Home2() {
           <p className="text-lg md:text-xl mb-6 max-w-full mx-auto text-white px-2">Connecting NRI Investors to verified builders and transparent investment opportunities across India</p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center mt-6">
             <Button size="lg" className="bg-white text-blue-900 hover:bg-blue-50 px-8 py-6 text-lg font-semibold w-full sm:w-auto">Start Investing Today <ArrowRight className="ml-2 h-5 w-5" /></Button>
-            <Button size="lg" variant="outline" className="border-white text-white hover:bg-white hover:text-blue-900 px-8 py-6 text-lg font-semibold w-full sm:w-auto">Partner with Us</Button>
+            <Button size="lg" variant="outline" onClick={() => router.push('/builder')} className="border-white text-white hover:bg-white hover:text-blue-900 px-8 py-6 text-lg font-semibold w-full sm:w-auto">Builder Portal</Button>
           </div>
         </div>
       </section>
