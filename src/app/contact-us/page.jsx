@@ -247,7 +247,7 @@ export default function ContactUs() {
                       >
                         <option value="">Subject</option>
                         <option value="Buying Property">Buying Property</option>
-                        <option value="Partnering with Investate">Partnering with Investate</option>
+                        <option value="Listing as Builder">Listing as Builder</option>
                         <option value="Existing Investment Support">Existing Investment Support</option>
                         <option value="Other Inquiry">Other Inquiry</option>
                       </select>
