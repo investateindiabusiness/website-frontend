@@ -298,7 +298,7 @@ const RegisterDialog = ({ isOpen, onOpenChange, onLoginClick, initialData = {} }
       image: "https://images.unsplash.com/photo-1504307651254-35680f356dfd?q=80&w=2070&auto=format&fit=crop",
       title: isUpdateMode ? "Update your" : (isForm2Mode ? "Complete your" : "Scale your projects"),
       highlight: isUpdateMode ? "information." : (isForm2Mode ? "profile." : "without limits."),
-      desc: isUpdateMode ? "Please update the requested fields to finalize your builder verification." : (isForm2Mode ? "Almost there! Complete the final details to finalize your partner account." : "Join our exclusive network of top-tier builders. Access global investors and streamline fundraising."),
+      desc: isUpdateMode ? "Please update the requested fields to finalize your builder verification." : (isForm2Mode ? "Almost there! Complete the final details to finalize your builder account." : "Join our exclusive network of top-tier builders. Access global investors and streamline fundraising."),
       features: ["Verified Investor Network", "Automated Compliance", "Fast-track Funding"]
     }
   };
@@ -321,17 +321,17 @@ const RegisterDialog = ({ isOpen, onOpenChange, onLoginClick, initialData = {} }
 
   return (
     <Dialog open={isOpen} onOpenChange={onOpenChange}>
-      <DialogContent className="fixed left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-[95vw] md:max-w-6xl p-0 overflow-hidden bg-white border-none shadow-[0_32px_64px_-15px_rgba(0,0,0,0.2)] flex flex-col lg:flex-row max-h-[90vh] md:max-h-[92vh] z-50 rounded-[2.5rem]">
+      <DialogContent className="fixed left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-[95vw] md:max-w-[950px] p-0 overflow-hidden bg-white border-none shadow-[0_32px_64px_-15px_rgba(0,0,0,0.2)] flex flex-col lg:flex-row max-h-[90vh] md:max-h-[92vh] z-50 rounded-[2.5rem]">
 
         <DialogTitle className="sr-only">
           {isUpdateMode ? 'Update Account' : 'Register Account'}
         </DialogTitle>
         <DialogDescription className="sr-only">
-          {isUpdateMode ? 'Update your builder profile details.' : 'Create an account to join Investate India as an investor or partner.'}
+          {isUpdateMode ? 'Update your builder profile details.' : 'Create an account to join Investate India as an investor or builder.'}
         </DialogDescription>
         
         {/* Vertex Inspired Sidebar - High Key & Airy */}
-        <div className="hidden lg:flex lg:w-[35%] relative bg-gray-50 flex-col justify-between p-12 overflow-hidden transition-all duration-700">
+        <div className="hidden lg:flex lg:w-[40%] relative bg-gray-50 flex-col justify-between p-8 lg:p-10 overflow-hidden transition-all duration-700">
           <div className="absolute inset-0 z-0">
             {/* Minimal overlay for text readability, but keeping image very clear */}
             <div className="absolute inset-0 bg-white/10 z-[1]" />
@@ -356,35 +356,35 @@ const RegisterDialog = ({ isOpen, onOpenChange, onLoginClick, initialData = {} }
               </span>
             </h1>
 
-            {/* Repositioned Floating Chips - Moved down and simplified for a cleaner look */}
-            <div className="relative h-80 mt-6 pointer-events-none">
-               <div className="absolute top-[5%] left-[5%] px-4 py-2 bg-gray-900 rounded-full shadow-xl border border-gray-800 flex items-center gap-2 animate-float-slow">
+            {/* Repositioned Floating Chips */}
+            <div className="relative h-56 mt-4 pointer-events-none">
+               <div className="absolute top-[5%] left-[5%] px-3 py-1.5 bg-gray-900 rounded-full shadow-xl border border-gray-800 flex items-center gap-2 animate-float-slow">
                   <div className="w-1.5 h-1.5 rounded-full bg-green-400 shadow-[0_0_8px_rgba(74,222,128,0.3)]" />
-                  <span className="text-[9px] font-black text-white uppercase tracking-[0.2em]">Yield Focus</span>
+                  <span className="text-[8px] font-black text-white uppercase tracking-[0.2em]">Yield Focus</span>
                </div>
-               <div className="absolute top-[20%] right-[8%] px-4 py-2 bg-white rounded-full shadow-xl border border-gray-100 flex items-center gap-2 animate-float">
+               <div className="absolute top-[20%] right-[8%] px-3 py-1.5 bg-white rounded-full shadow-xl border border-gray-100 flex items-center gap-2 animate-float">
                   <div className="w-1.5 h-1.5 rounded-full bg-blue-500 shadow-[0_0_8px_rgba(59,130,246,0.3)]" />
-                  <span className="text-[9px] font-black text-gray-700 uppercase tracking-[0.2em]">Market Pulse</span>
+                  <span className="text-[8px] font-black text-gray-700 uppercase tracking-[0.2em]">Market Pulse</span>
                </div>
-               <div className="absolute top-[45%] left-[0%] px-4 py-2 bg-white/90 backdrop-blur-md rounded-full shadow-xl border border-white/50 flex items-center gap-2 animate-float-sideways">
+               <div className="absolute top-[45%] left-[0%] px-3 py-1.5 bg-white/90 backdrop-blur-md rounded-full shadow-xl border border-white/50 flex items-center gap-2 animate-float-sideways">
                   <div className="w-1.5 h-1.5 rounded-full bg-orange-500 shadow-[0_0_8px_rgba(249,115,22,0.3)]" />
-                  <span className="text-[9px] font-black text-gray-700 uppercase tracking-[0.2em]">Smart Assets</span>
+                  <span className="text-[8px] font-black text-gray-700 uppercase tracking-[0.2em]">Smart Assets</span>
                </div>
-               <div className="absolute top-[35%] left-[55%] px-4 py-2 bg-gray-900 rounded-full shadow-xl border border-gray-800 flex items-center gap-2 animate-float-slow">
+               <div className="absolute top-[35%] left-[55%] px-3 py-1.5 bg-gray-900 rounded-full shadow-xl border border-gray-800 flex items-center gap-2 animate-float-slow">
                   <div className="w-1.5 h-1.5 rounded-full bg-purple-400 shadow-[0_0_8px_rgba(192,132,252,0.3)]" />
-                  <span className="text-[9px] font-black text-white uppercase tracking-[0.2em]">Secure Vault</span>
+                  <span className="text-[8px] font-black text-white uppercase tracking-[0.2em]">Secure Vault</span>
                </div>
-               <div className="absolute top-[65%] right-[5%] px-4 py-2 bg-gray-900 rounded-full shadow-xl border border-gray-800 flex items-center gap-2 animate-float">
+               <div className="absolute top-[65%] right-[5%] px-3 py-1.5 bg-gray-900 rounded-full shadow-xl border border-gray-800 flex items-center gap-2 animate-float">
                   <div className="w-1.5 h-1.5 rounded-full bg-red-400 shadow-[0_0_8px_rgba(248,113,113,0.3)]" />
-                  <span className="text-[9px] font-black text-white uppercase tracking-[0.2em]">Verified</span>
+                  <span className="text-[8px] font-black text-white uppercase tracking-[0.2em]">Verified</span>
                </div>
-               <div className="absolute top-[85%] left-[15%] px-4 py-2 bg-white/95 rounded-full shadow-xl border border-gray-100 flex items-center gap-2 animate-float-slow">
+               <div className="absolute top-[85%] left-[15%] px-3 py-1.5 bg-white/95 rounded-full shadow-xl border border-gray-100 flex items-center gap-2 animate-float-slow">
                   <div className="w-1.5 h-1.5 rounded-full bg-cyan-500 shadow-[0_0_8px_rgba(6,182,212,0.3)]" />
-                  <span className="text-[9px] font-black text-gray-700 uppercase tracking-[0.2em]">Growth Intel</span>
+                  <span className="text-[8px] font-black text-gray-700 uppercase tracking-[0.2em]">Growth Intel</span>
                </div>
-               <div className="absolute top-[72%] left-[48%] px-4 py-2 bg-white rounded-full shadow-xl border border-gray-100 flex items-center gap-2 animate-float-sideways">
+               <div className="absolute top-[72%] left-[48%] px-3 py-1.5 bg-white rounded-full shadow-xl border border-gray-100 flex items-center gap-2 animate-float-sideways">
                   <div className="w-1.5 h-1.5 rounded-full bg-yellow-500 shadow-[0_0_8px_rgba(234,179,8,0.3)]" />
-                  <span className="text-[9px] font-black text-gray-700 uppercase tracking-[0.2em]">ROI Optimized</span>
+                  <span className="text-[8px] font-black text-gray-700 uppercase tracking-[0.2em]">ROI Optimized</span>
                </div>
             </div>
 
@@ -416,8 +416,8 @@ const RegisterDialog = ({ isOpen, onOpenChange, onLoginClick, initialData = {} }
           </div>
         </div>
 
-        <div className="flex-1 overflow-y-auto relative custom-scrollbar bg-white">
-          <div className="p-6 md:p-12 lg:p-14 pt-12 md:pt-12">
+        <div className="flex-1 overflow-y-auto relative custom-scrollbar bg-white flex flex-col">
+          <div className="flex-1 p-6 md:px-12 lg:px-14 py-8 md:py-10 flex flex-col justify-center">
             {submitted ? (
               <div className="text-center py-6 animate-in zoom-in duration-500">
                 <div className="bg-green-50 w-20 h-20 rounded-full flex items-center justify-center mx-auto mb-6 shadow-inner">
@@ -441,27 +441,10 @@ const RegisterDialog = ({ isOpen, onOpenChange, onLoginClick, initialData = {} }
                 </Button>
               </div>
             ) : (
-              <div className="max-w-md mx-auto lg:mx-0 lg:max-w-none">
-                {step === 1 && (
-                  <div className="inline-flex bg-gray-100 p-1 rounded-[1.25rem] mb-6 w-full shadow-inner border border-gray-200/50">
-                    <button 
-                      onClick={() => setUserType('investor')} 
-                      className={`flex-1 py-3.5 text-[10px] font-black uppercase tracking-widest rounded-[1rem] transition-all duration-300 ${userType === 'investor' ? 'bg-white shadow-lg text-orange-600 ring-1 ring-black/5' : 'text-gray-400 hover:text-gray-600'}`}
-                    >
-                      Investor
-                    </button>
-                    <button 
-                      onClick={() => setUserType('builder')} 
-                      className={`flex-1 py-3.5 text-[10px] font-black uppercase tracking-widest rounded-[1rem] transition-all duration-300 ${userType === 'builder' ? 'bg-white shadow-lg text-orange-600 ring-1 ring-black/5' : 'text-gray-400 hover:text-gray-600'}`}
-                    >
-                      Partner
-                    </button>
-                  </div>
-                )}
-
-                <div className="text-left mb-6">
+              <div className="w-full max-w-lg mx-auto">
+                <div className="text-center mb-6">
                    <h2 className="text-2xl font-black tracking-tight text-gray-900 uppercase">
-                      {step === 1 ? (userType === 'investor' ? "Investor Portal" : "Partner Portal") : step === 2 ? "Basic Details" : "Verification"}
+                      {step === 1 ? (userType === 'investor' ? "Investor Registration" : "Builder Registration") : step === 2 ? "Basic Details" : "Verification"}
                    </h2>
                    <p className="text-gray-400 font-bold mt-1 tracking-wide uppercase text-[9px]">Step 0{step}</p>
                 </div>
@@ -478,16 +461,16 @@ const RegisterDialog = ({ isOpen, onOpenChange, onLoginClick, initialData = {} }
                     <form onSubmit={handleAuthSubmit} className="space-y-5">
                       <div className="space-y-2">
                         <Label className="text-[10px] font-black text-gray-900 uppercase tracking-widest ml-1">{userType === 'investor' ? 'Email Address' : 'Professional Email'}</Label>
-                        <Input type="email" name='email' required value={authData.email} onChange={(e) => setAuthData({ ...authData, email: e.target.value })} className="h-11 px-6 bg-gray-50 border-gray-200 focus:bg-white focus:ring-[6px] focus:ring-orange-500/5 focus:border-orange-500 transition-all duration-300 rounded-2xl text-sm font-bold placeholder:text-gray-300" placeholder="name@example.com" />
+                        <Input type="email" name='email' autoComplete="off" required value={authData.email} onChange={(e) => setAuthData({ ...authData, email: e.target.value })} className="h-11 px-6 bg-gray-50 border-gray-200 focus:bg-white focus:ring-[6px] focus:ring-orange-500/5 focus:border-orange-500 transition-all duration-300 rounded-2xl text-sm font-bold placeholder:text-gray-300" placeholder="name@example.com" />
                       </div>
                       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                         <div className="space-y-2">
                           <Label className="text-[10px] font-black text-gray-900 uppercase tracking-widest ml-1">Password</Label>
-                          <Input type="password" required value={authData.password} onChange={(e) => setAuthData({ ...authData, password: e.target.value })} className="h-11 px-6 bg-gray-50 border-gray-200 focus:bg-white focus:ring-[6px] focus:ring-orange-500/5 focus:border-orange-500 transition-all duration-300 rounded-2xl text-sm font-bold placeholder:text-gray-300" placeholder="••••••••" />
+                          <Input type="password" autoComplete="new-password" required value={authData.password} onChange={(e) => setAuthData({ ...authData, password: e.target.value })} className="h-11 px-6 bg-gray-50 border-gray-200 focus:bg-white focus:ring-[6px] focus:ring-orange-500/5 focus:border-orange-500 transition-all duration-300 rounded-2xl text-sm font-bold placeholder:text-gray-300" placeholder="••••••••" />
                         </div>
                         <div className="space-y-2">
                           <Label className="text-[10px] font-black text-gray-900 uppercase tracking-widest ml-1">Confirm Password</Label>
-                          <Input type="password" required value={authData.confirmPassword} onChange={(e) => setAuthData({ ...authData, confirmPassword: e.target.value })} className="h-11 px-6 bg-gray-50 border-gray-200 focus:bg-white focus:ring-[6px] focus:ring-orange-500/5 focus:border-orange-500 transition-all duration-300 rounded-2xl text-sm font-bold placeholder:text-gray-300" placeholder="••••••••" />
+                          <Input type="password" autoComplete="new-password" required value={authData.confirmPassword} onChange={(e) => setAuthData({ ...authData, confirmPassword: e.target.value })} className="h-11 px-6 bg-gray-50 border-gray-200 focus:bg-white focus:ring-[6px] focus:ring-orange-500/5 focus:border-orange-500 transition-all duration-300 rounded-2xl text-sm font-bold placeholder:text-gray-300" placeholder="••••••••" />
                         </div>
                       </div>
                       <Button 
