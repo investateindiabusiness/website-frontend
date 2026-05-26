@@ -1,4 +1,6 @@
-const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL;
+// In development, we use an empty string to utilize Next.js rewrites (proxy) and bypass CORS.
+// In production, we use the actual backend URL (assuming CORS is configured correctly there).
+const API_BASE_URL = process.env.NODE_ENV === 'development' ? '' : (process.env.NEXT_PUBLIC_API_BASE_URL || '');
 
 export const apiRequest = async (endpoint, options = {}) => {
   const session = JSON.parse(localStorage.getItem('user_session'));
