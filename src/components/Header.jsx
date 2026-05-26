@@ -2,7 +2,7 @@
 
 import React, { useState } from 'react';
 import Link from 'next/link';
-import { useRouter } from 'next/navigation';
+import { useRouter, usePathname } from 'next/navigation';
 import { Button } from './ui/button';
 import { Menu, X, LogOut, UserCircle } from 'lucide-react';
 import { useAuth } from '@/hooks/AuthContext';
@@ -14,6 +14,7 @@ const RegisterDialog = dynamic(() => import('@/components/RegisterDialog'), { ss
 const Header = ({ transparent = false }) => {
   const { user, logout } = useAuth();
   const router = useRouter();
+  const pathname = usePathname();
 
   const [open, setOpen] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
@@ -96,12 +97,14 @@ const Header = ({ transparent = false }) => {
 
           <nav className="hidden md:flex items-center flex-1">
             <ul className="flex items-center justify-center w-full text-md font-medium text-gray-400">
-              {navLinks.map((link, index) => (
+              {navLinks.map((link, index) => {
+                const isActive = pathname === link.path;
+                return (
                 <React.Fragment key={link.label}>
-                  <li><Link href={link.path} className="hover:text-white transition-colors px-3 lg:px-5 py-2 block mx-4">{link.label}</Link></li>
+                  <li><Link href={link.path} className={`transition-colors px-3 lg:px-5 py-2 block mx-4 ${isActive ? 'text-[#D48035]' : 'hover:text-[#D48035]'}`}>{link.label}</Link></li>
                   {index < navLinks.length - 1 && <span className="text-gray-700 select-none">|</span>}
                 </React.Fragment>
-              ))}
+              )})}
             </ul>
           </nav>
 
@@ -132,9 +135,11 @@ const Header = ({ transparent = false }) => {
         <div className={`md:hidden fixed inset-0 top-16 bg-[#232325] z-40 transition-transform duration-300 ${mobileMenuOpen ? 'translate-x-0' : 'translate-x-full'}`}>
           <div className="flex flex-col h-full p-6 overflow-y-auto text-gray-300">
             <div className="space-y-1 mb-8">
-              {navLinks.map((item) => (
-                <Link key={item.label} href={item.path} onClick={() => setMobileMenuOpen(false)} className="block py-3 px-4 rounded-xl font-medium text-gray-300 hover:bg-gray-800 hover:text-white transition-colors">{item.label}</Link>
-              ))}
+              {navLinks.map((item) => {
+                const isActive = pathname === item.path;
+                return (
+                <Link key={item.label} href={item.path} onClick={() => setMobileMenuOpen(false)} className={`block py-3 px-4 rounded-xl font-medium hover:bg-gray-800 transition-colors ${isActive ? 'text-[#D48035]' : 'text-gray-300 hover:text-[#D48035]'}`}>{item.label}</Link>
+              )})}
             </div>
 
             <div className="mt-auto pb-8">
