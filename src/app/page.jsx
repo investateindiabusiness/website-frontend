@@ -5,6 +5,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
 import dynamic from 'next/dynamic';
+import Image from 'next/image';
 
 const LoginDialog = dynamic(() => import('@/components/LoginDialog'), { ssr: false });
 const RegisterDialog = dynamic(() => import('@/components/RegisterDialog'), { ssr: false });
@@ -407,11 +408,11 @@ export default function Index() {
                                 }}>
                                     | Investor Safeguards
                                 </div> */}
-                                <h2 className="responsive-heading" style={{ color: '#111', marginBottom: '1.5rem' }}>
+                                <h2 className="responsive-heading text-[#111] mb-6">
                                     Uncompromising <br />
-                                    <span style={{ color: '#D48035' }}>Investor Safeguards</span>
+                                    <span className="text-[#D48035]">Investor Safeguards</span>
                                 </h2>
-                                <p className="responsive-paragraph" style={{ color: '#555', marginBottom: '2.5rem' }}>
+                                <p className="responsive-paragraph text-[#555] mb-10">
                                     A secure ecosystem where builder credentials and RERA compliance are consolidated for absolute peace of mind. We eliminate the distance gap through rigorous verification.
                                 </p>
 
@@ -426,11 +427,11 @@ export default function Index() {
                                             className="grid grid-cols-1 md:grid-cols-2 gap-x-12 gap-y-10"
                                         >
                                             {benefitsList.slice(benefitsPage * benefitsPerPage, (benefitsPage + 1) * benefitsPerPage).map((benefit, index) => (
-                                                <div key={index} style={{ borderLeft: '4px solid #D48035', paddingLeft: '1.25rem' }}>
-                                                    <h4 style={{ fontSize: '1.2rem', fontWeight: 700, color: '#111', marginBottom: '0.6rem' }}>
+                                                <div key={index} className="border-l-4 border-[#D48035] pl-5">
+                                                    <h4 className="text-[1.2rem] font-bold text-[#111] mb-2">
                                                         {benefit.title}
                                                     </h4>
-                                                    <p style={{ fontSize: '1.05rem', color: '#666', lineHeight: 1.6 }}>
+                                                    <p className="text-[1.05rem] text-[#666] leading-[1.6]">
                                                         {benefit.desc}
                                                     </p>
                                                 </div>
@@ -498,46 +499,25 @@ export default function Index() {
                             transition={{ duration: 0.8, ease: "easeOut", delay: 0.1 }}
                         >
                             {/* Background Image (Large) */}
-                            <div style={{
-                                width: '85%',
-                                height: '85%',
-                                borderRadius: '1.5rem',
-                                overflow: 'hidden',
-                                position: 'relative',
-                                transform: 'translateX(-10%)',
-                                boxShadow: '0 20px 40px rgba(0,0,0,0.1)'
-                            }}>
-                                <img
+                            <div className="w-[85%] h-[85%] rounded-[1.5rem] overflow-hidden relative -translate-x-[10%] shadow-[0_20px_40px_rgba(0,0,0,0.1)]">
+                                <Image
                                     src="/images/image_optimized.jpg"
                                     alt="Global NRI Reach Map"
                                     width={800}
                                     height={600}
-                                    style={{ width: '100%', height: '100%', objectFit: 'cover' }}
+                                    className="w-full h-full object-cover"
                                     loading="lazy"
-                                    decoding="async"
                                 />
                             </div>
                             {/* Overlapping Image (Small) */}
-                            <div style={{
-                                position: 'absolute',
-                                right: '0',
-                                bottom: '5%',
-                                width: '65%',
-                                height: '55%',
-                                borderRadius: '1.5rem',
-                                border: '12px solid #fff',
-                                overflow: 'hidden',
-                                boxShadow: '0 30px 60px rgba(0,0,0,0.15)',
-                                zIndex: 10
-                            }}>
-                                <img
+                            <div className="absolute right-0 bottom-[5%] w-[65%] h-[55%] rounded-[1.5rem] border-[12px] border-white overflow-hidden shadow-[0_30px_60px_rgba(0,0,0,0.15)] z-10">
+                                <Image
                                     src="/images/imagecopy_optimized.jpg"
                                     alt="Secure Premium Real Estate Asset"
                                     width={800}
                                     height={600}
-                                    style={{ width: '100%', height: '100%', objectFit: 'cover' }}
+                                    className="w-full h-full object-cover"
                                     loading="lazy"
-                                    decoding="async"
                                 />
                             </div>
                         </motion.div>

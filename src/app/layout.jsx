@@ -2,18 +2,19 @@ import './globals.css';
 import { AuthProvider } from '@/hooks/AuthContext';
 import { Toaster } from "@/components/ui/sonner";
 import { Toaster as Toast } from "@/components/ui/toaster";
+import Script from 'next/script';
 
 export const metadata = {
   metadataBase: new URL('https://dev.investateindia.brvteck.com'),
-  title: 'Investate India | Bridging Global NRIs to Verified Indian Real Estate',
-  description: 'Investate India is the trusted gateway bridging global NRIs to verified Indian real estate. Explore premium vetted properties with absolute transparency.',
-  keywords: 'Investate India, Indian Real Estate, NRI Real Estate Investment, Verified Properties India, Buy Property in India, Premium Real Estate',
+  title: 'Global NRIs Investment in India Real Estate | Investate',
+  description: 'Investate India is the trusted gateway for Global NRIs investment in India real estate. Explore premium vetted properties with absolute transparency.',
+  keywords: 'Global NRIs investment in India real estate, Investate India, Indian Real Estate, NRI Real Estate Investment, Verified Properties India',
   alternates: {
     canonical: '/',
   },
   openGraph: {
-    title: 'Investate India | Bridging Global NRIs to Verified Indian Real Estate',
-    description: 'Investate India is the trusted gateway bridging global NRIs to verified Indian real estate. Explore premium vetted properties with absolute transparency.',
+    title: 'Global NRIs Investment in India Real Estate | Investate',
+    description: 'Investate India is the trusted gateway for Global NRIs investment in India real estate. Explore premium vetted properties with absolute transparency.',
     url: 'https://dev.investateindia.brvteck.com',
     siteName: 'Investate India',
     images: [
@@ -29,8 +30,8 @@ export const metadata = {
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'Investate India | Bridging Global NRIs to Verified Indian Real Estate',
-    description: 'Investate India is the trusted gateway bridging global NRIs to verified Indian real estate. Explore premium vetted properties with absolute transparency.',
+    title: 'Global NRIs Investment in India Real Estate | Investate',
+    description: 'Investate India is the trusted gateway for Global NRIs investment in India real estate. Explore premium vetted properties with absolute transparency.',
     images: ['/logo-big.png'],
   },
 };
@@ -43,7 +44,6 @@ const schemaJson = {
   "logo": "https://dev.investateindia.brvteck.com/logo-big.png",
   "image": "https://dev.investateindia.brvteck.com/logo-big.png",
   "description": "Connecting NRI investors to India's growth through verified real estate opportunities.",
-  "email": "investateindia.business@gmail.com",
   "address": [
     {
       "@type": "PostalAddress",
@@ -71,6 +71,18 @@ export default function RootLayout({ children }) {
         />
       </head>
       <body suppressHydrationWarning>
+        <Script
+          src={`https://www.googletagmanager.com/gtag/js?id=G-XXXXXXXXXX`}
+          strategy="afterInteractive"
+        />
+        <Script id="google-analytics" strategy="afterInteractive">
+          {`
+            window.dataLayer = window.dataLayer || [];
+            function gtag(){dataLayer.push(arguments);}
+            gtag('js', new Date());
+            gtag('config', 'G-XXXXXXXXXX');
+          `}
+        </Script>
         <AuthProvider>
           {children}
           <Toaster />
