@@ -239,10 +239,7 @@ export default function BuilderHome() {
                         </AnimatePresence>
                         <div className="hero-cta-group">
                             <button onClick={() => handleAuthClick('register', 'builder')} className="btn btn-primary">
-                                Apply as Builder
-                            </button>
-                            <button onClick={() => handleAuthClick('login', 'builder')} className="btn btn-secondary">
-                                Builder Login
+                                Explore Opportunities
                             </button>
                         </div>
                     </div>
