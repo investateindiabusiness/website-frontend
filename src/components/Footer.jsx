@@ -71,27 +71,35 @@ const Footer = () => {
             </ul>
           </div>
 
-          {/* <div>
+          <div>
             <h3 className="text-white font-bold mb-4">Follow Us</h3>
             <ul className="space-y-3">
-              <li className="flex items-start space-x-3">
-                <Facebook className="h-5 w-5 text-[#C88A58] flex-shrink-0 mt-0.5" />
-                <span className="text-sm text-gray-400">Facebook</span>
+              <li>
+                <a href="#" target="_blank" rel="noopener noreferrer" className="flex items-start space-x-3 group">
+                  <Facebook className="h-5 w-5 text-[#C88A58] flex-shrink-0 mt-0.5 group-hover:text-[var(--color-accent,#D48035)] transition-colors" />
+                  <span className="text-sm text-gray-400 group-hover:text-[var(--color-accent,#D48035)] transition-colors">Facebook</span>
+                </a>
               </li>
-              <li className="flex items-center space-x-3">
-                <Twitter className="h-5 w-5 text-[#C88A58] flex-shrink-0 mt-0.5" />
-                <span className="text-sm text-gray-400">Twitter</span>
+              <li>
+                <a href="#" target="_blank" rel="noopener noreferrer" className="flex items-center space-x-3 group">
+                  <Twitter className="h-5 w-5 text-[#C88A58] flex-shrink-0 mt-0.5 group-hover:text-[var(--color-accent,#D48035)] transition-colors" />
+                  <span className="text-sm text-gray-400 group-hover:text-[var(--color-accent,#D48035)] transition-colors">Twitter (X)</span>
+                </a>
               </li>
-              <li className="flex items-center space-x-3">
-                <Linkedin className="h-5 w-5 text-[#C88A58] flex-shrink-0 mt-0.5" />
-                <span className="text-sm text-gray-400">Linkedin</span>
+              <li>
+                <a href="#" target="_blank" rel="noopener noreferrer" className="flex items-center space-x-3 group">
+                  <Linkedin className="h-5 w-5 text-[#C88A58] flex-shrink-0 mt-0.5 group-hover:text-[var(--color-accent,#D48035)] transition-colors" />
+                  <span className="text-sm text-gray-400 group-hover:text-[var(--color-accent,#D48035)] transition-colors">LinkedIn</span>
+                </a>
               </li>
-              <li className="flex items-center space-x-3">
-                <Instagram className="h-5 w-5 text-[#C88A58] flex-shrink-0 mt-0.5" />
-                <span className="text-sm text-gray-400">Instagram</span>
+              <li>
+                <a href="#" target="_blank" rel="noopener noreferrer" className="flex items-center space-x-3 group">
+                  <Instagram className="h-5 w-5 text-[#C88A58] flex-shrink-0 mt-0.5 group-hover:text-[var(--color-accent,#D48035)] transition-colors" />
+                  <span className="text-sm text-gray-400 group-hover:text-[var(--color-accent,#D48035)] transition-colors">Instagram</span>
+                </a>
               </li>
             </ul>
-          </div> */}
+          </div>
 
           {/* Contact */}
           <div>
@@ -107,9 +115,9 @@ const Footer = () => {
               </li> */}
               <li className="flex items-center space-x-3 min-w-0">
                 <Mail className="h-5 w-5 text-[#C88A58] flex-shrink-0" />
-                <a href="mailto:investateindia.business@gmail.com" className="text-xs sm:text-sm text-gray-400 hover:text-[var(--color-accent,#D48035)] transition-colors whitespace-nowrap">
-                  investateindia.business@gmail.com
-                </a>
+                <Link href="/contact-us" className="text-xs sm:text-sm text-gray-400 hover:text-[var(--color-accent,#D48035)] transition-colors whitespace-nowrap">
+                  Contact Support
+                </Link>
               </li>
             </ul>
           </div>
