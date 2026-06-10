@@ -5,6 +5,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
 import AwardsSection from '@/components/AwardsSection';
+import TestimonialsSection from '@/components/TestimonialsSection';
 import dynamic from 'next/dynamic';
 
 const LoginDialog = dynamic(() => import('@/components/LoginDialog'), { ssr: false });
@@ -478,6 +479,8 @@ export default function BuilderHome() {
                     </div>
                 </div>
             </section>
+
+            <TestimonialsSection />
 
             <section className="fullscreen-section section-theme" id="trust">
                 <div className="container">

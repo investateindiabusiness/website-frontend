@@ -5,6 +5,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
 import AwardsSection from '@/components/AwardsSection';
+import TestimonialsSection from '@/components/TestimonialsSection';
 import dynamic from 'next/dynamic';
 import Image from 'next/image';
 
@@ -566,6 +567,8 @@ export default function Index() {
                     </div>
                 </div>
             </section>
+
+            <TestimonialsSection />
 
             <section
                 className="fullscreen-section section-light relative overflow-hidden"
