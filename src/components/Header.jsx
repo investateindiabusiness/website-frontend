@@ -71,6 +71,7 @@ const Header = ({ transparent = false }) => {
         { label: 'Home', path: '/' },
         { label: 'Builder', path: '/builder' },
         { label: 'About Us', path: '/about-us' },
+        { label: 'Gallery', path: '/gallery' },
         { label: 'Contact Us', path: '/contact-us' },
       ];
     }
@@ -100,11 +101,12 @@ const Header = ({ transparent = false }) => {
               {navLinks.map((link, index) => {
                 const isActive = pathname === link.path;
                 return (
-                <React.Fragment key={link.label}>
-                  <li><Link href={link.path} className={`transition-colors px-3 lg:px-5 py-2 block mx-4 ${isActive ? 'text-[#D48035]' : 'hover:text-[#D48035]'}`}>{link.label}</Link></li>
-                  {index < navLinks.length - 1 && <span className="text-gray-700 select-none">|</span>}
-                </React.Fragment>
-              )})}
+                  <React.Fragment key={link.label}>
+                    <li><Link href={link.path} className={`transition-colors px-3 lg:px-5 py-2 block mx-4 ${isActive ? 'text-[#D48035]' : 'hover:text-[#D48035]'}`}>{link.label}</Link></li>
+                    {index < navLinks.length - 1 && <span className="text-gray-700 select-none">|</span>}
+                  </React.Fragment>
+                )
+              })}
             </ul>
           </nav>
 
@@ -116,8 +118,8 @@ const Header = ({ transparent = false }) => {
                 <span className="max-w-[120px] truncate">{user.name || user.email.split('@')[0]}</span>
                 <span className="text-[9px] uppercase tracking-wider bg-orange-500/10 text-orange-400 px-1.5 py-0.5 rounded border border-orange-500/20">{user.role}</span>
               </div>
-              <Button 
-                onClick={handleLogout} 
+              <Button
+                onClick={handleLogout}
                 className="h-9 px-4 text-xs font-black uppercase tracking-widest text-red-400 bg-transparent hover:text-red-300 hover:bg-red-950/20 flex items-center gap-1.5 rounded-full transition-all border border-red-900/30 hover:border-red-900/50"
               >
                 <LogOut className="w-3.5 h-3.5" /> Logout
@@ -138,8 +140,9 @@ const Header = ({ transparent = false }) => {
               {navLinks.map((item) => {
                 const isActive = pathname === item.path;
                 return (
-                <Link key={item.label} href={item.path} onClick={() => setMobileMenuOpen(false)} className={`block py-3 px-4 rounded-xl font-medium hover:bg-gray-800 transition-colors ${isActive ? 'text-[#D48035]' : 'text-gray-300 hover:text-[#D48035]'}`}>{item.label}</Link>
-              )})}
+                  <Link key={item.label} href={item.path} onClick={() => setMobileMenuOpen(false)} className={`block py-3 px-4 rounded-xl font-medium hover:bg-gray-800 transition-colors ${isActive ? 'text-[#D48035]' : 'text-gray-300 hover:text-[#D48035]'}`}>{item.label}</Link>
+                )
+              })}
             </div>
 
             <div className="mt-auto pb-8">
