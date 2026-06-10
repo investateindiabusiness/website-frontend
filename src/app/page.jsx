@@ -4,6 +4,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
+import AwardsSection from '@/components/AwardsSection';
 import dynamic from 'next/dynamic';
 import Image from 'next/image';
 
@@ -86,7 +87,7 @@ const stepImages = [
 ];
 
 const teamMembers = [
-    { name: "Deepak Kavadia", role: "Co-Founder", image: "/deepak.png" },
+    { name: "Deepak Kavadia", role: "CEO & Founder", image: "/deepak.png" },
     { name: "Pankaj Gupta", role: "Co-Founder", image: "/pankaj.png" },
     { name: "Atish Agarwal", role: "Co-Founder", image: "/atish.png" }
 ];
@@ -524,6 +525,7 @@ export default function Index() {
                     </div>
                 </div>
             </section>
+            <AwardsSection />
 
             <section className="fullscreen-section section-theme" id="process">
                 <div className="container">
@@ -656,6 +658,7 @@ export default function Index() {
                     </div>
                 </div>
             </section>
+
 
             <section className="fullscreen-section section-light" id="early-access">
                 <div className="container">
