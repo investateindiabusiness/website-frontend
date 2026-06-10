@@ -4,6 +4,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
+import AwardsSection from '@/components/AwardsSection';
 import dynamic from 'next/dynamic';
 
 const LoginDialog = dynamic(() => import('@/components/LoginDialog'), { ssr: false });
@@ -435,6 +436,7 @@ export default function BuilderHome() {
                     </div>
                 </div>
             </section>
+            <AwardsSection />
 
             {/* HOW IT WORKS SECTION */}
             <section className="fullscreen-section section-light" id="how-it-works">
@@ -506,6 +508,7 @@ export default function BuilderHome() {
                     </div>
                 </div>
             </section>
+
 
             {/* CONTACT SECTION */}
             <section className="fullscreen-section section-theme py-24" id="contact">
