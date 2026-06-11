@@ -125,43 +125,7 @@ const challengesList = [
     }
 ];
 
-const whyChooseUs = [
-    {
-        title: "Trusted Network",
-        desc: "A rigorously vetted ecosystem of verified builders, legal advisors, tax experts and service providers you can rely on.",
-        icon: <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path></svg>
-    },
-    {
-        title: "Professional Expertise",
-        desc: "Seasoned professionals with deep domain knowledge in NRI investment, real estate law, taxation and cross-border wealth management.",
-        icon: <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="8" r="7"></circle><polyline points="8.21 13.89 7 23 12 20 17 23 15.79 13.88"></polyline></svg>
-    },
-    {
-        title: "End-to-End Asset Management",
-        desc: "From investment discovery to property maintenance, rental collection and succession planning — a single ecosystem for all your needs.",
-        icon: <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect><line x1="3" y1="9" x2="21" y2="9"></line><line x1="9" y1="21" x2="9" y2="9"></line></svg>
-    },
-    {
-        title: "Legal & Compliance Support",
-        desc: "Navigate FEMA, RERA, property disputes, TDS, DTAA and succession law with expert guidance — all from wherever you are in the world.",
-        icon: <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line></svg>
-    },
-    {
-        title: "Transparent Processes",
-        desc: "Standardized disclosures, real-time updates and clear documentation — no hidden fees, no middlemen noise, no surprises.",
-        icon: <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="8" x2="12" y2="12"></line><line x1="12" y1="16" x2="12.01" y2="16"></line></svg>
-    },
-    {
-        title: "Global Accessibility",
-        desc: "Built for the NRI lifestyle — access your investment dashboard, advisors and property updates anytime, from any time zone.",
-        icon: <Globe className="w-6 h-6" />
-    },
-    {
-        title: "Long-Term Wealth Protection",
-        desc: "We're not just about your next investment. We help you build, protect and pass on lasting wealth in India across generations.",
-        icon: <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path></svg>
-    }
-];
+
 
 const benefitsList = [
     { title: "Pre-Verified Builders", desc: "Rigorous credibility assessments before any developer is listed.", icon: <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path></svg> },
@@ -489,51 +453,7 @@ export default function Index() {
                 </div>
             </section>
 
-            {/* ── Why NRIs Choose Us Section ── */}
-            <section className="fullscreen-section section-light" id="why-choose-us" style={{ padding: '80px 0' }}>
-                <div className="container">
-                    <div className="section-heading">
-                        <h2 className="section-title">Why NRIs <span className="text-highlight">Choose Us</span></h2>
-                        <p className="section-subtitle">We built Investate India to solve the real problems NRIs face — not just to list properties. Here is what sets us apart.</p>
-                    </div>
-                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 mt-10">
-                        {whyChooseUs.map((item, index) => (
-                            <motion.div
-                                key={index}
-                                initial={{ opacity: 0, y: 24 }}
-                                whileInView={{ opacity: 1, y: 0 }}
-                                viewport={{ once: true, amount: 0.15 }}
-                                transition={{ duration: 0.5, delay: index * 0.07 }}
-                                style={{
-                                    background: '#fff',
-                                    borderRadius: '1rem',
-                                    padding: '1.75rem 1.5rem',
-                                    boxShadow: '0 4px 24px rgba(0,0,0,0.07)',
-                                    borderTop: '3px solid #D48035',
-                                    display: 'flex',
-                                    flexDirection: 'column',
-                                    gap: '0.85rem',
-                                    transition: 'transform 0.25s ease, box-shadow 0.25s ease'
-                                }}
-                                whileHover={{ y: -4, boxShadow: '0 12px 36px rgba(0,0,0,0.12)' }}
-                            >
-                                <div style={{
-                                    width: '2.75rem', height: '2.75rem', borderRadius: '0.65rem',
-                                    background: 'linear-gradient(135deg, #D48035, #C88A58)',
-                                    display: 'flex', alignItems: 'center', justifyContent: 'center',
-                                    color: '#fff', flexShrink: 0
-                                }}>
-                                    <span style={{ width: '1.25rem', height: '1.25rem', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                                        {item.icon}
-                                    </span>
-                                </div>
-                                <h4 style={{ fontSize: '1rem', fontWeight: 700, color: '#111', lineHeight: 1.3 }}>{item.title}</h4>
-                                <p style={{ fontSize: '0.9rem', color: '#666', lineHeight: 1.65 }}>{item.desc}</p>
-                            </motion.div>
-                        ))}
-                    </div>
-                </div>
-            </section>
+
 
             <section className="fullscreen-section section-light" id="benefits" style={{ padding: '60px 0', overflow: 'hidden' }}>
                 <div className="container">
