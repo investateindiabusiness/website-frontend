@@ -13,8 +13,30 @@ const Footer = () => {
               <img src="/logo-big.png" alt="INVESTATE INDIA" className="h-16 w-auto" />
             </div>
             <p className="text-sm text-gray-400">
-              Connecting NRI investors to India's growth through verified real estate opportunities.
+              We don't just help NRIs invest in India. We help them protect, manage, and grow their wealth with confidence.
             </p>
+            <ul className="flex space-x-4 pt-2">
+              {/* <li>
+                <a href="#" target="_blank" rel="noopener noreferrer" className="flex items-center group">
+                  <Facebook className="h-5 w-5 text-[#C88A58] group-hover:text-[var(--color-accent,#D48035)] transition-colors" />
+                </a>
+              </li>
+              <li>
+                <a href="#" target="_blank" rel="noopener noreferrer" className="flex items-center group">
+                  <Twitter className="h-5 w-5 text-[#C88A58] group-hover:text-[var(--color-accent,#D48035)] transition-colors" />
+                </a>
+              </li>
+              <li>
+                <a href="#" target="_blank" rel="noopener noreferrer" className="flex items-center group">
+                  <Linkedin className="h-5 w-5 text-[#C88A58] group-hover:text-[var(--color-accent,#D48035)] transition-colors" />
+                </a>
+              </li> */}
+              <li>
+                <a href="https://www.instagram.com/investateindia/" target="_blank" rel="noopener noreferrer" className="flex items-center group">
+                  <Instagram className="h-5 w-5 text-[#C88A58] group-hover:text-[var(--color-accent,#D48035)] transition-colors" />
+                </a>
+              </li>
+            </ul>
           </div>
 
           {/* Quick Links */}
@@ -68,36 +90,6 @@ const Footer = () => {
               <li className="text-sm text-gray-400 hover:text-[var(--color-accent,#D48035)] transition-colors cursor-pointer">Mumbai</li>
               <li className="text-sm text-gray-400 hover:text-[var(--color-accent,#D48035)] transition-colors cursor-pointer">Pune</li>
               <li className="text-sm text-gray-400 hover:text-[var(--color-accent,#D48035)] transition-colors cursor-pointer">Hyderabad</li>
-            </ul>
-          </div>
-
-          <div>
-            <h3 className="text-white font-bold mb-4">Follow Us</h3>
-            <ul className="space-y-3">
-              <li>
-                <a href="#" target="_blank" rel="noopener noreferrer" className="flex items-start space-x-3 group">
-                  <Facebook className="h-5 w-5 text-[#C88A58] flex-shrink-0 mt-0.5 group-hover:text-[var(--color-accent,#D48035)] transition-colors" />
-                  <span className="text-sm text-gray-400 group-hover:text-[var(--color-accent,#D48035)] transition-colors">Facebook</span>
-                </a>
-              </li>
-              <li>
-                <a href="#" target="_blank" rel="noopener noreferrer" className="flex items-center space-x-3 group">
-                  <Twitter className="h-5 w-5 text-[#C88A58] flex-shrink-0 mt-0.5 group-hover:text-[var(--color-accent,#D48035)] transition-colors" />
-                  <span className="text-sm text-gray-400 group-hover:text-[var(--color-accent,#D48035)] transition-colors">Twitter (X)</span>
-                </a>
-              </li>
-              <li>
-                <a href="#" target="_blank" rel="noopener noreferrer" className="flex items-center space-x-3 group">
-                  <Linkedin className="h-5 w-5 text-[#C88A58] flex-shrink-0 mt-0.5 group-hover:text-[var(--color-accent,#D48035)] transition-colors" />
-                  <span className="text-sm text-gray-400 group-hover:text-[var(--color-accent,#D48035)] transition-colors">LinkedIn</span>
-                </a>
-              </li>
-              <li>
-                <a href="#" target="_blank" rel="noopener noreferrer" className="flex items-center space-x-3 group">
-                  <Instagram className="h-5 w-5 text-[#C88A58] flex-shrink-0 mt-0.5 group-hover:text-[var(--color-accent,#D48035)] transition-colors" />
-                  <span className="text-sm text-gray-400 group-hover:text-[var(--color-accent,#D48035)] transition-colors">Instagram</span>
-                </a>
-              </li>
             </ul>
           </div>
 

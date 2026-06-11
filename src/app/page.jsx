@@ -18,48 +18,149 @@ import { Loader2, Search, Users, FileText, Gavel, ShieldCheck, Globe } from 'luc
 const heroSlides = [
     {
         image: '/images/hero_indian_luxury.png',
-        tag: 'India\'s Most Trusted Gateway',
-        title: 'Bridging Global NRIs to',
-        highlight: 'Verified Indian Real Estate',
-        subtitle: 'Institutional-grade transparency, verified developer credentials, and professional on-ground representation for the global Indian diaspora.'
+        tag: 'India\'s Most Trusted NRI Platform',
+        title: 'You Built Your Future Abroad.',
+        highlight: 'We Protect & Grow Your Wealth in India.',
+        subtitle: "We don't just help NRIs invest in India. We help them protect, manage, and grow their wealth with absolute confidence."
     },
     {
         image: '/images/hero_modern_cityscape.png',
+        tag: 'End-to-End NRI Wealth Management',
+        title: 'Beyond Investment —',
+        highlight: 'Complete NRI Asset Protection',
+        subtitle: 'From real estate investment to legal support, rental management, tax planning and succession advisory — all in one trusted ecosystem.'
+    },
+    {
+        image: '/images/hero_indian_luxury.png',
         tag: 'Institutional Standards',
-        title: 'Secure Your Future with',
-        highlight: 'Digital Trust & Integrity',
-        subtitle: 'A sophisticated discovery ecosystem designed to eliminate the complexities of cross-border real estate acquisition with absolute clarity.'
+        title: 'Bridging Global NRIs to',
+        highlight: 'Verified Indian Real Estate',
+        subtitle: 'Institutional-grade transparency, verified developer credentials, and professional on-ground representation for the global Indian diaspora.'
     }
 ];
 
 const contentDataForSection2 = [
     {
         id: "01",
-        title: "The Platform",
-        text: "A structured discovery ecosystem built specifically for NRIs who seek visibility and a dependable investment process without the middleman noise.",
+        title: "Investment Opportunities",
+        text: "Curated, pre-verified real estate projects with standardized RERA disclosures and performance tracking — so you invest based on merit, not marketing.",
         image: "/images/media1.png"
     },
     {
         id: "02",
-        title: "The Standard",
-        text: "We mandate standardized disclosures—including RERA compliance and financial health—ensuring you invest based on merit, not marketing.",
+        title: "Asset Protection",
+        text: "Remote monitoring of your properties against illegal occupation, encroachment, forged documents, and misuse of Power of Attorney.",
         image: "https://images.unsplash.com/photo-1554224155-8d04cb21cd6c?q=80&w=1000&auto=format&fit=crop"
     },
     {
         id: "03",
-        title: "The Focus",
-        text: "Presenting builder-declared information in a clean, transparent manner to empower you with the clarity needed for remote decision-making.",
+        title: "Legal & Tax Advisory",
+        text: "A trusted network of legal partners and tax advisors helping you navigate FEMA, TDS, DTAA, capital gains, and property disputes from abroad.",
         image: "https://images.unsplash.com/photo-1460925895917-afdab827c52f?q=80&w=1000&auto=format&fit=crop"
-    }
+    },
+    // {
+    //     id: "04",
+    //     title: "Rental & Estate Management",
+    //     text: "End-to-end rental income management, tenant vetting, maintenance coordination, and succession planning — protecting your wealth across generations.",
+    //     image: "https://images.unsplash.com/photo-1560520653-9e0e4c89df11?q=80&w=1000&auto=format&fit=crop"
+    // }
 ];
 
 const challengesList = [
-    { id: "01", text: "Information Asymmetry", desc: "Unverified project data and lack of transparent documentation from abroad.", icon: <Search className="w-8 h-8 text-white" />, image: '/images/challenge_verified_info.png' },
-    { id: "02", text: "Fragmented Intermediaries", desc: "Heavy reliance on brokers and middlemen who often distort information.", icon: <Users className="w-8 h-8 text-white" />, image: '/images/challenge_intermediaries.png' },
-    { id: "03", text: "Lack of Standardized Disclosures", desc: "No uniform baseline to compare projects across different developers.", icon: <FileText className="w-8 h-8 text-white" />, image: '/images/challenge_disclosures.png' },
-    { id: "04", text: "Complex Regulatory Landscape", desc: "Navigating RERA, FEMA, and state-specific property laws remotely.", icon: <Gavel className="w-8 h-8 text-white" />, image: '/images/challenge_legal.png' },
-    { id: "05", text: "Builder Credibility Gaps", desc: "Difficulties in verifying past delivery records and financial stability.", icon: <ShieldCheck className="w-8 h-8 text-white" />, image: '/images/challenge_builder.png' },
-    { id: "06", text: "On-Ground Hurdles", desc: "Coordinating site visits and legal vetting across various time zones.", icon: <Globe className="w-8 h-8 text-white" />, image: '/images/challenge_timezone.png' }
+    {
+        id: "01",
+        text: "Currency Devaluation",
+        desc: "Exchange rate fluctuations reduce the effective value of Indian investments and impact returns when funds are repatriated.",
+        opportunity: "Diversified investment guidance, long-term wealth planning & portfolio monitoring.",
+        icon: <svg className="w-8 h-8 text-white" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><line x1="12" y1="1" x2="12" y2="23"></line><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path></svg>
+    },
+    {
+        id: "02",
+        text: "Returns on Investment",
+        desc: "Underperforming assets, vacancy periods, poor property management and delayed project completion erode NRI returns.",
+        opportunity: "Curated investment opportunities, performance tracking & market intelligence.",
+        icon: <svg className="w-8 h-8 text-white" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><line x1="12" y1="20" x2="12" y2="10"></line><line x1="18" y1="20" x2="18" y2="4"></line><line x1="6" y1="20" x2="6" y2="16"></line></svg>
+    },
+    {
+        id: "03",
+        text: "Asset Safety & Protection",
+        desc: "Illegal occupation, land encroachment, forged documents, misuse of Power of Attorney and unauthorized transactions.",
+        opportunity: "Asset monitoring, documentation management, property verification & trusted local network.",
+        icon: <ShieldCheck className="w-8 h-8 text-white" />
+    },
+    {
+        id: "04",
+        text: "Legal System Challenges",
+        desc: "Property disputes, civil litigation, fraudulent claims and delayed court proceedings are hard to manage from abroad.",
+        opportunity: "Legal advisory network, documentation support, case coordination & trusted legal partners.",
+        icon: <Gavel className="w-8 h-8 text-white" />
+    },
+    {
+        id: "05",
+        text: "Rental Income Management",
+        desc: "Non-paying tenants, long vacancy periods, property damage, delayed evictions and unauthorized subletting.",
+        opportunity: "Tenant management, rental monitoring, collection support & property inspections.",
+        icon: <svg className="w-8 h-8 text-white" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path><polyline points="9 22 9 12 15 12 15 22"></polyline></svg>
+    },
+    {
+        id: "06",
+        text: "Tax Planning & Compliance",
+        desc: "Income tax compliance, capital gains taxation, TDS deductions, DTAA regulations and repatriation procedures across multiple frameworks.",
+        opportunity: "Tax consultation, compliance support & investment structuring.",
+        icon: <FileText className="w-8 h-8 text-white" />
+    },
+    {
+        id: "07",
+        text: "Inheritance & Succession",
+        desc: "Multiple heir disputes, probate delays, unregistered wills, partition claims and asset transfer complications across generations.",
+        opportunity: "Estate planning support, succession advisory & documentation assistance.",
+        icon: <svg className="w-8 h-8 text-white" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg>
+    },
+    {
+        id: "08",
+        text: "Repairs & Maintenance",
+        desc: "Contractor overcharging, incomplete work, lack of supervision, maintenance delays and society management issues without on-ground presence.",
+        opportunity: "Verified service providers, maintenance monitoring, periodic inspections & digital reporting.",
+        icon: <svg className="w-8 h-8 text-white" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"></path></svg>
+    }
+];
+
+const whyChooseUs = [
+    {
+        title: "Trusted Network",
+        desc: "A rigorously vetted ecosystem of verified builders, legal advisors, tax experts and service providers you can rely on.",
+        icon: <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path></svg>
+    },
+    {
+        title: "Professional Expertise",
+        desc: "Seasoned professionals with deep domain knowledge in NRI investment, real estate law, taxation and cross-border wealth management.",
+        icon: <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="8" r="7"></circle><polyline points="8.21 13.89 7 23 12 20 17 23 15.79 13.88"></polyline></svg>
+    },
+    {
+        title: "End-to-End Asset Management",
+        desc: "From investment discovery to property maintenance, rental collection and succession planning — a single ecosystem for all your needs.",
+        icon: <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect><line x1="3" y1="9" x2="21" y2="9"></line><line x1="9" y1="21" x2="9" y2="9"></line></svg>
+    },
+    {
+        title: "Legal & Compliance Support",
+        desc: "Navigate FEMA, RERA, property disputes, TDS, DTAA and succession law with expert guidance — all from wherever you are in the world.",
+        icon: <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line></svg>
+    },
+    {
+        title: "Transparent Processes",
+        desc: "Standardized disclosures, real-time updates and clear documentation — no hidden fees, no middlemen noise, no surprises.",
+        icon: <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="8" x2="12" y2="12"></line><line x1="12" y1="16" x2="12.01" y2="16"></line></svg>
+    },
+    {
+        title: "Global Accessibility",
+        desc: "Built for the NRI lifestyle — access your investment dashboard, advisors and property updates anytime, from any time zone.",
+        icon: <Globe className="w-6 h-6" />
+    },
+    {
+        title: "Long-Term Wealth Protection",
+        desc: "We're not just about your next investment. We help you build, protect and pass on lasting wealth in India across generations.",
+        icon: <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path></svg>
+    }
 ];
 
 const benefitsList = [
@@ -324,8 +425,8 @@ export default function Index() {
             <section className="fullscreen-section section-light" id="about">
                 <div className="container">
                     <div className="section-heading">
-                        <h2 className="section-title">The <span className='text-highlight'>Investate Standard</span></h2>
-                        <p className="section-subtitle">A sophisticated discovery ecosystem built to eliminate the complexities of remote real estate acquisition for NRIs.</p>
+                        <h2 className="section-title">Our <span className='text-highlight'>End-to-End Platform</span></h2>
+                        <p className="section-subtitle">Beyond investment discovery — a comprehensive ecosystem protecting, managing and growing your Indian wealth from wherever you are in the world.</p>
                     </div>
 
                     <div className="horizontal-accordion-container">
@@ -355,23 +456,21 @@ export default function Index() {
                 </div>
             </section>
 
-            {/* ── Infrastructure-style Marquee Section ── */}
+            {/* ── NRI Challenges Marquee Section ── */}
             <section id="challenges" className="infra-section">
-                {/* ── Develite-style Header ── */}
                 <div className="infra-section-header">
                     <h2 className="infra-title">
-                        Overcoming <span className="infra-title-accent">Distance &amp; Trust Gap</span>
+                        Real Challenges <span className="infra-title-accent">Faced by NRIs</span>
                     </h2>
                 </div>
 
                 <p className="infra-subtitle">
-                    For NRIs, navigating the Indian property market often entails managing information asymmetry and on-ground uncertainty. We provide the clarity needed to differentiate exceptional opportunities from market noise.
+                    Distance creates far more than an investment gap. NRIs face complex legal, financial, operational and safety challenges in protecting their Indian assets. We address every one of them.
                 </p>
 
-                {/* ── Infinite Marquee with Original White Cards ── */}
+                {/* ── Infinite Marquee ── */}
                 <div className="infra-marquee-wrapper">
                     <div className="infra-marquee-track">
-                        {/* Render twice for seamless loop */}
                         {[...challengesList, ...challengesList].map((challenge, i) => (
                             <div key={i} className="infra-marquee-card">
                                 <div className="infra-card-icon-wrapper">
@@ -379,7 +478,58 @@ export default function Index() {
                                 </div>
                                 <h3 className="infra-card-title">{challenge.text}</h3>
                                 <p className="infra-card-desc">{challenge.desc}</p>
+                                {challenge.opportunity && (
+                                    <p style={{ fontSize: '0.78rem', color: '#C88A58', marginTop: '0.6rem', fontWeight: 600, lineHeight: 1.4 }}>
+                                        ✦ {challenge.opportunity}
+                                    </p>
+                                )}
                             </div>
+                        ))}
+                    </div>
+                </div>
+            </section>
+
+            {/* ── Why NRIs Choose Us Section ── */}
+            <section className="fullscreen-section section-light" id="why-choose-us" style={{ padding: '80px 0' }}>
+                <div className="container">
+                    <div className="section-heading">
+                        <h2 className="section-title">Why NRIs <span className="text-highlight">Choose Us</span></h2>
+                        <p className="section-subtitle">We built Investate India to solve the real problems NRIs face — not just to list properties. Here is what sets us apart.</p>
+                    </div>
+                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 mt-10">
+                        {whyChooseUs.map((item, index) => (
+                            <motion.div
+                                key={index}
+                                initial={{ opacity: 0, y: 24 }}
+                                whileInView={{ opacity: 1, y: 0 }}
+                                viewport={{ once: true, amount: 0.15 }}
+                                transition={{ duration: 0.5, delay: index * 0.07 }}
+                                style={{
+                                    background: '#fff',
+                                    borderRadius: '1rem',
+                                    padding: '1.75rem 1.5rem',
+                                    boxShadow: '0 4px 24px rgba(0,0,0,0.07)',
+                                    borderTop: '3px solid #D48035',
+                                    display: 'flex',
+                                    flexDirection: 'column',
+                                    gap: '0.85rem',
+                                    transition: 'transform 0.25s ease, box-shadow 0.25s ease'
+                                }}
+                                whileHover={{ y: -4, boxShadow: '0 12px 36px rgba(0,0,0,0.12)' }}
+                            >
+                                <div style={{
+                                    width: '2.75rem', height: '2.75rem', borderRadius: '0.65rem',
+                                    background: 'linear-gradient(135deg, #D48035, #C88A58)',
+                                    display: 'flex', alignItems: 'center', justifyContent: 'center',
+                                    color: '#fff', flexShrink: 0
+                                }}>
+                                    <span style={{ width: '1.25rem', height: '1.25rem', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                                        {item.icon}
+                                    </span>
+                                </div>
+                                <h4 style={{ fontSize: '1rem', fontWeight: 700, color: '#111', lineHeight: 1.3 }}>{item.title}</h4>
+                                <p style={{ fontSize: '0.9rem', color: '#666', lineHeight: 1.65 }}>{item.desc}</p>
+                            </motion.div>
                         ))}
                     </div>
                 </div>
