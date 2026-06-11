@@ -3,8 +3,46 @@
 import React, { useEffect } from 'react';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
-import { Shield, Users, Globe, Target, Award, Briefcase, ArrowRight, CheckCircle2 } from 'lucide-react';
+import { Shield, Users, Globe, Target, Award, Briefcase, ArrowRight, CheckCircle2, ChevronLeft, ChevronRight } from 'lucide-react';
 import { motion } from 'framer-motion';
+
+const whyChooseUs = [
+    {
+        title: "Trusted Network",
+        desc: "A rigorously vetted ecosystem of verified builders, legal advisors, tax experts and service providers you can rely on.",
+        icon: <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path></svg>
+    },
+    {
+        title: "Professional Expertise",
+        desc: "Seasoned professionals with deep domain knowledge in NRI investment, real estate law, taxation and cross-border wealth management.",
+        icon: <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="8" r="7"></circle><polyline points="8.21 13.89 7 23 12 20 17 23 15.79 13.88"></polyline></svg>
+    },
+    {
+        title: "End-to-End Asset Management",
+        desc: "From investment discovery to property maintenance, rental collection and succession planning — a single ecosystem for all your needs.",
+        icon: <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect><line x1="3" y1="9" x2="21" y2="9"></line><line x1="9" y1="21" x2="9" y2="9"></line></svg>
+    },
+    {
+        title: "Legal & Compliance Support",
+        desc: "Navigate FEMA, RERA, property disputes, TDS, DTAA and succession law with expert guidance — all from wherever you are in the world.",
+        icon: <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line></svg>
+    },
+    {
+        title: "Transparent Processes",
+        desc: "Standardized disclosures, real-time updates and clear documentation — no hidden fees, no middlemen noise, no surprises.",
+        icon: <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="8" x2="12" y2="12"></line><line x1="12" y1="16" x2="12.01" y2="16"></line></svg>
+    },
+    {
+        title: "Global Accessibility",
+        desc: "Built for the NRI lifestyle — access your investment dashboard, advisors and property updates anytime, from any time zone.",
+        icon: <Globe className="w-6 h-6" />
+    },
+    {
+        title: "Long-Term Wealth Protection",
+        desc: "We're not just about your next investment. We help you build, protect and pass on lasting wealth in India across generations.",
+        icon: <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path></svg>
+    }
+];
 
 export default function AboutUs() {
   useEffect(() => {
@@ -189,6 +227,59 @@ export default function AboutUs() {
               />
             </div>
           </div>
+
+          <div className="mt-20">
+            <div className="text-center mb-12">
+              <h2 className="text-3xl md:text-4xl font-bold text-[#0b264f] mb-4">
+                Why NRIs <span className="text-orange-500">Choose Us</span>
+              </h2>
+              <p className="text-gray-500 max-w-2xl mx-auto leading-relaxed">
+                We built Investate India to solve the real problems NRIs face — not just to list properties. Here is what sets us apart.
+              </p>
+            </div>
+
+            <div className="relative">
+              <button 
+                onClick={() => { const el = document.getElementById('why-choose-scroll'); el.scrollBy({ left: -el.clientWidth, behavior: 'smooth' }); }}
+                className="absolute left-0 top-1/2 -translate-y-1/2 -ml-6 z-10 bg-white shadow-[0_4px_20px_rgba(0,0,0,0.12)] rounded-full p-3 text-orange-500 hover:text-white hover:bg-orange-500 transition-all border border-gray-100 hidden md:flex"
+              >
+                <ChevronLeft className="w-6 h-6" />
+              </button>
+
+              <div 
+                id="why-choose-scroll" 
+                className="flex overflow-x-auto gap-6 pb-8 snap-x snap-mandatory px-4 -mx-4 scroll-smooth" 
+                style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
+              >
+                {whyChooseUs.map((item, index) => (
+                  <motion.div
+                    key={index}
+                    initial={{ opacity: 0, y: 24 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    viewport={{ once: true, amount: 0.15 }}
+                    transition={{ duration: 0.5, delay: index * 0.05 }}
+                    className="bg-white rounded-2xl p-6 shadow-md hover:shadow-xl transition-all duration-300 border-t-4 border-orange-400 flex flex-col gap-4 cursor-pointer w-[85vw] sm:w-[calc(50%-12px)] lg:w-[calc(33.333%-16px)] shrink-0 snap-start"
+                    style={{ transform: 'translateY(0)' }}
+                    whileHover={{ y: -6 }}
+                  >
+                    <div className="w-11 h-11 rounded-xl flex items-center justify-center text-white flex-shrink-0"
+                      style={{ background: 'linear-gradient(135deg, #F97316, #D48035)' }}>
+                      {item.icon}
+                    </div>
+                    <h4 className="text-base font-bold text-[#0b264f] leading-snug">{item.title}</h4>
+                    <p className="text-sm text-gray-500 leading-relaxed">{item.desc}</p>
+                  </motion.div>
+                ))}
+              </div>
+
+              <button 
+                onClick={() => { const el = document.getElementById('why-choose-scroll'); el.scrollBy({ left: el.clientWidth, behavior: 'smooth' }); }}
+                className="absolute right-0 top-1/2 -translate-y-1/2 -mr-6 z-10 bg-white shadow-[0_4px_20px_rgba(0,0,0,0.12)] rounded-full p-3 text-orange-500 hover:text-white hover:bg-orange-500 transition-all border border-gray-100 hidden md:flex"
+              >
+                <ChevronRight className="w-6 h-6" />
+              </button>
+            </div>
+          </div>
         </div>
       </section>
 
@@ -274,7 +365,7 @@ export default function AboutUs() {
         </div>
       </section>
 
-      {/* <section className="py-20 bg-[#0b264f] relative overflow-hidden">
+      <section className="py-20 bg-[#0b264f] relative overflow-hidden">
         <div className="absolute top-0 right-0 w-64 h-64 bg-blue-800 rounded-full opacity-20 -mr-32 -mt-32"></div>
         <div className="absolute bottom-0 left-0 w-64 h-64 bg-orange-600 rounded-full opacity-10 -ml-32 -mb-32"></div>
 
@@ -295,7 +386,7 @@ export default function AboutUs() {
             </button>
           </div>
         </div>
-      </section> */}
+      </section>
 
       <Footer />
     </div>
