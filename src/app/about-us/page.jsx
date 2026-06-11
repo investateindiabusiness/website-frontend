@@ -241,9 +241,9 @@ export default function AboutUs() {
             <div className="relative">
               <button 
                 onClick={() => { const el = document.getElementById('why-choose-scroll'); el.scrollBy({ left: -el.clientWidth, behavior: 'smooth' }); }}
-                className="absolute left-0 top-1/2 -translate-y-1/2 -ml-6 z-10 bg-white shadow-[0_4px_20px_rgba(0,0,0,0.12)] rounded-full p-3 text-orange-500 hover:text-white hover:bg-orange-500 transition-all border border-gray-100 hidden md:flex"
+                className="absolute left-0 top-1/2 -translate-y-1/2 -ml-4 md:-ml-6 z-10 bg-white shadow-[0_4px_20px_rgba(0,0,0,0.12)] rounded-full p-2 md:p-3 text-orange-500 hover:text-white hover:bg-orange-500 transition-all border border-gray-100 flex"
               >
-                <ChevronLeft className="w-6 h-6" />
+                <ChevronLeft className="w-5 h-5 md:w-6 md:h-6" />
               </button>
 
               <div 
@@ -274,9 +274,9 @@ export default function AboutUs() {
 
               <button 
                 onClick={() => { const el = document.getElementById('why-choose-scroll'); el.scrollBy({ left: el.clientWidth, behavior: 'smooth' }); }}
-                className="absolute right-0 top-1/2 -translate-y-1/2 -mr-6 z-10 bg-white shadow-[0_4px_20px_rgba(0,0,0,0.12)] rounded-full p-3 text-orange-500 hover:text-white hover:bg-orange-500 transition-all border border-gray-100 hidden md:flex"
+                className="absolute right-0 top-1/2 -translate-y-1/2 -mr-4 md:-mr-6 z-10 bg-white shadow-[0_4px_20px_rgba(0,0,0,0.12)] rounded-full p-2 md:p-3 text-orange-500 hover:text-white hover:bg-orange-500 transition-all border border-gray-100 flex"
               >
-                <ChevronRight className="w-6 h-6" />
+                <ChevronRight className="w-5 h-5 md:w-6 md:h-6" />
               </button>
             </div>
           </div>

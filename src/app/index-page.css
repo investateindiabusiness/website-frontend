@@ -2724,8 +2724,8 @@ h4,
 
     /* 6. Display window adjustments */
     .display-image-box {
-        height: 20vh;
-        min-height: 150px;
+        height: 220px;
+        min-height: 220px;
     }
 
     .display-text-box {
