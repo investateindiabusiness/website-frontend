@@ -22,7 +22,7 @@ export const metadata = {
         url: '/logo-big.png',
         width: 800,
         height: 600,
-        alt: 'Investate India Logo',
+        alt: 'Investate India — NRI Wealth Protection Platform',
       },
     ],
     locale: 'en_US',

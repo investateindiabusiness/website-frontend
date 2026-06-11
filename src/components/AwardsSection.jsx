@@ -82,7 +82,7 @@ export default function AwardsSection() {
         }
         return prev + 1;
       });
-    }, 2500); // Auto-slide every 2.5 seconds
+    }, 1500); // Auto-slide every 1.5 seconds
 
     return () => clearInterval(interval);
   }, [maxIndex, isHovered]);
