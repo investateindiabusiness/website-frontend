@@ -63,6 +63,11 @@ const Footer = () => {
                   Contact Us
                 </Link>
               </li>
+              <li>
+                <Link href="/gallery" className="text-gray-400 hover:text-[var(--color-accent,#D48035)] transition-colors text-sm">
+                  Gallery
+                </Link>
+              </li>
               {/* <li>
                 <Link href="/register" className="text-gray-400 hover:text-[var(--color-accent,#D48035)] transition-colors text-sm">
                   For Investors
