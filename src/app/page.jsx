@@ -146,10 +146,10 @@ const investorSteps = [
 ];
 
 const stepImages = [
-    "/images/register_optimized.jpg", /* Step 1 (Register): Newly uploaded luxury house model and paperwork signing representing safe registration and property planning */
-    "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?q=80&w=1000&auto=format&fit=crop", /* Step 2 (Discover): Breathtaking sunset luxury villa facade viewed from the outside, with no repeated images */
-    "https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?q=80&w=1000&auto=format&fit=crop", /* Step 3 (Evaluate): Real estate advisors evaluating project timelines and credentials with zero text/logos */
-    "https://images.unsplash.com/photo-1560520653-9e0e4c89df11?q=80&w=1000&auto=format&fit=crop"  /* Step 4 (Decide): Executive handshake of trust over real estate investment plans with no brand text/logos */
+    "/images/register_optimized.jpg",   /* Step 1 (Register) */
+    "/images/process_discovery.png",    /* Step 2 (Discover) */
+    "/images/image_optimized.jpg",      /* Step 3 (Evaluate) */
+    "/images/image3.png"                /* Step 4 (Decide) */
 ];
 
 const teamMembers = [
