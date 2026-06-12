@@ -63,8 +63,8 @@ export default function RootLayout({ children }) {
     <html lang="en">
       <head>
         <link rel="icon" type="image/png" href="/logo-small-black.png" />
-        <link rel="stylesheet" href="/theme.css" />
-        <link rel="stylesheet" href="/index-page.css" />
+        <link rel="stylesheet" href="/theme.css?v=1.0.2" />
+        <link rel="stylesheet" href="/index-page.css?v=1.0.2" />
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(schemaJson) }}

@@ -48,9 +48,10 @@ const awardsData = [
 ];
 
 export default function AwardsSection() {
-  const [activeIndex, setActiveIndex] = useState(0);
+  const [activeIndex, setActiveIndex] = useState(awardsData.length);
   const [visibleCards, setVisibleCards] = useState(3);
   const [isHovered, setIsHovered] = useState(false);
+  const [transitionEnabled, setTransitionEnabled] = useState(true);
 
   // Update visible cards based on screen size
   useEffect(() => {
@@ -69,31 +70,48 @@ export default function AwardsSection() {
     return () => window.removeEventListener('resize', handleResize);
   }, []);
 
-  const maxIndex = Math.max(0, awardsData.length - visibleCards);
+  // Re-enable transition after a zero-duration jump/reset
+  useEffect(() => {
+    if (!transitionEnabled) {
+      const raf = requestAnimationFrame(() => {
+        setTransitionEnabled(true);
+      });
+      return () => cancelAnimationFrame(raf);
+    }
+  }, [transitionEnabled]);
 
   // Auto-slide mechanism
   useEffect(() => {
-    if (isHovered || maxIndex === 0) return;
+    if (isHovered) return;
 
     const interval = setInterval(() => {
-      setActiveIndex((prev) => {
-        if (prev >= maxIndex) {
-          return 0; // wrap around to beginning
-        }
-        return prev + 1;
-      });
-    }, 1500); // Auto-slide every 1.5 seconds
+      setActiveIndex((prev) => prev + 1);
+    }, 2000); // Auto-slide every 2 seconds
 
     return () => clearInterval(interval);
-  }, [maxIndex, isHovered]);
+  }, [isHovered]);
 
   const handlePrev = () => {
-    setActiveIndex((prev) => Math.max(0, prev - 1));
+    if (!transitionEnabled) return;
+    setActiveIndex((prev) => prev - 1);
   };
 
   const handleNext = () => {
-    setActiveIndex((prev) => Math.min(maxIndex, prev + 1));
+    if (!transitionEnabled) return;
+    setActiveIndex((prev) => prev + 1);
   };
+
+  const handleAnimationComplete = () => {
+    if (activeIndex >= awardsData.length * 2) {
+      setTransitionEnabled(false);
+      setActiveIndex(activeIndex - awardsData.length);
+    } else if (activeIndex < awardsData.length) {
+      setTransitionEnabled(false);
+      setActiveIndex(activeIndex + awardsData.length);
+    }
+  };
+
+  const extendedAwardsData = [...awardsData, ...awardsData, ...awardsData];
 
   return (
     <section
@@ -113,22 +131,14 @@ export default function AwardsSection() {
           <div className="flex gap-3 mb-1">
             <button
               onClick={handlePrev}
-              disabled={activeIndex === 0}
-              className={`w-10 h-10 rounded-full border border-gray-300 flex items-center justify-center text-gray-600 transition-all ${activeIndex === 0
-                ? 'opacity-30 cursor-not-allowed'
-                : 'hover:border-[var(--color-accent,#D48035)] hover:text-[var(--color-accent,#D48035)] hover:scale-105 active:scale-95'
-                }`}
+              className="w-10 h-10 rounded-full border border-gray-300 flex items-center justify-center text-gray-600 transition-all hover:border-[var(--color-accent,#D48035)] hover:text-[var(--color-accent,#D48035)] hover:scale-105 active:scale-95"
               aria-label="Previous slide"
             >
               <ChevronLeft className="w-5 h-5" />
             </button>
             <button
               onClick={handleNext}
-              disabled={activeIndex >= maxIndex}
-              className={`w-10 h-10 rounded-full border border-gray-300 flex items-center justify-center text-gray-600 transition-all ${activeIndex >= maxIndex
-                ? 'opacity-30 cursor-not-allowed'
-                : 'hover:border-[var(--color-accent,#D48035)] hover:text-[var(--color-accent,#D48035)] hover:scale-105 active:scale-95'
-                }`}
+              className="w-10 h-10 rounded-full border border-gray-300 flex items-center justify-center text-gray-600 transition-all hover:border-[var(--color-accent,#D48035)] hover:text-[var(--color-accent,#D48035)] hover:scale-105 active:scale-95"
               aria-label="Next slide"
             >
               <ChevronRight className="w-5 h-5" />
@@ -170,11 +180,12 @@ export default function AwardsSection() {
             <motion.div
               className="flex -mx-4"
               animate={{ x: `-${activeIndex * (100 / visibleCards)}%` }}
-              transition={{ type: "spring", stiffness: 260, damping: 28 }}
+              transition={transitionEnabled ? { type: "spring", stiffness: 260, damping: 28 } : { duration: 0 }}
+              onAnimationComplete={handleAnimationComplete}
             >
-              {awardsData.map((award) => (
+              {extendedAwardsData.map((award, index) => (
                 <div
-                  key={award.id}
+                  key={`${award.id}-${index}`}
                   className={`px-4 flex-shrink-0`}
                   style={{ width: `${100 / visibleCards}%` }}
                 >
@@ -183,19 +194,14 @@ export default function AwardsSection() {
                     <div className="overflow-hidden rounded-lg shadow-sm border border-gray-100 aspect-[4/3] bg-gray-50">
                       <img
                         src={award.image}
-                        alt={award.title}
+                        alt={typeof award.title === 'string' ? award.title : "Moments of Pride"}
                         className="w-full h-full object-cover object-top transition-transform duration-500 group-hover:scale-105"
                         loading="lazy"
                       />
                     </div>
 
-                    {/* Award Year */}
-                    <h3 className="text-3xl font-bold text-gray-900 mt-6 mb-3 tracking-tight">
-                      {award.year}
-                    </h3>
-
                     {/* Award Description */}
-                    <p className="text-gray-600 text-[1.05rem] leading-relaxed font-normal">
+                    <p className="text-gray-600 text-[1.05rem] leading-relaxed font-normal mt-6">
                       {award.title}
                     </p>
                   </div>
@@ -210,13 +216,16 @@ export default function AwardsSection() {
           {awardsData.map((_, i) => (
             <button
               key={i}
-              onClick={() => setActiveIndex(Math.min(i, maxIndex))}
+              onClick={() => {
+                if (!transitionEnabled) return;
+                setActiveIndex(awardsData.length + i);
+              }}
               aria-label={`Go to slide ${i + 1}`}
               className="transition-all duration-300 rounded-full"
               style={{
-                width: activeIndex === i || (i > maxIndex && activeIndex === maxIndex) ? '1.5rem' : '0.5rem',
+                width: (activeIndex % awardsData.length) === i ? '1.5rem' : '0.5rem',
                 height: '0.5rem',
-                background: activeIndex === i ? 'var(--color-accent, #D48035)' : '#D1D5DB',
+                background: (activeIndex % awardsData.length) === i ? 'var(--color-accent, #D48035)' : '#D1D5DB',
                 border: 'none',
                 padding: 0,
                 cursor: 'pointer',
