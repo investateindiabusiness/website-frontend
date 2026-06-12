@@ -86,7 +86,7 @@ export default function AwardsSection() {
 
     const interval = setInterval(() => {
       setActiveIndex((prev) => prev + 1);
-    }, 2000); // Auto-slide every 2 seconds
+    }, 1000); // Auto-slide every 1 seconds
 
     return () => clearInterval(interval);
   }, [isHovered]);
