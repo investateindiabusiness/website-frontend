@@ -1,19 +1,31 @@
 "use client";
 
-import React, { useState } from 'react';
-import { useRouter } from 'next/navigation';
+import React, { useState, useEffect, Suspense } from 'react';
+import { useRouter, useSearchParams } from 'next/navigation';
 import { useAuth } from '@/hooks/AuthContext';
 import { toast } from '@/hooks/use-toast';
 import { adminLoginRequest } from '@/api';
 import { Shield, Lock, Eye, EyeOff, User, BarChart3, Users } from 'lucide-react';
 
-export default function AdminLogin() {
+function AdminLoginForm() {
   const router = useRouter();
   const { login } = useAuth();
+  const searchParams = useSearchParams();
   const [formData, setFormData] = useState({ email: '', password: '' });
   const [submitting, setSubmitting] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
   const [rememberMe, setRememberMe] = useState(false);
+
+  useEffect(() => {
+    if (searchParams.get('session_expired') === 'true') {
+      toast({
+        title: "Session Expired",
+        description: "Your session has expired. Please log in again.",
+        variant: "destructive"
+      });
+      window.history.replaceState({}, '', window.location.pathname);
+    }
+  }, [searchParams]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -34,6 +46,118 @@ export default function AdminLogin() {
     }
   };
 
+  return (
+    <div className="bg-white/80 backdrop-blur-md rounded-[2.25rem] shadow-[0_30px_70px_-15px_rgba(0,0,0,0.08)] border border-slate-100/90 p-8 md:p-10 transition-all duration-300">
+
+      {/* Shield Icon Top Badge */}
+      <div className="w-12 h-12 rounded-2xl border border-orange-500/20 bg-orange-500/5 flex items-center justify-center text-orange-500 mb-6 shadow-sm shadow-orange-500/10">
+        <Shield className="w-6 h-6 stroke-[1.75]" />
+      </div>
+
+      {/* Card Header */}
+      <div className="mb-8">
+        <h2 className="text-3xl font-extrabold tracking-tight text-slate-900 leading-none">Admin Portal</h2>
+        <p className="text-sm text-slate-400 mt-2 font-medium">Sign in to access your dashboard</p>
+      </div>
+
+      {/* Login Form */}
+      <form onSubmit={handleSubmit} className="space-y-6">
+
+        {/* Admin Email Input */}
+        <div className="space-y-2">
+          <label htmlFor="email" className="text-xs font-semibold text-slate-500 uppercase tracking-wider block">Admin Email</label>
+          <div className="relative group">
+            <span className="absolute left-4 top-1/2 -translate-y-1/2 text-orange-500/70 group-focus-within:text-orange-500 transition-colors">
+              <User className="h-5 w-5 stroke-[1.75]" />
+            </span>
+            <input
+              id="email"
+              type="email"
+              placeholder="test.admin@gmail.com"
+              value={formData.email}
+              onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+              required
+              className="w-full h-12 pl-12 pr-4 bg-slate-50/50 hover:bg-slate-50 focus:bg-white border border-slate-200 focus:border-orange-500 rounded-2xl text-slate-800 placeholder-slate-400 text-sm focus:ring-4 focus:ring-orange-500/10 focus:outline-none transition-all duration-200 font-medium"
+            />
+          </div>
+        </div>
+
+        {/* Password Input */}
+        <div className="space-y-2">
+          <label htmlFor="password" className="text-xs font-semibold text-slate-500 uppercase tracking-wider block">Password</label>
+          <div className="relative group">
+            <span className="absolute left-4 top-1/2 -translate-y-1/2 text-orange-500/70 group-focus-within:text-orange-500 transition-colors">
+              <Lock className="h-5 w-5 stroke-[1.75]" />
+            </span>
+            <input
+              id="password"
+              type={showPassword ? "text" : "password"}
+              placeholder="••••••••••••"
+              value={formData.password}
+              onChange={(e) => setFormData({ ...formData, password: e.target.value })}
+              required
+              className="w-full h-12 pl-12 pr-12 bg-slate-50/50 hover:bg-slate-50 focus:bg-white border border-slate-200 focus:border-orange-500 rounded-2xl text-slate-800 placeholder-slate-400 text-sm focus:ring-4 focus:ring-orange-500/10 focus:outline-none transition-all duration-200 font-medium"
+            />
+            <button
+              type="button"
+              onClick={() => setShowPassword(!showPassword)}
+              className="absolute right-4 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 transition-colors focus:outline-none"
+            >
+              {showPassword ? (
+                <EyeOff className="h-5 w-5 stroke-[1.75]" />
+              ) : (
+                <Eye className="h-5 w-5 stroke-[1.75]" />
+              )}
+            </button>
+          </div>
+        </div>
+
+        {/* Remember me & Forgot Password */}
+        <div className="flex items-center justify-between text-xs pt-1">
+          <label className="flex items-center gap-2 text-slate-500 cursor-pointer select-none">
+            <input
+              type="checkbox"
+              checked={rememberMe}
+              onChange={(e) => setRememberMe(e.target.checked)}
+              className="w-4.5 h-4.5 rounded border-slate-300 text-orange-500 focus:ring-orange-500/20 focus:ring-offset-0 accent-orange-500"
+            />
+            <span className="font-medium">Remember me</span>
+          </label>
+          <a href="#forgot" className="font-semibold text-slate-500 hover:text-orange-500 transition-colors">Forgot password?</a>
+        </div>
+
+        {/* Submit Button */}
+        <button
+          type="submit"
+          disabled={submitting}
+          className="w-full h-12 bg-gradient-to-r from-orange-500 to-orange-600 hover:from-orange-600 hover:to-orange-700 text-white font-semibold text-sm rounded-2xl shadow-lg shadow-orange-500/20 hover:shadow-orange-500/30 transition-all duration-200 flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed group"
+        >
+          {submitting ? (
+            <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
+          ) : (
+            <>
+              <Lock className="h-4 w-4 group-hover:scale-110 transition-transform duration-200" />
+              <span>Secure Login</span>
+            </>
+          )}
+        </button>
+
+      </form>
+
+      {/* Encrypted footer inside card */}
+      <div className="flex items-center justify-center gap-2 text-[10px] text-slate-400 mt-6 font-medium">
+        <svg className="w-3.5 h-3.5 text-slate-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2.5">
+          <rect x="3" y="11" width="18" height="11" rx="2" ry="2" />
+          <path d="M7 11V7a5 5 0 0 1 10 0v4" />
+        </svg>
+        <span>Your connection is encrypted and secure</span>
+      </div>
+
+    </div>
+  );
+}
+
+export default function AdminLogin() {
   return (
     <div className="min-h-screen w-full flex bg-[#fafbfe] relative overflow-hidden font-sans">
 
@@ -104,7 +228,6 @@ export default function AdminLogin() {
 
         {/* Bottom features columns */}
         <div className="relative z-10 grid grid-cols-3 gap-4 pt-6 border-t border-slate-800/60">
-          {/* Col 1 */}
           <div className="flex flex-col items-start">
             <div className="w-9 h-9 rounded-xl border border-orange-500/20 bg-orange-500/5 flex items-center justify-center text-orange-500 mb-3 shadow-sm">
               <Shield className="h-4.5 w-4.5 stroke-[1.75]" />
@@ -113,7 +236,6 @@ export default function AdminLogin() {
             <p className="text-[11px] text-slate-400 mt-1 leading-normal">Enterprise grade protection</p>
           </div>
 
-          {/* Col 2 */}
           <div className="flex flex-col items-start">
             <div className="w-9 h-9 rounded-xl border border-orange-500/20 bg-orange-500/5 flex items-center justify-center text-orange-500 mb-3 shadow-sm">
               <BarChart3 className="h-4.5 w-4.5 stroke-[1.75]" />
@@ -122,7 +244,6 @@ export default function AdminLogin() {
             <p className="text-[11px] text-slate-400 mt-1 leading-normal">Monitor and manage operations</p>
           </div>
 
-          {/* Col 3 */}
           <div className="flex flex-col items-start">
             <div className="w-9 h-9 rounded-xl border border-orange-500/20 bg-orange-500/5 flex items-center justify-center text-orange-500 mb-3 shadow-sm">
               <Users className="h-4.5 w-4.5 stroke-[1.75]" />
@@ -136,12 +257,10 @@ export default function AdminLogin() {
         <div className="relative z-10 text-xs text-slate-500/80 mt-12 font-medium">
           © 2025  INVESTATE INDIA. All rights reserved.
         </div>
-
       </div>
 
       {/* Right Panel: Login Card Container */}
       <div className="flex-1 flex flex-col justify-center items-center p-6 md:p-12 bg-slate-50 relative z-20">
-
         {/* Grid Background Pattern */}
         <div
           className="absolute inset-0 opacity-[0.06] z-0 pointer-events-none"
@@ -152,118 +271,14 @@ export default function AdminLogin() {
         />
 
         <div className="w-full max-w-[450px] z-10">
-
-          {/* White Elevated Card */}
-          <div className="bg-white/80 backdrop-blur-md rounded-[2.25rem] shadow-[0_30px_70px_-15px_rgba(0,0,0,0.08)] border border-slate-100/90 p-8 md:p-10 transition-all duration-300">
-
-            {/* Shield Icon Top Badge */}
-            <div className="w-12 h-12 rounded-2xl border border-orange-500/20 bg-orange-500/5 flex items-center justify-center text-orange-500 mb-6 shadow-sm shadow-orange-500/10">
-              <Shield className="w-6 h-6 stroke-[1.75]" />
+          <Suspense fallback={
+            <div className="bg-white/80 backdrop-blur-md rounded-[2.25rem] shadow-[0_30px_70px_-15px_rgba(0,0,0,0.08)] border border-slate-100/90 p-8 md:p-10 text-center flex flex-col items-center justify-center min-h-[400px]">
+              <div className="w-8 h-8 border-2 border-orange-500 border-t-transparent rounded-full animate-spin"></div>
             </div>
-
-            {/* Card Header */}
-            <div className="mb-8">
-              <h2 className="text-3xl font-extrabold tracking-tight text-slate-900 leading-none">Admin Portal</h2>
-              <p className="text-sm text-slate-400 mt-2 font-medium">Sign in to access your dashboard</p>
-            </div>
-
-            {/* Login Form */}
-            <form onSubmit={handleSubmit} className="space-y-6">
-
-              {/* Admin Email Input */}
-              <div className="space-y-2">
-                <label htmlFor="email" className="text-xs font-semibold text-slate-500 uppercase tracking-wider block">Admin Email</label>
-                <div className="relative group">
-                  <span className="absolute left-4 top-1/2 -translate-y-1/2 text-orange-500/70 group-focus-within:text-orange-500 transition-colors">
-                    <User className="h-5 w-5 stroke-[1.75]" />
-                  </span>
-                  <input
-                    id="email"
-                    type="email"
-                    placeholder="test.admin@gmail.com"
-                    value={formData.email}
-                    onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-                    required
-                    className="w-full h-12 pl-12 pr-4 bg-slate-50/50 hover:bg-slate-50 focus:bg-white border border-slate-200 focus:border-orange-500 rounded-2xl text-slate-800 placeholder-slate-400 text-sm focus:ring-4 focus:ring-orange-500/10 focus:outline-none transition-all duration-200 font-medium"
-                  />
-                </div>
-              </div>
-
-              {/* Password Input */}
-              <div className="space-y-2">
-                <label htmlFor="password" className="text-xs font-semibold text-slate-500 uppercase tracking-wider block">Password</label>
-                <div className="relative group">
-                  <span className="absolute left-4 top-1/2 -translate-y-1/2 text-orange-500/70 group-focus-within:text-orange-500 transition-colors">
-                    <Lock className="h-5 w-5 stroke-[1.75]" />
-                  </span>
-                  <input
-                    id="password"
-                    type={showPassword ? "text" : "password"}
-                    placeholder="••••••••••••"
-                    value={formData.password}
-                    onChange={(e) => setFormData({ ...formData, password: e.target.value })}
-                    required
-                    className="w-full h-12 pl-12 pr-12 bg-slate-50/50 hover:bg-slate-50 focus:bg-white border border-slate-200 focus:border-orange-500 rounded-2xl text-slate-800 placeholder-slate-400 text-sm focus:ring-4 focus:ring-orange-500/10 focus:outline-none transition-all duration-200 font-medium"
-                  />
-                  <button
-                    type="button"
-                    onClick={() => setShowPassword(!showPassword)}
-                    className="absolute right-4 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 transition-colors focus:outline-none"
-                  >
-                    {showPassword ? (
-                      <EyeOff className="h-5 w-5 stroke-[1.75]" />
-                    ) : (
-                      <Eye className="h-5 w-5 stroke-[1.75]" />
-                    )}
-                  </button>
-                </div>
-              </div>
-
-              {/* Remember me & Forgot Password */}
-              <div className="flex items-center justify-between text-xs pt-1">
-                <label className="flex items-center gap-2 text-slate-500 cursor-pointer select-none">
-                  <input
-                    type="checkbox"
-                    checked={rememberMe}
-                    onChange={(e) => setRememberMe(e.target.checked)}
-                    className="w-4.5 h-4.5 rounded border-slate-300 text-orange-500 focus:ring-orange-500/20 focus:ring-offset-0 accent-orange-500"
-                  />
-                  <span className="font-medium">Remember me</span>
-                </label>
-                <a href="#forgot" className="font-semibold text-slate-500 hover:text-orange-500 transition-colors">Forgot password?</a>
-              </div>
-
-              {/* Submit Button */}
-              <button
-                type="submit"
-                disabled={submitting}
-                className="w-full h-12 bg-gradient-to-r from-orange-500 to-orange-600 hover:from-orange-600 hover:to-orange-700 text-white font-semibold text-sm rounded-2xl shadow-lg shadow-orange-500/20 hover:shadow-orange-500/30 transition-all duration-200 flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed group"
-              >
-                {submitting ? (
-                  <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
-                ) : (
-                  <>
-                    <Lock className="h-4 w-4 group-hover:scale-110 transition-transform duration-200" />
-                    <span>Secure Login</span>
-                  </>
-                )}
-              </button>
-
-            </form>
-
-            {/* Encrypted footer inside card */}
-            <div className="flex items-center justify-center gap-2 text-[10px] text-slate-400 mt-6 font-medium">
-              <svg className="w-3.5 h-3.5 text-slate-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2.5">
-                <rect x="3" y="11" width="18" height="11" rx="2" ry="2" />
-                <path d="M7 11V7a5 5 0 0 1 10 0v4" />
-              </svg>
-              <span>Your connection is encrypted and secure</span>
-            </div>
-
-          </div>
-
+          }>
+            <AdminLoginForm />
+          </Suspense>
         </div>
-
       </div>
 
     </div>

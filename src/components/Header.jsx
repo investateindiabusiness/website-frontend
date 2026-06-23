@@ -1,20 +1,22 @@
 "use client";
 
-import React, { useState } from 'react';
+import React, { useState, useEffect, Suspense } from 'react';
 import Link from 'next/link';
-import { useRouter, usePathname } from 'next/navigation';
+import { useRouter, usePathname, useSearchParams } from 'next/navigation';
 import { Button } from './ui/button';
-import { Menu, X, LogOut, UserCircle } from 'lucide-react';
+import { Menu, X, LogOut, UserCircle, LayoutDashboard } from 'lucide-react';
 import { useAuth } from '@/hooks/AuthContext';
+import { toast } from '@/hooks/use-toast';
 import dynamic from 'next/dynamic';
 
 const LoginDialog = dynamic(() => import('@/components/LoginDialog'), { ssr: false });
 const RegisterDialog = dynamic(() => import('@/components/RegisterDialog'), { ssr: false });
 
-const Header = ({ transparent = false }) => {
+const HeaderContent = ({ transparent = false }) => {
   const { user, logout } = useAuth();
   const router = useRouter();
   const pathname = usePathname();
+  const searchParams = useSearchParams();
 
   const [open, setOpen] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
@@ -47,6 +49,26 @@ const Header = ({ transparent = false }) => {
     setOpen(false);
   };
 
+  useEffect(() => {
+    const loginParam = searchParams.get('login');
+    const roleParam = searchParams.get('role');
+    const expiredParam = searchParams.get('session_expired');
+
+    if (expiredParam === 'true') {
+      toast({
+        title: "Session Expired",
+        description: "Your session has expired. Please log in again.",
+        variant: "destructive"
+      });
+      const cleanUrl = window.location.pathname + (loginParam ? `?login=${loginParam}&role=${roleParam}` : '');
+      window.history.replaceState({}, '', cleanUrl);
+    }
+
+    if (loginParam === 'true') {
+      openLogin(roleParam || 'investor');
+    }
+  }, [searchParams]);
+
   const handleSwitchToRegister = (dataPayload) => {
     setIsLoginOpen(false);
     if (typeof dataPayload === 'string') {
@@ -65,8 +87,20 @@ const Header = ({ transparent = false }) => {
     }
   };
 
+  const getDashboardPath = (role) => {
+    if (role === 'admin') return '/admin/dashboard';
+    if (role === 'builder') return '/builder/dashboard';
+    return '/dashboard';
+  };
+
+  const isDashboardArea = pathname.startsWith('/admin') || 
+                          pathname.startsWith('/builder/') || pathname === '/builder/dashboard' || pathname === '/builder/projects' ||
+                          pathname === '/dashboard' || pathname === '/properties' || pathname.startsWith('/investor/') || pathname.startsWith('/project/');
+
+  const displayUser = isDashboardArea ? user : null;
+
   const getNavLinks = () => {
-    if (!user) {
+    if (!displayUser) {
       return [
         { label: 'Home', path: '/' },
         { label: 'Builder', path: '/builder' },
@@ -75,7 +109,7 @@ const Header = ({ transparent = false }) => {
         { label: 'Contact Us', path: '/contact-us' },
       ];
     }
-    switch (user.role) {
+    switch (displayUser.role) {
       case 'admin': return [{ label: 'Dashboard', path: '/admin/dashboard' }, { label: 'Builders', path: '/admin/builders' }, { label: 'Investors', path: '/admin/investors' }, { label: 'Projects', path: '/admin/projects' }, { label: 'Leads', path: '/admin/leads' }, { label: 'Inquiries', path: '/admin/inquiries' }, { label: 'Newsletter', path: '/admin/newsletter' }];
       case 'builder': return [{ label: 'Dashboard', path: '/builder/dashboard' }, { label: 'Projects', path: '/builder/projects' }];
       case 'investor': return [{ label: 'Dashboard', path: '/dashboard' }, { label: 'Properties', path: '/properties' }];
@@ -111,13 +145,13 @@ const Header = ({ transparent = false }) => {
           </nav>
 
           {/* Desktop Auth Actions */}
-          {user ? (
+          {displayUser ? (
             <div className="hidden md:flex items-center gap-3 mr-4">
-              <div className="flex items-center gap-2 text-xs font-bold bg-gray-800/60 px-4.5 py-2 rounded-full border border-gray-700/50 text-gray-200 shadow-inner">
+              <Link href={getDashboardPath(displayUser.role)} className="flex items-center gap-2 text-xs font-bold bg-gray-800/60 px-4.5 py-2 rounded-full border border-gray-700/50 text-gray-200 shadow-inner hover:bg-gray-700 transition-all">
                 <UserCircle className="w-4 h-4 text-orange-500 flex-shrink-0" />
-                <span className="max-w-[120px] truncate">{user.name || user.email.split('@')[0]}</span>
-                <span className="text-[9px] uppercase tracking-wider bg-orange-500/10 text-orange-400 px-1.5 py-0.5 rounded border border-orange-500/20">{user.role}</span>
-              </div>
+                <span className="max-w-[120px] truncate">{displayUser.name || displayUser.email.split('@')[0]}</span>
+                <span className="text-[9px] uppercase tracking-wider bg-orange-500/10 text-orange-400 px-1.5 py-0.5 rounded border border-orange-500/20">{displayUser.role}</span>
+              </Link>
               <Button
                 onClick={handleLogout}
                 className="h-9 px-4 text-xs font-black uppercase tracking-widest text-red-400 bg-transparent hover:text-red-300 hover:bg-red-950/20 flex items-center gap-1.5 rounded-full transition-all border border-red-900/30 hover:border-red-900/50"
@@ -146,12 +180,13 @@ const Header = ({ transparent = false }) => {
             </div>
 
             <div className="mt-auto pb-8">
-              {user ? (
+              {displayUser ? (
                 <div className="space-y-3">
                   <div className="p-3 bg-gray-800 rounded mb-4">
                     <p className="text-xs text-gray-400">Account</p>
-                    <p className="text-white font-medium">{user.email}</p>
+                    <p className="text-white font-medium">{displayUser.email}</p>
                   </div>
+                  <Button onClick={() => { router.push(getDashboardPath(displayUser.role)); setMobileMenuOpen(false); }} className="w-full bg-[#D48035] hover:bg-[#B45309] text-white flex items-center justify-center gap-2"><LayoutDashboard className="w-4 h-4" /> Go to Dashboard</Button>
                   <Button onClick={handleLogout} variant="destructive" className="w-full"><LogOut className="w-4 h-4 mr-2" /> Logout</Button>
                 </div>
               ) : (
@@ -182,6 +217,14 @@ const Header = ({ transparent = false }) => {
         initialData={dialogData}
       />
     </>
+  );
+};
+
+const Header = (props) => {
+  return (
+    <Suspense fallback={<header className="fixed w-full top-0 left-0 right-0 z-[1000] h-16 bg-[#232325] border-b border-gray-800" />}>
+      <HeaderContent {...props} />
+    </Suspense>
   );
 };
 

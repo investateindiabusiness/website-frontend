@@ -3,7 +3,14 @@
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL || '';
 
 export const apiRequest = async (endpoint, options = {}) => {
-  const session = JSON.parse(localStorage.getItem('user_session'));
+  let session = null;
+  if (typeof window !== 'undefined') {
+    try {
+      session = JSON.parse(sessionStorage.getItem('user_session'));
+    } catch (e) {
+      console.warn("Failed to parse user session:", e);
+    }
+  }
 
   const headers = {
     'Content-Type': 'application/json',
@@ -22,8 +29,30 @@ export const apiRequest = async (endpoint, options = {}) => {
     if (response.status === 401) {
       const isAuthRequest = endpoint.includes('/login') || endpoint.includes('/google-sync') || endpoint.includes('/admin-login');
       if (!isAuthRequest) {
-        localStorage.removeItem('user_session');
-        window.location.href = '/';
+        const savedSession = typeof window !== 'undefined' ? sessionStorage.getItem('user_session') : null;
+        let role = 'investor';
+        if (savedSession) {
+          try {
+            const parsedSession = JSON.parse(savedSession);
+            if (parsedSession && parsedSession.role) {
+              role = parsedSession.role;
+            }
+          } catch (e) {
+            console.error("Error parsing user session in API interceptor:", e);
+          }
+        }
+        if (typeof window !== 'undefined') {
+          sessionStorage.removeItem('user_session');
+        }
+
+        if (role === 'admin') {
+          window.location.href = '/admin/login?session_expired=true';
+        } else if (role === 'builder') {
+          window.location.href = '/builder?login=true&role=builder&session_expired=true';
+        } else {
+          window.location.href = '/?login=true&role=investor&session_expired=true';
+        }
+
         return Promise.reject('Session expired');
       } else {
         return Promise.reject({ message: data.message || 'Authentication failed', ...data });
