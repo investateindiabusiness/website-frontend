@@ -90,9 +90,9 @@ export default function AdminHelpdesk() {
   }, [user, router, filterStatus]);
 
   const filteredTickets = tickets.filter(ticket => {
-    const matchesSearch = ticket.subject?.toLowerCase().includes(searchQuery.toLowerCase()) || 
-                          ticket.ticketId?.toLowerCase().includes(searchQuery.toLowerCase()) ||
-                          ticket.userName?.toLowerCase().includes(searchQuery.toLowerCase());
+    const matchesSearch = ticket.subject?.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      ticket.ticketId?.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      ticket.userName?.toLowerCase().includes(searchQuery.toLowerCase());
     return matchesSearch;
   });
 
@@ -105,7 +105,7 @@ export default function AdminHelpdesk() {
       <Header />
 
       <main className="flex-grow mt-[4rem] md:mt-[5rem] pb-12 px-4 md:px-8 max-w-7xl mx-auto w-full">
-        
+
         <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-8">
           <div>
             <h1 className="text-3xl font-bold text-gray-900 tracking-tight">Helpdesk Administration</h1>
@@ -126,17 +126,16 @@ export default function AdminHelpdesk() {
               onChange={(e) => setSearchQuery(e.target.value)}
             />
           </div>
-          
+
           <div className="flex overflow-x-auto gap-2 pb-2 md:pb-0 scrollbar-hide shrink-0 items-center">
             {statuses.map((status) => (
               <button
                 key={status}
                 onClick={() => setFilterStatus(status)}
-                className={`px-4 py-2 rounded-xl text-xs font-bold whitespace-nowrap transition-all border ${
-                  filterStatus === status
+                className={`px-4 py-2 rounded-xl text-xs font-bold whitespace-nowrap transition-all border ${filterStatus === status
                     ? 'bg-[#0b264f] text-white border-[#0b264f] shadow-md'
                     : 'bg-white text-gray-600 border-gray-200 hover:bg-gray-50'
-                }`}
+                  }`}
               >
                 {status.replace(/_/g, ' ')}
               </button>
