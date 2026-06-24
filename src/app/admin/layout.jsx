@@ -6,7 +6,7 @@ import { useAuth } from '@/hooks/AuthContext';
 import { toast } from '@/hooks/use-toast';
 
 export default function AdminLayout({ children }) {
-  const { user, loading } = useAuth();
+  const { user, loading, logout } = useAuth();
   const router = useRouter();
   const pathname = usePathname();
 
@@ -17,15 +17,21 @@ export default function AdminLayout({ children }) {
           router.push('/admin/login');
         }
       } else if (user.role !== 'admin') {
-        toast({
-          title: "Access Denied",
-          description: "You do not have administrator privileges.",
-          variant: "destructive"
-        });
-        router.push('/');
+        if (pathname === '/admin/login') {
+          // If a non-admin tries to go to the admin login page, automatically log them out
+          // so they can actually see the login form and log in as an admin.
+          logout();
+        } else {
+          toast({
+            title: "Access Denied",
+            description: "You do not have administrator privileges.",
+            variant: "destructive"
+          });
+          router.push('/');
+        }
       }
     }
-  }, [user, loading, router, pathname]);
+  }, [user, loading, router, pathname, logout]);
 
   if (loading) {
     return (

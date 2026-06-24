@@ -109,15 +109,13 @@ const HeaderContent = ({ transparent = false }) => {
         { label: 'Contact Us', path: '/contact-us' },
       ];
     }
-    switch (user.role) {
+    switch (displayUser.role) {
       case 'admin': return [{ label: 'Dashboard', path: '/admin/dashboard' }, { label: 'Builders', path: '/admin/builders' }, { label: 'Investors', path: '/admin/investors' }, { label: 'Projects', path: '/admin/projects' }, { label: 'Leads', path: '/admin/leads' }, { label: 'Inquiries', path: '/admin/inquiries' }, { label: 'Helpdesk', path: '/admin/helpdesk' }, { label: 'Newsletter', path: '/admin/newsletter' }];
-        switch (displayUser.role) {
-          case 'admin': return [{ label: 'Dashboard', path: '/admin/dashboard' }, { label: 'Builders', path: '/admin/builders' }, { label: 'Investors', path: '/admin/investors' }, { label: 'Projects', path: '/admin/projects' }, { label: 'Leads', path: '/admin/leads' }, { label: 'Inquiries', path: '/admin/inquiries' }, { label: 'Newsletter', path: '/admin/newsletter' }];
-          case 'builder': return [{ label: 'Dashboard', path: '/builder/dashboard' }, { label: 'Projects', path: '/builder/projects' }];
-          case 'investor': return [{ label: 'Dashboard', path: '/dashboard' }, { label: 'Properties', path: '/properties' }];
-          default: return [{ label: 'Home', path: '/' }];
-        }
-    };
+      case 'builder': return [{ label: 'Dashboard', path: '/builder/dashboard' }, { label: 'Projects', path: '/builder/projects' }];
+      case 'investor': return [{ label: 'Dashboard', path: '/dashboard' }, { label: 'Properties', path: '/properties' }];
+      default: return [{ label: 'Home', path: '/' }];
+    }
+  };
 
     const navLinks = getNavLinks();
 
