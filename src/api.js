@@ -24,21 +24,7 @@ export const apiRequest = async (endpoint, options = {}) => {
       headers,
     });
 
-    const contentType = response.headers.get("content-type");
-    let data;
-    if (contentType && contentType.includes("application/json")) {
-      data = await response.json();
-    } else {
-      // Non-JSON response (e.g. Express plain-text 404 "Cannot GET /api/...")
-      // For 404s this means the backend route doesn't exist yet — return an empty
-      // data object so the UI can render a graceful empty state instead of crashing.
-      if (response.status === 404) {
-        console.warn(`API 404 (route not found): ${endpoint}`);
-        return { data: [], total: 0, message: 'Not found' };
-      }
-      const text = await response.text();
-      throw new Error(`Invalid response format (expected JSON, got ${contentType || 'text'}). Status: ${response.status}. Content: ${text.slice(0, 150)}...`);
-    }
+    const data = await response.json();
 
     if (response.status === 401) {
       const isAuthRequest = endpoint.includes('/login') || endpoint.includes('/google-sync') || endpoint.includes('/admin-login');

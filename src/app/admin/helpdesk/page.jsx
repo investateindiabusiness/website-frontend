@@ -78,7 +78,7 @@ export default function AdminHelpdesk() {
     const loadTickets = async () => {
       try {
         setLoading(true);
-        
+
         let apiTickets = [];
         try {
           const res = await fetchAllTickets(filterStatus !== 'ALL' ? { status: filterStatus } : {});
@@ -87,8 +87,8 @@ export default function AdminHelpdesk() {
           console.warn("API load failed, falling back to local mock storage:", apiErr);
         }
 
-        const isDev = typeof window !== 'undefined' && 
-                      (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1');
+        const isDev = typeof window !== 'undefined' &&
+          (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1');
         if (isDev) {
           const mockTickets = JSON.parse(localStorage.getItem('mock_tickets') || '[]');
           setTickets([...mockTickets, ...apiTickets]);
@@ -107,19 +107,10 @@ export default function AdminHelpdesk() {
   }, [user, router, filterStatus]);
 
   const filteredTickets = tickets.filter(ticket => {
-    const cleanQuery = searchQuery.trim().toLowerCase().replace(/^#/, '');
-    const matchesSearch = (ticket.subject || '').toLowerCase().includes(cleanQuery) || 
-                          (ticket.ticketId || '').toLowerCase().includes(cleanQuery) ||
-                          (ticket.userName || '').toLowerCase().includes(cleanQuery);
-    
-    if (cleanQuery) {
-      return matchesSearch;
-    }
-
-    const normalizedTicketStatus = ticket.status?.toUpperCase().replace(/[-\s]/g, '_') || 'OPEN';
-    const normalizedFilterStatus = filterStatus.toUpperCase().replace(/[-\s]/g, '_');
-    const matchesStatus = normalizedFilterStatus === 'ALL' || normalizedTicketStatus === normalizedFilterStatus;
-    return matchesSearch && matchesStatus;
+    const matchesSearch = ticket.subject?.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      ticket.ticketId?.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      ticket.userName?.toLowerCase().includes(searchQuery.toLowerCase());
+    return matchesSearch;
   });
 
   const statuses = ['ALL', 'OPEN', 'IN_PROGRESS', 'WAITING_FOR_USER', 'RESOLVED', 'CLOSED', 'ESCALATED'];
@@ -131,7 +122,7 @@ export default function AdminHelpdesk() {
       <Header />
 
       <main className="flex-grow mt-[4rem] md:mt-[5rem] pb-12 px-4 md:px-8 max-w-7xl mx-auto w-full">
-        
+
         <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-8">
           <div>
             <h1 className="text-3xl font-bold text-gray-900 tracking-tight">Helpdesk Administration</h1>
@@ -152,17 +143,16 @@ export default function AdminHelpdesk() {
               onChange={(e) => setSearchQuery(e.target.value)}
             />
           </div>
-          
+
           <div className="flex overflow-x-auto gap-2 pb-2 md:pb-0 scrollbar-hide shrink-0 items-center">
             {statuses.map((status) => (
               <button
                 key={status}
                 onClick={() => setFilterStatus(status)}
-                className={`px-4 py-2 rounded-xl text-xs font-bold whitespace-nowrap transition-all border ${
-                  filterStatus === status
-                    ? 'bg-[#0b264f] text-white border-[#0b264f] shadow-md'
-                    : 'bg-white text-gray-600 border-gray-200 hover:bg-gray-50'
-                }`}
+                className={`px-4 py-2 rounded-xl text-xs font-bold whitespace-nowrap transition-all border ${filterStatus === status
+                  ? 'bg-[#0b264f] text-white border-[#0b264f] shadow-md'
+                  : 'bg-white text-gray-600 border-gray-200 hover:bg-gray-50'
+                  }`}
               >
                 {status.replace(/_/g, ' ')}
               </button>
