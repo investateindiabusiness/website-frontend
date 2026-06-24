@@ -66,6 +66,13 @@ export default function BuilderDashboard() {
                 </Badge>
                 <h1 className="text-2xl md:text-3xl lg:text-4xl font-bold mb-2">Dashboard Overview</h1>
                 <p className="text-sm md:text-base text-blue-100 opacity-90">Track performance, manage inventory, and monitor leads.</p>
+                <Button 
+                  onClick={() => router.push('/support')} 
+                  variant="outline" 
+                  className="mt-4 bg-white/10 hover:bg-white/20 text-white border-white/20 backdrop-blur-sm rounded-xl"
+                >
+                  <MessageSquare className="w-4 h-4 mr-2" /> Support Helpdesk
+                </Button>
               </div>
             </div>
             <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 md:gap-4 mt-8">

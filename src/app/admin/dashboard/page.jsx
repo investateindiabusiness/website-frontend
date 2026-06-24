@@ -70,11 +70,12 @@ export default function AdminDashboard() {
           <StatCard title="General Inquiries" value={stats.inquiries} icon={<FileText />} color="purple" />
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-8">
+        <div className="grid grid-cols-1 md:grid-cols-5 gap-4 mb-8">
           <Button onClick={() => router.push('/admin/projects')} className="bg-blue-600 h-auto py-6 flex-col gap-2"><Building2 /> Manage Projects</Button>
           <Button onClick={() => router.push('/admin/builders')} className="bg-green-600 h-auto py-6 flex-col gap-2"><Users /> Manage Builders</Button>
           <Button onClick={() => router.push('/admin/leads')} className="bg-orange-600 h-auto py-6 flex-col gap-2"><MessageSquare /> Project Leads</Button>
           <Button onClick={() => router.push('/admin/inquiries')} className="bg-purple-600 h-auto py-6 flex-col gap-2"><FileText /> Inquiries</Button>
+          <Button onClick={() => router.push('/admin/helpdesk')} className="bg-[#D48035] h-auto py-6 flex-col gap-2"><MessageSquare /> Helpdesk</Button>
         </div>
       </div>
       <Footer />

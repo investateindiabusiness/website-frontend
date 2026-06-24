@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
-import { Building2, MapPin, Search, TrendingUp, Shield, CheckCircle, Filter, PieChart as PieChartIcon, BarChart as BarChartIcon, Loader2 } from 'lucide-react';
+import { Building2, MapPin, Search, TrendingUp, Shield, CheckCircle, Filter, PieChart as PieChartIcon, BarChart as BarChartIcon, Loader2, MessageSquare } from 'lucide-react';
 import { AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, BarChart, Bar } from 'recharts';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
@@ -120,6 +120,13 @@ export default function InvestorDashboard() {
                 </Badge>
                 <h1 className="text-2xl md:text-3xl lg:text-4xl font-bold mb-1">Welcome, {user?.name || 'Investor'}</h1>
                 <p className="text-blue-100 text-sm md:text-base opacity-90">Manage your portfolio and discover India's top realty.</p>
+                <Button 
+                  onClick={() => router.push('/support')} 
+                  variant="outline" 
+                  className="mt-4 bg-white/10 hover:bg-white/20 text-white border-white/20 backdrop-blur-sm rounded-xl"
+                >
+                  <MessageSquare className="w-4 h-4 mr-2" /> Support Helpdesk
+                </Button>
               </div>
 
               <div className="bg-white/10 backdrop-blur-md p-3 md:p-4 rounded-2xl flex items-center gap-4 border border-white/10 w-full md:w-auto justify-center md:justify-start">

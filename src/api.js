@@ -349,3 +349,58 @@ export const approveProject = (projectId, visibleDocuments) =>
       visibleDocuments: visibleDocuments,
     }),
   });
+
+// --- Helpdesk Endpoints ---
+
+export const fetchMyTickets = async (status) => {
+  const query = status ? `?status=${status}` : '';
+  return apiRequest(`/api/helpdesk/my-tickets${query}`);
+};
+
+export const fetchAllTickets = async (params = {}) => {
+  const queryParams = new URLSearchParams(params).toString();
+  return apiRequest(`/api/helpdesk/tickets${queryParams ? `?${queryParams}` : ''}`);
+};
+
+export const fetchTicketDetails = async (id) => {
+  return apiRequest(`/api/helpdesk/tickets/${id}`);
+};
+
+export const fetchTicketMessages = async (id) => {
+  return apiRequest(`/api/helpdesk/tickets/${id}/messages`);
+};
+
+export const createTicket = async (data) => {
+  return apiRequest('/api/helpdesk/tickets', {
+    method: 'POST',
+    body: JSON.stringify(data),
+  });
+};
+
+export const sendTicketMessage = async (id, data) => {
+  return apiRequest(`/api/helpdesk/tickets/${id}/messages`, {
+    method: 'POST',
+    body: JSON.stringify(data),
+  });
+};
+
+export const changeTicketStatus = async (id, status, reason = '') => {
+  return apiRequest(`/api/helpdesk/tickets/${id}/status`, {
+    method: 'PATCH',
+    body: JSON.stringify({ status, reason }),
+  });
+};
+
+export const changeTicketPriority = async (id, priority, reason = '') => {
+  return apiRequest(`/api/helpdesk/tickets/${id}/priority`, {
+    method: 'PATCH',
+    body: JSON.stringify({ priority, reason }),
+  });
+};
+
+export const assignTicket = async (id, assignedTo, team = '') => {
+  return apiRequest(`/api/helpdesk/tickets/${id}/assign`, {
+    method: 'POST',
+    body: JSON.stringify({ assignedTo, team }),
+  });
+};
