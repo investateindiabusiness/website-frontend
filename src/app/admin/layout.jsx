@@ -17,12 +17,18 @@ export default function AdminLayout({ children }) {
           router.push('/admin/login');
         }
       } else if (user.role !== 'admin') {
-        toast({
-          title: "Access Denied",
-          description: "You do not have administrator privileges.",
-          variant: "destructive"
-        });
-        router.push('/');
+        if (pathname !== '/admin/login') {
+          toast({
+            title: "Access Denied",
+            description: "You do not have administrator privileges.",
+            variant: "destructive"
+          });
+          router.push('/');
+        }
+      } else {
+        if (pathname === '/admin/login') {
+          router.push('/admin/dashboard');
+        }
       }
     }
   }, [user, loading, router, pathname]);

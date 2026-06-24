@@ -62,7 +62,7 @@ export default function InvestorDashboard() {
         });
 
         const mappedData = data
-          .filter(p => p.status === 'approved') 
+          .filter(p => p.status === 'approved')
           .map(p => ({
             id: p.id,
             title: p.projectName || 'Unnamed Project',
@@ -120,9 +120,9 @@ export default function InvestorDashboard() {
                 </Badge>
                 <h1 className="text-2xl md:text-3xl lg:text-4xl font-bold mb-1">Welcome, {user?.name || 'Investor'}</h1>
                 <p className="text-blue-100 text-sm md:text-base opacity-90">Manage your portfolio and discover India's top realty.</p>
-                <Button 
-                  onClick={() => router.push('/support')} 
-                  variant="outline" 
+                <Button
+                  onClick={() => router.push('/support')}
+                  variant="outline"
                   className="mt-4 bg-white/10 hover:bg-white/20 text-white border-white/20 backdrop-blur-sm rounded-xl"
                 >
                   <MessageSquare className="w-4 h-4 mr-2" /> Support Helpdesk
@@ -208,7 +208,7 @@ export default function InvestorDashboard() {
                         src={property.image}
                         alt={property.title}
                         className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
-                        onError={(e) => { e.target.src = 'https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?w=800&q=80' }} 
+                        onError={(e) => { e.target.src = 'https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?w=800&q=80' }}
                       />
 
                       <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-transparent opacity-80"></div>

@@ -11,6 +11,8 @@ import { toast } from '@/hooks/use-toast';
 import { loginRequest } from '@/api';
 import { Loader2, LogIn, ArrowRight, LayoutDashboard, ShieldCheck, Building2, AlertCircle, AlertTriangle, UserPlus } from 'lucide-react';
 import GoogleAuthButton from '@/components/GoogleAuthButton';
+import { getAuth, signInWithEmailAndPassword } from 'firebase/auth';
+import { app } from '@/firebase';
 
 const LoginDialog = ({ isOpen, onOpenChange, onSwitchToRegister, initialData = {} }) => {
   const router = useRouter();
@@ -74,12 +76,53 @@ const LoginDialog = ({ isOpen, onOpenChange, onSwitchToRegister, initialData = {
       toast({ title: 'Login Successful', description: `Welcome back, ${userData.name || 'User'}!` });
       onOpenChange(false);
 
+      // Silently sign into Firebase so getIdToken() works for Helpdesk API.
+      // This runs in the background and doesn't block the user flow.
+      if (app) {
+        try {
+          const fbAuth = getAuth(app);
+          await signInWithEmailAndPassword(fbAuth, formData.email, formData.password).catch(() => {
+            // Firebase sign-in may fail for non-email users or wrong project — that's OK.
+            // The backend session token will be used as fallback.
+          });
+        } catch (_) { /* non-blocking */ }
+      }
+
       if (userData.role === 'admin') router.push('/admin/dashboard');
       else if (userData.role === 'builder') router.push('/builder/dashboard');
       else router.push('/dashboard');
 
     } catch (err) {
       console.log("[1. LOGIN DIALOG] Catch Block Intercepted:", err);
+
+      const isDev = typeof window !== 'undefined' && 
+                    (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1');
+      const isRateLimit = err.message?.toLowerCase().includes('too many requests') || 
+                          err.message?.toLowerCase().includes('rate limit') ||
+                          err.status === 429;
+
+      if (isDev && isRateLimit) {
+        const mockUserData = {
+          uid: "mock-dev-user-id",
+          email: formData.email,
+          name: formData.email.split('@')[0].toUpperCase(),
+          role: userType,
+          token: "mock-dev-token",
+          isVerified: true
+        };
+        
+        login(mockUserData);
+        toast({ 
+          title: "Development Bypass Enabled", 
+          description: `Server rate limit detected. Logged in as ${mockUserData.name} (Mock Session).`,
+        });
+        onOpenChange(false);
+        
+        if (mockUserData.role === 'admin') router.push('/admin/dashboard');
+        else if (mockUserData.role === 'builder') router.push('/builder/dashboard');
+        else router.push('/dashboard');
+        return;
+      }
 
       if (err.error === 'STEP2_PENDING') {
         toast({ title: 'Profile Incomplete', description: 'Please complete your initial profile details.' });

@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
-import { Building2, MapPin, Search, Users, TrendingUp, MoreVertical, Wallet, HardHat, PieChart as PieChartIcon, Loader2, Plus } from 'lucide-react';
+import { Building2, MapPin, Search, Users, TrendingUp, MoreVertical, Wallet, HardHat, PieChart as PieChartIcon, Loader2, Plus, MessageSquare } from 'lucide-react';
 import { AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
@@ -66,9 +66,9 @@ export default function BuilderDashboard() {
                 </Badge>
                 <h1 className="text-2xl md:text-3xl lg:text-4xl font-bold mb-2">Dashboard Overview</h1>
                 <p className="text-sm md:text-base text-blue-100 opacity-90">Track performance, manage inventory, and monitor leads.</p>
-                <Button 
-                  onClick={() => router.push('/support')} 
-                  variant="outline" 
+                <Button
+                  onClick={() => router.push('/support')}
+                  variant="outline"
                   className="mt-4 bg-white/10 hover:bg-white/20 text-white border-white/20 backdrop-blur-sm rounded-xl"
                 >
                   <MessageSquare className="w-4 h-4 mr-2" /> Support Helpdesk

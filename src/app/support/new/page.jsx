@@ -46,11 +46,40 @@ export default function NewTicketPage() {
 
     try {
       setLoading(true);
+
+      const isDev = typeof window !== 'undefined' && 
+                    (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1');
+
+      if (isDev) {
+        const newTicket = {
+          id: `mock-${Date.now()}`,
+          ticketId: `TK-${Math.floor(100000 + Math.random() * 900000)}`,
+          subject: formData.subject,
+          category: formData.category,
+          priority: formData.priority,
+          description: formData.description,
+          status: 'OPEN',
+          createdAt: new Date().toISOString(),
+          lastResponseAt: null,
+          userName: user?.name || 'Test User',
+          userEmail: user?.email || 'user@example.com',
+          userRole: user?.role || 'investor'
+        };
+
+        const existingMockTickets = JSON.parse(localStorage.getItem('mock_tickets') || '[]');
+        existingMockTickets.unshift(newTicket);
+        localStorage.setItem('mock_tickets', JSON.stringify(existingMockTickets));
+
+        toast({ title: "Success (Mock Mode)", description: "Support ticket created locally." });
+        router.push('/support');
+        return;
+      }
+
       await createTicket(formData);
       toast({ title: "Success", description: "Support ticket created successfully." });
       router.push('/support');
     } catch (error) {
-      console.error("Failed to create ticket:", error);
+      console.warn("Failed to create ticket:", error);
       toast({ title: "Error", description: error.message || "Failed to submit ticket.", variant: "destructive" });
     } finally {
       setLoading(false);
