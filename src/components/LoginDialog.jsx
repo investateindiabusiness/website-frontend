@@ -9,7 +9,7 @@ import { Label } from '@/components/ui/label';
 import { useAuth } from '@/hooks/AuthContext';
 import { toast } from '@/hooks/use-toast';
 import { loginRequest } from '@/api';
-import { Loader2, LogIn, ArrowRight, LayoutDashboard, ShieldCheck, Building2, AlertCircle } from 'lucide-react';
+import { Loader2, LogIn, ArrowRight, LayoutDashboard, ShieldCheck, Building2, AlertCircle, AlertTriangle, UserPlus } from 'lucide-react';
 import GoogleAuthButton from '@/components/GoogleAuthButton';
 
 const LoginDialog = ({ isOpen, onOpenChange, onSwitchToRegister, initialData = {} }) => {
@@ -20,6 +20,12 @@ const LoginDialog = ({ isOpen, onOpenChange, onSwitchToRegister, initialData = {
   const [formData, setFormData] = useState({ email: '', password: '' });
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState(null);
+  const [alertModal, setAlertModal] = useState({
+    isOpen: false,
+    type: '', // 'role_mismatch' | 'not_registered'
+    message: '',
+    role: '',
+  });
 
   useEffect(() => {
     if (isOpen && initialData?.userType) {
@@ -32,6 +38,7 @@ const LoginDialog = ({ isOpen, onOpenChange, onSwitchToRegister, initialData = {
       setTimeout(() => {
         setFormData({ email: '', password: '' });
         setError(null);
+        setAlertModal({ isOpen: false, type: '', message: '', role: '' });
       }, 300);
     }
   }, [isOpen]);
@@ -47,6 +54,21 @@ const LoginDialog = ({ isOpen, onOpenChange, onSwitchToRegister, initialData = {
     try {
       setSubmitting(true);
       const userData = await loginRequest({ ...formData, role: userType });
+
+      if (userData.role !== userType) {
+        const normalizedUserDataRole = userData.role === 'partner' ? 'builder' : userData.role;
+        if (normalizedUserDataRole !== userType) {
+          const registeredRole = normalizedUserDataRole;
+          const displayRole = registeredRole === 'investor' ? 'Investor' : (registeredRole === 'builder' ? 'Builder' : registeredRole);
+          setAlertModal({
+            isOpen: true,
+            type: 'role_mismatch',
+            message: `This account is registered as a${displayRole === 'Investor' ? 'n' : ''} ${displayRole}. Please use the ${displayRole} tab.`,
+            role: registeredRole
+          });
+          return;
+        }
+      }
 
       login(userData);
       toast({ title: 'Login Successful', description: `Welcome back, ${userData.name || 'User'}!` });
@@ -67,7 +89,6 @@ const LoginDialog = ({ isOpen, onOpenChange, onSwitchToRegister, initialData = {
         }, 300);
 
       } else if (err.error === 'CHANGES_REQUESTED') {
-        // --- NEW: Route to Register Dialog with Update Data ---
         toast({ title: 'Update Required', description: err.message });
         onOpenChange(false);
         setTimeout(() => {
@@ -89,14 +110,105 @@ const LoginDialog = ({ isOpen, onOpenChange, onSwitchToRegister, initialData = {
             uid: err.uid,
             userType: userType,
             skipStep1: true,
-            phase: 'FORM2_PENDING', // Tell RegisterDialog to open Form 2
-            userData: err.userData  // Pass user data for read-only fields
+            phase: 'FORM2_PENDING',
+            userData: err.userData
           });
         }, 300);
       } else if (err.error === 'ACCOUNT_UNDER_REVIEW') {
         setError('Your account is currently under review by our administration team.');
       } else {
-        setError(err.message || 'Invalid credentials. Please try again.');
+        const errMsg = err.message || '';
+        const isLoginFailure = 
+          errMsg.toLowerCase().includes('login failed') ||
+          errMsg.toLowerCase().includes('invalid credentials') ||
+          err.error === 'INVALID_LOGIN_CREDENTIALS';
+
+        if (isLoginFailure && formData.email) {
+          try {
+            const apiKey = process.env.NEXT_PUBLIC_FIREBASE_API_KEY;
+            const signUpUrl = `https://identitytoolkit.googleapis.com/v1/accounts:signUp?key=${apiKey}`;
+            const deleteUrl = `https://identitytoolkit.googleapis.com/v1/accounts:delete?key=${apiKey}`;
+
+            const res = await fetch(signUpUrl, {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({ 
+                email: formData.email, 
+                password: 'CheckEmailExistencePassword123!', 
+                returnSecureToken: true 
+              })
+            });
+
+            const data = await res.json();
+
+            if (res.status === 200) {
+              // Successfully created user means the email is NOT registered!
+              const idToken = data.idToken;
+              await fetch(deleteUrl, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ idToken })
+              });
+
+              setAlertModal({
+                isOpen: true,
+                type: 'not_registered',
+                message: 'Your email id is not registered. Do register.',
+                role: userType
+              });
+            } else if (data.error?.message === 'EMAIL_EXISTS') {
+              // User exists, so the credentials entered were wrong
+              setError('Login failed');
+            } else {
+              setError('Login failed');
+            }
+          } catch (checkErr) {
+            console.error('Error checking email existence:', checkErr);
+            setError('Login failed');
+          }
+        } else {
+          const isNotRegistered = 
+            errMsg.toLowerCase().includes('user not found') || 
+            errMsg.toLowerCase().includes('not registered') || 
+            errMsg.toLowerCase().includes('no user found') ||
+            errMsg.toLowerCase().includes('not exist') ||
+            err.error === 'USER_NOT_FOUND' ||
+            err.code === 'auth/user-not-found';
+
+          const isRoleMismatch = 
+            errMsg.toLowerCase().includes('registered as') || 
+            errMsg.toLowerCase().includes('use the') || 
+            errMsg.toLowerCase().includes('tab') ||
+            (errMsg.toLowerCase().includes('account') && (
+              errMsg.toLowerCase().includes('investor') ||
+              errMsg.toLowerCase().includes('builder') ||
+              errMsg.toLowerCase().includes('partner') ||
+              errMsg.toLowerCase().includes('admin')
+            ));
+
+          if (isRoleMismatch) {
+            let targetRole = 'builder';
+            if (errMsg.toLowerCase().includes('investor')) targetRole = 'investor';
+            else if (errMsg.toLowerCase().includes('partner') || errMsg.toLowerCase().includes('builder')) targetRole = 'builder';
+            else if (errMsg.toLowerCase().includes('admin')) targetRole = 'admin';
+
+            setAlertModal({
+              isOpen: true,
+              type: 'role_mismatch',
+              message: errMsg.replace(/partner/gi, 'Builder').replace(/Partner/g, 'Builder'),
+              role: targetRole
+            });
+          } else if (isNotRegistered) {
+            setAlertModal({
+              isOpen: true,
+              type: 'not_registered',
+              message: 'Your email id is not registered. Do register.',
+              role: userType
+            });
+          } else {
+            setError(errMsg || 'Login failed');
+          }
+        }
       }
     } finally {
       setSubmitting(false);
@@ -105,6 +217,20 @@ const LoginDialog = ({ isOpen, onOpenChange, onSwitchToRegister, initialData = {
 
   const handleGoogleSuccess = (userData) => {
     setError(null);
+
+    const normalizedUserDataRole = userData.role === 'partner' ? 'builder' : userData.role;
+    if (normalizedUserDataRole !== userType) {
+      const registeredRole = normalizedUserDataRole;
+      const displayRole = registeredRole === 'investor' ? 'Investor' : (registeredRole === 'builder' ? 'Builder' : registeredRole);
+      setAlertModal({
+        isOpen: true,
+        type: 'role_mismatch',
+        message: `This account is registered as a${displayRole === 'Investor' ? 'n' : ''} ${displayRole}. Please use the ${displayRole} tab.`,
+        role: registeredRole
+      });
+      return;
+    }
+
     login(userData);
     toast({ title: 'Login Successful', description: `Welcome back, ${userData.name}!` });
     onOpenChange(false);
@@ -125,7 +251,6 @@ const LoginDialog = ({ isOpen, onOpenChange, onSwitchToRegister, initialData = {
       }, 300);
 
     } else if (err.error === 'CHANGES_REQUESTED') {
-      // --- NEW: Route to Register Dialog with Update Data ---
       toast({ title: 'Update Required', description: err.message });
       onOpenChange(false);
       setTimeout(() => {
@@ -147,14 +272,55 @@ const LoginDialog = ({ isOpen, onOpenChange, onSwitchToRegister, initialData = {
           uid: err.uid,
           userType: userType,
           skipStep1: true,
-          phase: 'FORM2_PENDING', // Tell RegisterDialog to open Form 2
-          userData: err.userData  // Pass user data for read-only fields
+          phase: 'FORM2_PENDING',
+          userData: err.userData
         });
       }, 300);
     } else if (err.error === 'ACCOUNT_UNDER_REVIEW') {
       setError('Your account is currently under review by our administration team.');
     } else {
-      setError(err.message || 'Google authentication failed');
+      const errMsg = err.message || '';
+      const isNotRegistered = 
+        errMsg.toLowerCase().includes('user not found') || 
+        errMsg.toLowerCase().includes('not registered') || 
+        errMsg.toLowerCase().includes('no user found') ||
+        errMsg.toLowerCase().includes('not exist') ||
+        err.error === 'USER_NOT_FOUND' ||
+        err.code === 'auth/user-not-found';
+
+      const isRoleMismatch = 
+        errMsg.toLowerCase().includes('registered as') || 
+        errMsg.toLowerCase().includes('use the') || 
+        errMsg.toLowerCase().includes('tab') ||
+        (errMsg.toLowerCase().includes('account') && (
+          errMsg.toLowerCase().includes('investor') ||
+          errMsg.toLowerCase().includes('builder') ||
+          errMsg.toLowerCase().includes('partner') ||
+          errMsg.toLowerCase().includes('admin')
+        ));
+
+      if (isRoleMismatch) {
+        let targetRole = 'builder';
+        if (errMsg.toLowerCase().includes('investor')) targetRole = 'investor';
+        else if (errMsg.toLowerCase().includes('partner') || errMsg.toLowerCase().includes('builder')) targetRole = 'builder';
+        else if (errMsg.toLowerCase().includes('admin')) targetRole = 'admin';
+
+        setAlertModal({
+          isOpen: true,
+          type: 'role_mismatch',
+          message: errMsg.replace(/partner/gi, 'Builder').replace(/Partner/g, 'Builder'),
+          role: targetRole
+        });
+      } else if (isNotRegistered) {
+        setAlertModal({
+          isOpen: true,
+          type: 'not_registered',
+          message: 'Your email id is not registered. Do register.',
+          role: userType
+        });
+      } else {
+        setError(errMsg || 'Google authentication failed');
+      }
     }
   };
 
@@ -295,6 +461,72 @@ const LoginDialog = ({ isOpen, onOpenChange, onSwitchToRegister, initialData = {
           </div>
         </div>
       </DialogContent>
+
+      <Dialog open={alertModal.isOpen} onOpenChange={(open) => setAlertModal(prev => ({ ...prev, isOpen: open }))}>
+        <DialogContent className="fixed left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-[90vw] max-w-[420px] p-6 bg-white border border-gray-100 shadow-[0_24px_48px_-10px_rgba(0,0,0,0.18)] rounded-3xl z-[110] flex flex-col items-center text-center animate-in zoom-in-95 duration-200">
+          <DialogTitle className="sr-only">
+            {alertModal.type === 'role_mismatch' ? 'Role Mismatch' : 'Not Registered'}
+          </DialogTitle>
+          <DialogDescription className="sr-only">
+            {alertModal.message}
+          </DialogDescription>
+
+          {alertModal.type === 'role_mismatch' ? (
+            <div className="w-14 h-14 bg-amber-50 rounded-2xl flex items-center justify-center mb-4 text-amber-600 shadow-inner">
+              <AlertTriangle className="w-7 h-7" />
+            </div>
+          ) : (
+            <div className="w-14 h-14 bg-orange-50 rounded-2xl flex items-center justify-center mb-4 text-orange-600 shadow-inner">
+              <UserPlus className="w-7 h-7" />
+            </div>
+          )}
+
+          <h3 className="text-lg font-black text-gray-900 uppercase tracking-tight mb-2">
+            {alertModal.type === 'role_mismatch' ? 'Account Role Mismatch' : 'Account Not Found'}
+          </h3>
+          
+          <p className="text-xs text-gray-500 font-semibold leading-relaxed mb-6 px-2">
+            {alertModal.message}
+          </p>
+
+          <div className="flex flex-col gap-2 w-full">
+            {alertModal.type === 'role_mismatch' ? (
+              <Button
+                onClick={() => {
+                  setUserType(alertModal.role);
+                  setFormData({ ...formData, password: '' });
+                  setError(null);
+                  setAlertModal(prev => ({ ...prev, isOpen: false }));
+                }}
+                className="w-full h-11 bg-orange-600 hover:bg-orange-700 text-white font-black text-xs uppercase tracking-wider rounded-xl shadow-lg shadow-orange-600/10 transition-all"
+              >
+                Switch to {alertModal.role === 'investor' ? 'Investor' : 'Builder'} Tab
+              </Button>
+            ) : (
+              <Button
+                onClick={() => {
+                  setAlertModal(prev => ({ ...prev, isOpen: false }));
+                  onOpenChange(false); // Close login dialog
+                  setTimeout(() => {
+                    onSwitchToRegister(alertModal.role); // Open register dialog with current userType role
+                  }, 300);
+                }}
+                className="w-full h-11 bg-orange-600 hover:bg-orange-700 text-white font-black text-xs uppercase tracking-wider rounded-xl shadow-lg shadow-orange-600/10 transition-all"
+              >
+                Register Now
+              </Button>
+            )}
+            
+            <Button
+              variant="outline"
+              onClick={() => setAlertModal(prev => ({ ...prev, isOpen: false }))}
+              className="w-full h-11 border-gray-200 text-gray-500 font-black text-xs uppercase tracking-wider rounded-xl hover:bg-gray-50"
+            >
+              Cancel
+            </Button>
+          </div>
+        </DialogContent>
+      </Dialog>
     </Dialog>
   );
 };
