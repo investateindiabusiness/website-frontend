@@ -101,7 +101,7 @@ export default function BuilderDashboard() {
             <div className="lg:col-span-2 bg-white rounded-3xl p-4 md:p-6 shadow-sm border border-gray-100">
               <h3 className="font-bold text-gray-900 text-lg flex items-center mb-6"><TrendingUp className="w-5 h-5 mr-2 text-[#0b264f]" /> Sales Performance</h3>
               <div className="h-56 md:h-64 w-full">
-                <ResponsiveContainer width="100%" height="100%">
+                <ResponsiveContainer width="100%" height={256}>
                   <AreaChart data={ANALYTICS_DATA}>
                     <defs>
                       <linearGradient id="colorSales" x1="0" y1="0" x2="0" y2="1">

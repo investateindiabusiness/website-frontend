@@ -104,7 +104,7 @@ export default function BuilderDashboard() {
                 </h3>
               </div>
               <div className="h-56 md:h-64 w-full">
-                <ResponsiveContainer width="100%" height="100%">
+                <ResponsiveContainer width="100%" height={256}>
                   <AreaChart data={ANALYTICS_DATA}>
                     <defs>
                       <linearGradient id="colorSales" x1="0" y1="0" x2="0" y2="1">
