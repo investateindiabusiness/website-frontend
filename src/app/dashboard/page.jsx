@@ -106,7 +106,7 @@ export default function InvestorDashboard() {
     <div className="min-h-screen bg-gray-50 flex flex-col font-sans overflow-x-hidden">
       <Header />
 
-      <div className="flex-grow mt-[2rem] md:mt-[4rem] pb-12">
+      <div className="flex-grow mt-16 md:mt-[4rem] pb-12">
 
         <div className="bg-gradient-to-r from-[#0b264f] to-[#1a4b8c] text-white pt-6 pb-12 md:pt-10 md:pb-16 px-4 md:px-8 rounded-b-[2rem] md:rounded-b-[2.5rem] shadow-xl relative overflow-hidden">
           <div className="absolute top-0 right-0 w-64 h-64 bg-white/5 rounded-full -mr-16 -mt-16 blur-3xl pointer-events-none"></div>

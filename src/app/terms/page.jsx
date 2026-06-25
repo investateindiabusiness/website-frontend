@@ -3,6 +3,7 @@
 import React, { useEffect } from 'react';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
+import { Mail } from 'lucide-react';
 
 export default function TermsAndConditions() {
   useEffect(() => {
@@ -27,35 +28,31 @@ export default function TermsAndConditions() {
         </div>
       </div>
 
-      <div className="flex-grow container mx-auto px-4 py-12 -mt-10 relative z-20">
-        <div className="max-w-4xl mx-auto bg-white rounded-xl shadow-xl border border-gray-100 p-8 md:p-12">
+      <div className="flex-grow w-full px-6 md:px-16 lg:px-24 py-12">
 
-          <div className="border-b border-gray-100 pb-6 mb-8">
-            <p className="text-sm text-gray-500 italic">
-              Last Updated: {new Date().toLocaleDateString('en-IN', { year: 'numeric', month: 'long', day: 'numeric' })}
-            </p>
-            <p className="mt-4 text-gray-700 font-medium text-lg">
+          <div className="border-b border-gray-200 pb-8 mb-8 text-center">
+            <p className="text-sm text-gray-500 italic">Last Updated: 25 June 2026</p>
+            <p className="mt-4 text-gray-800 font-bold text-lg">
               These Terms govern your use of Investate India. By registering or using the platform, you agree to comply with these Terms.
             </p>
           </div>
 
           <section>
-            <h2 className={sectionTitleStyle}>1. Platform Nature</h2>
-            <p className={paragraphStyle}>
+            <h2 className="text-xl md:text-2xl font-bold text-gray-900 mt-10 mb-2 text-center">1. Platform Nature</h2>
+            <p className="text-gray-600 mb-6 text-center max-w-4xl mx-auto">
               Investate India is a technology platform only.
             </p>
-
-            <div className="grid md:grid-cols-2 gap-6 my-6">
-              <div className="bg-green-50 p-6 rounded-lg border border-green-100">
-                <h3 className="font-bold text-green-800 mb-3">We Do:</h3>
+            <div className="grid md:grid-cols-2 gap-6 max-w-4xl mx-auto">
+              <div className="bg-green-50 p-6 rounded-xl border border-green-200 shadow-sm text-left">
+                <h3 className="font-bold text-green-800 mb-3 text-lg">We Do:</h3>
                 <ul className="space-y-2 text-gray-700">
                   <li className="flex items-start gap-2"><span className="text-green-600 font-bold">✓</span> Display verified property listings</li>
                   <li className="flex items-start gap-2"><span className="text-green-600 font-bold">✓</span> Provide dashboards for users</li>
                   <li className="flex items-start gap-2"><span className="text-green-600 font-bold">✓</span> Enable direct communication</li>
                 </ul>
               </div>
-              <div className="bg-red-50 p-6 rounded-lg border border-red-100">
-                <h3 className="font-bold text-red-800 mb-3">We DO NOT:</h3>
+              <div className="bg-red-50 p-6 rounded-xl border border-red-200 shadow-sm text-left">
+                <h3 className="font-bold text-red-800 mb-3 text-lg">We DO NOT:</h3>
                 <ul className="space-y-2 text-gray-700">
                   <li className="flex items-start gap-2"><span className="text-red-600 font-bold">✕</span> Sell properties directly</li>
                   <li className="flex items-start gap-2"><span className="text-red-600 font-bold">✕</span> Act as broker/agent</li>
@@ -65,37 +62,40 @@ export default function TermsAndConditions() {
             </div>
           </section>
 
-          <section>
-            <h2 className={sectionTitleStyle}>2. User Accounts</h2>
-            <p className={paragraphStyle}>Users must:</p>
-            <ul className={listStyle}>
-              <li>Provide accurate information during registration.</li>
-              <li>Keep login credentials secure and confidential.</li>
-            </ul>
+          <section className="mt-12">
+            <h2 className="text-xl md:text-2xl font-bold text-gray-900 mb-6 text-center">2. User Accounts</h2>
+            <div className="bg-white border border-gray-200 rounded-xl p-6 shadow-sm max-w-4xl mx-auto">
+              <p className="text-gray-600 mb-3 text-left">Users must:</p>
+              <ul className="list-disc pl-5 space-y-2 text-gray-600 marker:text-orange-500 text-left">
+                <li>Provide accurate information during registration.</li>
+                <li>Keep login credentials secure and confidential.</li>
+              </ul>
+            </div>
           </section>
 
-          <section>
-            <h2 className={sectionTitleStyle}>3. Limitation of Liability</h2>
-            <p className={paragraphStyle}>Investate India is <strong>not liable</strong> for:</p>
-            <ul className={listStyle}>
-              <li>Investment losses.</li>
-              <li>Property disputes or legal battles.</li>
-              <li>Builder defaults or bankruptcy.</li>
-              <li>Construction delays.</li>
-            </ul>
-            <p className="font-semibold text-gray-800">Your use of the platform is entirely at your own risk.</p>
+          <section className="mt-12">
+            <h2 className="text-xl md:text-2xl font-bold text-gray-900 mb-6 text-center">3. Limitation of Liability</h2>
+            <div className="bg-white border border-gray-200 rounded-xl p-6 shadow-sm max-w-4xl mx-auto">
+              <p className="text-gray-600 mb-3 text-left">Investate India is <strong>not liable</strong> for:</p>
+              <ul className="list-disc pl-5 space-y-2 text-gray-600 marker:text-orange-500 mb-4 text-left">
+                <li>Investment losses.</li>
+                <li>Property disputes or legal battles.</li>
+                <li>Builder defaults or bankruptcy.</li>
+                <li>Construction delays.</li>
+              </ul>
+              <p className="font-semibold text-gray-800 border-l-4 border-orange-500 pl-4 py-2 bg-gray-50 rounded-r-lg text-left">Your use of the platform is entirely at your own risk.</p>
+            </div>
           </section>
 
-          <section className="mt-12 bg-orange-50 p-6 rounded-xl border border-orange-100 text-center">
-            <h2 className="text-xl font-bold text-gray-900 mb-2">Contact Us</h2>
-            <p className="text-gray-600 mb-4">
+          <section className="mt-12 bg-orange-50 p-4 sm:p-6 rounded-xl border border-orange-100 text-center max-w-4xl mx-auto w-full">
+            <h2 className="text-xl font-bold text-gray-900 mb-2 flex items-center justify-center gap-2"><Mail className="w-5 h-5" />Contact Us</h2>
+            <p className="text-gray-600 mb-4 text-sm sm:text-base">
               If you have any questions about these Terms, please contact us at:
             </p>
-            <a href="mailto:investateindia.business@gmail.com" className="inline-flex items-center justify-center px-6 py-3 border border-transparent text-base font-medium rounded-md text-white bg-orange-600 hover:bg-orange-700 transition-colors">
+            <a href="mailto:investateindia.business@gmail.com" className="inline-flex items-center justify-center px-4 sm:px-6 py-2.5 sm:py-3 border border-transparent text-sm sm:text-base font-medium rounded-md text-white bg-orange-600 hover:bg-orange-700 transition-colors max-w-full break-all whitespace-normal">
               investateindia.business@gmail.com
             </a>
           </section>
-        </div>
       </div>
 
       <Footer />

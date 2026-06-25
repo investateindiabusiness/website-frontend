@@ -16,11 +16,43 @@ const GoogleAuthButton = ({ onSuccess, onError, text = "Continue with Google", u
     try {
       setLoading(true);
       const provider = new GoogleAuthProvider();
+      provider.setCustomParameters({
+        prompt: 'select_account'
+      });
       
       const result = await signInWithPopup(auth, provider);
       const idToken = await result.user.getIdToken();
 
-      const userData = await googleSyncRequest(idToken, userType);
+      let userData;
+      let syncError = null;
+      let finalRole = userType;
+
+      try {
+        userData = await googleSyncRequest(idToken, userType);
+      } catch (syncErr) {
+        const errMsg = syncErr.message || '';
+        const isRoleMismatch = 
+          errMsg.toLowerCase().includes('registered as') || 
+          errMsg.toLowerCase().includes('use the') || 
+          errMsg.toLowerCase().includes('tab');
+        
+        if (isRoleMismatch) {
+          const otherRole = userType === 'investor' ? 'builder' : 'investor';
+          finalRole = otherRole;
+          try {
+            userData = await googleSyncRequest(idToken, otherRole);
+          } catch (retryErr) {
+            syncError = retryErr;
+          }
+        } else {
+          syncError = syncErr;
+        }
+      }
+
+      if (syncError) {
+        syncError.userType = finalRole;
+        throw syncError;
+      }
       
       onSuccess(userData);
       

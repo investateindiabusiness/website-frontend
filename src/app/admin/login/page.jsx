@@ -6,6 +6,8 @@ import { useAuth } from '@/hooks/AuthContext';
 import { toast } from '@/hooks/use-toast';
 import { adminLoginRequest } from '@/api';
 import { Shield, Lock, Eye, EyeOff, User, BarChart3, Users } from 'lucide-react';
+import { getAuth, sendPasswordResetEmail } from 'firebase/auth';
+import { app } from '@/firebase';
 
 function AdminLoginForm() {
   const router = useRouter();
@@ -26,6 +28,33 @@ function AdminLoginForm() {
       window.history.replaceState({}, '', window.location.pathname);
     }
   }, [searchParams]);
+
+  const handleForgotPassword = async () => {
+    if (!formData.email) {
+      toast({
+        title: "Email Required",
+        description: "Please enter your admin email address first.",
+        variant: "destructive"
+      });
+      return;
+    }
+    try {
+      if (!app) throw new Error("Firebase app is not initialized.");
+      const fbAuth = getAuth(app);
+      await sendPasswordResetEmail(fbAuth, formData.email);
+      toast({
+        title: "Reset Link Sent",
+        description: `A password reset link has been sent to ${formData.email}.`,
+      });
+    } catch (err) {
+      console.error("Password reset error:", err);
+      toast({
+        title: "Reset Failed",
+        description: err.message || "Failed to send reset email.",
+        variant: "destructive"
+      });
+    }
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -123,7 +152,7 @@ function AdminLoginForm() {
             />
             <span className="font-medium">Remember me</span>
           </label>
-          <a href="#forgot" className="font-semibold text-slate-500 hover:text-orange-500 transition-colors">Forgot password?</a>
+          <button type="button" onClick={handleForgotPassword} className="font-semibold text-slate-500 hover:text-orange-500 transition-colors">Forgot password?</button>
         </div>
 
         {/* Submit Button */}

@@ -107,9 +107,16 @@ export default function AdminHelpdesk() {
   }, [user, router, filterStatus]);
 
   const filteredTickets = tickets.filter(ticket => {
-    const matchesSearch = ticket.subject?.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      ticket.ticketId?.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      ticket.userName?.toLowerCase().includes(searchQuery.toLowerCase());
+    if (!searchQuery.trim()) return true;
+    // Strip leading '#' so users can type either '#TKT-001' or 'TKT-001'
+    const query = searchQuery.trim().replace(/^#/, '').toLowerCase();
+    const matchesSearch =
+      String(ticket.ticketId || '').toLowerCase().includes(query) ||
+      String(ticket.id || '').toLowerCase().includes(query) ||
+      (ticket.subject || '').toLowerCase().includes(query) ||
+      (ticket.userName || '').toLowerCase().includes(query) ||
+      (ticket.userEmail || '').toLowerCase().includes(query) ||
+      (ticket.category || '').toLowerCase().includes(query);
     return matchesSearch;
   });
 

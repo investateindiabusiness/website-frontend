@@ -130,13 +130,13 @@ const HeaderContent = ({ transparent = false }) => {
             </Link>
           </div>
 
-          <nav className="hidden md:flex items-center flex-1">
-            <ul className="flex items-center justify-center w-full text-md font-medium text-gray-400">
+          <nav className="hidden md:flex items-center flex-1 px-4 overflow-hidden">
+            <ul className="flex items-center justify-center w-full text-sm lg:text-base font-medium text-gray-400">
               {navLinks.map((link, index) => {
                 const isActive = pathname === link.path;
                 return (
                   <React.Fragment key={link.label}>
-                    <li><Link href={link.path} className={`transition-colors px-3 lg:px-5 py-2 block mx-4 ${isActive ? 'text-[#D48035]' : 'hover:text-[#D48035]'}`}>{link.label}</Link></li>
+                    <li><Link href={link.path} className={`transition-colors px-2 lg:px-4 py-2 block mx-1 lg:mx-2 xl:mx-3 text-nowrap ${isActive ? 'text-[#D48035]' : 'hover:text-[#D48035]'}`}>{link.label}</Link></li>
                     {index < navLinks.length - 1 && <span className="text-gray-700 select-none">|</span>}
                   </React.Fragment>
                 )
@@ -146,7 +146,7 @@ const HeaderContent = ({ transparent = false }) => {
 
           {/* Desktop Auth Actions */}
           {displayUser ? (
-            <div className="hidden md:flex items-center gap-3 mr-4">
+            <div className="hidden md:flex items-center gap-3 mr-4 shrink-0">
               <Link href={getDashboardPath(displayUser.role)} className="flex items-center gap-2 text-xs font-bold bg-gray-800/60 px-4.5 py-2 rounded-full border border-gray-700/50 text-gray-200 shadow-inner hover:bg-gray-700 transition-all">
                 <UserCircle className="w-4 h-4 text-orange-500 flex-shrink-0" />
                 <span className="max-w-[120px] truncate">{displayUser.name || displayUser.email.split('@')[0]}</span>
