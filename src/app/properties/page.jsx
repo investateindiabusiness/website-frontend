@@ -8,6 +8,7 @@ import {
 } from 'lucide-react';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
+import AdBanner from '@/components/AdBanner';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { useAuth } from '@/hooks/AuthContext';
@@ -143,8 +144,14 @@ export default function InvestorProperties() {
               </div>
             ) : (
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8">
-                {filteredProperties.map((property) => (
-                  <div key={property.id} className="group bg-white rounded-3xl overflow-hidden shadow-sm hover:shadow-xl transition-all duration-300 border border-gray-200 flex flex-col h-full">
+                {filteredProperties.map((property, index) => (
+                  <React.Fragment key={property.id}>
+                    {index === 3 && (
+                      <div className="col-span-1 md:col-span-2 lg:col-span-3 flex justify-center py-4">
+                        <AdBanner zoneId="zone4" />
+                      </div>
+                    )}
+                    <div className="group bg-white rounded-3xl overflow-hidden shadow-sm hover:shadow-xl transition-all duration-300 border border-gray-200 flex flex-col h-full">
                     <div className="relative aspect-[4/3] overflow-hidden bg-gray-100">
                       <img
                         src={property.image}
@@ -198,8 +205,14 @@ export default function InvestorProperties() {
                         View Full Details <ArrowRight className="w-4 h-4 ml-2" />
                       </Button>
                     </div>
-                  </div>
+                    </div>
+                  </React.Fragment>
                 ))}
+                {filteredProperties.length > 0 && filteredProperties.length < 4 && (
+                  <div className="col-span-1 md:col-span-2 lg:col-span-3 flex justify-center py-4">
+                    <AdBanner zoneId="zone4" />
+                  </div>
+                )}
               </div>
             )}
         </div>

@@ -6,6 +6,7 @@ import { Building2, MapPin, Search, TrendingUp, Shield, CheckCircle, Filter, Pie
 import { AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, BarChart, Bar } from 'recharts';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
+import AdBanner from '@/components/AdBanner';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { useAuth } from '@/hooks/AuthContext';
@@ -145,6 +146,9 @@ export default function InvestorDashboard() {
         </div>
 
         <div className="container mx-auto px-4 -mt-6 md:-mt-8 relative z-20 space-y-6 md:space-y-10">
+          <div className="pt-2">
+            <AdBanner zoneId="zone2" />
+          </div>
 
           <div className="bg-white rounded-2xl !mt-0 shadow-lg p-2 flex flex-col sm:flex-row items-center gap-2 max-w-3xl mx-auto border border-gray-100">
             <div className="pl-4 hidden sm:block">

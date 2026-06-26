@@ -432,4 +432,82 @@ export const assignTicket = async (id, assignedTo, team = '') => {
     method: 'POST',
     body: JSON.stringify({ assignedTo, team }),
   });
-};
+};
+
+// --- Advertisement Endpoints ---
+
+export const fetchAdZones = () =>
+  apiRequest('/api/advertisements/zones');
+
+export const fetchAvailableSlots = (zoneId) =>
+  apiRequest(`/api/advertisements/zones/${zoneId}/available-slots`);
+
+export const bookSlot = (payload) =>
+  apiRequest('/api/advertisements/bookings', {
+    method: 'POST',
+    body: JSON.stringify(payload),
+  });
+
+export const fetchMyBookings = () =>
+  apiRequest('/api/advertisements/my-bookings');
+
+export const rectifyBooking = (bookingId, payload) =>
+  apiRequest(`/api/advertisements/bookings/${bookingId}/rectify`, {
+    method: 'PUT',
+    body: JSON.stringify(payload),
+  });
+
+export const cancelBooking = (bookingId) =>
+  apiRequest(`/api/advertisements/bookings/${bookingId}/cancel`, {
+    method: 'POST',
+  });
+
+export const fetchActiveAd = (zoneId) =>
+  apiRequest(`/api/advertisements/active-ad/${zoneId}`);
+
+// --- Admin Advertisement Endpoints ---
+
+export const adminSeedZones = () =>
+  apiRequest('/api/admin/advertisements/seed-zones', {
+    method: 'POST',
+  });
+
+export const adminFetchZones = () =>
+  apiRequest('/api/admin/advertisements/zones');
+
+export const adminFetchZoneDetails = (zoneId) =>
+  apiRequest(`/api/admin/advertisements/zones/${zoneId}`);
+
+export const adminUpdateZone = (zoneId, payload) =>
+  apiRequest(`/api/admin/advertisements/zones/${zoneId}`, {
+    method: 'PUT',
+    body: JSON.stringify(payload),
+  });
+
+export const adminCreateSlot = (zoneId, payload) =>
+  apiRequest(`/api/admin/advertisements/zones/${zoneId}/slots`, {
+    method: 'POST',
+    body: JSON.stringify(payload),
+  });
+
+export const adminDeleteSlot = (slotId) =>
+  apiRequest(`/api/admin/advertisements/slots/${slotId}`, {
+    method: 'DELETE',
+  });
+
+export const adminFetchSlots = (zoneId = '') => {
+  const query = zoneId ? `?zoneId=${zoneId}` : '';
+  return apiRequest(`/api/admin/advertisements/slots${query}`);
+};
+
+export const adminFetchBookings = (params = {}) => {
+  const queryParams = new URLSearchParams(params).toString();
+  const query = queryParams ? `?${queryParams}` : '';
+  return apiRequest(`/api/admin/advertisements/bookings${query}`);
+};
+
+export const adminReviewBooking = (bookingId, payload) =>
+  apiRequest(`/api/admin/advertisements/bookings/${bookingId}/review`, {
+    method: 'PATCH',
+    body: JSON.stringify(payload),
+  });
