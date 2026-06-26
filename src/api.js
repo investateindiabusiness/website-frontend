@@ -436,111 +436,78 @@ export const assignTicket = async (id, assignedTo, team = '') => {
 
 // --- Advertisement Endpoints ---
 
-// Public: fetch the winning/active ad for a given zone (path param, not query param)
-// GET /api/advertisements/active-ad/:zoneId
-export const fetchActiveAd = async (zoneId) => {
-  return apiRequest(`/api/advertisements/active-ad/${zoneId}`, { method: 'GET' });
-};
+export const fetchAdZones = () =>
+  apiRequest('/api/advertisements/zones');
 
-// Builder: fetch all ad zones (browse & book)
-// GET /api/advertisements/zones
-export const fetchAdZones = async () => {
-  return apiRequest('/api/advertisements/zones', { method: 'GET' });
-};
+export const fetchAvailableSlots = (zoneId) =>
+  apiRequest(`/api/advertisements/zones/${zoneId}/available-slots`);
 
-// Builder: fetch available (unbooked) slots for a specific zone
-// GET /api/advertisements/zones/:zoneId/available-slots
-export const fetchAvailableSlots = async (zoneId) => {
-  return apiRequest(`/api/advertisements/zones/${zoneId}/available-slots`, { method: 'GET' });
-};
-
-// Builder: book a slot — payload = { zoneId, slotId, adContent }
-// POST /api/advertisements/bookings
-export const bookSlot = async (payload) => {
-  return apiRequest('/api/advertisements/bookings', {
+export const bookSlot = (payload) =>
+  apiRequest('/api/advertisements/bookings', {
     method: 'POST',
     body: JSON.stringify(payload),
   });
-};
 
-// Builder: fetch current user's bookings
-// GET /api/advertisements/my-bookings
-export const fetchMyBookings = async () => {
-  return apiRequest('/api/advertisements/my-bookings', { method: 'GET' });
-};
+export const fetchMyBookings = () =>
+  apiRequest('/api/advertisements/my-bookings');
 
-// Builder: rectify a rejected booking and re-submit for review
-// PUT /api/advertisements/bookings/:bookingId/rectify
-export const rectifyBooking = async (bookingId, payload) => {
-  return apiRequest(`/api/advertisements/bookings/${bookingId}/rectify`, {
+export const rectifyBooking = (bookingId, payload) =>
+  apiRequest(`/api/advertisements/bookings/${bookingId}/rectify`, {
     method: 'PUT',
     body: JSON.stringify(payload),
   });
-};
 
-// Builder: cancel a booking and release the slot
-// POST /api/advertisements/bookings/:bookingId/cancel
-export const cancelBooking = async (bookingId) => {
-  return apiRequest(`/api/advertisements/bookings/${bookingId}/cancel`, {
+export const cancelBooking = (bookingId) =>
+  apiRequest(`/api/advertisements/bookings/${bookingId}/cancel`, {
     method: 'POST',
   });
-};
 
-// Admin: seed the 5 default advertisement zones
-// POST /api/admin/advertisements/seed-zones
-export const adminSeedZones = async () => {
-  return apiRequest('/api/admin/advertisements/seed-zones', { method: 'POST' });
-};
+export const fetchActiveAd = (zoneId) =>
+  apiRequest(`/api/advertisements/active-ad/${zoneId}`);
 
-// Admin: list all 5 zones (including inactive)
-// GET /api/admin/advertisements/zones
-export const adminFetchZones = async () => {
-  return apiRequest('/api/admin/advertisements/zones', { method: 'GET' });
-};
+// --- Admin Advertisement Endpoints ---
 
-// Admin: update a zone's configuration (cost, defaultAd, dimensions, etc.)
-// PUT /api/admin/advertisements/zones/:zoneId
-export const adminUpdateZone = async (zoneId, payload) => {
-  return apiRequest(`/api/admin/advertisements/zones/${zoneId}`, {
+export const adminSeedZones = () =>
+  apiRequest('/api/admin/advertisements/seed-zones', {
+    method: 'POST',
+  });
+
+export const adminFetchZones = () =>
+  apiRequest('/api/admin/advertisements/zones');
+
+export const adminFetchZoneDetails = (zoneId) =>
+  apiRequest(`/api/admin/advertisements/zones/${zoneId}`);
+
+export const adminUpdateZone = (zoneId, payload) =>
+  apiRequest(`/api/admin/advertisements/zones/${zoneId}`, {
     method: 'PUT',
     body: JSON.stringify(payload),
   });
-};
 
-// Admin: create a new available booking slot inside a zone
-// POST /api/admin/advertisements/zones/:zoneId/slots
-export const adminCreateSlot = async (zoneId, payload) => {
-  return apiRequest(`/api/admin/advertisements/zones/${zoneId}/slots`, {
+export const adminCreateSlot = (zoneId, payload) =>
+  apiRequest(`/api/admin/advertisements/zones/${zoneId}/slots`, {
     method: 'POST',
     body: JSON.stringify(payload),
   });
+
+export const adminDeleteSlot = (slotId) =>
+  apiRequest(`/api/admin/advertisements/slots/${slotId}`, {
+    method: 'DELETE',
+  });
+
+export const adminFetchSlots = (zoneId = '') => {
+  const query = zoneId ? `?zoneId=${zoneId}` : '';
+  return apiRequest(`/api/admin/advertisements/slots${query}`);
 };
 
-// Admin: delete an unbooked slot
-// DELETE /api/admin/advertisements/slots/:slotId
-export const adminDeleteSlot = async (slotId) => {
-  return apiRequest(`/api/admin/advertisements/slots/${slotId}`, { method: 'DELETE' });
+export const adminFetchBookings = (params = {}) => {
+  const queryParams = new URLSearchParams(params).toString();
+  const query = queryParams ? `?${queryParams}` : '';
+  return apiRequest(`/api/admin/advertisements/bookings${query}`);
 };
 
-// Admin: list all slots (optionally filter by ?zoneId=zone1)
-// GET /api/admin/advertisements/slots
-export const adminFetchSlots = async (params = {}) => {
-  const query = new URLSearchParams(params).toString();
-  return apiRequest(`/api/admin/advertisements/slots${query ? `?${query}` : ''}`, { method: 'GET' });
-};
-
-// Admin: list all campaign bookings (filter by ?zoneId= or ?approvalStatus=)
-// GET /api/admin/advertisements/bookings
-export const adminFetchBookings = async (params = {}) => {
-  const query = new URLSearchParams(params).toString();
-  return apiRequest(`/api/admin/advertisements/bookings${query ? `?${query}` : ''}`, { method: 'GET' });
-};
-
-// Admin: approve or reject a booking
-// PATCH /api/admin/advertisements/bookings/:bookingId/review
-export const adminReviewBooking = async (bookingId, payload) => {
-  return apiRequest(`/api/admin/advertisements/bookings/${bookingId}/review`, {
+export const adminReviewBooking = (bookingId, payload) =>
+  apiRequest(`/api/admin/advertisements/bookings/${bookingId}/review`, {
     method: 'PATCH',
     body: JSON.stringify(payload),
   });
-};

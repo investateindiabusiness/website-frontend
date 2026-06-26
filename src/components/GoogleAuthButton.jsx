@@ -12,6 +12,14 @@ const GoogleAuthButton = ({ onSuccess, onError, text = "Continue with Google", u
   const [loading, setLoading] = useState(false);
 
   const handleGoogleClick = async () => {
+    if (!app) {
+      toast({
+        title: "Google Sign-In Unavailable",
+        description: "Firebase is not initialized. Please check your environment configuration.",
+        variant: "destructive"
+      });
+      return;
+    }
     const auth = getAuth(app);
     let successData = null;
     let authError = null;
