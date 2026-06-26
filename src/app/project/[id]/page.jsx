@@ -4,6 +4,7 @@ import React, { useState, useEffect } from 'react';
 import { useParams, useRouter } from 'next/navigation';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
+import AdBanner from '@/components/AdBanner';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
@@ -138,6 +139,8 @@ export default function ProjectDetail() {
                            </Button>
                         </CardContent>
                      </Card>
+
+                     <AdBanner zoneId="zone3" />
                   </div>
                </div>
             </div>

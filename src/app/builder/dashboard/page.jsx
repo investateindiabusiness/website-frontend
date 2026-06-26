@@ -6,6 +6,7 @@ import { Building2, MapPin, Search, Users, TrendingUp, MoreVertical, Wallet, Har
 import { AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
+import AdBanner from '@/components/AdBanner';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { useAuth } from '@/hooks/AuthContext';
@@ -96,6 +97,9 @@ export default function BuilderDashboard() {
 
         {/* Main Content */}
         <div className="container mx-auto px-4 -mt-4 md:-mt-8 relative z-20 space-y-6 md:space-y-8">
+          <div className="pt-2">
+            <AdBanner zoneId="zone1" />
+          </div>
           {/* Charts */}
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
             <div className="lg:col-span-2 bg-white rounded-3xl p-4 md:p-6 shadow-sm border border-gray-100">
