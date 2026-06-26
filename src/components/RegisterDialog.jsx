@@ -1,6 +1,8 @@
 "use client";
 
 import React, { useState, useEffect } from 'react';
+import { useRouter } from 'next/navigation';
+import { useAuth } from '@/hooks/AuthContext';
 import { Dialog, DialogContent, DialogTitle, DialogDescription } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -15,16 +17,27 @@ import { registerStep1, submitInvestorForm1, submitBuilderForm1, submitRequested
 import GoogleAuthButton from '@/components/GoogleAuthButton';
 
 const RegisterDialog = ({ isOpen, onOpenChange, onLoginClick, initialData = {} }) => {
+  const router = useRouter();
+  const { login } = useAuth();
+
   const [step, setStep] = useState(1);
   const [userType, setUserType] = useState('investor');
   const [userId, setUserId] = useState(null);
   const [loading, setLoading] = useState(false);
   const [submitted, setSubmitted] = useState(false);
 
+  const [localInitialData, setLocalInitialData] = useState(initialData);
+
+  useEffect(() => {
+    if (isOpen) {
+      setLocalInitialData(initialData);
+    }
+  }, [isOpen, initialData]);
+
   // --- Update Modes ---
   // --- CRITICAL FAIL-SAFE: Update Mode Auto-Detection ---
-  const currentStatus = initialData?.userData?.onboardingStatus;
-  const adminRequests = initialData?.adminRequests || initialData?.userData?.adminRequests || [];
+  const currentStatus = localInitialData?.userData?.onboardingStatus;
+  const adminRequests = localInitialData?.adminRequests || localInitialData?.userData?.adminRequests || [];
 
   // List of all Form 2 specific keys
   const FORM2_KEYS = [
@@ -38,15 +51,15 @@ const RegisterDialog = ({ isOpen, onOpenChange, onLoginClick, initialData = {} }
     return FORM2_KEYS.includes(id);
   });
 
-  const isUpdateMode = initialData?.phase === 'CHANGES_REQUESTED' || currentStatus?.includes('changes_requested');
+  const isUpdateMode = localInitialData?.phase === 'CHANGES_REQUESTED' || currentStatus?.includes('changes_requested');
 
   // Force Form 2 update mode if the status is form2 OR if Form 2 fields are detected
   const isForm2UpdateMode = isUpdateMode && (currentStatus === 'form2_changes_requested' || hasForm2Requests);
   const isForm1UpdateMode = isUpdateMode && !isForm2UpdateMode;
 
-  const isForm2Mode = initialData?.phase === 'FORM2_PENDING' || isForm2UpdateMode;
+  const isForm2Mode = localInitialData?.phase === 'FORM2_PENDING' || isForm2UpdateMode;
 
-  const prefilledUserData = initialData?.userData || {};
+  const prefilledUserData = localInitialData?.userData || {};
 
   const [authData, setAuthData] = useState({ email: '', password: '', confirmPassword: '' });
 
@@ -112,25 +125,25 @@ const RegisterDialog = ({ isOpen, onOpenChange, onLoginClick, initialData = {} }
     let timer;
     if (isOpen) {
       fetch('https://countriesnow.space/api/v0.1/countries/iso').then(res => res.json()).then(data => { if (!data.error) setCountries(data.data || []); }).catch(console.error);
-      if (initialData?.userType) setUserType(initialData.userType);
+      if (localInitialData?.userType) setUserType(localInitialData.userType);
 
-      if (initialData?.skipStep1 && initialData?.uid) {
-        setUserId(initialData.uid);
-        setAuthData(prev => ({ ...prev, email: initialData.email || '' }));
+      if (localInitialData?.skipStep1 && localInitialData?.uid) {
+        setUserId(localInitialData.uid);
+        setAuthData(prev => ({ ...prev, email: localInitialData.email || '' }));
 
-        if (isUpdateMode && initialData.userData) {
-          const uData = initialData.userData;
-          if (initialData.userType === 'investor') setInvestorData(prev => ({ ...prev, ...uData }));
+        if (isUpdateMode && localInitialData.userData) {
+          const uData = localInitialData.userData;
+          if (localInitialData.userType === 'investor') setInvestorData(prev => ({ ...prev, ...uData }));
           else setBuilderData(prev => ({ ...prev, ...uData }));
-        } else if (initialData.userType === 'investor' && !isForm2Mode) {
-          setInvestorData(prev => ({ ...prev, fullName: initialData.name || '' }));
+        } else if (localInitialData.userType === 'investor' && !isForm2Mode) {
+          setInvestorData(prev => ({ ...prev, fullName: localInitialData.name || '' }));
         }
 
         if (isForm2Mode) {
           setStep(3);
-          if (initialData.userData) {
-            if (initialData.userType === 'investor') setInvForm2(prev => ({ ...prev, ...initialData.userData }));
-            else setBldForm2(prev => ({ ...prev, ...initialData.userData }));
+          if (localInitialData.userData) {
+            if (localInitialData.userType === 'investor') setInvForm2(prev => ({ ...prev, ...localInitialData.userData }));
+            else setBldForm2(prev => ({ ...prev, ...localInitialData.userData }));
           }
         } else {
           setStep(2);
@@ -144,7 +157,7 @@ const RegisterDialog = ({ isOpen, onOpenChange, onLoginClick, initialData = {} }
       }, 300);
     }
     return () => { if (timer) clearTimeout(timer); };
-  }, [isOpen, initialData, isUpdateMode, isForm2Mode]);
+  }, [isOpen, localInitialData, isUpdateMode, isForm2Mode]);
 
   const handleCountryChange = (e) => setActiveData({ ...getActiveData(), country: e.target.value, state: '', city: '' });
   const handleStateChange = (e) => setActiveData({ ...getActiveData(), state: e.target.value, city: '' });
@@ -233,12 +246,14 @@ const RegisterDialog = ({ isOpen, onOpenChange, onLoginClick, initialData = {} }
 
         fieldsToSend.forEach(id => { if (currentData[id] !== undefined) payload[id] = currentData[id]; });
         await submitRequestedChanges(userId, payload);
+        setSubmitted(true);
       } else if (userType === 'investor') {
         await submitInvestorForm1(userId, currentData);
+        setStep(3);
       } else {
         await submitBuilderForm1(userId, currentData);
+        setStep(3);
       }
-      setSubmitted(true);
     } catch (error) {
       toast({ title: 'Error', description: error.message || 'Failed to submit.', variant: 'destructive' });
     } finally { setLoading(false); }
@@ -276,14 +291,62 @@ const RegisterDialog = ({ isOpen, onOpenChange, onLoginClick, initialData = {} }
     } finally { setLoading(false); }
   };
 
-  const handleGoogleRegisterSuccess = async (userData) => {
-    const auth = getAuth(app);
-    await signOut(auth);
-    setUserId(userData.uid);
-    setAuthData({ ...authData, email: userData.email });
-    if (userType === 'investor') setInvestorData(prev => ({ ...prev, fullName: userData.name || '' }));
-    toast({ title: "Authentication Successful", description: "Please complete your details." });
-    setStep(2);
+  const handleGoogleRegisterSuccess = (userData) => {
+    login(userData);
+    toast({ title: 'Login Successful', description: `Welcome back, ${userData.name || 'User'}!` });
+    onOpenChange(false);
+
+    if (userData.role === 'admin') router.push('/admin/dashboard');
+    else if (userData.role === 'builder') router.push('/builder/dashboard');
+    else router.push('/dashboard');
+  };
+
+  const handleGoogleRegisterError = (err) => {
+    console.log("Register Google Auth Error:", err);
+
+    const targetUserType = err.userType || userType;
+
+    if (err.error === 'STEP2_PENDING') {
+      toast({ title: 'Profile Incomplete', description: 'Please complete your profile details.' });
+      setLocalInitialData({
+        uid: err.uid,
+        email: err.email,
+        name: err.name,
+        skipStep1: true,
+        userType: targetUserType
+      });
+    } else if (err.error === 'CHANGES_REQUESTED') {
+      toast({ title: 'Update Required', description: err.message });
+      setLocalInitialData({
+        uid: err.uid,
+        userType: targetUserType,
+        skipStep1: true,
+        phase: 'CHANGES_REQUESTED',
+        adminRequests: err.adminRequests,
+        userData: err.userData
+      });
+    } else if (err.error === 'FORM2_PENDING') {
+      toast({ title: 'Action Required', description: err.message });
+      setLocalInitialData({
+        uid: err.uid,
+        userType: targetUserType,
+        skipStep1: true,
+        phase: 'FORM2_PENDING',
+        userData: err.userData
+      });
+    } else if (err.error === 'ACCOUNT_UNDER_REVIEW') {
+      toast({
+        title: 'Account Under Review',
+        description: 'Your account is currently under review by our administration team.',
+        variant: 'destructive'
+      });
+    } else {
+      toast({
+        title: "Registration Failed",
+        description: err.message || "Google registration failed",
+        variant: "destructive"
+      });
+    }
   };
 
   const content = {
@@ -321,7 +384,7 @@ const RegisterDialog = ({ isOpen, onOpenChange, onLoginClick, initialData = {} }
 
   return (
     <Dialog open={isOpen} onOpenChange={onOpenChange}>
-      <DialogContent className="fixed left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-[95vw] md:max-w-[950px] p-0 overflow-hidden bg-white border-none shadow-[0_32px_64px_-15px_rgba(0,0,0,0.2)] flex flex-col lg:flex-row max-h-[90vh] md:max-h-[92vh] z-50 rounded-[2.5rem]">
+      <DialogContent className="fixed left-1/2 top-[72px] -translate-x-1/2 translate-y-0 w-[95vw] md:max-w-[950px] p-0 overflow-hidden bg-white border-none shadow-[0_32px_64px_-15px_rgba(0,0,0,0.2)] flex flex-col lg:flex-row z-50 rounded-[2.5rem]" style={{ maxHeight: 'calc(100vh - 80px)' }}>
 
         <DialogTitle className="sr-only">
           {isUpdateMode ? 'Update Account' : 'Register Account'}
@@ -451,7 +514,7 @@ const RegisterDialog = ({ isOpen, onOpenChange, onLoginClick, initialData = {} }
 
                 {step === 1 && (
                   <div className="space-y-6 animate-in slide-in-from-bottom-6 duration-500">
-                    <GoogleAuthButton onSuccess={handleGoogleRegisterSuccess} text="Continue with Google" userType={userType} />
+                    <GoogleAuthButton onSuccess={handleGoogleRegisterSuccess} onError={handleGoogleRegisterError} text="Continue with Google" userType={userType} />
                     
                     <div className="relative py-2">
                       <div className="absolute inset-0 flex items-center"><span className="w-full border-t border-gray-100" /></div>
@@ -697,7 +760,7 @@ const RegisterDialog = ({ isOpen, onOpenChange, onLoginClick, initialData = {} }
                             </div>
                           )}
                           {shouldShowForm2Field('industryNatureOfWork') && (<div><Label className={labelStyle}>Primary Industry *</Label><Input required value={invForm2.industryNatureOfWork} onChange={(e) => setInvForm2({ ...invForm2, industryNatureOfWork: e.target.value })} className={inputStyle} /></div>)}
-                          {shouldShowField('yearlyIncome') && (
+                          {shouldShowForm2Field('yearlyIncome') && (
                             <div><Label className={labelStyle}>Annual Income *</Label>
                               <Input required type="text" value={invForm2.yearlyIncome} onChange={(e) => {
                                 const validNumber = e.target.value.replace(/\D/g, '').replace(/^0+/, '');

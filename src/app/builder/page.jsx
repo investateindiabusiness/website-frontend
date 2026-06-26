@@ -278,7 +278,7 @@ export default function BuilderHome() {
                 </div>
             </section>
 
-            <section className="fullscreen-section section-theme" id="benefits" style={{ padding: '60px 0', overflow: 'hidden' }}>
+            <section className="fullscreen-section section-theme" id="benefits" style={{ paddingTop: '60px', paddingBottom: '60px', overflow: 'hidden' }}>
                 <div className="container">
                     <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-start">
                         {/* Left Side: Content */}

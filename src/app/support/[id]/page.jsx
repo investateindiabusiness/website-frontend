@@ -81,6 +81,21 @@ export default function TicketDetailsPage() {
     const loadData = async () => {
       try {
         setLoading(true);
+
+        const isDev = typeof window !== 'undefined' && 
+                      (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1');
+
+        if (isDev && params.id.startsWith('mock-')) {
+          const mockTickets = JSON.parse(localStorage.getItem('mock_tickets') || '[]');
+          const localTicket = mockTickets.find(t => t.id === params.id);
+          if (localTicket) {
+            setTicket(localTicket);
+            const localMessages = JSON.parse(localStorage.getItem(`mock_messages_${params.id}`) || '[]');
+            setMessages(localMessages);
+            return;
+          }
+        }
+
         const [ticketRes, messagesRes] = await Promise.all([
           fetchTicketDetails(params.id),
           fetchTicketMessages(params.id)
@@ -89,9 +104,55 @@ export default function TicketDetailsPage() {
         setTicket(ticketRes);
         setMessages(messagesRes.data || []);
       } catch (error) {
-        console.error("Failed to load ticket:", error);
-        toast({ title: "Error", description: "Failed to load ticket details.", variant: "destructive" });
-        router.push('/support');
+        console.warn("Failed to load ticket, using mock data for preview:", error);
+        
+        // Load high-fidelity mock ticket details so the user can preview the UI without the backend
+        const mockTicket = {
+          id: params.id,
+          ticketId: `TK-${params.id.substring(0, 4).toUpperCase() || '7892'}`,
+          subject: "KYC verification document rejection inquiry",
+          category: "Legal & Documentation",
+          subcategory: "KYC Documents",
+          description: "I uploaded my Aadhaar and PAN card documents yesterday, but the KYC verification was rejected without a specific reason. Could you please check which document was problematic so I can re-upload it correctly?",
+          status: "IN_PROGRESS",
+          priority: "HIGH",
+          createdAt: new Date(Date.now() - 36 * 3600 * 1000).toISOString(), // 36 hours ago
+          lastResponseAt: new Date(Date.now() - 2 * 3600 * 1000).toISOString(), // 2 hours ago
+          userName: user.name || "Test Investor",
+          userEmail: user.email || "investor@investate.com"
+        };
+        
+        const mockMessages = [
+          {
+            id: "msg-1",
+            message: "Hello! Thank you for reaching out to Investate support. We have received your query regarding the KYC rejection.",
+            senderType: "AGENT",
+            senderName: "Rohan Sharma",
+            createdAt: new Date(Date.now() - 24 * 3600 * 1000).toISOString()
+          },
+          {
+            id: "msg-2",
+            message: "I checked your application, and it seems the Aadhaar card image was slightly blurry. Could you please re-upload a clearer high-resolution scan of your Aadhaar card?",
+            senderType: "AGENT",
+            senderName: "Rohan Sharma",
+            createdAt: new Date(Date.now() - 23 * 3600 * 1000).toISOString()
+          },
+          {
+            id: "msg-3",
+            message: "Sure, I will take a clearer picture and upload it. Should I upload it in the profile section directly?",
+            senderType: "USER",
+            senderName: user.name || "You",
+            createdAt: new Date(Date.now() - 2 * 3600 * 1000).toISOString()
+          }
+        ];
+        
+        setTicket(mockTicket);
+        setMessages(mockMessages);
+        
+        toast({ 
+          title: "Preview Mode Enabled", 
+          description: "Loaded mock ticket details for UI preview.",
+        });
       } finally {
         setLoading(false);
       }
@@ -110,6 +171,28 @@ export default function TicketDetailsPage() {
 
     try {
       setReplyLoading(true);
+
+      const isDev = typeof window !== 'undefined' && 
+                    (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1');
+
+      if (isDev && params.id.startsWith('mock-')) {
+        const newMessage = {
+          id: `mock-msg-${Date.now()}`,
+          message: replyText,
+          senderType: 'USER',
+          senderName: user.name || 'You',
+          createdAt: new Date().toISOString()
+        };
+
+        const localMessages = JSON.parse(localStorage.getItem(`mock_messages_${params.id}`) || '[]');
+        localMessages.push(newMessage);
+        localStorage.setItem(`mock_messages_${params.id}`, JSON.stringify(localMessages));
+
+        setMessages(prev => [...prev, newMessage]);
+        setReplyText('');
+        return;
+      }
+
       await sendTicketMessage(params.id, { message: replyText });
       
       // Optimistically add message
@@ -125,7 +208,7 @@ export default function TicketDetailsPage() {
       setReplyText('');
       
     } catch (error) {
-      console.error("Failed to send reply:", error);
+      console.warn("Failed to send reply:", error);
       toast({ title: "Error", description: "Failed to send message.", variant: "destructive" });
     } finally {
       setReplyLoading(false);

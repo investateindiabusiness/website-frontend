@@ -460,7 +460,7 @@ export default function Index() {
 
 
 
-            <section className="fullscreen-section section-light" id="benefits" style={{ padding: '60px 0', overflow: 'hidden' }}>
+            <section className="fullscreen-section section-light" id="benefits" style={{ paddingTop: '60px', paddingBottom: '60px', overflow: 'hidden' }}>
                 <div className="container">
                     <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-start">
                         {/* Left Side: Content */}

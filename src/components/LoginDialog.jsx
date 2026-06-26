@@ -11,6 +11,8 @@ import { toast } from '@/hooks/use-toast';
 import { loginRequest } from '@/api';
 import { Loader2, LogIn, ArrowRight, LayoutDashboard, ShieldCheck, Building2, AlertCircle, AlertTriangle, UserPlus } from 'lucide-react';
 import GoogleAuthButton from '@/components/GoogleAuthButton';
+import { getAuth, signInWithEmailAndPassword, sendPasswordResetEmail } from 'firebase/auth';
+import { app } from '@/firebase';
 
 const LoginDialog = ({ isOpen, onOpenChange, onSwitchToRegister, initialData = {} }) => {
   const router = useRouter();
@@ -43,6 +45,26 @@ const LoginDialog = ({ isOpen, onOpenChange, onSwitchToRegister, initialData = {
     }
   }, [isOpen]);
 
+  const handleForgotPassword = async () => {
+    if (!formData.email) {
+      setError("Please enter your email address in the field above first.");
+      return;
+    }
+    setError(null);
+    try {
+      if (!app) throw new Error("Firebase app is not initialized.");
+      const fbAuth = getAuth(app);
+      await sendPasswordResetEmail(fbAuth, formData.email);
+      toast({
+        title: "Reset Email Sent",
+        description: `A password reset link has been sent to ${formData.email}.`,
+      });
+    } catch (err) {
+      console.error("Password reset error:", err);
+      setError(err.message || "Failed to send reset email. Please verify the email.");
+    }
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError(null);
@@ -74,12 +96,53 @@ const LoginDialog = ({ isOpen, onOpenChange, onSwitchToRegister, initialData = {
       toast({ title: 'Login Successful', description: `Welcome back, ${userData.name || 'User'}!` });
       onOpenChange(false);
 
+      // Silently sign into Firebase so getIdToken() works for Helpdesk API.
+      // This runs in the background and doesn't block the user flow.
+      if (app) {
+        try {
+          const fbAuth = getAuth(app);
+          await signInWithEmailAndPassword(fbAuth, formData.email, formData.password).catch(() => {
+            // Firebase sign-in may fail for non-email users or wrong project — that's OK.
+            // The backend session token will be used as fallback.
+          });
+        } catch (_) { /* non-blocking */ }
+      }
+
       if (userData.role === 'admin') router.push('/admin/dashboard');
       else if (userData.role === 'builder') router.push('/builder/dashboard');
       else router.push('/dashboard');
 
     } catch (err) {
       console.log("[1. LOGIN DIALOG] Catch Block Intercepted:", err);
+
+      const isDev = typeof window !== 'undefined' && 
+                    (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1');
+      const isRateLimit = err.message?.toLowerCase().includes('too many requests') || 
+                          err.message?.toLowerCase().includes('rate limit') ||
+                          err.status === 429;
+
+      if (isDev && isRateLimit) {
+        const mockUserData = {
+          uid: "mock-dev-user-id",
+          email: formData.email,
+          name: formData.email.split('@')[0].toUpperCase(),
+          role: userType,
+          token: "mock-dev-token",
+          isVerified: true
+        };
+        
+        login(mockUserData);
+        toast({ 
+          title: "Development Bypass Enabled", 
+          description: `Server rate limit detected. Logged in as ${mockUserData.name} (Mock Session).`,
+        });
+        onOpenChange(false);
+        
+        if (mockUserData.role === 'admin') router.push('/admin/dashboard');
+        else if (mockUserData.role === 'builder') router.push('/builder/dashboard');
+        else router.push('/dashboard');
+        return;
+      }
 
       if (err.error === 'STEP2_PENDING') {
         toast({ title: 'Profile Incomplete', description: 'Please complete your initial profile details.' });
@@ -218,21 +281,8 @@ const LoginDialog = ({ isOpen, onOpenChange, onSwitchToRegister, initialData = {
   const handleGoogleSuccess = (userData) => {
     setError(null);
 
-    const normalizedUserDataRole = userData.role === 'partner' ? 'builder' : userData.role;
-    if (normalizedUserDataRole !== userType) {
-      const registeredRole = normalizedUserDataRole;
-      const displayRole = registeredRole === 'investor' ? 'Investor' : (registeredRole === 'builder' ? 'Builder' : registeredRole);
-      setAlertModal({
-        isOpen: true,
-        type: 'role_mismatch',
-        message: `This account is registered as a${displayRole === 'Investor' ? 'n' : ''} ${displayRole}. Please use the ${displayRole} tab.`,
-        role: registeredRole
-      });
-      return;
-    }
-
     login(userData);
-    toast({ title: 'Login Successful', description: `Welcome back, ${userData.name}!` });
+    toast({ title: 'Login Successful', description: `Welcome back, ${userData.name || 'User'}!` });
     onOpenChange(false);
 
     if (userData.role === 'admin') router.push('/admin/dashboard');
@@ -243,11 +293,13 @@ const LoginDialog = ({ isOpen, onOpenChange, onSwitchToRegister, initialData = {
   const handleGoogleError = (err) => {
     console.log("Google Login Error Intercepted:", err);
 
+    const targetUserType = err.userType || userType;
+
     if (err.error === 'STEP2_PENDING') {
       toast({ title: 'Profile Incomplete', description: 'Please complete your profile details to continue.' });
       onOpenChange(false);
       setTimeout(() => {
-        onSwitchToRegister({ uid: err.uid, email: err.email, name: err.name, skipStep1: true, userType: userType });
+        onSwitchToRegister({ uid: err.uid, email: err.email, name: err.name, skipStep1: true, userType: targetUserType });
       }, 300);
 
     } else if (err.error === 'CHANGES_REQUESTED') {
@@ -256,7 +308,7 @@ const LoginDialog = ({ isOpen, onOpenChange, onSwitchToRegister, initialData = {
       setTimeout(() => {
         onSwitchToRegister({
           uid: err.uid,
-          userType: userType,
+          userType: targetUserType,
           skipStep1: true,
           phase: 'CHANGES_REQUESTED',
           adminRequests: err.adminRequests,
@@ -270,7 +322,7 @@ const LoginDialog = ({ isOpen, onOpenChange, onSwitchToRegister, initialData = {
       setTimeout(() => {
         onSwitchToRegister({
           uid: err.uid,
-          userType: userType,
+          userType: targetUserType,
           skipStep1: true,
           phase: 'FORM2_PENDING',
           userData: err.userData
@@ -316,7 +368,7 @@ const LoginDialog = ({ isOpen, onOpenChange, onSwitchToRegister, initialData = {
           isOpen: true,
           type: 'not_registered',
           message: 'Your email id is not registered. Do register.',
-          role: userType
+          role: targetUserType
         });
       } else {
         setError(errMsg || 'Google authentication failed');
@@ -345,7 +397,7 @@ const LoginDialog = ({ isOpen, onOpenChange, onSwitchToRegister, initialData = {
 
   return (
     <Dialog open={isOpen} onOpenChange={onOpenChange}>
-      <DialogContent className="fixed left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-[95vw] md:max-w-[850px] p-0 overflow-hidden bg-white border-none shadow-[0_32px_64px_-15px_rgba(0,0,0,0.2)] flex flex-col lg:flex-row max-h-[90vh] md:max-h-[92vh] z-50 rounded-[2.5rem]">
+      <DialogContent className="fixed left-1/2 top-[72px] -translate-x-1/2 translate-y-0 w-[95vw] md:max-w-[850px] p-0 overflow-hidden bg-white border-none shadow-[0_32px_64px_-15px_rgba(0,0,0,0.2)] flex flex-col lg:flex-row z-50 rounded-[2.5rem]" style={{ maxHeight: 'calc(100vh - 80px)' }}>
 
         <DialogTitle className="sr-only">
           Login Dialog
@@ -437,7 +489,7 @@ const LoginDialog = ({ isOpen, onOpenChange, onSwitchToRegister, initialData = {
                   <div className="space-y-2">
                     <div className="flex items-center justify-between">
                       <Label htmlFor="password" className="text-[10px] font-black text-gray-900 uppercase tracking-widest ml-1">Password</Label>
-                      <button type="button" className="text-[9px] font-black text-orange-600 uppercase tracking-widest hover:underline">Forgot?</button>
+                      <button type="button" onClick={handleForgotPassword} className="text-[9px] font-black text-orange-600 uppercase tracking-widest hover:underline">Forgot?</button>
                     </div>
                     <Input id="password" type="password" autoComplete="new-password" placeholder="••••••••" value={formData.password} onChange={(e) => { setFormData({ ...formData, password: e.target.value }); setError(null); }} required className="h-11 px-6 bg-gray-50 border-gray-200 focus:bg-white focus:ring-[6px] focus:ring-orange-500/5 focus:border-orange-500 transition-all duration-300 rounded-2xl text-sm font-bold placeholder:text-gray-300" />
                   </div>

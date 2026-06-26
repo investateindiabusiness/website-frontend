@@ -9,35 +9,10 @@ const AuthContext = createContext(null);
 const isSessionExpired = (userData) => {
   if (!userData) return false;
 
-  // 1. Check JWT expiration if token is present
-  if (userData.token) {
-    try {
-      const parts = userData.token.split('.');
-      if (parts.length === 3) {
-        const base64Url = parts[1];
-        const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
-        const jsonPayload = decodeURIComponent(
-          atob(base64)
-            .split('')
-            .map((c) => '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2))
-            .join('')
-        );
-        const payload = JSON.parse(jsonPayload);
-        if (payload && typeof payload.exp === 'number') {
-          const expirationTime = payload.exp * 1000;
-          if (Date.now() >= expirationTime) {
-            return true;
-          }
-        }
-      }
-    } catch (e) {
-      console.warn("Failed to parse JWT token expiration:", e);
-    }
-  }
-
-  // 2. Fallback: absolute session timeout (e.g., 2 hours from login time)
+  // Rely on the backend to validate JWT expiration (which handles clock skews safely).
+  // We only check a generous absolute session timeout (e.g. 24 hours) as a client-side fallback.
   if (userData.loginTime) {
-    const SESSION_TIMEOUT = 2 * 60 * 60 * 1000; // 2 hours
+    const SESSION_TIMEOUT = 24 * 60 * 60 * 1000; // 24 hours
     if (Date.now() - userData.loginTime >= SESSION_TIMEOUT) {
       return true;
     }

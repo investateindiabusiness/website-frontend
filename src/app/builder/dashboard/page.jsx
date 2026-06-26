@@ -55,7 +55,7 @@ export default function BuilderDashboard() {
   return (
     <div className="min-h-screen bg-gray-50 flex flex-col font-sans overflow-x-hidden">
       <Header />
-      <div className="flex-grow mt-[2rem] md:mt-[4rem] pb-12">
+      <div className="flex-grow mt-16 md:mt-[4rem] pb-12">
         {/* Hero Section */}
         <div className="bg-gradient-to-r from-[#0b264f] to-[#1a4b8c] text-white pt-6 pb-12 md:pt-10 md:pb-20 px-4 md:px-8 rounded-b-[2rem] shadow-xl relative overflow-hidden">
           <div className="absolute top-0 right-0 w-80 h-80 bg-white/5 rounded-full -mr-20 -mt-20 blur-3xl pointer-events-none"></div>
@@ -67,9 +67,9 @@ export default function BuilderDashboard() {
                 </Badge>
                 <h1 className="text-2xl md:text-3xl lg:text-4xl font-bold mb-2">Dashboard Overview</h1>
                 <p className="text-sm md:text-base text-blue-100 opacity-90">Track performance, manage inventory, and monitor leads.</p>
-                <Button 
-                  onClick={() => router.push('/support')} 
-                  variant="outline" 
+                <Button
+                  onClick={() => router.push('/support')}
+                  variant="outline"
                   className="mt-4 bg-white/10 hover:bg-white/20 text-white border-white/20 backdrop-blur-sm rounded-xl"
                 >
                   <MessageSquare className="w-4 h-4 mr-2" /> Support Helpdesk
@@ -105,7 +105,7 @@ export default function BuilderDashboard() {
             <div className="lg:col-span-2 bg-white rounded-3xl p-4 md:p-6 shadow-sm border border-gray-100">
               <h3 className="font-bold text-gray-900 text-lg flex items-center mb-6"><TrendingUp className="w-5 h-5 mr-2 text-[#0b264f]" /> Sales Performance</h3>
               <div className="h-56 md:h-64 w-full">
-                <ResponsiveContainer width="100%" height="100%">
+                <ResponsiveContainer width="100%" height={256}>
                   <AreaChart data={ANALYTICS_DATA}>
                     <defs>
                       <linearGradient id="colorSales" x1="0" y1="0" x2="0" y2="1">

@@ -38,9 +38,10 @@ const StatusBadge = ({ status }) => {
     ESCALATED: 'bg-red-100 text-red-800 border-red-200 font-bold',
   };
   const defaultStyle = 'bg-gray-100 text-gray-800 border-gray-200';
+  const normalizedStatus = status?.toUpperCase().replace(/[-\s]/g, '_') || 'OPEN';
   return (
-    <Badge variant="outline" className={`${styles[status] || defaultStyle} px-2.5 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wider`}>
-      {status?.replace(/_/g, ' ')}
+    <Badge variant="outline" className={`${styles[normalizedStatus] || defaultStyle} px-2.5 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wider`}>
+      {normalizedStatus.replace(/_/g, ' ')}
     </Badge>
   );
 };
@@ -52,9 +53,10 @@ const PriorityBadge = ({ priority }) => {
     HIGH: 'text-orange-600 bg-orange-50 border-orange-200',
     CRITICAL: 'text-red-600 bg-red-50 border-red-200 animate-pulse',
   };
+  const normalizedPriority = priority?.toUpperCase().replace(/[-\s]/g, '_') || 'MEDIUM';
   return (
-    <span className={`text-[10px] font-bold px-2 py-1 rounded border ${styles[priority] || 'text-gray-600'}`}>
-      {priority}
+    <span className={`text-[10px] font-bold px-2 py-1 rounded border ${styles[normalizedPriority] || 'text-gray-600 bg-gray-50'}`}>
+      {normalizedPriority}
     </span>
   );
 };
@@ -65,7 +67,7 @@ export default function AdminHelpdesk() {
   const [tickets, setTickets] = useState([]);
   const [loading, setLoading] = useState(true);
   const [searchQuery, setSearchQuery] = useState('');
-  const [filterStatus, setFilterStatus] = useState('OPEN');
+  const [filterStatus, setFilterStatus] = useState('ALL');
 
   useEffect(() => {
     if (!user) {
@@ -76,10 +78,25 @@ export default function AdminHelpdesk() {
     const loadTickets = async () => {
       try {
         setLoading(true);
-        const res = await fetchAllTickets(filterStatus !== 'ALL' ? { status: filterStatus } : {});
-        setTickets(res.data || []);
+
+        let apiTickets = [];
+        try {
+          const res = await fetchAllTickets(filterStatus !== 'ALL' ? { status: filterStatus } : {});
+          apiTickets = res.data || [];
+        } catch (apiErr) {
+          console.warn("API load failed, falling back to local mock storage:", apiErr);
+        }
+
+        const isDev = typeof window !== 'undefined' &&
+          (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1');
+        if (isDev) {
+          const mockTickets = JSON.parse(localStorage.getItem('mock_tickets') || '[]');
+          setTickets([...mockTickets, ...apiTickets]);
+        } else {
+          setTickets(apiTickets);
+        }
       } catch (error) {
-        console.error("Failed to load tickets:", error);
+        console.warn("Failed to load tickets:", error);
         toast({ title: "Error", description: "Could not load support tickets.", variant: "destructive" });
       } finally {
         setLoading(false);
@@ -90,9 +107,16 @@ export default function AdminHelpdesk() {
   }, [user, router, filterStatus]);
 
   const filteredTickets = tickets.filter(ticket => {
-    const matchesSearch = ticket.subject?.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      ticket.ticketId?.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      ticket.userName?.toLowerCase().includes(searchQuery.toLowerCase());
+    if (!searchQuery.trim()) return true;
+    // Strip leading '#' so users can type either '#TKT-001' or 'TKT-001'
+    const query = searchQuery.trim().replace(/^#/, '').toLowerCase();
+    const matchesSearch =
+      String(ticket.ticketId || '').toLowerCase().includes(query) ||
+      String(ticket.id || '').toLowerCase().includes(query) ||
+      (ticket.subject || '').toLowerCase().includes(query) ||
+      (ticket.userName || '').toLowerCase().includes(query) ||
+      (ticket.userEmail || '').toLowerCase().includes(query) ||
+      (ticket.category || '').toLowerCase().includes(query);
     return matchesSearch;
   });
 
@@ -133,8 +157,8 @@ export default function AdminHelpdesk() {
                 key={status}
                 onClick={() => setFilterStatus(status)}
                 className={`px-4 py-2 rounded-xl text-xs font-bold whitespace-nowrap transition-all border ${filterStatus === status
-                    ? 'bg-[#0b264f] text-white border-[#0b264f] shadow-md'
-                    : 'bg-white text-gray-600 border-gray-200 hover:bg-gray-50'
+                  ? 'bg-[#0b264f] text-white border-[#0b264f] shadow-md'
+                  : 'bg-white text-gray-600 border-gray-200 hover:bg-gray-50'
                   }`}
               >
                 {status.replace(/_/g, ' ')}

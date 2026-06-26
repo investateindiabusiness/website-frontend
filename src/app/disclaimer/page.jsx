@@ -25,39 +25,60 @@ export default function Disclaimer() {
         </div>
       </div>
 
-      <div className="flex-grow container mx-auto px-4 py-12 -mt-10 relative z-20">
-        <div className="max-w-4xl mx-auto bg-white rounded-xl shadow-xl border border-gray-100 p-8 md:p-12">
-          <div className="border-b border-gray-100 pb-6 mb-8">
-            <p className="text-gray-700 font-medium text-lg leading-relaxed">
+      <div className="flex-grow w-full px-6 md:px-16 lg:px-24 py-12">
+
+          <div className="border-b border-gray-200 pb-8 mb-8 text-center">
+            <p className="text-sm text-gray-500 italic mb-4">Last Updated: 25 June 2026</p>
+            <p className="text-gray-800 font-bold text-lg leading-relaxed">
               Investate India provides a digital platform to connect investors and builders. <br />
-              <span className="text-orange-600 font-bold">We are not a real estate broker, agent, or developer.</span>
+              <span className="text-orange-600">We are not a real estate broker, agent, or developer.</span>
             </p>
           </div>
 
           <section>
-            <h2 className={sectionTitleStyle}><FileWarning className="w-6 h-6 text-gray-700" />1. No Investment Advice</h2>
-            <p className={paragraphStyle}>Information provided is for general informational purposes only and does not constitute financial or legal advice.</p>
+            <h2 className="text-xl md:text-2xl font-bold text-gray-900 mt-10 mb-6 text-center flex items-center justify-center gap-2">
+              <FileWarning className="w-6 h-6 text-gray-700" />1. No Investment Advice
+            </h2>
+            <div className="bg-white border border-gray-200 rounded-xl p-6 shadow-sm max-w-4xl mx-auto">
+              <p className="text-gray-600 leading-relaxed text-left">
+                Information provided is for general informational purposes only and does not constitute financial or legal advice.
+              </p>
+            </div>
           </section>
 
-          <section>
-            <h2 className={sectionTitleStyle}><ShieldAlert className="w-6 h-6 text-red-600" />2. No Guarantees</h2>
-            <ul className={listStyle}>
-              <li>Financial returns (ROI) or profit.</li>
-              <li>Builder reliability or solvency.</li>
-              <li>Timely project completion.</li>
-            </ul>
+          <section className="mt-12">
+            <h2 className="text-xl md:text-2xl font-bold text-gray-900 mb-6 text-center flex items-center justify-center gap-2">
+              <ShieldAlert className="w-6 h-6 text-red-600" />2. No Guarantees
+            </h2>
+            <div className="bg-white border border-gray-200 rounded-xl p-6 shadow-sm max-w-4xl mx-auto">
+              <p className="text-gray-600 mb-3 text-left">We provide no guarantees regarding:</p>
+              <ul className="list-disc pl-5 space-y-2 text-gray-600 marker:text-orange-500 text-left">
+                <li>Financial returns (ROI) or profit.</li>
+                <li>Builder reliability or solvency.</li>
+                <li>Timely project completion.</li>
+              </ul>
+            </div>
           </section>
 
-          <section>
-            <h2 className={sectionTitleStyle}><SearchCheck className="w-6 h-6 text-blue-600" />3. Independent Verification Required</h2>
-            <p className={paragraphStyle}>It is the sole responsibility of the user to independently verify all details before committing.</p>
+          <section className="mt-12">
+            <h2 className="text-xl md:text-2xl font-bold text-gray-900 mb-6 text-center flex items-center justify-center gap-2">
+              <SearchCheck className="w-6 h-6 text-blue-600" />3. Independent Verification Required
+            </h2>
+            <div className="bg-white border border-gray-200 rounded-xl p-6 shadow-sm max-w-4xl mx-auto">
+              <p className="text-gray-600 leading-relaxed text-left">
+                It is the sole responsibility of the user to independently verify all details before committing.
+              </p>
+            </div>
           </section>
 
-          <section className="mt-10 bg-orange-50 p-6 rounded-xl border border-orange-100">
-            <h2 className="text-xl font-bold text-orange-800 mb-3 flex items-center gap-2"><TrendingUp className="w-6 h-6" />Risk Notice</h2>
-            <p className="text-orange-900/80 leading-relaxed">Real estate investments involve inherent risks. Please invest at your own discretion.</p>
+          <section className="mt-12 bg-orange-50 p-6 rounded-xl border border-orange-100 max-w-4xl mx-auto">
+            <h2 className="text-xl font-bold text-orange-800 mb-3 flex items-center justify-center gap-2">
+              <TrendingUp className="w-6 h-6" />Risk Notice
+            </h2>
+            <p className="text-orange-900/80 leading-relaxed text-center">
+              Real estate investments involve inherent risks. Please invest at your own discretion.
+            </p>
           </section>
-        </div>
       </div>
       <Footer />
     </div>

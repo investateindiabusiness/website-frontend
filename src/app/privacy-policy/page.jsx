@@ -29,38 +29,46 @@ export default function PrivacyPolicy() {
         </div>
       </div>
 
-      <div className="flex-grow container mx-auto px-4 py-12 -mt-10 relative z-20">
-        <div className="max-w-4xl mx-auto bg-white rounded-xl shadow-xl border border-gray-100 p-8 md:p-12">
-          <div className="border-b border-gray-100 pb-6 mb-8">
-            <p className="text-sm text-gray-500 italic">Last Updated: May 2024</p>
+      <div className="flex-grow w-full px-6 md:px-16 lg:px-24 py-12">
+          <div className="border-b border-gray-200 pb-8 mb-8 text-center">
+            <p className="text-sm text-gray-500 italic">Last Updated: 25 June 2026</p>
           </div>
 
           <section>
-            <h2 className={sectionTitleStyle}>1. Information We Collect</h2>
-            <h3 className={subSectionTitleStyle}>A. Account Information</h3>
-            <p className={paragraphStyle}>When you register or log in, we collect:</p>
-            <ul className={listStyle}>
-              <li>Name, Email address, and Phone/WhatsApp number.</li>
-              <li>Country/location.</li>
-              <li>Account type (Investor/Builder).</li>
-            </ul>
+            <h2 className="text-xl md:text-2xl font-bold text-gray-900 mt-10 mb-6 text-center">1. Information We Collect</h2>
+            <div className="grid md:grid-cols-1 gap-6">
+
+              {/* Card A */}
+              <div className="bg-white border border-gray-200 rounded-xl p-6 shadow-sm">
+                <h3 className="text-lg font-semibold text-gray-800 mb-3">A. Account Information</h3>
+                <p className="text-gray-600 mb-3">When you register or log in, we collect:</p>
+                <ul className="list-disc pl-5 space-y-2 text-gray-600 marker:text-orange-500">
+                  <li>Name, Email address, and Phone/WhatsApp number.</li>
+                  <li>Country/location.</li>
+                  <li>Account type (Investor/Builder).</li>
+                </ul>
+              </div>
+
+            </div>
           </section>
 
-          <section>
-            <h2 className={sectionTitleStyle}>2. How We Use Your Information</h2>
-            <ul className="grid md:grid-cols-2 gap-x-4 gap-y-2 text-gray-600 mb-6">
-              <li className="flex items-start gap-2"><span className="text-orange-500">•</span> Create and manage accounts</li>
-              <li className="flex items-start gap-2"><span className="text-orange-500">•</span> Verify builders before publishing</li>
-              <li className="flex items-start gap-2"><span className="text-orange-500">•</span> Respond to inquiries</li>
-            </ul>
+          <section className="mt-12">
+            <h2 className="text-xl md:text-2xl font-bold text-gray-900 mb-6 text-center">2. How We Use Your Information</h2>
+            <div className="bg-white border border-gray-200 rounded-xl p-6 shadow-sm max-w-4xl mx-auto">
+              <p className="text-gray-600 mb-4 text-left">We use your information to:</p>
+              <ul className="space-y-3 text-gray-600">
+                <li className="flex items-start gap-2"><span className="text-orange-500">•</span> Create and manage accounts</li>
+                <li className="flex items-start gap-2"><span className="text-orange-500">•</span> Verify builders before publishing</li>
+                <li className="flex items-start gap-2"><span className="text-orange-500">•</span> Respond to inquiries</li>
+              </ul>
+            </div>
           </section>
 
-          <section className="mt-12 bg-orange-50 p-6 rounded-xl border border-orange-100 text-center">
+          <section className="mt-12 bg-orange-50 p-4 sm:p-6 rounded-xl border border-orange-100 text-center max-w-4xl mx-auto w-full">
             <h2 className="text-xl font-bold text-gray-900 mb-2 flex items-center justify-center gap-2"><Mail className="w-5 h-5" />Contact Us</h2>
-            <p className="text-gray-600 mb-4">If you have any questions, please contact us at:</p>
-            <a href="mailto:investateindia.business@gmail.com" className="inline-flex items-center justify-center px-6 py-3 border border-transparent text-base font-medium rounded-md text-white bg-orange-600 hover:bg-orange-700 transition-colors">investateindia.business@gmail.com</a>
+            <p className="text-gray-600 mb-4 text-sm sm:text-base">If you have any questions, please contact us at:</p>
+            <a href="mailto:investateindia.business@gmail.com" className="inline-flex items-center justify-center px-4 sm:px-6 py-2.5 sm:py-3 border border-transparent text-sm sm:text-base font-medium rounded-md text-white bg-orange-600 hover:bg-orange-700 transition-colors max-w-full break-all whitespace-normal">investateindia.business@gmail.com</a>
           </section>
-        </div>
       </div>
       <Footer />
     </div>
