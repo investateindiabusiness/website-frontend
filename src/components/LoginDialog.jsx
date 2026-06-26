@@ -33,7 +33,7 @@ const LoginDialog = ({ isOpen, onOpenChange, onSwitchToRegister, initialData = {
     if (isOpen && initialData?.userType) {
       setUserType(initialData.userType);
     }
-  }, [isOpen, initialData]);
+  }, [isOpen, initialData?.userType]);
 
   useEffect(() => {
     if (!isOpen) {

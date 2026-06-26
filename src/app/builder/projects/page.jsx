@@ -32,7 +32,8 @@ const initialFormState = {
 
 const IGNORED_DETAIL_KEYS = [
     'id', 'builderId', 'status', 'projectName', 'projectType', 'projectLocation',
-    'projectImages', 'projectDocuments', 'adminRequests', 'appealReason', 'createdAt', 'updatedAt', 'views', 'inquiries', 'createdBy', 'updatedBy'
+    'projectImages', 'projectDocuments', 'adminRequests', 'appealReason', 'createdAt', 'updatedAt', 'views', 'inquiries', 'createdBy', 'updatedBy',
+    'pendingEdits', 'hasPendingEdits'
 ];
 
 const CONSTRUCTION_STATUSES = [

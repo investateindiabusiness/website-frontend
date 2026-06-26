@@ -13,6 +13,9 @@ const GoogleAuthButton = ({ onSuccess, onError, text = "Continue with Google", u
 
   const handleGoogleClick = async () => {
     const auth = getAuth(app);
+    let successData = null;
+    let authError = null;
+
     try {
       setLoading(true);
       const provider = new GoogleAuthProvider();
@@ -53,23 +56,36 @@ const GoogleAuthButton = ({ onSuccess, onError, text = "Continue with Google", u
         syncError.userType = finalRole;
         throw syncError;
       }
-      
-      onSuccess(userData);
-      
-    } catch (error) {
-      await signOut(auth);
 
+      // Store success data to call onSuccess OUTSIDE the try-catch,
+      // so that errors thrown by the success handler (e.g., router.push)
+      // don't accidentally fall into the error path and show an error popup.
+      successData = userData;
+
+    } catch (error) {
+      authError = error;
+      await signOut(auth);
+    } finally {
+      setLoading(false);
+    }
+
+    // Handle success outside try-catch to avoid false error popups
+    if (successData && !authError) {
+      onSuccess(successData);
+      return;
+    }
+
+    // Handle error
+    if (authError) {
       if (onError) {
-        onError(error); 
+        onError(authError);
       } else {
         toast({
           title: "Authentication Failed",
-          description: error.message || "Google authentication failed",
+          description: authError.message || "Google authentication failed",
           variant: "destructive"
         });
       }
-    } finally {
-      setLoading(false);
     }
   };
 
