@@ -13,6 +13,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } f
 import { toast } from '@/hooks/use-toast';
 import { useAuth } from '@/hooks/AuthContext';
 import { fetchBuilderProjects, createProject, updateProject, deleteProject, submitProjectChanges, appealProjectRejection } from '@/api';
+import { compressImage } from '@/utils/imageCompressor';
 
 // --- FIREBASE IMPORTS ---
 import { getStorage, ref, uploadBytes, getDownloadURL } from 'firebase/storage';
@@ -128,35 +129,37 @@ export default function ProjectManager() {
 
             const projectId = isEditing ? currentProject.id : doc(firestoreCollection(db, 'projects')).id;
 
-            const uploadedImages = [];
-            for (const img of (currentProject.projectImages || [])) {
-                if (img instanceof File) {
-                    const safeName = img.name.replace(/[^a-zA-Z0-9.\-]/g, '_');
-                    const fileRef = ref(storage, `${projectId}/ProjectDisplayImages/${Date.now()}_${safeName}`);
-                    await uploadBytes(fileRef, img);
-                    const url = await getDownloadURL(fileRef);
-                    uploadedImages.push(url);
-                } else {
-                    uploadedImages.push(img);
-                }
-            }
+            // Upload images in parallel with client-side canvas compression
+            const uploadedImages = await Promise.all(
+                (currentProject.projectImages || []).map(async (img) => {
+                    if (img instanceof File) {
+                        const compressed = await compressImage(img);
+                        const safeName = compressed.name.replace(/[^a-zA-Z0-9.\-]/g, '_');
+                        const fileRef = ref(storage, `${projectId}/ProjectDisplayImages/${Date.now()}_${safeName}`);
+                        await uploadBytes(fileRef, compressed);
+                        return await getDownloadURL(fileRef);
+                    }
+                    return img;
+                })
+            );
 
-            const uploadedDocs = [];
-            for (const docObj of (currentProject.projectDocuments || [])) {
-                if (docObj.file instanceof File) {
-                    const safeName = docObj.file.name.replace(/[^a-zA-Z0-9.\-]/g, '_');
-                    const fileRef = ref(storage, `${projectId}/ProjectDocuments/${Date.now()}_${safeName}`);
-                    await uploadBytes(fileRef, docObj.file);
-                    const url = await getDownloadURL(fileRef);
-                    uploadedDocs.push({
-                        docName: docObj.docName,
-                        fileName: docObj.file.name,
-                        url: url
-                    });
-                } else {
-                    uploadedDocs.push(docObj);
-                }
-            }
+            // Upload documents in parallel
+            const uploadedDocs = await Promise.all(
+                (currentProject.projectDocuments || []).map(async (docObj) => {
+                    if (docObj.file instanceof File) {
+                        const safeName = docObj.file.name.replace(/[^a-zA-Z0-9.\-]/g, '_');
+                        const fileRef = ref(storage, `${projectId}/ProjectDocuments/${Date.now()}_${safeName}`);
+                        await uploadBytes(fileRef, docObj.file);
+                        const url = await getDownloadURL(fileRef);
+                        return {
+                            docName: docObj.docName,
+                            fileName: docObj.file.name,
+                            url: url
+                        };
+                    }
+                    return docObj;
+                })
+            );
 
             const payload = {
                 ...currentProject,

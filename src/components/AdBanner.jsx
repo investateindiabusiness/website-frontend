@@ -1,8 +1,10 @@
 "use client";
 
 import React, { useState, useEffect } from 'react';
-import { fetchActiveAd } from '@/api';
-import { ExternalLink, Loader2 } from 'lucide-react';
+import { fetchActiveAd, fetchMyBookings } from '@/api';
+import { useAuth } from '@/hooks/AuthContext';
+import { ExternalLink, Loader2, TrendingUp, CheckCircle, Building2, MapPin } from 'lucide-react';
+import { Button } from '@/components/ui/button';
 
 // Zone pixel dimensions from the API spec
 const ZONE_CONFIG = {
@@ -26,23 +28,54 @@ const ZONE_CONFIG = {
 export default function AdBanner({ zoneId, variant = 'default' }) {
   const [ad, setAd]           = useState(null);
   const [loading, setLoading] = useState(true);
+  const { user }              = useAuth();
 
   useEffect(() => {
     let active = true;
     const loadAd = async () => {
       try {
         setLoading(true);
-        const data = await fetchActiveAd(zoneId);
-        if (active) setAd(data || null);
+        if (user?.token) {
+          const res = await fetchMyBookings();
+          const bookings = res?.data || [];
+
+          // Exclude rejected/cancelled/expired statuses
+          const EXCLUDE_STATUSES = ['rejected', 'cancelled', 'canceled', 'rectify_needed', 'expired'];
+
+          const zoneAds = bookings.filter(
+            (b) =>
+              b.zoneId === zoneId &&
+              !EXCLUDE_STATUSES.includes((b.approvalStatus || b.status || '').toLowerCase()) &&
+              (b.adContent?.imageUrl || b.adContent?.text)
+          );
+
+          if (active) {
+            if (zoneAds.length > 0) {
+              setAd({ adContent: zoneAds[0].adContent });
+            } else {
+              const data = await fetchActiveAd(zoneId);
+              setAd(data || null);
+            }
+          }
+        } else {
+          const data = await fetchActiveAd(zoneId);
+          if (active) setAd(data || null);
+        }
       } catch (err) {
         console.warn(`AdBanner [${zoneId}]: failed to load.`, err);
+        try {
+          const data = await fetchActiveAd(zoneId);
+          if (active) setAd(data || null);
+        } catch {
+          if (active) setAd(null);
+        }
       } finally {
         if (active) setLoading(false);
       }
     };
     loadAd();
     return () => { active = false; };
-  }, [zoneId]);
+  }, [zoneId, user]);
 
   const zone = ZONE_CONFIG[zoneId] || { width: 728, height: 90 };
 
@@ -53,7 +86,7 @@ export default function AdBanner({ zoneId, variant = 'default' }) {
   if (variant === 'card') {
     if (loading) {
       return (
-        <div className="rounded-3xl overflow-hidden shadow-sm border border-gray-100 bg-gray-100 animate-pulse aspect-[4/3]" />
+        <div className="rounded-[2rem] overflow-hidden shadow-sm border border-gray-100 bg-gray-100 animate-pulse aspect-[4/3]" />
       );
     }
     if (!ad?.adContent || (!ad.adContent.imageUrl && !ad.adContent.text)) return null;
@@ -61,55 +94,69 @@ export default function AdBanner({ zoneId, variant = 'default' }) {
     const { imageUrl, targetUrl, text } = ad.adContent;
     return (
       <div
-        className="group bg-white rounded-3xl overflow-hidden shadow-sm hover:shadow-xl transition-all duration-300 border border-gray-100 flex flex-col h-full cursor-pointer"
+        className="group bg-white rounded-[2rem] overflow-hidden shadow-sm hover:shadow-xl transition-all duration-300 border border-gray-200 flex flex-col h-full cursor-pointer"
         onClick={() => targetUrl && window.open(targetUrl, '_blank', 'noopener,noreferrer')}
         role={targetUrl ? 'link' : undefined}
         aria-label={text || 'Sponsored advertisement'}
       >
-        {/* Image — same aspect-[4/3] as property cards */}
         <div className="relative aspect-[4/3] overflow-hidden bg-gray-100 flex-shrink-0">
           {imageUrl ? (
             <img
               src={imageUrl}
               alt={text || 'Advertisement'}
-              className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
-              onError={(e) => { e.currentTarget.style.display = 'none'; }}
+              className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
             />
           ) : (
             <div className="absolute inset-0 bg-gradient-to-br from-[#0b264f] to-[#1a4b8c]" />
           )}
 
-          {/* Dark gradient overlay — same as property cards */}
-          <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-transparent opacity-80" />
+          <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent opacity-90" />
 
-          {/* Top-left: Sponsored badge — mirrors the status badge */}
-          <div className="absolute top-4 left-4 flex gap-2 z-10">
-            <span className="bg-white/90 backdrop-blur text-[#0b264f] text-xs font-bold px-3 py-1 rounded-full shadow-sm">
+          {/* Top-left: Sponsored badge */}
+          <div className="absolute top-4 left-4">
+            <span className="bg-[#EAF0F6] text-[#0b264f] text-xs font-bold px-3 py-1.5 rounded-lg shadow-sm">
               Sponsored
             </span>
           </div>
-
-          {/* Bottom overlay — mirrors price/yield area */}
-          <div className="absolute bottom-4 left-4 right-4 text-white z-10">
-            {text && (
-              <p className="text-base md:text-lg font-bold leading-tight drop-shadow-md line-clamp-2">
-                {text}
-              </p>
-            )}
-            {targetUrl && (
-              <p className="text-xs font-medium bg-orange-500/90 backdrop-blur-md inline-flex items-center px-2 py-0.5 rounded-md mt-2">
-                View Details →
-              </p>
-            )}
+          
+          {/* Bottom Overlay - Yield slot */}
+          <div className="absolute bottom-4 left-4 right-4 text-white">
+            <span className="text-xs font-bold bg-orange-500 text-white inline-flex items-center px-2.5 py-1 rounded-md mb-1 shadow-sm">
+              <TrendingUp className="w-3.5 h-3.5 mr-1" />
+              Special Promo
+            </span>
+            <h3 className="text-2xl font-bold leading-tight tracking-tight mt-1 drop-shadow-md">
+              Learn More
+            </h3>
           </div>
         </div>
 
-        {/* Card footer — mirrors property card footer */}
-        <div className="p-4 flex flex-col gap-1 flex-grow">
-          <p className="text-xs font-bold text-orange-500 uppercase tracking-wider">Sponsored</p>
-          <p className="text-sm text-gray-500 line-clamp-2 leading-snug">
-            {text || 'Sponsored Advertisement'}
-          </p>
+        <div className="p-6 flex flex-col flex-grow">
+          <div className="flex-grow">
+            <h3 className="font-extrabold text-gray-900 text-2xl mb-1.5 capitalize tracking-tight line-clamp-2 leading-tight">
+              {text || 'Featured Promotion'}
+            </h3>
+            <p className="text-sm text-gray-400 mb-4 flex items-center font-medium">
+              <Building2 className="w-4 h-4 mr-2 text-gray-400 stroke-[2]" /> Verified Partner
+            </p>
+            <div className="flex items-center text-sm text-gray-600 bg-gray-50/80 px-4 py-2.5 rounded-2xl mb-5 border border-gray-100/50">
+              <MapPin className="w-4.5 h-4.5 mr-2 text-orange-500 flex-shrink-0" />
+              <span className="truncate">{targetUrl || 'www.investateindia.com'}</span>
+            </div>
+            <div className="flex flex-wrap gap-2 mb-6">
+              <span className="text-xs font-bold px-3 py-1.5 bg-[#EEF2FF] text-[#4F46E5] rounded-lg border border-[#E0E7FF]">
+                Promo
+              </span>
+              <span className="text-xs font-bold px-3 py-1.5 bg-[#ECFDF5] text-[#059669] rounded-lg border border-[#D1FAE5] flex items-center gap-1">
+                <CheckCircle className="w-3.5 h-3.5 text-[#059669]" /> Verified
+              </span>
+            </div>
+          </div>
+          <Button
+            className="w-full bg-[#0b264f] hover:bg-blue-900 text-white font-bold py-4 rounded-[1.25rem] transition-all duration-300 h-13 text-sm tracking-wide"
+          >
+            View Details
+          </Button>
         </div>
       </div>
     );
@@ -168,7 +215,6 @@ export default function AdBanner({ zoneId, variant = 'default' }) {
               src={imageUrl}
               alt={text || 'Advertisement'}
               className="absolute inset-0 w-full h-full object-cover object-center transition-transform duration-700 group-hover:scale-105"
-              onError={(e) => { e.currentTarget.style.display = 'none'; }}
             />
             {/* Gradient for text legibility */}
             <div className="absolute inset-0 bg-gradient-to-r from-black/60 via-black/20 to-transparent pointer-events-none" />
@@ -235,7 +281,6 @@ export default function AdBanner({ zoneId, variant = 'default' }) {
               src={imageUrl}
               alt={text || 'Advertisement'}
               className="absolute inset-0 w-full h-full object-cover object-center transition-transform duration-700 group-hover:scale-105"
-              onError={(e) => { e.currentTarget.style.display = 'none'; }}
             />
             <div className="absolute inset-0 bg-gradient-to-r from-black/40 via-transparent to-black/20 pointer-events-none" />
           </>
@@ -322,7 +367,6 @@ export default function AdBanner({ zoneId, variant = 'default' }) {
             src={imageUrl}
             alt={text || 'Advertisement'}
             className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
-            onError={(e) => { e.currentTarget.style.display = 'none'; }}
           />
           {text && (
             <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/70 via-black/30 to-transparent px-4 py-3 text-white text-xs md:text-sm font-medium line-clamp-1 opacity-0 group-hover:opacity-100 transition-opacity duration-300">

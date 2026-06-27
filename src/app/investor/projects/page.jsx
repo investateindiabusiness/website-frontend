@@ -11,6 +11,7 @@ import { Badge } from '@/components/ui/badge';
 import { MapPin, Building2, Search, Filter, Loader2 } from 'lucide-react';
 import { apiRequest } from '@/api';
 import { toast } from '@/hooks/use-toast';
+import { parseProjectImages } from '@/utils/imageCompressor';
 
 export default function InvestorProjects() {
   const router = useRouter();
@@ -102,7 +103,7 @@ export default function InvestorProjects() {
             >
               <div className="relative h-56 overflow-hidden">
                 <img
-                  src={project.projectImages?.[0] || 'https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?w=800&q=80'}
+                  src={parseProjectImages(project.projectImages)[0]}
                   alt={project.projectName}
                   className="w-full h-full object-cover transition-transform hover:scale-110"
                 />
