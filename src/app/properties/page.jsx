@@ -8,7 +8,7 @@ import {
 } from 'lucide-react';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
-import AdBanner from '@/components/AdBanner';
+import AdCarousel from '@/components/AdCarousel';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { useAuth } from '@/hooks/AuthContext';
@@ -148,7 +148,7 @@ export default function InvestorProperties() {
                   <React.Fragment key={property.id}>
                     {index === 3 && (
                       <div className="col-span-1 md:col-span-2 lg:col-span-3 flex justify-center py-4">
-                        <AdBanner zoneId="zone4" />
+                        <AdCarousel zoneId="zone4" height={340} />
                       </div>
                     )}
                     <div className="group bg-white rounded-3xl overflow-hidden shadow-sm hover:shadow-xl transition-all duration-300 border border-gray-200 flex flex-col h-full">
@@ -210,7 +210,7 @@ export default function InvestorProperties() {
                 ))}
                 {filteredProperties.length > 0 && filteredProperties.length < 4 && (
                   <div className="col-span-1 md:col-span-2 lg:col-span-3 flex justify-center py-4">
-                    <AdBanner zoneId="zone4" />
+                    <AdCarousel zoneId="zone4" height={340} />
                   </div>
                 )}
               </div>

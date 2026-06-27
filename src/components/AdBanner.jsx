@@ -120,20 +120,38 @@ export default function AdBanner({ zoneId, variant = 'default' }) {
      matches the home page hero section feel
   ───────────────────────────────────────── */
   if (variant === 'spotlight') {
-    if (loading) {
-      return (
+    const SpotlightFallback = () => (
+      <div
+        className="relative w-full max-w-5xl mx-auto rounded-2xl overflow-hidden shadow-lg"
+        style={{ height: 340 }}
+      >
+        <img
+          src="https://images.unsplash.com/photo-1560518883-ce09059eeffa?w=1200&q=80"
+          alt="Real estate banner"
+          className="absolute inset-0 w-full h-full object-cover"
+        />
         <div
-          className="w-full max-w-5xl mx-auto rounded-2xl overflow-hidden animate-pulse bg-gray-100"
-          style={{ height: 340 }}
-        >
-          <div className="w-full h-full flex items-center justify-center gap-2">
-            <Loader2 className="w-5 h-5 text-gray-400 animate-spin" />
-            <span className="text-sm text-gray-400 font-medium">Loading advertisement…</span>
-          </div>
+          className="absolute inset-0"
+          style={{ background: 'linear-gradient(to right, rgba(0,0,0,0.75) 0%, rgba(0,0,0,0.40) 55%, rgba(0,0,0,0.08) 100%)' }}
+        />
+        <div className="absolute top-4 right-4 flex items-center gap-1.5 bg-black/55 backdrop-blur-sm text-white text-[10px] font-bold tracking-widest px-3 py-1.5 rounded-full border border-white/20 uppercase pointer-events-none">
+          SPONSORED <ExternalLink className="w-2.5 h-2.5 opacity-70" />
         </div>
-      );
-    }
-    if (!ad?.adContent || (!ad.adContent.imageUrl && !ad.adContent.text)) return null;
+        <div className="absolute inset-y-0 left-0 flex flex-col justify-center px-10 md:px-14 max-w-xl">
+          <h2 className="text-white font-extrabold text-3xl md:text-4xl leading-tight mb-5 drop-shadow-xl">
+            Invest in premium real estate today!
+          </h2>
+          <a
+            href="/properties"
+            className="inline-flex items-center gap-2 bg-orange-500 hover:bg-orange-600 text-white font-bold text-sm px-6 py-3 rounded-lg shadow-lg transition-all duration-200 w-fit"
+          >
+            Learn More <ExternalLink className="w-4 h-4" />
+          </a>
+        </div>
+      </div>
+    );
+    if (loading) return <SpotlightFallback />;
+    if (!ad?.adContent || (!ad.adContent.imageUrl && !ad.adContent.text)) return <SpotlightFallback />;
 
     const { imageUrl, targetUrl, text } = ad.adContent;
     return (
@@ -242,18 +260,45 @@ export default function AdBanner({ zoneId, variant = 'default' }) {
   /* ─────────────────────────────────────────
      DEFAULT VARIANT — floating card
   ───────────────────────────────────────── */
-  if (loading) {
-    return (
+  /* Static fallback banner — shown when loading OR when no API ad is available */
+  const StaticFallbackBanner = () => (
+    <div
+      className="relative w-full mx-auto rounded-2xl overflow-hidden shadow-md"
+      style={{ maxWidth: '100%', height: 180 }}
+    >
+      {/* Background image */}
+      <img
+        src="https://images.unsplash.com/photo-1560518883-ce09059eeffa?w=1200&q=80"
+        alt="Real estate banner"
+        className="absolute inset-0 w-full h-full object-cover"
+      />
+      {/* Dark gradient left→right */}
       <div
-        className="w-full mx-auto rounded-2xl bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 animate-pulse flex items-center justify-center"
-        style={{ maxWidth: zone.width, height: zone.height }}
-      >
-        <Loader2 className="w-4 h-4 text-slate-400 animate-spin mr-2" />
-        <span className="text-xs font-semibold text-slate-400">Loading Sponsor Spotlight…</span>
+        className="absolute inset-0"
+        style={{ background: 'linear-gradient(to right, rgba(0,0,0,0.75) 0%, rgba(0,0,0,0.45) 50%, rgba(0,0,0,0.08) 100%)' }}
+      />
+      {/* SPONSORED badge — top right */}
+      <div className="absolute top-3 right-3 flex items-center gap-1.5 bg-black/55 backdrop-blur-sm text-white text-[10px] font-bold tracking-widest px-3 py-1.5 rounded-full border border-white/20 uppercase pointer-events-none">
+        SPONSORED
+        <ExternalLink className="w-3 h-3 opacity-70" />
       </div>
-    );
-  }
-  if (!ad?.adContent || (!ad.adContent.imageUrl && !ad.adContent.text)) return null;
+      {/* Text + CTA */}
+      <div className="absolute inset-0 flex flex-col justify-center px-8 max-w-lg">
+        <h2 className="text-white font-extrabold text-2xl md:text-3xl leading-tight mb-4 drop-shadow-lg">
+          Invest in premium real estate today!
+        </h2>
+        <a
+          href="/properties"
+          className="inline-flex items-center gap-2 bg-orange-500 hover:bg-orange-600 active:bg-orange-700 text-white font-bold text-sm px-5 py-2.5 rounded-lg shadow-lg transition-all duration-200 w-fit"
+        >
+          Learn More <ExternalLink className="w-4 h-4" />
+        </a>
+      </div>
+    </div>
+  );
+
+  if (loading) return <StaticFallbackBanner />;
+  if (!ad?.adContent || (!ad.adContent.imageUrl && !ad.adContent.text)) return <StaticFallbackBanner />;
 
   const { imageUrl, targetUrl, text } = ad.adContent;
   // Padding-bottom trick for bulletproof aspect ratio

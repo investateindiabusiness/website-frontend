@@ -4,7 +4,7 @@ import React, { useState, useEffect } from 'react';
 import { useParams, useRouter } from 'next/navigation';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
-import AdBanner from '@/components/AdBanner';
+import AdCarousel from '@/components/AdCarousel';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
@@ -140,7 +140,7 @@ export default function ProjectDetail() {
                         </CardContent>
                      </Card>
 
-                     <AdBanner zoneId="zone3" />
+                     <AdCarousel zoneId="zone3" height={250} />
                   </div>
                </div>
             </div>
