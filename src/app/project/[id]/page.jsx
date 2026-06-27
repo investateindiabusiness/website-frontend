@@ -19,6 +19,7 @@ import {
 import { apiRequest, submitProjectLead } from '@/api';
 import { useAuth } from '@/hooks/AuthContext';
 import { toast } from '@/hooks/use-toast';
+import { parseProjectImages } from '@/utils/imageCompressor';
 
 export default function ProjectDetail() {
    const { id } = useParams();
@@ -52,7 +53,7 @@ export default function ProjectDetail() {
                ...data,
                title: data.projectName,
                address: data.projectLocation,
-               images: (data.projectImages && data.projectImages.length > 0) ? data.projectImages : ['https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?w=1200&q=80'],
+               images: parseProjectImages(data.projectImages, 'https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?w=1200&q=80'),
                approvedDocuments: approvedDocs,
                details: { ...data }
             });

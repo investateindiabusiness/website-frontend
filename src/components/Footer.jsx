@@ -10,7 +10,7 @@ const Footer = () => {
           {/* Brand */}
           <div className="space-y-4">
             <div className="flex items-center space-x-2">
-              <img src="/logo-big.png" alt="INVESTATE INDIA" className="h-16 w-auto" />
+              <img src="/logo-big.png" alt="INVESTATE INDIA" className="h-44 w-auto object-contain -mt-8 -mb-12" />
             </div>
             <p className="text-sm text-gray-400">
               We don't just help NRIs invest in India. We help them protect, manage, and grow their wealth with confidence.

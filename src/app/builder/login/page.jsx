@@ -91,7 +91,7 @@ function BuilderLoginContent() {
         setAlertModal({
           isOpen: true,
           type: 'role_mismatch',
-          message: `This account is registered as a${displayRole === 'Investor' ? 'n' : ''} ${displayRole}. Please login as a ${displayRole}.`,
+          message: `This account is registered as a${displayRole === 'Investor' ? 'n' : ''} ${displayRole}. Please use the ${displayRole} tab.`,
           role: registeredRole
         });
         return;
@@ -115,6 +115,24 @@ function BuilderLoginContent() {
     } catch (err) {
       console.log("[BUILDER LOGIN] Catch Block Intercepted:", err);
 
+      const errMsg = err.message || '';
+      const isRoleMismatch = 
+        errMsg.toLowerCase().includes('registered as') ||
+        errMsg.toLowerCase().includes('role mismatch') ||
+        errMsg.toLowerCase().includes('use the investor tab') ||
+        errMsg.toLowerCase().includes('use the builder tab') ||
+        errMsg.toLowerCase().includes('use the builder portal');
+
+      if (isRoleMismatch) {
+        setAlertModal({
+          isOpen: true,
+          type: 'role_mismatch',
+          message: errMsg || 'This account is registered as an Investor. Please use the Investor tab.',
+          role: 'investor'
+        });
+        return;
+      }
+
       if (err.error === 'STEP2_PENDING') {
         toast({ title: 'Profile Incomplete', description: 'Please complete your initial profile details.' });
         router.push(`/builder/register?uid=${err.uid}&email=${err.email}&name=${err.name || ''}&skipStep1=true`);
@@ -135,7 +153,6 @@ function BuilderLoginContent() {
         return;
       }
 
-      const errMsg = err.message || '';
       const isLoginFailure = 
         errMsg.toLowerCase().includes('login failed') ||
         errMsg.toLowerCase().includes('invalid credentials') ||
@@ -266,15 +283,15 @@ function BuilderLoginContent() {
           <div className="absolute top-[-5%] right-[-5%] w-[40%] h-[20%] bg-orange-200/20 blur-[60px] rounded-full" />
         </div>
 
-        <div className="relative z-20">
-          <Link href="/" className="inline-flex items-center gap-2 text-xs font-bold text-white/80 uppercase tracking-wider hover:text-white mb-8 transition-colors">
+        <div className="relative z-20 flex flex-col items-start gap-4">
+          <Link href="/" className="inline-flex items-center gap-2 text-xs font-bold text-white/80 uppercase tracking-wider hover:text-white transition-colors">
             <ArrowLeft className="w-4 h-4" /> Back to Home
           </Link>
-          <div className="inline-flex items-center gap-2 bg-orange-600 px-3 py-1 rounded-full mb-8 shadow-lg shadow-orange-600/20">
+          <div className="inline-flex items-center gap-2 bg-orange-600 px-3 py-1 rounded-full shadow-lg shadow-orange-600/20">
             <div className="w-1.5 h-1.5 rounded-full bg-white animate-pulse" />
             <span className="text-[10px] font-black text-white uppercase tracking-[0.2em]">Platform Access</span>
           </div>
-          <h1 className="text-4xl font-black mb-10 leading-[1.1] tracking-tight text-white">
+          <h1 className="text-4xl font-black mt-2 mb-10 leading-[1.1] tracking-tight text-white">
             Build the future <br />
             with <span className="text-transparent bg-clip-text bg-gradient-to-r from-orange-300 to-orange-500">precision.</span>
           </h1>
@@ -305,11 +322,8 @@ function BuilderLoginContent() {
       {/* Main content - Right (Full height scrollable) */}
       <div className="flex-grow min-h-screen bg-white flex flex-col justify-center py-10 px-6 md:px-12 lg:px-20 overflow-y-auto">
         <div className="w-full max-w-md mx-auto">
-          {/* Logo & Header */}
+          {/* Header */}
           <div className="text-center mb-8">
-            <Link href="/" className="inline-block mb-6">
-              <img src="/logo-small-black.png" alt="logo" className="h-16 w-auto object-contain mx-auto" />
-            </Link>
             <h2 className="text-2xl font-black tracking-tight text-gray-900 uppercase">
               Builder Login
             </h2>
@@ -393,7 +407,7 @@ function BuilderLoginContent() {
                   }}
                   className="w-full h-11 bg-orange-600 hover:bg-orange-700 text-white font-black text-xs uppercase tracking-wider rounded-xl shadow-lg shadow-orange-600/10 transition-all"
                 >
-                  Switch to Investor Login
+                  Switch to Investor Tab
                 </Button>
               ) : (
                 <Button

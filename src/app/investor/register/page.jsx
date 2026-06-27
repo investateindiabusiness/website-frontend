@@ -349,20 +349,21 @@ function InvestorRegisterContent() {
           <div className="absolute top-[-5%] right-[-5%] w-[40%] h-[20%] bg-orange-200/20 blur-[60px] rounded-full" />
         </div>
 
-        <div className="relative z-20">
-          <Link href="/" className="inline-flex items-center gap-2 text-xs font-bold text-white/80 uppercase tracking-wider hover:text-white mb-8 transition-colors">
+        <div className="relative z-20 flex flex-col items-start gap-4">
+          <Link href="/" className="inline-flex items-center gap-2 text-xs font-bold text-white/80 uppercase tracking-wider hover:text-white transition-colors">
             <ArrowLeft className="w-4 h-4" /> Back to Home
           </Link>
-          <div className="inline-flex items-center gap-2 bg-orange-600 px-3 py-1 rounded-full mb-8 shadow-lg shadow-orange-600/20">
+          <div className="inline-flex items-center gap-2 bg-orange-600 px-3 py-1 rounded-full shadow-lg shadow-orange-600/20">
             <div className="w-1.5 h-1.5 rounded-full bg-white animate-pulse" />
             <span className="text-[10px] font-black text-white uppercase tracking-[0.2em]">Platform Registration</span>
           </div>
-          <h1 className="text-4xl font-black mb-10 leading-[1.1] tracking-tight text-white">
+          <h1 className="text-4xl font-black mt-2 mb-10 leading-[1.1] tracking-tight text-white">
             Grow your wealth <br />
             <span className="text-transparent bg-clip-text bg-gradient-to-r from-orange-300 to-orange-500">
               with confidence.
             </span>
           </h1>
+        </div>
 
           {/* Floating Chips exactly like first image */}
           <div className="relative h-72 mt-4 pointer-events-none w-full">
@@ -395,7 +396,6 @@ function InvestorRegisterContent() {
                 <span className="text-[8px] font-black text-gray-700 uppercase tracking-[0.2em]">Growth Intel</span>
              </div>
           </div>
-        </div>
 
         <div className="relative z-20 space-y-5">
           <div className="pt-8 border-t border-white/10 flex flex-col gap-4">
@@ -447,9 +447,6 @@ function InvestorRegisterContent() {
             <div className="w-full">
               {/* Header */}
               <div className="text-center mb-6">
-                 <Link href="/" className="inline-block mb-4">
-                   <img src="/logo-small-black.png" alt="logo" className="h-16 w-auto object-contain mx-auto" />
-                 </Link>
                  <h2 className="text-2xl font-black tracking-tight text-gray-900 uppercase">
                     {step === 1 ? "Investor Registration" : step === 2 ? "Basic Details" : "Verification"}
                  </h2>

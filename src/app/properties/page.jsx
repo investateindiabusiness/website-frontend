@@ -14,6 +14,7 @@ import { Badge } from '@/components/ui/badge';
 import { useAuth } from '@/hooks/AuthContext';
 import { apiRequest } from '@/api';
 import { toast } from '@/hooks/use-toast';
+import { parseProjectImages } from '@/utils/imageCompressor';
 
 export default function InvestorProperties() {
   const router = useRouter();
@@ -45,9 +46,7 @@ export default function InvestorProperties() {
             type: p.projectType || 'Property',
             price: p.sellingPrice || 'Price on Request',
             yield: p.expectedRent ? `Rent: ${p.expectedRent}` : 'High ROI',
-            image: (p.projectImages && p.projectImages.length > 0 && p.projectImages[0].startsWith('http')) 
-                   ? p.projectImages[0] 
-                   : 'https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?w=800&q=80',
+            image: parseProjectImages(p.projectImages)[0],
             status: p.currentConstructionStatus || 'Active',
             totalUnits: p.totalUnits || 'N/A'
         }));

@@ -103,13 +103,13 @@ const HeaderContent = ({ transparent = false }) => {
           <div className="flex items-center shrink-0">
             {user ? (
               <div className="flex items-center cursor-default">
-                <img src="/logo-big.png" alt="LOGO" className="hidden md:block h-14 w-auto object-contain" />
-                <img src="/logo-small-white.png" alt="LOGO" className="block md:hidden h-14 w-auto object-contain" />
+                <img src="/logo-big.png" alt="LOGO" className="hidden md:block h-32 w-auto object-contain" />
+                <img src="/logo-small-white.png" alt="LOGO" className="block md:hidden h-24 w-auto object-contain" />
               </div>
             ) : (
               <Link href="/" className="flex items-center">
-                <img src="/logo-big.png" alt="LOGO" className="hidden md:block h-14 w-auto object-contain" />
-                <img src="/logo-small-white.png" alt="LOGO" className="block md:hidden h-14 w-auto object-contain" />
+                <img src="/logo-big.png" alt="LOGO" className="hidden md:block h-32 w-auto object-contain" />
+                <img src="/logo-small-white.png" alt="LOGO" className="block md:hidden h-24 w-auto object-contain" />
               </Link>
             )}
           </div>
