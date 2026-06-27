@@ -7,42 +7,6 @@ import { useAuth } from '@/hooks/AuthContext';
 
 const AUTO_PLAY_MS = 4500;
 
-/* ─── Static fallback when there are no ads ─── */
-function FallbackBanner({ height = 340 }) {
-  return (
-    <div
-      className="relative w-full rounded-2xl overflow-hidden shadow-md"
-      style={{ height }}
-    >
-      <img
-        src="https://images.unsplash.com/photo-1560518883-ce09059eeffa?w=1200&q=80"
-        alt="Real estate banner"
-        className="absolute inset-0 w-full h-full object-cover"
-      />
-      <div
-        className="absolute inset-0"
-        style={{
-          background:
-            'linear-gradient(to right, rgba(0,0,0,0.75) 0%, rgba(0,0,0,0.45) 50%, rgba(0,0,0,0.08) 100%)',
-        }}
-      />
-      <div className="absolute top-3 right-3 flex items-center gap-1.5 bg-black/55 backdrop-blur-sm text-white text-[10px] font-bold tracking-widest px-3 py-1.5 rounded-full border border-white/20 uppercase pointer-events-none">
-        SPONSORED <ExternalLink className="w-3 h-3 opacity-70" />
-      </div>
-      <div className="absolute inset-0 flex flex-col justify-center px-8 md:px-14 max-w-xl">
-        <h2 className="text-white font-extrabold text-2xl md:text-3xl leading-tight mb-4 drop-shadow-lg">
-          Invest in premium real estate today!
-        </h2>
-        <a
-          href="/properties"
-          className="inline-flex items-center gap-2 bg-orange-500 hover:bg-orange-600 text-white font-bold text-sm px-5 py-2.5 rounded-lg shadow-lg transition-all duration-200 w-fit"
-        >
-          Learn More <ExternalLink className="w-4 h-4" />
-        </a>
-      </div>
-    </div>
-  );
-}
 
 /* ─── Single slide ─── */
 function AdSlide({ ad, height = 340 }) {
@@ -201,7 +165,7 @@ export default function AdCarousel({ zoneId, height = 340 }) {
     );
   }
 
-  if (ads.length === 0) return <FallbackBanner height={height} />;
+  if (ads.length === 0) return null;
 
   return (
     <div className="relative w-full" style={{ height }}>
