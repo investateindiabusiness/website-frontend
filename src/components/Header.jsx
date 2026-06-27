@@ -74,7 +74,7 @@ const HeaderContent = ({ transparent = false }) => {
     switch (displayUser.role) {
       case 'admin':    return [{ label: 'Dashboard', path: '/admin/dashboard' }, { label: 'Builders', path: '/admin/builders' }, { label: 'Investors', path: '/admin/investors' }, { label: 'Projects', path: '/admin/projects' }];
       case 'builder':  return [{ label: 'Dashboard', path: '/builder/dashboard' }, { label: 'Projects', path: '/builder/projects' }, { label: 'Advertise', path: '/builder/advertisements' }];
-      case 'investor': return [{ label: 'Dashboard', path: '/dashboard' }, { label: 'Properties', path: '/properties' }];
+      case 'investor': return [{ label: 'Dashboard', path: '/dashboard' }, { label: 'Properties', path: '/properties' }, { label: 'Advertise', path: '/investor/advertisements' }];
       default:         return [{ label: 'Home', path: '/' }];
     }
   };

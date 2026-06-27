@@ -35,47 +35,18 @@ export default function AdBanner({ zoneId, variant = 'default' }) {
     const loadAd = async () => {
       try {
         setLoading(true);
-        if (user?.token) {
-          const res = await fetchMyBookings();
-          const bookings = res?.data || [];
-
-          // Exclude rejected/cancelled/expired statuses
-          const EXCLUDE_STATUSES = ['rejected', 'cancelled', 'canceled', 'rectify_needed', 'expired'];
-
-          const zoneAds = bookings.filter(
-            (b) =>
-              b.zoneId === zoneId &&
-              !EXCLUDE_STATUSES.includes((b.approvalStatus || b.status || '').toLowerCase()) &&
-              (b.adContent?.imageUrl || b.adContent?.text)
-          );
-
-          if (active) {
-            if (zoneAds.length > 0) {
-              setAd({ adContent: zoneAds[0].adContent });
-            } else {
-              const data = await fetchActiveAd(zoneId);
-              setAd(data || null);
-            }
-          }
-        } else {
-          const data = await fetchActiveAd(zoneId);
-          if (active) setAd(data || null);
-        }
+        const data = await fetchActiveAd(zoneId);
+        if (active) setAd(data || null);
       } catch (err) {
         console.warn(`AdBanner [${zoneId}]: failed to load.`, err);
-        try {
-          const data = await fetchActiveAd(zoneId);
-          if (active) setAd(data || null);
-        } catch {
-          if (active) setAd(null);
-        }
+        if (active) setAd(null);
       } finally {
         if (active) setLoading(false);
       }
     };
     loadAd();
     return () => { active = false; };
-  }, [zoneId, user]);
+  }, [zoneId]);
 
   const zone = ZONE_CONFIG[zoneId] || { width: 728, height: 90 };
 
@@ -121,12 +92,12 @@ export default function AdBanner({ zoneId, variant = 'default' }) {
           
           {/* Bottom Overlay - Yield slot */}
           <div className="absolute bottom-4 left-4 right-4 text-white">
-            <span className="text-xs font-bold bg-orange-500 text-white inline-flex items-center px-2.5 py-1 rounded-md mb-1 shadow-sm">
+            <span className="text-xs font-bold bg-[#10B981] text-white inline-flex items-center px-2.5 py-1 rounded-md mb-1 shadow-sm">
               <TrendingUp className="w-3.5 h-3.5 mr-1" />
-              Special Promo
+              {ad.adContent.yield || 'High ROI'}
             </span>
             <h3 className="text-2xl font-bold leading-tight tracking-tight mt-1 drop-shadow-md">
-              Learn More
+              {ad.adContent.price || '9876654'}
             </h3>
           </div>
         </div>
@@ -155,7 +126,7 @@ export default function AdBanner({ zoneId, variant = 'default' }) {
           <Button
             className="w-full bg-[#0b264f] hover:bg-blue-900 text-white font-bold py-4 rounded-[1.25rem] transition-all duration-300 h-13 text-sm tracking-wide"
           >
-            View Details
+            View Full Details
           </Button>
         </div>
       </div>

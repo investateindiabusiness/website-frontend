@@ -67,7 +67,7 @@ const formatDate = (dateStr) => {
   return `${day}-${month}-${year}`;
 };
 
-export default function BuilderAdvertisements() {
+export default function InvestorAdvertisements() {
   const { user } = useAuth();
   const router = useRouter();
   
@@ -203,7 +203,7 @@ export default function BuilderAdvertisements() {
   };
 
   const handleOpenBookingModal = (slot) => {
-    router.push(`/builder/advertisements/book?zoneId=${selectedZone.id}&slotId=${slot.id}&startDate=${slot.startDate}&endDate=${slot.endDate}&timeSlot=${encodeURIComponent(slot.timeSlot || 'All Day')}`);
+    router.push(`/investor/advertisements/book?zoneId=${selectedZone.id}&slotId=${slot.id}&startDate=${slot.startDate}&endDate=${slot.endDate}&timeSlot=${encodeURIComponent(slot.timeSlot || 'All Day')}`);
   };
 
   const handleCloseBookingModal = () => {
@@ -393,9 +393,9 @@ export default function BuilderAdvertisements() {
               <Badge className="bg-orange-500/20 text-orange-200 hover:bg-orange-500/30 border-none mb-3 px-3 py-1">
                 <Sparkles className="w-3.5 h-3.5 mr-1.5" /> Expand Your Viewers
               </Badge>
-              <h1 className="text-2xl md:text-3xl lg:text-4xl font-bold mb-2">Builder Campaigns</h1>
+              <h1 className="text-2xl md:text-3xl lg:text-4xl font-bold mb-2">Investor Campaigns</h1>
               <p className="text-sm md:text-base text-blue-100 opacity-90 max-w-xl">
-                Advertise your premium real estate listings inside active landing pages, dashboards, and search inline sections across Investate India.
+                Advertise your listings inside active landing pages, dashboards, and search inline sections across Investate India.
               </p>
             </div>
           </div>
@@ -489,7 +489,7 @@ export default function BuilderAdvertisements() {
                 <Card className="shadow-md border-none rounded-2xl overflow-hidden bg-white">
                   <CardHeader className="bg-slate-50 border-b border-slate-100 py-4 px-6">
                     <CardTitle className="text-base font-bold text-slate-800">Add Available Slot to {selectedZone.name}</CardTitle>
-                    <CardDescription className="text-xs">Create unbooked slots that builders can select and purchase</CardDescription>
+                    <CardDescription className="text-xs">Create unbooked slots that you can select and purchase</CardDescription>
                   </CardHeader>
                   <form onSubmit={handleCreateSlotSubmit}>
                     <CardContent className="p-6">

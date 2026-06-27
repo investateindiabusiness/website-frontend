@@ -11,19 +11,26 @@ const firebaseConfig = {
   measurementId: process.env.NEXT_PUBLIC_FIREBASE_MEASUREMENT_ID
 };
 
+// Initialize Firebase App universally (needed for Storage on both client and server)
 let app;
 let auth;
 
-if (typeof window !== 'undefined') {
+try {
+  if (!firebaseConfig.apiKey) {
+    console.error("Firebase API Key is missing. Check your environment variables.");
+  } else {
+    app = getApps().length === 0 ? initializeApp(firebaseConfig) : getApps()[0];
+  }
+} catch (error) {
+  console.error("Failed to initialize Firebase:", error);
+}
+
+// Auth is browser-only
+if (typeof window !== 'undefined' && app) {
   try {
-    if (!firebaseConfig.apiKey) {
-      console.error("Firebase API Key is missing. Check your environment variables.");
-    } else {
-      app = getApps().length === 0 ? initializeApp(firebaseConfig) : getApps()[0];
-      auth = getAuth(app);
-    }
+    auth = getAuth(app);
   } catch (error) {
-    console.error("Failed to initialize Firebase:", error);
+    console.error("Failed to initialize Firebase Auth:", error);
   }
 }
 

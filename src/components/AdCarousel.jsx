@@ -85,53 +85,18 @@ export default function AdCarousel({ zoneId, height = 340 }) {
     const load = async () => {
       try {
         setLoading(true);
-        if (user?.token) {
-          const res = await fetchMyBookings();
-          const bookings = res?.data || [];
-
-          console.log(`[AdCarousel zone=${zoneId}] all bookings:`, bookings);
-
-          // Only show ads that have been explicitly approved by admin
-          const zoneAds = bookings
-            .filter(
-              (b) =>
-                b.zoneId === zoneId &&
-                (b.approvalStatus || '').toLowerCase() === 'approved' &&
-                (b.adContent?.imageUrl || b.adContent?.text)
-            )
-            .map((b) => ({ adContent: b.adContent }));
-
-          console.log(`[AdCarousel zone=${zoneId}] matched ads:`, zoneAds);
-
-          if (active) {
-            if (zoneAds.length > 0) {
-              setAds(zoneAds.slice(0, 1));
-            } else {
-              // No user bookings — fall back to public active ad
-              const data = await fetchActiveAd(zoneId);
-              setAds(data?.adContent ? [{ adContent: data.adContent }] : []);
-            }
-          }
-        } else {
-          const data = await fetchActiveAd(zoneId);
-          if (active) setAds(data?.adContent ? [{ adContent: data.adContent }] : []);
-        }
+        const data = await fetchActiveAd(zoneId);
+        if (active) setAds(data?.adContent ? [{ adContent: data.adContent }] : []);
       } catch (err) {
         console.warn(`AdCarousel [${zoneId}]:`, err);
-        // On error fall back to public ad
-        try {
-          const data = await fetchActiveAd(zoneId);
-          if (active) setAds(data?.adContent ? [{ adContent: data.adContent }] : []);
-        } catch {
-          if (active) setAds([]);
-        }
+        if (active) setAds([]);
       } finally {
         if (active) setLoading(false);
       }
     };
     load();
     return () => { active = false; };
-  }, [zoneId, user]);
+  }, [zoneId]);
 
   /* ── Auto-play ── */
   const next = useCallback(() => {

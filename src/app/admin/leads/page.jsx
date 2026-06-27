@@ -57,7 +57,7 @@ export default function AdminLeads() {
         }
     };
 
-    const filteredLeads = leads.filter(lead => 
+    const filteredLeads = leads.filter(lead =>
         (lead.investorName || '').toLowerCase().includes(searchQuery.toLowerCase()) ||
         (lead.projectName || '').toLowerCase().includes(searchQuery.toLowerCase())
     );
@@ -149,9 +149,9 @@ export default function AdminLeads() {
 
                             <div className="space-y-2">
                                 <Label className="text-xs text-gray-400 font-semibold uppercase">Lead Status</Label>
-                                <select 
-                                    value={statusValue} 
-                                    onChange={(e) => setStatusValue(e.target.value)} 
+                                <select
+                                    value={statusValue}
+                                    onChange={(e) => setStatusValue(e.target.value)}
                                     className="w-full h-10 px-3 rounded-lg border border-gray-200 bg-white text-sm outline-none focus:border-[#0b264f] transition-all"
                                 >
                                     <option value="New">New</option>
@@ -178,5 +178,5 @@ export default function AdminLeads() {
 }
 
 function Input({ className, ...props }) {
-  return <input className={`flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ${className}`} {...props} />;
+    return <input className={`flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ${className}`} {...props} />;
 }
