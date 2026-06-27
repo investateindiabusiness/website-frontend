@@ -96,11 +96,13 @@ const HeaderContent = ({ transparent = false }) => {
   const getDashboardPath = (role) => {
     if (role === 'admin') return '/admin/dashboard';
     if (role === 'builder') return '/builder/dashboard';
+    if (role === 'serviceProvider') return '/service-provider/dashboard';
     return '/dashboard';
   };
 
   const isDashboardArea = pathname.startsWith('/admin') ||
-    pathname.startsWith('/builder/') || pathname === '/builder/dashboard' || pathname === '/builder/projects' ||
+    pathname.startsWith('/builder/') || pathname === '/builder/dashboard' || pathname === '/builder/projects' || pathname === '/builder/advertisements' ||
+    pathname.startsWith('/service-provider/') || pathname === '/service-provider/dashboard' || pathname === '/service-provider/advertisements' ||
     pathname === '/dashboard' || pathname === '/properties' || pathname.startsWith('/investor/') || pathname.startsWith('/project/');
 
   const displayUser = isDashboardArea ? user : null;
@@ -111,14 +113,16 @@ const HeaderContent = ({ transparent = false }) => {
       return [
         { label: 'Home', path: '/' },
         { label: 'Builder', path: '/builder' },
+        { label: 'Service Provider', path: '/service-provider' },
         { label: 'About Us', path: '/about-us' },
         { label: 'Gallery', path: '/gallery' },
         { label: 'Contact Us', path: '/contact-us' },
       ];
     }
     switch (displayUser.role) {
-      case 'admin':    return [{ label: 'Dashboard', path: '/admin/dashboard' }, { label: 'Builders', path: '/admin/builders' }, { label: 'Investors', path: '/admin/investors' }, { label: 'Projects', path: '/admin/projects' }];
+      case 'admin':    return [{ label: 'Dashboard', path: '/admin/dashboard' }, { label: 'Builders', path: '/admin/builders' }, { label: 'Investors', path: '/admin/investors' }, { label: 'Service Providers', path: '/admin/service-providers' }, { label: 'Projects', path: '/admin/projects' }];
       case 'builder':  return [{ label: 'Dashboard', path: '/builder/dashboard' }, { label: 'Projects', path: '/builder/projects' }, { label: 'Advertise', path: '/builder/advertisements' }];
+      case 'serviceProvider': return [{ label: 'Dashboard', path: '/service-provider/dashboard' }, { label: 'Advertise', path: '/service-provider/advertisements' }];
       case 'investor': return [{ label: 'Dashboard', path: '/dashboard' }, { label: 'Properties', path: '/properties' }];
       default:         return [{ label: 'Home', path: '/' }];
     }
@@ -279,8 +283,9 @@ const HeaderContent = ({ transparent = false }) => {
                 </div>
               ) : (
                 <div className="flex flex-col gap-3">
-                  <Button onClick={() => handleAuthClick('login', 'investor')} className="w-full bg-gray-800 hover:bg-gray-700 text-white py-6">Login/Register as an Investor</Button>
-                  <Button onClick={() => handleAuthClick('login', 'builder')} className="w-full bg-[var(--color-accent,#D48035)] hover:bg-[var(--color-accent-hover,#B45309)] text-white py-6">Login/Register as a Builder</Button>
+                  <Button onClick={() => handleAuthClick('login', 'investor')} className="w-full bg-gray-800 hover:bg-gray-700 text-white py-5 text-xs font-semibold">Login/Register as an Investor</Button>
+                  <Button onClick={() => handleAuthClick('login', 'builder')} className="w-full bg-[var(--color-accent,#D48035)] hover:bg-[var(--color-accent-hover,#B45309)] text-white py-5 text-xs font-semibold">Login/Register as a Builder</Button>
+                  <Button onClick={() => handleAuthClick('login', 'serviceProvider')} className="w-full bg-slate-700 hover:bg-slate-600 text-white py-5 text-xs font-semibold">Login/Register as Service Provider</Button>
                 </div>
               )}
             </div>

@@ -517,3 +517,35 @@ export const adminReviewBooking = (bookingId, payload) =>
     method: 'PATCH',
     body: JSON.stringify(payload),
   });
+
+// --- Service Provider Endpoints ---
+
+export const submitServiceProviderForm1 = (uid, profileData) =>
+  apiRequest(`/api/auth/service-provider-form1/${uid}`, {
+    method: 'POST',
+    body: JSON.stringify(profileData),
+  });
+
+export const fetchServiceProviderStats = () =>
+  apiRequest('/api/service-providers/dashboard-stats');
+
+export const fetchAllServiceProviders = (token) =>
+  apiRequest('/api/service-providers', {
+    method: 'GET',
+    headers: { 'Authorization': `Bearer ${token}` }
+  });
+
+export const approveServiceProviderForm1 = (uid) =>
+  apiRequest(`/api/service-providers/approve-form1/${uid}`, { method: 'POST' });
+
+export const requestServiceProviderChanges = (uid, fieldsRequested) =>
+  apiRequest(`/api/service-providers/request-changes/${uid}`, {
+    method: 'POST',
+    body: JSON.stringify({ fieldsRequested })
+  });
+
+export const verifyServiceProviderFinal = (uid, isVerified) =>
+  apiRequest(`/api/service-providers/verify-final/${uid}`, {
+    method: 'POST',
+    body: JSON.stringify({ isVerified })
+  });

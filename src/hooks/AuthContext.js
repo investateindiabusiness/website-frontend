@@ -38,6 +38,8 @@ export const AuthProvider = ({ children }) => {
           window.location.href = '/admin/login?session_expired=true';
         } else if (role === 'builder') {
           window.location.href = '/builder?login=true&role=builder&session_expired=true';
+        } else if (role === 'serviceProvider') {
+          window.location.href = '/service-provider?login=true&role=serviceProvider&session_expired=true';
         } else {
           window.location.href = '/?login=true&role=investor&session_expired=true';
         }
@@ -64,6 +66,8 @@ export const AuthProvider = ({ children }) => {
             window.location.href = '/admin/login?session_expired=true';
           } else if (role === 'builder') {
             window.location.href = '/builder?login=true&role=builder&session_expired=true';
+          } else if (role === 'serviceProvider') {
+            window.location.href = '/service-provider?login=true&role=serviceProvider&session_expired=true';
           } else {
             window.location.href = '/?login=true&role=investor&session_expired=true';
           }
@@ -87,8 +91,9 @@ export const AuthProvider = ({ children }) => {
     if (loading) return;
 
     const isAdminRoute = pathname.startsWith('/admin') && pathname !== '/admin/login';
-    const isBuilderRoute = pathname.startsWith('/builder/') || pathname === '/builder/dashboard' || pathname === '/builder/projects';
+    const isBuilderRoute = pathname.startsWith('/builder/') || pathname === '/builder/dashboard' || pathname === '/builder/projects' || pathname === '/builder/advertisements';
     const isInvestorRoute = pathname === '/dashboard' || pathname === '/properties' || pathname.startsWith('/investor/') || pathname.startsWith('/project/');
+    const isServiceProviderRoute = pathname.startsWith('/service-provider/') || pathname === '/service-provider/dashboard' || pathname === '/service-provider/advertisements';
 
     if (isAdminRoute) {
       if (!user) {
@@ -119,6 +124,17 @@ export const AuthProvider = ({ children }) => {
         toast({
           title: "Access Denied",
           description: "You do not have investor privileges.",
+          variant: "destructive"
+        });
+        router.push('/');
+      }
+    } else if (isServiceProviderRoute) {
+      if (!user) {
+        router.push('/service-provider?login=true&role=serviceProvider');
+      } else if (user.role !== 'serviceProvider') {
+        toast({
+          title: "Access Denied",
+          description: "You do not have service provider privileges.",
           variant: "destructive"
         });
         router.push('/');
