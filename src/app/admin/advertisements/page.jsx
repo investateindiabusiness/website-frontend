@@ -45,7 +45,7 @@ export default function AdminAdvertisements() {
   const [selectedZone, setSelectedZone] = useState(null);
   const [slots, setSlots] = useState([]);
   const [bookings, setBookings] = useState([]);
-  
+
   const [loadingZones, setLoadingZones] = useState(true);
   const [loadingSlots, setLoadingSlots] = useState(false);
   const [loadingBookings, setLoadingBookings] = useState(true);
@@ -295,7 +295,7 @@ export default function AdminAdvertisements() {
       <Header />
 
       <div className="flex-grow mt-[2rem] md:mt-[4rem] pb-16">
-        
+
         {/* Banner Title */}
         <div className="bg-gradient-to-r from-slate-900 to-slate-800 text-white pt-8 pb-14 px-4 md:px-8 rounded-b-[2rem] shadow-xl relative overflow-hidden">
           <div className="absolute top-0 right-0 w-80 h-80 bg-white/5 rounded-full -mr-20 -mt-20 blur-3xl pointer-events-none"></div>
@@ -307,8 +307,8 @@ export default function AdminAdvertisements() {
               </p>
             </div>
             <div className="flex items-center gap-2">
-              <Button 
-                onClick={handleSeedZones} 
+              <Button
+                onClick={handleSeedZones}
                 disabled={isSeeding}
                 className="bg-blue-600 hover:bg-blue-700 text-white rounded-xl shadow-md flex items-center gap-2"
               >
@@ -324,17 +324,15 @@ export default function AdminAdvertisements() {
           <div className="flex border-b border-slate-200 gap-6">
             <button
               onClick={() => setActiveTab('bookings')}
-              className={`pb-3 font-bold text-sm transition-all relative ${
-                activeTab === 'bookings' ? 'text-slate-800 border-b-2 border-slate-800' : 'text-slate-400 hover:text-slate-600'
-              }`}
+              className={`pb-3 font-bold text-sm transition-all relative ${activeTab === 'bookings' ? 'text-slate-800 border-b-2 border-slate-800' : 'text-slate-400 hover:text-slate-600'
+                }`}
             >
               Campaign Bookings ({bookings.filter(b => b.approvalStatus === 'pending_review').length} Pending)
             </button>
             <button
               onClick={() => setActiveTab('zones')}
-              className={`pb-3 font-bold text-sm transition-all relative ${
-                activeTab === 'zones' ? 'text-slate-800 border-b-2 border-slate-800' : 'text-slate-400 hover:text-slate-600'
-              }`}
+              className={`pb-3 font-bold text-sm transition-all relative ${activeTab === 'zones' ? 'text-slate-800 border-b-2 border-slate-800' : 'text-slate-400 hover:text-slate-600'
+                }`}
             >
               Configure Placements & Slots
             </button>
@@ -355,7 +353,7 @@ export default function AdminAdvertisements() {
                 <div className="flex flex-wrap items-center gap-3">
                   <div className="flex items-center gap-2">
                     <Filter className="w-4 h-4 text-slate-400" />
-                    <select 
+                    <select
                       className="bg-white border border-slate-200 rounded-lg text-xs font-semibold py-1.5 px-3 text-slate-700 outline-none"
                       value={statusFilter}
                       onChange={(e) => setStatusFilter(e.target.value)}
@@ -368,7 +366,7 @@ export default function AdminAdvertisements() {
                     </select>
                   </div>
 
-                  <select 
+                  <select
                     className="bg-white border border-slate-200 rounded-lg text-xs font-semibold py-1.5 px-3 text-slate-700 outline-none"
                     value={zoneFilter}
                     onChange={(e) => setZoneFilter(e.target.value)}
@@ -487,7 +485,7 @@ export default function AdminAdvertisements() {
         {activeTab === 'zones' && (
           <div className="container mx-auto px-4 mt-6 space-y-6">
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 items-start">
-              
+
               {/* Placement settings column */}
               <div className="lg:col-span-1 space-y-6">
                 <Card className="shadow-md border-none rounded-2xl overflow-hidden bg-white">
@@ -505,11 +503,10 @@ export default function AdminAdvertisements() {
                       zones.map((zone) => (
                         <div
                           key={zone.id}
-                          className={`p-3.5 rounded-xl border transition-all duration-200 flex items-center justify-between gap-2 ${
-                            selectedZone?.id === zone.id 
-                              ? 'border-slate-800 bg-slate-50 shadow-sm' 
+                          className={`p-3.5 rounded-xl border transition-all duration-200 flex items-center justify-between gap-2 ${selectedZone?.id === zone.id
+                              ? 'border-slate-800 bg-slate-50 shadow-sm'
                               : 'border-slate-200'
-                          }`}
+                            }`}
                         >
                           <button
                             onClick={() => handleSelectZone(zone)}
@@ -518,10 +515,10 @@ export default function AdminAdvertisements() {
                             <span className="text-sm font-bold text-slate-800">{zone.name}</span>
                             <span className="text-[10px] text-slate-500">₹{zone.cost} / {zone.campaignDuration} days</span>
                           </button>
-                          <Button 
-                            onClick={() => handleOpenEditZone(zone)} 
-                            size="sm" 
-                            variant="ghost" 
+                          <Button
+                            onClick={() => handleOpenEditZone(zone)}
+                            size="sm"
+                            variant="ghost"
                             className="rounded-lg h-8 w-8 p-1 text-slate-500 hover:text-slate-800 hover:bg-slate-100"
                           >
                             <Settings className="w-4 h-4" />
@@ -548,26 +545,26 @@ export default function AdminAdvertisements() {
                           <div className="grid grid-cols-1 md:grid-cols-3 gap-4 items-end">
                             <div className="space-y-1.5">
                               <label className="text-xs font-bold text-slate-600 block">Start Date</label>
-                              <input 
+                              <input
                                 type="date"
                                 required
                                 className="w-full border border-slate-200 rounded-xl px-4 py-2 text-sm outline-none focus:border-slate-800 text-slate-700"
                                 value={newSlot.startDate}
-                                onChange={(e) => setNewSlot({...newSlot, startDate: e.target.value})}
+                                onChange={(e) => setNewSlot({ ...newSlot, startDate: e.target.value })}
                               />
                             </div>
                             <div className="space-y-1.5">
                               <label className="text-xs font-bold text-slate-600 block">End Date</label>
-                              <input 
+                              <input
                                 type="date"
                                 required
                                 className="w-full border border-slate-200 rounded-xl px-4 py-2 text-sm outline-none focus:border-slate-800 text-slate-700"
                                 value={newSlot.endDate}
-                                onChange={(e) => setNewSlot({...newSlot, endDate: e.target.value})}
+                                onChange={(e) => setNewSlot({ ...newSlot, endDate: e.target.value })}
                               />
                             </div>
-                            <Button 
-                              type="submit" 
+                            <Button
+                              type="submit"
                               disabled={isCreatingSlot}
                               className="bg-slate-800 hover:bg-slate-900 text-white rounded-xl shadow-md w-full md:w-auto h-10"
                             >
@@ -610,10 +607,10 @@ export default function AdminAdvertisements() {
                                   </p>
                                 </div>
                                 {!slot.isBooked && (
-                                  <Button 
+                                  <Button
                                     onClick={() => handleDeleteSlot(slot.id)}
-                                    size="sm" 
-                                    variant="ghost" 
+                                    size="sm"
+                                    variant="ghost"
                                     className="text-red-500 hover:text-red-700 hover:bg-red-50 rounded-lg p-2 h-9 w-9"
                                   >
                                     <Trash2 className="w-4 h-4" />
@@ -654,44 +651,44 @@ export default function AdminAdvertisements() {
               <CardContent className="p-6 space-y-4 max-h-[70vh] overflow-y-auto">
                 <div className="space-y-1.5">
                   <label className="text-xs font-bold text-slate-600 block">Placement Display Name</label>
-                  <input 
+                  <input
                     type="text"
                     required
                     className="w-full border border-slate-200 rounded-xl px-4 py-2.5 text-sm outline-none focus:border-slate-800 text-slate-700"
                     value={editZoneForm.name}
-                    onChange={(e) => setEditZoneForm({...editZoneForm, name: e.target.value})}
+                    onChange={(e) => setEditZoneForm({ ...editZoneForm, name: e.target.value })}
                   />
                 </div>
 
                 <div className="grid grid-cols-2 gap-4">
                   <div className="space-y-1.5">
                     <label className="text-xs font-bold text-slate-600 block">Cost per Slot (₹)</label>
-                    <input 
+                    <input
                       type="number"
                       required
                       className="w-full border border-slate-200 rounded-xl px-4 py-2.5 text-sm outline-none focus:border-slate-800 text-slate-700"
                       value={editZoneForm.cost}
-                      onChange={(e) => setEditZoneForm({...editZoneForm, cost: parseInt(e.target.value) || 0})}
+                      onChange={(e) => setEditZoneForm({ ...editZoneForm, cost: parseInt(e.target.value) || 0 })}
                     />
                   </div>
                   <div className="space-y-1.5">
                     <label className="text-xs font-bold text-slate-600 block">Slot Duration (Days)</label>
-                    <input 
+                    <input
                       type="number"
                       required
                       className="w-full border border-slate-200 rounded-xl px-4 py-2.5 text-sm outline-none focus:border-slate-800 text-slate-700"
                       value={editZoneForm.campaignDuration}
-                      onChange={(e) => setEditZoneForm({...editZoneForm, campaignDuration: parseInt(e.target.value) || 0})}
+                      onChange={(e) => setEditZoneForm({ ...editZoneForm, campaignDuration: parseInt(e.target.value) || 0 })}
                     />
                   </div>
                 </div>
 
                 <div className="space-y-1.5">
                   <label className="text-xs font-bold text-slate-600 block">Active Status</label>
-                  <select 
+                  <select
                     className="w-full border border-slate-200 rounded-xl px-4 py-2.5 text-sm outline-none focus:border-slate-800 text-slate-700 bg-white"
                     value={editZoneForm.status}
-                    onChange={(e) => setEditZoneForm({...editZoneForm, status: e.target.value})}
+                    onChange={(e) => setEditZoneForm({ ...editZoneForm, status: e.target.value })}
                   >
                     <option value="active">Active</option>
                     <option value="inactive">Inactive</option>
@@ -701,16 +698,16 @@ export default function AdminAdvertisements() {
                 {/* Default Fallback Sub-fields */}
                 <div className="border-t border-slate-100 pt-4 space-y-3">
                   <h4 className="text-xs font-bold text-slate-800 uppercase tracking-wider">Configure Fallback Ad Details</h4>
-                  
+
                   <div className="space-y-1.5">
                     <label className="text-xs font-bold text-slate-600 block">Fallback Text</label>
-                    <input 
+                    <input
                       type="text"
                       placeholder="e.g. Grow your reach with Investate India"
                       className="w-full border border-slate-200 rounded-xl px-4 py-2.5 text-sm outline-none focus:border-slate-800 text-slate-700"
                       value={editZoneForm.defaultAd.text}
                       onChange={(e) => setEditZoneForm({
-                        ...editZoneForm, 
+                        ...editZoneForm,
                         defaultAd: { ...editZoneForm.defaultAd, text: e.target.value }
                       })}
                     />
@@ -718,13 +715,13 @@ export default function AdminAdvertisements() {
 
                   <div className="space-y-1.5">
                     <label className="text-xs font-bold text-slate-600 block">Fallback Image URL</label>
-                    <input 
+                    <input
                       type="url"
                       placeholder="https://example.com/fallback-ad.jpg"
                       className="w-full border border-slate-200 rounded-xl px-4 py-2.5 text-sm outline-none focus:border-slate-800 text-slate-700"
                       value={editZoneForm.defaultAd.imageUrl}
                       onChange={(e) => setEditZoneForm({
-                        ...editZoneForm, 
+                        ...editZoneForm,
                         defaultAd: { ...editZoneForm.defaultAd, imageUrl: e.target.value }
                       })}
                     />
@@ -732,13 +729,13 @@ export default function AdminAdvertisements() {
 
                   <div className="space-y-1.5">
                     <label className="text-xs font-bold text-slate-600 block">Fallback Redirect Target URL</label>
-                    <input 
+                    <input
                       type="url"
                       placeholder="https://investateindia.com"
                       className="w-full border border-slate-200 rounded-xl px-4 py-2.5 text-sm outline-none focus:border-slate-800 text-slate-700"
                       value={editZoneForm.defaultAd.targetUrl}
                       onChange={(e) => setEditZoneForm({
-                        ...editZoneForm, 
+                        ...editZoneForm,
                         defaultAd: { ...editZoneForm.defaultAd, targetUrl: e.target.value }
                       })}
                     />
@@ -747,8 +744,8 @@ export default function AdminAdvertisements() {
               </CardContent>
               <div className="bg-slate-50 border-t border-slate-100 p-4 px-6 flex justify-end gap-3 rounded-b-2xl">
                 <Button type="button" variant="outline" onClick={handleCloseEditZone} className="rounded-xl">Cancel</Button>
-                <Button 
-                  type="submit" 
+                <Button
+                  type="submit"
                   disabled={isUpdatingZone}
                   className="bg-slate-900 hover:bg-slate-950 text-white rounded-xl shadow-md min-w-[120px]"
                 >
@@ -777,7 +774,7 @@ export default function AdminAdvertisements() {
               <CardContent className="p-6 space-y-4">
                 <div className="space-y-1.5">
                   <label className="text-xs font-bold text-slate-600 block">Rejection Feedback/Reason <span className="text-red-500">*</span></label>
-                  <textarea 
+                  <textarea
                     required
                     rows="4"
                     placeholder="Provide specific reasons (e.g. upload high-res image, fix text formatting, target link is dead)..."
@@ -789,8 +786,8 @@ export default function AdminAdvertisements() {
               </CardContent>
               <div className="bg-slate-50 border-t border-slate-100 p-4 px-6 flex justify-end gap-3 rounded-b-2xl">
                 <Button type="button" variant="outline" onClick={handleCloseRejectDialog} className="rounded-xl">Cancel</Button>
-                <Button 
-                  type="submit" 
+                <Button
+                  type="submit"
                   disabled={isSubmittingReview}
                   className="bg-red-600 hover:bg-red-700 text-white rounded-xl shadow-md min-w-[120px]"
                 >
