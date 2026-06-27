@@ -190,7 +190,8 @@ export default function BuilderAdvertisements() {
       // If payment details exist, proceed to checkout
       if (response?.data?.payment?.clientSecret) {
         setPaymentClientSecret(response.data.payment.clientSecret);
-        setPaymentId(response.data.payment.id);
+        // API returns `paymentId` (not `id`) in the payment response DTO
+        setPaymentId(response.data.payment.paymentId || null);
       } else {
         toast({ 
           title: "Campaign Booked!", 

@@ -91,14 +91,12 @@ export default function AdCarousel({ zoneId, height = 340 }) {
 
           console.log(`[AdCarousel zone=${zoneId}] all bookings:`, bookings);
 
-          // Exclude rejected/cancelled/expired statuses
-          const EXCLUDE_STATUSES = ['rejected', 'cancelled', 'canceled', 'rectify_needed', 'expired'];
-
+          // Only show ads that have been explicitly approved by admin
           const zoneAds = bookings
             .filter(
               (b) =>
                 b.zoneId === zoneId &&
-                !EXCLUDE_STATUSES.includes((b.approvalStatus || b.status || '').toLowerCase()) &&
+                (b.approvalStatus || '').toLowerCase() === 'approved' &&
                 (b.adContent?.imageUrl || b.adContent?.text)
             )
             .map((b) => ({ adContent: b.adContent }));

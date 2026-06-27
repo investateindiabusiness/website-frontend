@@ -55,7 +55,7 @@ export default function AdminAdvertisements() {
   const [activeTab, setActiveTab] = useState('bookings');
 
   // Booking approval filters
-  const [statusFilter, setStatusFilter] = useState('pending_review');
+  const [statusFilter, setStatusFilter] = useState('All');
   const [zoneFilter, setZoneFilter] = useState('All');
 
   // Modal forms
