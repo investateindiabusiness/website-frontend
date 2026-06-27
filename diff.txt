@@ -1,0 +1,413 @@
+﻿diff --git a/src/components/AdBanner.jsx b/src/components/AdBanner.jsx
+index ce8fc3e..4cacf59 100644
+--- a/src/components/AdBanner.jsx
++++ b/src/components/AdBanner.jsx
+@@ -4,8 +4,27 @@ import React, { useState, useEffect } from 'react';
+ import { fetchActiveAd } from '@/api';
+ import { ExternalLink, Loader2 } from 'lucide-react';
+ 
+-export default function AdBanner({ zoneId }) {
+-  const [ad, setAd] = useState(null);
++// Zone pixel dimensions from the API spec
++const ZONE_CONFIG = {
++  zone1: { width: 728, height: 90 },
++  zone2: { width: 728, height: 90 },
++  zone3: { width: 300, height: 250 },
++  zone4: { width: 728, height: 90 },
++  zone5: { width: 970, height: 250 },
++};
++
++/**
++ * AdBanner
++ *
++ * Props:
++ *  zoneId   — required, e.g. "zone2"
++ *  variant  — "default"   → floating card with max-width (works everywhere)
++ *             "hero"      → flush full-width strip inside a dark hero section
++ *             "spotlight" → large prominent banner section below the hero,
++ *                           styled like the home page's zone5 placement
++ */
++export default function AdBanner({ zoneId, variant = 'default' }) {
++  const [ad, setAd]           = useState(null);
+   const [loading, setLoading] = useState(true);
+ 
+   useEffect(() => {
+@@ -14,95 +33,319 @@ export default function AdBanner({ zoneId }) {
+       try {
+         setLoading(true);
+         const data = await fetchActiveAd(zoneId);
+-        if (active) {
+-          setAd(data || null);
+-        }
+-      } catch (error) {
+-        console.warn(`Failed to fetch ad for zone ${zoneId}:`, error);
++        if (active) setAd(data || null);
++      } catch (err) {
++        console.warn(`AdBanner [${zoneId}]: failed to load.`, err);
+       } finally {
+-        if (active) {
+-          setLoading(false);
+-        }
++        if (active) setLoading(false);
+       }
+     };
+     loadAd();
+-    return () => {
+-      active = false;
+-    };
++    return () => { active = false; };
+   }, [zoneId]);
+ 
+-  if (loading) {
++  const zone = ZONE_CONFIG[zoneId] || { width: 728, height: 90 };
++
++  /* ─────────────────────────────────────────
++     CARD VARIANT — sits inside the property grid
++     Same shape/size as a property listing card
++  ───────────────────────────────────────── */
++  if (variant === 'card') {
++    if (loading) {
++      return (
++        <div className="rounded-3xl overflow-hidden shadow-sm border border-gray-100 bg-gray-100 animate-pulse aspect-[4/3]" />
++      );
++    }
++    if (!ad?.adContent || (!ad.adContent.imageUrl && !ad.adContent.text)) return null;
++
++    const { imageUrl, targetUrl, text } = ad.adContent;
+     return (
+-      <div className="w-full flex items-center justify-center bg-slate-50 dark:bg-slate-900/20 border border-slate-100 dark:border-slate-800 rounded-2xl py-6 animate-pulse select-none">
+-        <Loader2 className="w-5 h-5 text-slate-400 animate-spin mr-2" />
+-        <span className="text-xs font-semibold text-slate-400">Loading Sponsor Spotlight...</span>
++      <div
++        className="group bg-white rounded-3xl overflow-hidden shadow-sm hover:shadow-xl transition-all duration-300 border border-gray-100 flex flex-col h-full cursor-pointer"
++        onClick={() => targetUrl && window.open(targetUrl, '_blank', 'noopener,noreferrer')}
++        role={targetUrl ? 'link' : undefined}
++        aria-label={text || 'Sponsored advertisement'}
++      >
++        {/* Image — same aspect-[4/3] as property cards */}
++        <div className="relative aspect-[4/3] overflow-hidden bg-gray-100 flex-shrink-0">
++          {imageUrl ? (
++            <img
++              src={imageUrl}
++              alt={text || 'Advertisement'}
++              className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
++              onError={(e) => { e.currentTarget.style.display = 'none'; }}
++            />
++          ) : (
++            <div className="absolute inset-0 bg-gradient-to-br from-[#0b264f] to-[#1a4b8c]" />
++          )}
++
++          {/* Dark gradient overlay — same as property cards */}
++          <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-transparent opacity-80" />
++
++          {/* Top-left: Sponsored badge — mirrors the status badge */}
++          <div className="absolute top-4 left-4 flex gap-2 z-10">
++            <span className="bg-white/90 backdrop-blur text-[#0b264f] text-xs font-bold px-3 py-1 rounded-full shadow-sm">
++              Sponsored
++            </span>
++          </div>
++
++          {/* Bottom overlay — mirrors price/yield area */}
++          <div className="absolute bottom-4 left-4 right-4 text-white z-10">
++            {text && (
++              <p className="text-base md:text-lg font-bold leading-tight drop-shadow-md line-clamp-2">
++                {text}
++              </p>
++            )}
++            {targetUrl && (
++              <p className="text-xs font-medium bg-orange-500/90 backdrop-blur-md inline-flex items-center px-2 py-0.5 rounded-md mt-2">
++                View Details →
++              </p>
++            )}
++          </div>
++        </div>
++
++        {/* Card footer — mirrors property card footer */}
++        <div className="p-4 flex flex-col gap-1 flex-grow">
++          <p className="text-xs font-bold text-orange-500 uppercase tracking-wider">Sponsored</p>
++          <p className="text-sm text-gray-500 line-clamp-2 leading-snug">
++            {text || 'Sponsored Advertisement'}
++          </p>
++        </div>
+       </div>
+     );
+   }
+ 
+-  // If there's no advertisement content, do not render anything
+-  if (!ad || !ad.adContent || (!ad.adContent.imageUrl && !ad.adContent.text)) {
+-    return null;
++  /* ─────────────────────────────────────────
++     SPOTLIGHT VARIANT — standalone big banner
++     matches the home page hero section feel
++  ───────────────────────────────────────── */
++  if (variant === 'spotlight') {
++    if (loading) {
++      return (
++        <div
++          className="w-full rounded-2xl overflow-hidden animate-pulse bg-gray-100"
++          style={{ height: 280 }}
++        >
++          <div className="w-full h-full flex items-center justify-center gap-2">
++            <Loader2 className="w-5 h-5 text-gray-400 animate-spin" />
++            <span className="text-sm text-gray-400 font-medium">Loading advertisement…</span>
++          </div>
++        </div>
++      );
++    }
++    if (!ad?.adContent || (!ad.adContent.imageUrl && !ad.adContent.text)) return null;
++
++    const { imageUrl, targetUrl, text } = ad.adContent;
++    return (
++      <div
++        className="relative w-full rounded-2xl overflow-hidden cursor-pointer group shadow-lg hover:shadow-xl transition-shadow duration-300"
++        style={{ height: 280 }}
++        onClick={() => targetUrl && window.open(targetUrl, '_blank', 'noopener,noreferrer')}
++        role={targetUrl ? 'link' : undefined}
++        aria-label={text || 'Sponsored advertisement'}
++      >
++        {imageUrl ? (
++          <>
++            <img
++              src={imageUrl}
++              alt={text || 'Advertisement'}
++              className="absolute inset-0 w-full h-full object-cover object-center transition-transform duration-700 group-hover:scale-105"
++              onError={(e) => { e.currentTarget.style.display = 'none'; }}
++            />
++            {/* Gradient for text legibility */}
++            <div className="absolute inset-0 bg-gradient-to-r from-black/60 via-black/20 to-transparent pointer-events-none" />
++          </>
++        ) : (
++          <div className="absolute inset-0 bg-gradient-to-r from-[#0b264f] to-[#1a4b8c]" />
++        )}
++
++        {/* Text overlay — bottom-left */}
++        <div className="absolute inset-y-0 left-0 flex flex-col justify-center px-8 md:px-12 max-w-xl z-10">
++          {text && (
++            <p className="text-white text-xl md:text-3xl font-extrabold leading-tight drop-shadow-xl line-clamp-3">
++              {text}
++            </p>
++          )}
++          {targetUrl && (
++            <a
++              href={targetUrl}
++              target="_blank"
++              rel="noopener noreferrer"
++              onClick={(e) => e.stopPropagation()}
++              className="mt-4 self-start inline-flex items-center gap-2 bg-orange-500 hover:bg-orange-600 text-white text-sm font-bold px-5 py-2 rounded-lg transition-colors shadow-md"
++            >
++              Learn More <ExternalLink className="w-4 h-4" />
++            </a>
++          )}
++        </div>
++
++        {/* Sponsored pill — top right */}
++        <div className="absolute top-3 right-3 z-20 flex items-center gap-1 bg-black/50 backdrop-blur-sm px-3 py-1 rounded-full text-[10px] font-bold text-white/80 uppercase tracking-widest pointer-events-none">
++          <span>Sponsored</span>
++          {targetUrl && <ExternalLink className="w-2.5 h-2.5 opacity-60" />}
++        </div>
++      </div>
++    );
+   }
++        {imageUrl ? (
++          <>
++            <img
++              src={imageUrl}
++              alt={text || 'Advertisement'}
++              className="absolute inset-0 w-full h-full object-cover object-center transition-transform duration-700 group-hover:scale-105"
++              onError={(e) => { e.currentTarget.style.display = 'none'; }}
++            />
++            {/* Bottom gradient — text legibility */}
++            <div className="absolute inset-0 bg-gradient-to-t from-black/65 via-black/10 to-transparent pointer-events-none" />
++            {/* Content overlay bottom-left, like the home hero */}
++            <div className="absolute inset-x-0 bottom-0 z-10 px-8 md:px-16 pb-10 pt-20">
++              {text && (
++                <p className="text-white text-2xl md:text-4xl font-extrabold leading-tight drop-shadow-xl max-w-3xl">
++                  {text}
++                </p>
++              )}
++              {targetUrl && (
++                <a
++                  href={targetUrl}
++                  target="_blank"
++                  rel="noopener noreferrer"
++                  onClick={(e) => e.stopPropagation()}
++                  className="mt-5 inline-flex items-center gap-2 bg-orange-500 hover:bg-orange-600 text-white text-sm font-bold px-6 py-2.5 rounded-lg transition-colors shadow-lg"
++                >
++                  Learn More <ExternalLink className="w-4 h-4" />
++                </a>
++              )}
++            </div>
++          </>
++        ) : (
++          /* Text-only full-bleed */
++          <div className="absolute inset-0 bg-gradient-to-br from-[#0b264f] to-[#1a4b8c] flex flex-col justify-end px-8 md:px-16 pb-10">
++            <p className="text-white text-2xl md:text-4xl font-extrabold leading-tight max-w-3xl drop-shadow">{text}</p>
++            {targetUrl && (
++              <a
++                href={targetUrl}
++                target="_blank"
++                rel="noopener noreferrer"
++                onClick={(e) => e.stopPropagation()}
++                className="mt-5 inline-flex items-center gap-2 bg-orange-500 hover:bg-orange-600 text-white text-sm font-bold px-6 py-2.5 rounded-lg transition-colors shadow-lg"
++              >
++                Learn More <ExternalLink className="w-4 h-4" />
++              </a>
++            )}
++          </div>
++        )}
+ 
+-  const { imageUrl, targetUrl, text } = ad.adContent;
++        {/* Sponsored pill — top right */}
++        <div className="absolute top-4 right-4 z-20 flex items-center gap-1 bg-black/50 backdrop-blur-sm px-3 py-1 rounded-full text-[10px] font-bold text-white/75 uppercase tracking-widest pointer-events-none">
++          <span>Sponsored</span>
++          {targetUrl && <ExternalLink className="w-2.5 h-2.5 opacity-60" />}
++        </div>
++      </div>
++    );
++  }
+ 
+-  // Set default dimensions based on zoneId to preserve aspect ratio / spacing
+-  const getZoneDimensions = () => {
+-    switch (zoneId) {
+-      case 'zone1':
+-      case 'zone2':
+-      case 'zone4':
+-        return { maxWidth: '728px', aspectRatio: '728/90' };
+-      case 'zone3':
+-        return { maxWidth: '300px', aspectRatio: '300/250' };
+-      case 'zone5':
+-        return { maxWidth: '970px', aspectRatio: '970/250' };
+-      default:
+-        return { maxWidth: '100%', aspectRatio: 'auto' };
++  /* ─────────────────────────────────────────
++     HERO VARIANT — flush strip inside a hero
++  ───────────────────────────────────────── */
++  if (variant === 'hero') {
++    if (loading) {
++      return (
++        <div className="w-full h-[90px] animate-pulse bg-white/10 rounded-2xl flex items-center justify-center">
++          <Loader2 className="w-4 h-4 text-white/40 animate-spin mr-2" />
++          <span className="text-xs text-white/40 font-medium">Loading sponsor…</span>
++        </div>
++      );
+     }
+-  };
++    if (!ad?.adContent || (!ad.adContent.imageUrl && !ad.adContent.text)) return null;
+ 
+-  const dims = getZoneDimensions();
++    const { imageUrl, targetUrl, text } = ad.adContent;
++    return (
++      <div
++        className="w-full relative group rounded-2xl overflow-hidden cursor-pointer shadow-lg hover:shadow-xl transition-all duration-300 border border-white/10"
++        style={{ height: zone.height, minHeight: 80 }}
++        onClick={() => targetUrl && window.open(targetUrl, '_blank', 'noopener,noreferrer')}
++        role={targetUrl ? 'link' : undefined}
++        aria-label={text || 'Sponsored advertisement'}
++      >
++        {imageUrl ? (
++          <>
++            <img
++              src={imageUrl}
++              alt={text || 'Advertisement'}
++              className="absolute inset-0 w-full h-full object-cover object-center transition-transform duration-700 group-hover:scale-105"
++              onError={(e) => { e.currentTarget.style.display = 'none'; }}
++            />
++            <div className="absolute inset-0 bg-gradient-to-r from-black/40 via-transparent to-black/20 pointer-events-none" />
++          </>
++        ) : (
++          <div className="absolute inset-0 bg-gradient-to-r from-orange-600 to-orange-500 flex items-center justify-center px-6">
++            <p className="text-white font-bold text-sm md:text-base text-center line-clamp-2 max-w-2xl">{text}</p>
++          </div>
++        )}
++        <div className="absolute top-2 right-3 z-10 flex items-center gap-1 bg-black/50 backdrop-blur-sm px-2 py-0.5 rounded-full text-[9px] font-bold text-white/80 uppercase tracking-widest pointer-events-none">
++          <span>Sponsored</span>
++          {targetUrl && <ExternalLink className="w-2.5 h-2.5 opacity-70" />}
++        </div>
++        {imageUrl && text && (
++          <div className="absolute bottom-0 inset-x-0 px-4 py-2.5 bg-gradient-to-t from-black/70 via-black/30 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300">
++            <p className="text-white text-xs md:text-sm font-medium line-clamp-1">{text}</p>
++          </div>
++        )}
++      </div>
++    );
++  }
+ 
+-  const handleAdClick = () => {
+-    if (targetUrl) {
+-      window.open(targetUrl, '_blank', 'noopener,noreferrer');
+-    }
+-  };
++  /* ─────────────────────────────────────────
++     DEFAULT VARIANT — floating card
++  ───────────────────────────────────────── */
++  if (loading) {
++    return (
++      <div
++        className="w-full mx-auto rounded-2xl bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 animate-pulse flex items-center justify-center"
++        style={{ maxWidth: zone.width, height: zone.height }}
++      >
++        <Loader2 className="w-4 h-4 text-slate-400 animate-spin mr-2" />
++        <span className="text-xs font-semibold text-slate-400">Loading Sponsor Spotlight…</span>
++      </div>
++    );
++  }
++  if (!ad?.adContent || (!ad.adContent.imageUrl && !ad.adContent.text)) return null;
++
++  const { imageUrl, targetUrl, text } = ad.adContent;
++  // Padding-bottom trick for bulletproof aspect ratio
++  const paddingBottom = `${((zone.height / zone.width) * 100).toFixed(4)}%`;
+ 
+   return (
+-    <div 
+-      className="w-full mx-auto relative group overflow-hidden bg-white/60 dark:bg-slate-900/60 backdrop-blur-md border border-slate-200/50 dark:border-slate-800/50 rounded-2xl shadow-sm hover:shadow-md hover:scale-[1.01] active:scale-[0.99] transition-all duration-300 cursor-pointer select-none"
+-      style={{ maxWidth: dims.maxWidth }}
+-      onClick={handleAdClick}
++    <div
++      className="w-full mx-auto relative group rounded-2xl shadow-sm hover:shadow-md hover:scale-[1.005] active:scale-[0.998] transition-all duration-300 cursor-pointer select-none border border-slate-200/60 dark:border-slate-700/60"
++      style={{ maxWidth: zone.width }}
++      onClick={() => targetUrl && window.open(targetUrl, '_blank', 'noopener,noreferrer')}
++      role={targetUrl ? 'link' : undefined}
++      aria-label={text || 'Sponsored advertisement'}
+     >
+-      {/* Sponsored Tag */}
+-      <div className="absolute top-2.5 right-2.5 z-10 flex items-center gap-1 bg-white/80 dark:bg-slate-950/80 backdrop-blur-md px-2 py-0.5 rounded-full border border-slate-200/40 dark:border-slate-800/40 text-[9px] font-bold text-slate-400 uppercase tracking-widest pointer-events-none transition-opacity duration-300">
++      <div className="absolute top-2 right-2 z-20 flex items-center gap-1 bg-white/90 dark:bg-slate-900/90 backdrop-blur-sm px-2 py-0.5 rounded-full border border-slate-200/60 text-[9px] font-bold text-slate-500 uppercase tracking-widest pointer-events-none shadow-sm">
+         <span>Sponsored</span>
+-        {targetUrl && <ExternalLink className="w-2.5 h-2.5 ml-0.5 opacity-60 group-hover:opacity-100 transition-opacity" />}
++        {targetUrl && <ExternalLink className="w-2.5 h-2.5 opacity-60 group-hover:opacity-100 transition-opacity" />}
+       </div>
+-
+       {imageUrl ? (
+-        <div className="relative w-full overflow-hidden flex items-center justify-center bg-slate-950" style={{ aspectRatio: dims.aspectRatio }}>
+-          <img 
+-            src={imageUrl} 
+-            alt={text || "Advertisement"} 
+-            className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
+-            onError={(e) => {
+-              // Fallback to text banner if image fails to load
+-              e.currentTarget.style.display = 'none';
+-            }}
++        <div className="relative w-full rounded-2xl overflow-hidden bg-slate-900" style={{ paddingBottom }}>
++          <img
++            src={imageUrl}
++            alt={text || 'Advertisement'}
++            className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
++            onError={(e) => { e.currentTarget.style.display = 'none'; }}
+           />
+           {text && (
+-            <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-slate-950 via-slate-950/50 to-transparent p-3 pt-8 text-white text-xs font-medium md:text-sm line-clamp-1 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
++            <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/70 via-black/30 to-transparent px-4 py-3 text-white text-xs md:text-sm font-medium line-clamp-1 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+               {text}
+             </div>
+           )}
+         </div>
+       ) : (
+-        /* Text-Only Banner Layout */
+-        <div className="p-6 flex flex-col justify-center items-center text-center gap-2 min-h-[90px] bg-gradient-to-br from-[#0b264f] to-[#1a4b8c] text-white">
++        <div
++          className="w-full rounded-2xl flex flex-col items-center justify-center text-center gap-2 bg-gradient-to-r from-[#0b264f] to-[#1a4b8c] text-white px-6"
++          style={{ height: zone.height, minHeight: 90 }}
++        >
+           <p className="text-sm md:text-base font-bold leading-snug max-w-[85%]">{text}</p>
+           {targetUrl && (
+             <span className="text-[10px] uppercase font-bold text-orange-400 tracking-wider flex items-center gap-1 group-hover:underline">

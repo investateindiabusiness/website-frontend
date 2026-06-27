@@ -27,11 +27,21 @@ import {
   Trash2, 
   Loader2, 
   Sparkles,
-  ExternalLink
+  ExternalLink,
+  Settings
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
+
+// Zone display metadata — names and pricing shown in the sidebar list
+const ZONE_META = {
+  zone1: { name: 'Builder Dashboard Top Banner',       cost: 100, campaignDuration: 7 },
+  zone2: { name: 'Investor Dashboard Leaderboard',     cost: 150, campaignDuration: 7 },
+  zone3: { name: 'Investor Project Details Sidebar',   cost: 120, campaignDuration: 7 },
+  zone4: { name: 'Project Search Results Inline Ad',   cost: 80,  campaignDuration: 7 },
+  zone5: { name: 'Landing Page Hero Spotlight',        cost: 200, campaignDuration: 7 },
+};
 
 export default function BuilderAdvertisements() {
   const { user } = useAuth();
@@ -75,9 +85,19 @@ export default function BuilderAdvertisements() {
     try {
       setLoadingZones(true);
       const data = await fetchAdZones();
-      setZones(data.data || []);
-      if (data.data && data.data.length > 0) {
-        handleSelectZone(data.data[0]);
+      // Merge API zone list with local metadata (names, costs, durations)
+      const enriched = (data.data || []).map((z) => ({
+        ...ZONE_META[z.id],
+        ...z,
+        // Prefer API values but fall back to local meta
+        name: z.name || ZONE_META[z.id]?.name || z.id,
+        cost: z.cost ?? ZONE_META[z.id]?.cost ?? '—',
+        campaignDuration: z.campaignDuration ?? ZONE_META[z.id]?.campaignDuration ?? '—',
+      }));
+      setZones(enriched);
+      if (enriched.length > 0) {
+        const defaultZone = enriched.find(z => z.id === 'zone2') || enriched[0];
+        handleSelectZone(defaultZone);
       }
     } catch (error) {
       toast({ 
@@ -281,10 +301,10 @@ export default function BuilderAdvertisements() {
         {/* Main Content Area */}
         <div className="container mx-auto px-4 -mt-6 relative z-20 space-y-8">
           
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 items-start">
+          <div className="grid grid-cols-1 lg:grid-cols-5 gap-6 items-start">
             
             {/* Column 1: Zones list & selected details */}
-            <div className="lg:col-span-1 space-y-6">
+            <div className="lg:col-span-2 space-y-6">
               <Card className="shadow-md border-none rounded-2xl overflow-hidden bg-white">
                 <CardHeader className="bg-slate-50 border-b border-slate-100 py-4 px-5">
                   <CardTitle className="text-lg font-bold text-slate-800">Advertisement Placements</CardTitle>
@@ -303,19 +323,21 @@ export default function BuilderAdvertisements() {
                       <button
                         key={zone.id}
                         onClick={() => handleSelectZone(zone)}
-                        className={`w-full text-left p-3.5 rounded-xl border transition-all duration-200 flex flex-col gap-1 ${
-                          selectedZone?.id === zone.id 
-                            ? 'border-[#0b264f] bg-[#0b264f]/5 shadow-sm' 
-                            : 'border-slate-200 hover:bg-slate-50'
+                        className={`w-full text-left p-4 rounded-xl border transition-all duration-200 flex items-center justify-between gap-3 ${
+                          selectedZone?.id === zone.id
+                            ? 'border-[#0b264f] bg-[#0b264f]/5 shadow-sm'
+                            : 'border-slate-200 bg-white hover:bg-slate-50'
                         }`}
                       >
-                        <span className={`text-sm font-bold ${selectedZone?.id === zone.id ? 'text-[#0b264f]' : 'text-slate-700'}`}>
-                          {zone.name}
-                        </span>
-                        <div className="flex flex-wrap gap-2 text-[10px] text-slate-500 mt-1">
-                          <span className="bg-slate-100 px-1.5 py-0.5 rounded flex items-center gap-1 font-semibold"><Monitor className="w-2.5 h-2.5" /> {zone.platform}</span>
-                          <span className="bg-slate-100 px-1.5 py-0.5 rounded font-semibold">{zone.width} x {zone.height}</span>
+                        <div className="flex flex-col gap-0.5 min-w-0">
+                          <span className={`text-sm font-bold truncate ${selectedZone?.id === zone.id ? 'text-[#0b264f]' : 'text-slate-800'}`}>
+                            {zone.name}
+                          </span>
+                          <span className="text-xs font-semibold text-orange-500">
+                            ₹{zone.cost} / {zone.campaignDuration} days
+                          </span>
                         </div>
+
                       </button>
                     ))
                   )}
@@ -324,7 +346,7 @@ export default function BuilderAdvertisements() {
 
               {selectedZone && (
                 <Card className="shadow-sm border border-slate-200/60 rounded-2xl bg-white overflow-hidden">
-                  <div className="bg-[#0b264f] text-white p-4.5">
+                  <div className="bg-[#0b264f] text-white p-4.5 text-center">
                     <h3 className="text-sm uppercase tracking-wider font-bold opacity-85">Zone Specification</h3>
                     <h2 className="text-lg font-bold mt-1">{selectedZone.name}</h2>
                   </div>
@@ -362,7 +384,7 @@ export default function BuilderAdvertisements() {
             </div>
 
             {/* Column 2: Available slots list */}
-            <div className="lg:col-span-2 space-y-6">
+            <div className="lg:col-span-3 space-y-6">
               <Card className="shadow-md border-none rounded-2xl overflow-hidden bg-white">
                 <CardHeader className="bg-slate-50 border-b border-slate-100 py-4 px-6">
                   <CardTitle className="text-lg font-bold text-slate-800">Available Booking Calendar</CardTitle>
@@ -377,9 +399,10 @@ export default function BuilderAdvertisements() {
                   ) : slots.length === 0 ? (
                     <div className="flex flex-col items-center justify-center py-16 text-center">
                       <Calendar className="w-12 h-12 text-slate-300 mb-3" />
-                      <h3 className="text-base font-bold text-slate-800 mb-1">No Available Slots</h3>
+                      <h3 className="text-base font-bold text-slate-800 mb-1">No Available Slots in "{selectedZone?.name}"</h3>
                       <p className="text-xs text-slate-500 max-w-sm">
-                        There are no upcoming booking slots generated for this zone yet. Contact support/admin to configure more slots.
+                        No upcoming booking slots have been created for this zone yet, or all existing slots are in the past.
+                        Please select a different zone or contact the admin to add new slots.
                       </p>
                     </div>
                   ) : (

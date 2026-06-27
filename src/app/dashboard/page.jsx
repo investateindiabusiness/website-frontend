@@ -6,7 +6,7 @@ import { Building2, MapPin, Search, TrendingUp, Shield, CheckCircle, Filter, Pie
 
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
-import AdBanner from '@/components/AdBanner';
+import AdCarousel from '@/components/AdCarousel';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { useAuth } from '@/hooks/AuthContext';
@@ -145,10 +145,12 @@ export default function InvestorDashboard() {
           </div>
         </div>
 
-        <div className="container mx-auto px-4 -mt-6 md:-mt-8 relative z-20 space-y-6 md:space-y-10">
-          <div className="pt-2">
-            <AdBanner zoneId="zone2" />
-          </div>
+        {/* ── Wide Ad Banner — below hero ── */}
+        <div className="container mx-auto px-4 pt-6">
+          <AdCarousel zoneId="zone2" height={340} />
+        </div>
+
+        <div className="container mx-auto px-4 mt-6 md:mt-8 relative z-20 space-y-6 md:space-y-10">
 
           <div className="bg-white rounded-2xl !mt-0 shadow-lg p-2 flex flex-col sm:flex-row items-center gap-2 max-w-3xl mx-auto border border-gray-100">
             <div className="pl-4 hidden sm:block">
