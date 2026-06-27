@@ -107,7 +107,7 @@ export default function AdCarousel({ zoneId, height = 340 }) {
 
           if (active) {
             if (zoneAds.length > 0) {
-              setAds(zoneAds);
+              setAds(zoneAds.slice(0, 1));
             } else {
               // No user bookings — fall back to public active ad
               const data = await fetchActiveAd(zoneId);

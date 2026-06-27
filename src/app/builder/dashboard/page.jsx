@@ -6,7 +6,7 @@ import { Building2, MapPin, Search, Users, TrendingUp, MoreVertical, Wallet, Har
 import { AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
-import AdCarousel from '@/components/AdCarousel';
+import AdBanner from '@/components/AdBanner';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { useAuth } from '@/hooks/AuthContext';
@@ -94,9 +94,11 @@ export default function BuilderDashboard() {
             </div>
           </div>
         </div>
-        {/* ── Wide Ad Banner — below hero ── */}
-        <div className="container mx-auto px-4 pt-6">
-          <AdCarousel zoneId="zone1" height={340} />
+        {/* ── Ad Banner — below hero ── */}
+        <div className="container mx-auto px-4 pt-6 flex justify-center">
+          <div className="w-full max-w-md">
+            <AdBanner zoneId="zone1" variant="card" />
+          </div>
         </div>
 
         {/* Main Content */}

@@ -5,7 +5,7 @@ import { useRouter } from 'next/navigation';
 import { Building2, MapPin, Search, TrendingUp, Shield, CheckCircle, Filter, Loader2 } from 'lucide-react';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
-import AdCarousel from '@/components/AdCarousel';
+import AdBanner from '@/components/AdBanner';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { useAuth } from '@/hooks/AuthContext';
@@ -85,9 +85,11 @@ export default function InvestorDashboard() {
           </div>
         </div>
 
-        {/* ── Ad Carousel — below hero ── */}
-        <div className="container mx-auto px-4 pt-6">
-          <AdCarousel zoneId="zone2" height={340} />
+        {/* ── Ad Banner — below hero ── */}
+        <div className="container mx-auto px-4 pt-6 flex justify-center">
+          <div className="w-full max-w-md">
+            <AdBanner zoneId="zone2" variant="card" />
+          </div>
         </div>
 
         <div className="container mx-auto px-4 -mt-6 md:-mt-8 relative z-20 space-y-6 md:space-y-10">
@@ -135,41 +137,55 @@ export default function InvestorDashboard() {
             ) : (
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8">
                 {filteredProperties.map((property) => (
-                  <div key={property.id} className="group bg-white rounded-3xl overflow-hidden shadow-sm hover:shadow-xl transition-all duration-300 border border-gray-100 flex flex-col h-full">
+                  <div key={property.id} className="group bg-white rounded-[2rem] overflow-hidden shadow-sm hover:shadow-xl transition-all duration-300 border border-gray-100 flex flex-col h-full">
                     <div className="relative aspect-[4/3] overflow-hidden bg-gray-100">
                       <img
                         src={property.image}
                         alt={property.title}
-                        className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
+                        className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
+                        onError={(e) => { e.target.src = 'https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?w=800&q=80' }}
                       />
-                      <div className="absolute top-4 left-4 flex gap-2">
-                        <Badge className="bg-white/90 backdrop-blur text-[#0b264f] border-none font-bold shadow-sm">
-                          {property.status}
-                        </Badge>
+                      <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent opacity-90"></div>
+                      <div className="absolute top-4 left-4">
+                        <span className="bg-[#EAF0F6] text-[#0b264f] text-xs font-bold px-3 py-1.5 rounded-lg shadow-sm">
+                          {property.status === 'approved' ? 'Under Construction' : property.status}
+                        </span>
                       </div>
                       <div className="absolute bottom-4 left-4 right-4 text-white">
-                        <p className="text-xs font-medium bg-green-500/90 backdrop-blur-md inline-flex items-center px-2 py-0.5 rounded-md mb-2">
-                          <TrendingUp className="w-3 h-3 mr-1" />
+                        <span className="text-xs font-bold bg-[#10B981] text-white inline-flex items-center px-2.5 py-1 rounded-md mb-1 shadow-sm">
+                          <TrendingUp className="w-3.5 h-3.5 mr-1" />
                           {property.yield}
-                        </p>
-                        <h3 className="text-xl font-bold leading-tight drop-shadow-md">{property.price}</h3>
+                        </span>
+                        <h3 className="text-2xl font-bold leading-tight tracking-tight mt-1 drop-shadow-md">
+                          {property.price}
+                        </h3>
                       </div>
                     </div>
 
-                    <div className="p-4 md:p-5 flex flex-col flex-grow">
+                    <div className="p-6 flex flex-col flex-grow">
                       <div className="flex-grow">
-                        <h3 className="font-bold text-gray-900 text-lg line-clamp-1">{property.title}</h3>
-                        <p className="text-sm text-gray-500 mb-3 flex items-center">
-                          <Building2 className="w-3.5 h-3.5 mr-1" /> {property.builder}
+                        <h3 className="font-extrabold text-gray-900 text-2xl mb-1.5 capitalize tracking-tight">
+                          {property.title}
+                        </h3>
+                        <p className="text-sm text-gray-400 mb-4 flex items-center font-medium">
+                          <Building2 className="w-4 h-4 mr-2 text-gray-400 stroke-[2]" /> {property.builder}
                         </p>
-                        <div className="flex items-center text-xs text-gray-500 bg-gray-50 p-2.5 rounded-xl mb-4 w-full">
-                          <MapPin className="w-4 h-4 mr-2 text-orange-500 flex-shrink-0" />
+                        <div className="flex items-center text-sm text-gray-600 bg-gray-50/80 px-4 py-2.5 rounded-2xl mb-5 border border-gray-100/50">
+                          <MapPin className="w-4.5 h-4.5 mr-2 text-orange-500 flex-shrink-0" />
                           <span className="truncate">{property.location}</span>
+                        </div>
+                        <div className="flex flex-wrap gap-2 mb-6">
+                          <span className="text-xs font-bold px-3 py-1.5 bg-[#EEF2FF] text-[#4F46E5] rounded-lg border border-[#E0E7FF]">
+                            {property.type}
+                          </span>
+                          <span className="text-xs font-bold px-3 py-1.5 bg-[#ECFDF5] text-[#059669] rounded-lg border border-[#D1FAE5] flex items-center gap-1">
+                            <CheckCircle className="w-3.5 h-3.5 text-[#059669]" /> Verified
+                          </span>
                         </div>
                       </div>
                       <Button
                         onClick={() => router.push(`/project/${property.id}`)}
-                        className="w-full bg-[#0b264f] hover:bg-blue-900 text-white rounded-xl h-10 md:h-12 shadow-lg hover:shadow-blue-900/20"
+                        className="w-full bg-[#0b264f] hover:bg-blue-900 text-white font-bold py-4 rounded-[1.25rem] transition-all duration-300 h-13 text-sm tracking-wide"
                       >
                         View Full Details
                       </Button>
