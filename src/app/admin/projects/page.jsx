@@ -20,6 +20,12 @@ export default function AdminProjects() {
   const [viewProjectData, setViewProjectData] = useState(null);
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const [actionLoading, setActionLoading] = useState(false);
+  const [currentPage, setCurrentPage] = useState(1);
+  const ITEMS_PER_PAGE = 10;
+
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [filter]);
 
   const loadProjects = useCallback(async () => {
     try {
@@ -115,53 +121,133 @@ export default function AdminProjects() {
           </div>
         </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        <div className="bg-white rounded-3xl shadow-sm border border-gray-200 overflow-hidden">
           {loading ? (
-            <div className="col-span-full py-24 text-center flex flex-col items-center gap-3">
-              <Loader2 className="w-10 h-10 animate-spin text-blue-600" />
-              <p className="text-gray-500">Loading projects...</p>
+            <div className="flex flex-col items-center justify-center text-gray-500 py-24">
+              <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-orange-600 mb-4"></div>
+              Loading projects...
             </div>
           ) : filteredProjects.length === 0 ? (
-            <div className="col-span-full text-center py-12 text-gray-500">No projects found.</div>
-          ) : filteredProjects.map((project) => (
-            <Card key={project.id} className="border border-gray-100 shadow-md hover:shadow-lg transition-shadow">
-              <CardContent className="p-6">
-                {/* Project image thumbnail */}
-                <div className="h-40 rounded-xl overflow-hidden bg-gray-100 mb-4">
-                  <img
-                    src={project.projectImages?.[0] || 'https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?w=800&q=80'}
-                    alt={project.projectName}
-                    className="w-full h-full object-cover"
-                    onError={(e) => { e.target.src = 'https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?w=800&q=80'; }}
-                  />
-                </div>
-                <div className="flex items-start justify-between mb-3">
-                  <div className="flex gap-3">
-                    <div className="w-10 h-10 bg-blue-50 rounded-xl flex items-center justify-center text-blue-500 flex-shrink-0">
-                      <Building2 className="w-5 h-5" />
-                    </div>
-                    <div className="min-w-0">
-                      <h3 className="text-lg font-bold truncate">{project.projectName || 'Unnamed'}</h3>
-                      <p className="text-sm text-gray-500 flex items-center gap-1 truncate">
-                        <MapPin className="w-3 h-3 flex-shrink-0" />{project.projectLocation || 'N/A'}
-                      </p>
-                    </div>
+            <div className="text-center p-12 text-gray-500">
+              No projects found in this category.
+            </div>
+          ) : (
+            <>
+              <div className="overflow-x-auto">
+                <table className="w-full text-left border-collapse">
+                  <thead>
+                    <tr className="bg-gray-50/75 border-b border-gray-200 text-gray-600 text-xs font-bold uppercase tracking-wider">
+                      <th className="px-6 py-4">Project</th>
+                      <th className="px-6 py-4">Builder</th>
+                      <th className="px-6 py-4">Location</th>
+                      <th className="px-6 py-4">Type / Units</th>
+                      <th className="px-6 py-4">Status</th>
+                      <th className="px-6 py-4 text-right">Actions</th>
+                    </tr>
+                  </thead>
+                  <tbody className="divide-y divide-gray-100">
+                    {filteredProjects.slice((currentPage - 1) * ITEMS_PER_PAGE, currentPage * ITEMS_PER_PAGE).map((project) => {
+                      return (
+                        <tr key={project.id} className="hover:bg-gray-50/50 transition-colors">
+                          <td className="px-6 py-4 whitespace-nowrap">
+                            <div className="flex items-center space-x-3">
+                              <div className="w-16 h-12 rounded-lg overflow-hidden bg-gray-100 flex-shrink-0 border border-gray-200">
+                                <img
+                                  src={project.projectImages?.[0] || 'https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?w=800&q=80'}
+                                  alt={project.projectName}
+                                  className="w-full h-full object-cover"
+                                  onError={(e) => { e.target.src = 'https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?w=800&q=80'; }}
+                                />
+                              </div>
+                              <div>
+                                <div className="text-sm font-bold text-gray-900">
+                                  {project.projectName || 'Unnamed Project'}
+                                </div>
+                                <div className="text-xs text-gray-400">
+                                  ID: {project.id}
+                                </div>
+                              </div>
+                            </div>
+                          </td>
+                          <td className="px-6 py-4 whitespace-nowrap text-sm font-semibold text-blue-700">
+                            {project.builderName || '—'}
+                          </td>
+                          <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-600">
+                            <div className="flex items-center gap-1.5">
+                              <MapPin className="w-3.5 h-3.5 text-orange-500" />
+                              {project.projectLocation || 'N/A'}
+                            </div>
+                          </td>
+                          <td className="px-6 py-4 whitespace-nowrap">
+                            <div className="text-sm text-gray-900 font-medium">
+                              {project.projectType || 'N/A'}
+                            </div>
+                            <div className="text-xs text-gray-400">
+                              {project.totalUnits ? `${project.totalUnits} Units` : 'N/A'}
+                            </div>
+                          </td>
+                          <td className="px-6 py-4 whitespace-nowrap">
+                            <Badge className={`capitalize border-none py-1 px-3 text-xs font-semibold ${getStatusColor(project.status)}`}>
+                              {project.status}
+                            </Badge>
+                          </td>
+                          <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+                            <Button 
+                              onClick={() => openModal(project)} 
+                              className="bg-gray-900 hover:bg-gray-800 text-white rounded-xl text-xs px-4 py-2"
+                            >
+                              <Eye className="w-3.5 h-3.5 mr-1.5" /> View Details
+                            </Button>
+                          </td>
+                        </tr>
+                      );
+                    })}
+                  </tbody>
+                </table>
+              </div>
+
+              {/* Pagination Controls */}
+              {Math.ceil(filteredProjects.length / ITEMS_PER_PAGE) > 1 && (
+                <div className="bg-gray-50 border-t border-gray-200 px-6 py-4 flex flex-col sm:flex-row items-center justify-between gap-4">
+                  <div className="text-xs font-bold text-gray-500 uppercase tracking-wider">
+                    Showing {((currentPage - 1) * ITEMS_PER_PAGE) + 1} to {Math.min(currentPage * ITEMS_PER_PAGE, filteredProjects.length)} of {filteredProjects.length} records
                   </div>
-                  <Badge className={`capitalize flex-shrink-0 ml-2 ${getStatusColor(project.status)}`}>
-                    {project.status}
-                  </Badge>
+                  <div className="flex items-center gap-1.5">
+                    <Button
+                      onClick={() => setCurrentPage(prev => Math.max(1, prev - 1))}
+                      disabled={currentPage === 1}
+                      variant="outline"
+                      className="h-9 px-3 rounded-lg text-xs font-bold hover:bg-slate-100 bg-white"
+                    >
+                      Previous
+                    </Button>
+                    
+                    {Array.from({ length: Math.ceil(filteredProjects.length / ITEMS_PER_PAGE) }, (_, i) => i + 1).map((page) => (
+                      <Button
+                        key={page}
+                        onClick={() => setCurrentPage(page)}
+                        variant={currentPage === page ? 'default' : 'outline'}
+                        className={`h-9 w-9 p-0 rounded-lg text-xs font-bold ${
+                          currentPage === page ? 'bg-slate-900 text-white hover:bg-slate-800' : 'hover:bg-slate-100 bg-white'
+                        }`}
+                      >
+                        {page}
+                      </Button>
+                    ))}
+
+                    <Button
+                      onClick={() => setCurrentPage(prev => Math.min(Math.ceil(filteredProjects.length / ITEMS_PER_PAGE), prev + 1))}
+                      disabled={currentPage === Math.ceil(filteredProjects.length / ITEMS_PER_PAGE)}
+                      variant="outline"
+                      className="h-9 px-3 rounded-lg text-xs font-bold hover:bg-slate-100 bg-white"
+                    >
+                      Next
+                    </Button>
+                  </div>
                 </div>
-                <div className="flex gap-2 text-xs text-gray-500 mb-4">
-                  <span className="bg-gray-100 px-2 py-1 rounded">{project.projectType || 'N/A'}</span>
-                  {project.totalUnits && <span className="bg-gray-100 px-2 py-1 rounded">{project.totalUnits} Units</span>}
-                  {project.builderName && <span className="bg-blue-50 text-blue-700 px-2 py-1 rounded">{project.builderName}</span>}
-                </div>
-                <Button onClick={() => openModal(project)} className="w-full bg-gray-900 hover:bg-gray-700 text-white gap-2">
-                  <Eye className="w-4 h-4" /> View Full Details
-                </Button>
-              </CardContent>
-            </Card>
-          ))}
+              )}
+            </>
+          )}
         </div>
       </div>
       <Footer />

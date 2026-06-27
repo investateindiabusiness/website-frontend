@@ -37,13 +37,9 @@ export const AuthProvider = ({ children }) => {
         if (role === 'admin') {
           window.location.href = '/admin/login?session_expired=true';
         } else if (role === 'builder') {
-<<<<<<< HEAD
-          window.location.href = '/builder?login=true&role=builder&session_expired=true';
+          window.location.href = '/builder/login?session_expired=true';
         } else if (role === 'serviceProvider') {
           window.location.href = '/service-provider?login=true&role=serviceProvider&session_expired=true';
-=======
-          window.location.href = '/builder/login?session_expired=true';
->>>>>>> 9339f52662e525eab8d7a7751b2e2f902caa4f7e
         } else {
           window.location.href = '/investor/login?session_expired=true';
         }
@@ -69,13 +65,9 @@ export const AuthProvider = ({ children }) => {
           if (role === 'admin') {
             window.location.href = '/admin/login?session_expired=true';
           } else if (role === 'builder') {
-<<<<<<< HEAD
-            window.location.href = '/builder?login=true&role=builder&session_expired=true';
+            window.location.href = '/builder/login?session_expired=true';
           } else if (role === 'serviceProvider') {
             window.location.href = '/service-provider?login=true&role=serviceProvider&session_expired=true';
-=======
-            window.location.href = '/builder/login?session_expired=true';
->>>>>>> 9339f52662e525eab8d7a7751b2e2f902caa4f7e
           } else {
             window.location.href = '/investor/login?session_expired=true';
           }
@@ -99,14 +91,9 @@ export const AuthProvider = ({ children }) => {
     if (loading) return;
 
     const isAdminRoute = pathname.startsWith('/admin') && pathname !== '/admin/login';
-<<<<<<< HEAD
-    const isBuilderRoute = pathname.startsWith('/builder/') || pathname === '/builder/dashboard' || pathname === '/builder/projects' || pathname === '/builder/advertisements';
-    const isInvestorRoute = pathname === '/dashboard' || pathname === '/properties' || pathname.startsWith('/investor/') || pathname.startsWith('/project/');
-    const isServiceProviderRoute = pathname.startsWith('/service-provider/') || pathname === '/service-provider/dashboard' || pathname === '/service-provider/advertisements';
-=======
-    const isBuilderRoute = (pathname.startsWith('/builder/') && pathname !== '/builder/login' && pathname !== '/builder/register') || pathname === '/builder/dashboard' || pathname === '/builder/projects';
+    const isBuilderRoute = (pathname.startsWith('/builder/') && pathname !== '/builder/login' && pathname !== '/builder/register') || pathname === '/builder/dashboard' || pathname === '/builder/projects' || pathname === '/builder/advertisements';
     const isInvestorRoute = pathname === '/dashboard' || pathname === '/properties' || (pathname.startsWith('/investor/') && pathname !== '/investor/login' && pathname !== '/investor/register') || pathname.startsWith('/project/');
->>>>>>> 9339f52662e525eab8d7a7751b2e2f902caa4f7e
+    const isServiceProviderRoute = (pathname.startsWith('/service-provider/') && pathname !== '/service-provider') || pathname === '/service-provider/dashboard' || pathname === '/service-provider/advertisements';
 
     if (isAdminRoute) {
       if (!user) {

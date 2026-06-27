@@ -42,6 +42,12 @@ export default function AdminServiceProviders() {
   const [providers, setProviders] = useState([]);
   const [loading, setLoading] = useState(true);
   const [filter, setFilter] = useState('all');
+  const [currentPage, setCurrentPage] = useState(1);
+  const ITEMS_PER_PAGE = 10;
+
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [filter]);
 
   const [isRequestModalOpen, setIsRequestModalOpen] = useState(false);
   const [selectedProviderId, setSelectedProviderId] = useState(null);
@@ -203,54 +209,129 @@ export default function AdminServiceProviders() {
               <p>No service providers matches the selected filter.</p>
             </Card>
           ) : (
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-              {filteredProviders.map((sp) => (
-                <Card key={sp.id} className="shadow-sm border border-slate-100 hover:shadow-md transition-all rounded-3xl overflow-hidden bg-white">
-                  <div className="p-6 space-y-4">
-                    <div className="flex justify-between items-start">
-                      <div>
-                        <h3 className="font-bold text-gray-900 text-lg leading-tight">{sp.fullName || sp.email.split('@')[0]}</h3>
-                        <span className="text-xs text-orange-600 font-bold uppercase tracking-wide">{sp.serviceCategory || "Professional Service"}</span>
-                      </div>
-                      <Badge className={`border-none text-xs font-bold py-1 px-3 ${
-                        sp.isVerified 
-                          ? 'bg-green-100 text-green-700' 
-                          : sp.onboardingStatus === 'form1_changes_requested'
-                          ? 'bg-amber-100 text-amber-700'
-                          : 'bg-yellow-100 text-yellow-700'
-                      }`}>
-                        {sp.isVerified ? 'Verified' : sp.onboardingStatus.replace('_', ' ').toUpperCase()}
-                      </Badge>
-                    </div>
+            <div className="bg-white rounded-3xl shadow-sm border border-gray-200 overflow-hidden">
+              <div className="overflow-x-auto">
+                <table className="w-full text-left border-collapse">
+                  <thead>
+                    <tr className="bg-gray-50/75 border-b border-gray-200 text-gray-600 text-xs font-bold uppercase tracking-wider">
+                      <th className="px-6 py-4">Full Name</th>
+                      <th className="px-6 py-4">Category</th>
+                      <th className="px-6 py-4">Contact Info</th>
+                      <th className="px-6 py-4">Status</th>
+                      <th className="px-6 py-4 text-right">Actions</th>
+                    </tr>
+                  </thead>
+                  <tbody className="divide-y divide-gray-100">
+                    {filteredProviders.slice((currentPage - 1) * ITEMS_PER_PAGE, currentPage * ITEMS_PER_PAGE).map((sp) => {
+                      const renderStatusBadge = () => (
+                        <Badge className={`border-none text-xs font-semibold py-1 px-3 ${
+                          sp.isVerified 
+                            ? 'bg-green-100 text-green-700' 
+                            : sp.onboardingStatus === 'form1_changes_requested'
+                            ? 'bg-amber-100 text-amber-700'
+                            : 'bg-yellow-100 text-yellow-700'
+                        }`}>
+                          {sp.isVerified ? 'Verified' : sp.onboardingStatus.replace('_', ' ').toUpperCase()}
+                        </Badge>
+                      );
 
-                    <div className="space-y-2 border-t border-gray-50 pt-4 text-xs font-medium text-slate-600">
-                      <div className="flex items-center gap-2.5"><Mail className="w-4 h-4 text-slate-400" /> {sp.email}</div>
-                      <div className="flex items-center gap-2.5"><Phone className="w-4 h-4 text-slate-400" /> {sp.contactNumber || '—'}</div>
-                      <div className="flex items-center gap-2.5"><Clock className="w-4 h-4 text-slate-400" /> Experience: {sp.yearsOfExperience || '—'} yrs</div>
-                    </div>
+                      return (
+                        <tr key={sp.id} className="hover:bg-gray-50/50 transition-colors">
+                          <td className="px-6 py-4 whitespace-nowrap">
+                            <div className="flex items-center space-x-3">
+                              <div className="w-10 h-10 rounded-xl bg-slate-50 flex items-center justify-center flex-shrink-0">
+                                <TrendingUp className="h-5 w-5 text-slate-500" />
+                              </div>
+                              <div>
+                                <div className="text-sm font-bold text-gray-900">
+                                  {sp.fullName || sp.email.split('@')[0]}
+                                </div>
+                                <div className="text-xs text-gray-400">
+                                  Experience: {sp.yearsOfExperience || '0'} yrs
+                                </div>
+                              </div>
+                            </div>
+                          </td>
+                          <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-600">
+                            {sp.serviceCategory || "Professional Service"}
+                          </td>
+                          <td className="px-6 py-4 whitespace-nowrap">
+                            <div className="flex flex-col gap-0.5 text-sm text-gray-600">
+                              <a href={`mailto:${sp.email}`} className="flex items-center hover:text-orange-600 gap-1.5"><Mail className="h-3.5 w-3.5 text-gray-400" /> {sp.email}</a>
+                              {sp.contactNumber && (
+                                <a href={`tel:${sp.contactNumber}`} className="flex items-center hover:text-orange-600 gap-1.5"><Phone className="h-3.5 w-3.5 text-gray-400" /> {sp.contactNumber}</a>
+                              )}
+                            </div>
+                          </td>
+                          <td className="px-6 py-4 whitespace-nowrap">
+                            {renderStatusBadge()}
+                          </td>
+                          <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+                            <div className="flex justify-end gap-2">
+                              <Button 
+                                onClick={() => setViewProviderData(sp)} 
+                                className="bg-gray-900 hover:bg-gray-800 text-white rounded-xl text-xs px-4 py-2"
+                              >
+                                <Eye className="w-3.5 h-3.5 mr-1.5" /> View Profile
+                              </Button>
+                              {sp.onboardingStatus === 'form1_pending' && (
+                                <Button
+                                  onClick={() => { setSelectedProviderId(sp.id); setRequestedFields([]); setIsRequestModalOpen(true); }}
+                                  variant="ghost"
+                                  className="text-amber-600 hover:text-amber-700 hover:bg-amber-50 rounded-xl text-xs font-bold border border-amber-100 hover:border-amber-200"
+                                >
+                                  Request Changes
+                                </Button>
+                              )}
+                            </div>
+                          </td>
+                        </tr>
+                      );
+                    })}
+                  </tbody>
+                </table>
+              </div>
 
-                    <div className="flex gap-2 pt-2">
-                      <Button
-                        onClick={() => setViewProviderData(sp)}
-                        variant="outline"
-                        className="flex-1 rounded-xl text-slate-700 border-slate-200 text-xs font-bold hover:bg-slate-50"
-                      >
-                        <Eye className="w-4 h-4 mr-1.5" /> View Details
-                      </Button>
-
-                      {sp.onboardingStatus === 'form1_pending' && (
-                        <Button
-                          onClick={() => { setSelectedProviderId(sp.id); setRequestedFields([]); setIsRequestModalOpen(true); }}
-                          variant="ghost"
-                          className="text-amber-600 hover:text-amber-700 hover:bg-amber-50 rounded-xl text-xs font-bold border border-transparent hover:border-amber-100"
-                        >
-                          Request Changes
-                        </Button>
-                      )}
-                    </div>
+              {/* Pagination Controls */}
+              {Math.ceil(filteredProviders.length / ITEMS_PER_PAGE) > 1 && (
+                <div className="bg-gray-50 border-t border-gray-200 px-6 py-4 flex flex-col sm:flex-row items-center justify-between gap-4">
+                  <div className="text-xs font-bold text-gray-500 uppercase tracking-wider">
+                    Showing {((currentPage - 1) * ITEMS_PER_PAGE) + 1} to {Math.min(currentPage * ITEMS_PER_PAGE, filteredProviders.length)} of {filteredProviders.length} records
                   </div>
-                </Card>
-              ))}
+                  <div className="flex items-center gap-1.5">
+                    <Button
+                      onClick={() => setCurrentPage(prev => Math.max(1, prev - 1))}
+                      disabled={currentPage === 1}
+                      variant="outline"
+                      className="h-9 px-3 rounded-lg text-xs font-bold hover:bg-slate-100 bg-white"
+                    >
+                      Previous
+                    </Button>
+                    
+                    {Array.from({ length: Math.ceil(filteredProviders.length / ITEMS_PER_PAGE) }, (_, i) => i + 1).map((page) => (
+                      <Button
+                        key={page}
+                        onClick={() => setCurrentPage(page)}
+                        variant={currentPage === page ? 'default' : 'outline'}
+                        className={`h-9 w-9 p-0 rounded-lg text-xs font-bold ${
+                          currentPage === page ? 'bg-slate-950 text-white hover:bg-slate-800' : 'hover:bg-slate-100 bg-white'
+                        }`}
+                      >
+                        {page}
+                      </Button>
+                    ))}
+
+                    <Button
+                      onClick={() => setCurrentPage(prev => Math.min(Math.ceil(filteredProviders.length / ITEMS_PER_PAGE), prev + 1))}
+                      disabled={currentPage === Math.ceil(filteredProviders.length / ITEMS_PER_PAGE)}
+                      variant="outline"
+                      className="h-9 px-3 rounded-lg text-xs font-bold hover:bg-slate-100 bg-white"
+                    >
+                      Next
+                    </Button>
+                  </div>
+                </div>
+              )}
             </div>
           )}
         </div>
