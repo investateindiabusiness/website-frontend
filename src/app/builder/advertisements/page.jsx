@@ -11,7 +11,9 @@ import {
   bookSlot, 
   fetchMyBookings, 
   rectifyBooking, 
-  cancelBooking 
+  cancelBooking,
+  fetchMyCoupons,
+  validateCoupon
 } from '@/api';
 import { loadStripe } from '@stripe/stripe-js';
 import { Elements } from '@stripe/react-stripe-js';
@@ -71,6 +73,7 @@ export default function BuilderAdvertisements() {
   const [isSubmittingBooking, setIsSubmittingBooking] = useState(false);
   const [paymentClientSecret, setPaymentClientSecret] = useState(null);
   const [paymentId, setPaymentId] = useState(null);
+  const [checkoutCost, setCheckoutCost] = useState(0);
 
   // Rectify Modal / Form State
   const [rectifyBookingItem, setRectifyBookingItem] = useState(null);
@@ -82,12 +85,29 @@ export default function BuilderAdvertisements() {
   });
   const [isSubmittingRectify, setIsSubmittingRectify] = useState(false);
 
+  // Coupon State
+  const [myCoupons, setMyCoupons] = useState([]);
+  const [couponCodeInput, setCouponCodeInput] = useState('');
+  const [appliedCoupon, setAppliedCoupon] = useState(null);
+  const [isApplyingCoupon, setIsApplyingCoupon] = useState(false);
+  const [couponError, setCouponError] = useState('');
+
   useEffect(() => {
     if (user) {
       loadZones();
       loadMyBookings();
+      loadCoupons();
     }
   }, [user]);
+
+  const loadCoupons = async () => {
+    try {
+      const res = await fetchMyCoupons();
+      setMyCoupons(res.data || []);
+    } catch (err) {
+      console.error("Failed to load coupons", err);
+    }
+  };
 
   const loadZones = async () => {
     try {
@@ -159,12 +179,35 @@ export default function BuilderAdvertisements() {
       text: '',
       targetUrl: ''
     });
+    setCouponCodeInput('');
+    setAppliedCoupon(null);
+    setCouponError('');
   };
 
   const handleCloseBookingModal = () => {
     setBookingSlot(null);
     setPaymentClientSecret(null);
     setPaymentId(null);
+    setCheckoutCost(0);
+    setCouponCodeInput('');
+    setAppliedCoupon(null);
+    setCouponError('');
+  };
+
+  const handleApplyCoupon = async () => {
+    if (!couponCodeInput) return;
+    try {
+      setIsApplyingCoupon(true);
+      setCouponError('');
+      const res = await validateCoupon(couponCodeInput);
+      setAppliedCoupon(res.data);
+      toast({ title: "Coupon Applied", description: `Discount of ₹${res.data.discountAmount} applied.` });
+    } catch (err) {
+      setCouponError(err.message || 'Invalid coupon');
+      setAppliedCoupon(null);
+    } finally {
+      setIsApplyingCoupon(false);
+    }
   };
 
   const handleBookingSubmit = async (e) => {
@@ -184,6 +227,7 @@ export default function BuilderAdvertisements() {
       const response = await bookSlot({
         zoneId: selectedZone.id,
         slotId: bookingSlot.id,
+        couponCode: appliedCoupon?.code,
         adContent
       });
       
@@ -192,6 +236,7 @@ export default function BuilderAdvertisements() {
         setPaymentClientSecret(response.data.payment.clientSecret);
         // API returns `paymentId` (not `id`) in the payment response DTO
         setPaymentId(response.data.payment.paymentId || null);
+        setCheckoutCost(response.data.cost || 0);
       } else {
         toast({ 
           title: "Campaign Booked!", 
@@ -596,7 +641,7 @@ export default function BuilderAdvertisements() {
               <CardContent className="p-6">
                 <Elements stripe={stripePromise} options={{ clientSecret: paymentClientSecret, appearance: { theme: 'stripe' } }}>
                   <CheckoutForm 
-                    amount={selectedZone?.cost}
+                    amount={checkoutCost}
                     paymentId={paymentId}
                     onSuccess={() => {
                       handleCloseBookingModal();
@@ -616,9 +661,55 @@ export default function BuilderAdvertisements() {
                     <strong className="text-slate-800 text-sm">{bookingSlot.startDate} to {bookingSlot.endDate}</strong>
                   </div>
                   <div className="text-right">
-                    <span className="font-semibold text-slate-400 uppercase tracking-wide block text-[9px]">Cost</span>
+                    <span className="font-semibold text-slate-400 uppercase tracking-wide block text-[9px]">Base Cost</span>
                     <strong className="text-slate-800 text-sm">₹{selectedZone?.cost}</strong>
                   </div>
+                </div>
+
+                <div className="space-y-1.5 border-t border-slate-100 pt-3">
+                  <label className="text-xs font-bold text-slate-600 block">Apply Coupon</label>
+                  <div className="flex gap-2">
+                    <input 
+                      type="text"
+                      placeholder="Enter coupon code"
+                      className="flex-1 border border-slate-200 rounded-xl px-4 py-2.5 text-sm uppercase outline-none focus:border-[#0b264f]"
+                      value={couponCodeInput}
+                      onChange={(e) => setCouponCodeInput(e.target.value.toUpperCase())}
+                      disabled={!!appliedCoupon}
+                    />
+                    {!appliedCoupon ? (
+                      <Button type="button" onClick={handleApplyCoupon} disabled={!couponCodeInput || isApplyingCoupon} className="bg-slate-800 text-white rounded-xl hover:bg-slate-700">
+                        {isApplyingCoupon ? <Loader2 className="w-4 h-4 animate-spin" /> : "Apply"}
+                      </Button>
+                    ) : (
+                      <Button type="button" onClick={() => { setAppliedCoupon(null); setCouponCodeInput(''); }} variant="outline" className="text-red-500 border-red-200 rounded-xl hover:bg-red-50">
+                        Remove
+                      </Button>
+                    )}
+                  </div>
+                  {couponError && <p className="text-[10px] text-red-500">{couponError}</p>}
+                  {appliedCoupon && (
+                    <div className="flex justify-between items-center text-xs text-green-600 font-semibold bg-green-50 p-2 rounded-lg mt-2">
+                      <span>Discount Applied:</span>
+                      <span>-₹{appliedCoupon.discountAmount}</span>
+                    </div>
+                  )}
+                  {myCoupons.length > 0 && !appliedCoupon && (
+                    <div className="mt-2 text-xs flex gap-2 flex-wrap items-center">
+                      <span className="text-slate-500">Available:</span>
+                      {myCoupons.map(c => (
+                        <button key={c.id} type="button" onClick={() => setCouponCodeInput(c.code)} className="text-[#0b264f] font-bold hover:underline px-2 py-1 bg-blue-50 rounded">
+                          {c.code}
+                        </button>
+                      ))}
+                    </div>
+                  )}
+                  {appliedCoupon && selectedZone && (
+                     <div className="flex justify-between items-center mt-2 font-bold text-sm pt-2 border-t border-slate-100">
+                       <span className="text-slate-700">Final Total:</span>
+                       <span className="text-[#0b264f] text-lg">₹{Math.max(0, selectedZone.cost - appliedCoupon.discountAmount)}</span>
+                     </div>
+                  )}
                 </div>
 
                 <div className="space-y-1.5">
