@@ -1,8 +1,8 @@
 "use client";
 
-import React, { createContext, useContext, useState, useEffect } from 'react';
-import { usePathname, useRouter } from 'next/navigation';
-import { toast } from '@/hooks/use-toast';
+import React, { createContext, useContext, useState, useEffect } from "react";
+import { usePathname, useRouter } from "next/navigation";
+import { toast } from "@/hooks/use-toast";
 
 const AuthContext = createContext(null);
 
@@ -28,24 +28,18 @@ export const AuthProvider = ({ children }) => {
   const router = useRouter();
 
   useEffect(() => {
-    const savedUser = sessionStorage.getItem('user_session');
+    const savedUser = sessionStorage.getItem("user_session");
     if (savedUser) {
       const parsedUser = JSON.parse(savedUser);
       if (isSessionExpired(parsedUser)) {
         const role = parsedUser.role;
-        sessionStorage.removeItem('user_session');
-        if (role === 'admin') {
-          window.location.href = '/admin/login?session_expired=true';
-        } else if (role === 'builder') {
-<<<<<<< HEAD
-          window.location.href = '/builder?login=true&role=builder&session_expired=true';
-        } else if (role === 'serviceProvider') {
-          window.location.href = '/service-provider?login=true&role=serviceProvider&session_expired=true';
-=======
-          window.location.href = '/builder/login?session_expired=true';
->>>>>>> 9339f52662e525eab8d7a7751b2e2f902caa4f7e
+        sessionStorage.removeItem("user_session");
+        if (role === "admin") {
+          window.location.href = "/admin/login?session_expired=true";
+        } else if (role === "builder") {
+          window.location.href = "/builder/login?session_expired=true";
         } else {
-          window.location.href = '/investor/login?session_expired=true';
+          window.location.href = "/investor/login?session_expired=true";
         }
       } else {
         setUser(parsedUser);
@@ -58,26 +52,23 @@ export const AuthProvider = ({ children }) => {
     if (loading) return;
 
     const checkSession = () => {
-      const savedUser = sessionStorage.getItem('user_session');
+      const savedUser = sessionStorage.getItem("user_session");
       if (savedUser) {
         const parsedUser = JSON.parse(savedUser);
         if (isSessionExpired(parsedUser)) {
           const role = parsedUser.role;
-          sessionStorage.removeItem('user_session');
+          sessionStorage.removeItem("user_session");
           setUser(null);
 
-          if (role === 'admin') {
-            window.location.href = '/admin/login?session_expired=true';
-          } else if (role === 'builder') {
-<<<<<<< HEAD
-            window.location.href = '/builder?login=true&role=builder&session_expired=true';
-          } else if (role === 'serviceProvider') {
-            window.location.href = '/service-provider?login=true&role=serviceProvider&session_expired=true';
-=======
-            window.location.href = '/builder/login?session_expired=true';
->>>>>>> 9339f52662e525eab8d7a7751b2e2f902caa4f7e
+          if (role === "admin") {
+            window.location.href = "/admin/login?session_expired=true";
+          } else if (role === "builder") {
+            window.location.href = "/builder/login?session_expired=true";
+          } else if (role === "serviceProvider") {
+            window.location.href =
+              "/service-provider/login?session_expired=true";
           } else {
-            window.location.href = '/investor/login?session_expired=true';
+            window.location.href = "/investor/login?session_expired=true";
           }
           return true;
         }
@@ -98,71 +89,84 @@ export const AuthProvider = ({ children }) => {
   useEffect(() => {
     if (loading) return;
 
-    const isAdminRoute = pathname.startsWith('/admin') && pathname !== '/admin/login';
-<<<<<<< HEAD
-    const isBuilderRoute = pathname.startsWith('/builder/') || pathname === '/builder/dashboard' || pathname === '/builder/projects' || pathname === '/builder/advertisements';
-    const isInvestorRoute = pathname === '/dashboard' || pathname === '/properties' || pathname.startsWith('/investor/') || pathname.startsWith('/project/');
-    const isServiceProviderRoute = pathname.startsWith('/service-provider/') || pathname === '/service-provider/dashboard' || pathname === '/service-provider/advertisements';
-=======
-    const isBuilderRoute = (pathname.startsWith('/builder/') && pathname !== '/builder/login' && pathname !== '/builder/register') || pathname === '/builder/dashboard' || pathname === '/builder/projects';
-    const isInvestorRoute = pathname === '/dashboard' || pathname === '/properties' || (pathname.startsWith('/investor/') && pathname !== '/investor/login' && pathname !== '/investor/register') || pathname.startsWith('/project/');
->>>>>>> 9339f52662e525eab8d7a7751b2e2f902caa4f7e
+    const isAdminRoute =
+      pathname.startsWith("/admin") && pathname !== "/admin/login";
+    const isBuilderRoute =
+      (pathname.startsWith("/builder/") &&
+        pathname !== "/builder/login" &&
+        pathname !== "/builder/register") ||
+      pathname === "/builder/dashboard" ||
+      pathname === "/builder/projects" ||
+      pathname === "/builder/advertisements";
+    const isInvestorRoute =
+      pathname === "/dashboard" ||
+      pathname === "/properties" ||
+      (pathname.startsWith("/investor/") &&
+        pathname !== "/investor/login" &&
+        pathname !== "/investor/register") ||
+      pathname.startsWith("/project/");
+    const isServiceProviderRoute =
+      (pathname.startsWith("/service-provider/") &&
+        pathname !== "/service-provider/login" &&
+        pathname !== "/service-provider/register") ||
+      pathname === "/service-provider/dashboard" ||
+      pathname === "/service-provider/advertisements";
 
     if (isAdminRoute) {
       if (!user) {
-        router.push('/admin/login');
-      } else if (user.role !== 'admin') {
+        router.push("/admin/login");
+      } else if (user.role !== "admin") {
         toast({
           title: "Access Denied",
           description: "You do not have administrator privileges.",
-          variant: "destructive"
+          variant: "destructive",
         });
-        router.push('/');
+        router.push("/");
       }
     } else if (isBuilderRoute) {
       if (!user) {
-        router.push('/builder/login');
-      } else if (user.role !== 'builder') {
+        router.push("/builder/login");
+      } else if (user.role !== "builder") {
         toast({
           title: "Access Denied",
           description: "You do not have builder privileges.",
-          variant: "destructive"
+          variant: "destructive",
         });
-        router.push('/');
+        router.push("/");
       }
     } else if (isInvestorRoute) {
       if (!user) {
-        router.push('/investor/login');
-      } else if (user.role !== 'investor') {
+        router.push("/investor/login");
+      } else if (user.role !== "investor") {
         toast({
           title: "Access Denied",
           description: "You do not have investor privileges.",
-          variant: "destructive"
+          variant: "destructive",
         });
-        router.push('/');
+        router.push("/");
       }
     } else if (isServiceProviderRoute) {
       if (!user) {
-        router.push('/service-provider?login=true&role=serviceProvider');
-      } else if (user.role !== 'serviceProvider') {
+        router.push("/service-provider?login=true&role=serviceProvider");
+      } else if (user.role !== "serviceProvider") {
         toast({
           title: "Access Denied",
           description: "You do not have service provider privileges.",
-          variant: "destructive"
+          variant: "destructive",
         });
-        router.push('/');
+        router.push("/");
       }
     }
   }, [user, loading, pathname, router]);
 
   const login = (userData) => {
     const sessionData = { ...userData, loginTime: Date.now() };
-    sessionStorage.setItem('user_session', JSON.stringify(sessionData));
+    sessionStorage.setItem("user_session", JSON.stringify(sessionData));
     setUser(sessionData);
   };
 
   const logout = () => {
-    sessionStorage.removeItem('user_session');
+    sessionStorage.removeItem("user_session");
     setUser(null);
   };
 
@@ -173,4 +177,4 @@ export const AuthProvider = ({ children }) => {
   );
 };
 
-export const useAuth = () => useContext(AuthContext);
+export const useAuth = () => useContext(AuthContext);
