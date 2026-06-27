@@ -549,3 +549,23 @@ export const verifyServiceProviderFinal = (uid, isVerified) =>
     method: 'POST',
     body: JSON.stringify({ isVerified })
   });
+
+// --- Coupons Admin API ---
+export const fetchAdminCoupons = () => apiRequest('/api/admin/coupons');
+export const createAdminCoupon = (couponData) => apiRequest('/api/admin/coupons', {
+  method: 'POST',
+  body: JSON.stringify(couponData)
+});
+export const deleteAdminCoupon = (id) => apiRequest(`/api/admin/coupons/${id}`, {
+  method: 'DELETE'
+});
+export const resetAdminCoupon = (id) => apiRequest(`/api/admin/coupons/${id}/reset`, {
+  method: 'PATCH'
+});
+
+// --- Coupons User API ---
+export const fetchMyCoupons = () => apiRequest('/api/coupons/my-coupons');
+export const validateCoupon = (code) => apiRequest('/api/coupons/validate', {
+  method: 'POST',
+  body: JSON.stringify({ code })
+});

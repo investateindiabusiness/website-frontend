@@ -76,9 +76,9 @@ const HeaderContent = ({ transparent = false }) => {
     }
     switch (displayUser.role) {
       case 'admin':    return [{ label: 'Dashboard', path: '/admin/dashboard' }, { label: 'Builders', path: '/admin/builders' }, { label: 'Investors', path: '/admin/investors' }, { label: 'Service Providers', path: '/admin/service-providers' }, { label: 'Projects', path: '/admin/projects' }];
-      case 'builder':  return [{ label: 'Dashboard', path: '/builder/dashboard' }, { label: 'Projects', path: '/builder/projects' }, { label: 'Advertise', path: '/builder/advertisements' }];
-      case 'serviceProvider': return [{ label: 'Dashboard', path: '/service-provider/dashboard' }, { label: 'Advertise', path: '/service-provider/advertisements' }];
-      case 'investor': return [{ label: 'Dashboard', path: '/dashboard' }, { label: 'Properties', path: '/properties' }];
+      case 'builder':  return [{ label: 'Dashboard', path: '/builder/dashboard' }, { label: 'Projects', path: '/builder/projects' }, { label: 'Advertise', path: '/builder/advertisements' }, { label: 'Coupons', path: '/builder/coupons' }];
+      case 'serviceProvider': return [{ label: 'Dashboard', path: '/service-provider/dashboard' }, { label: 'Advertise', path: '/service-provider/advertisements' }, { label: 'Coupons', path: '/service-provider/coupons' }];
+      case 'investor': return [{ label: 'Dashboard', path: '/dashboard' }, { label: 'Properties', path: '/properties' }, { label: 'Coupons', path: '/investor/coupons' }];
       default:         return [{ label: 'Home', path: '/' }];
     }
   };
@@ -90,6 +90,7 @@ const HeaderContent = ({ transparent = false }) => {
     { label: 'Helpdesk',       path: '/admin/helpdesk' },
     { label: 'Newsletter',     path: '/admin/newsletter' },
     { label: 'Advertisements', path: '/admin/advertisements' },
+    { label: 'Coupons',        path: '/admin/coupons' },
   ] : [];
 
   const navLinks = getNavLinks();
