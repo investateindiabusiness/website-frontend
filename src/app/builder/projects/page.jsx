@@ -50,6 +50,12 @@ export default function ProjectManager() {
     const [isEditing, setIsEditing] = useState(false);
     const [searchQuery, setSearchQuery] = useState('');
     const [isLoading, setIsLoading] = useState(false);
+    const [currentPage, setCurrentPage] = useState(1);
+    const ITEMS_PER_PAGE = 10;
+
+    useEffect(() => {
+        setCurrentPage(1);
+    }, [searchQuery]);
 
     const [dynamicProjectData, setDynamicProjectData] = useState({});
     const [isAppealModalOpen, setIsAppealModalOpen] = useState(false);
@@ -313,7 +319,7 @@ export default function ProjectManager() {
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        {filteredProjects.length > 0 ? filteredProjects.map((project) => (
+                                        {filteredProjects.length > 0 ? filteredProjects.slice((currentPage - 1) * ITEMS_PER_PAGE, currentPage * ITEMS_PER_PAGE).map((project) => (
                                             <tr key={project.id} className="border-b border-gray-50 hover:bg-gray-50/50 transition-colors">
                                                 <td className="p-4">
                                                     <div className="font-bold text-gray-900 flex items-center gap-2">
@@ -353,6 +359,47 @@ export default function ProjectManager() {
                                     </tbody>
                                 </table>
                             </div>
+
+                            {/* Pagination Controls */}
+                            {Math.ceil(filteredProjects.length / ITEMS_PER_PAGE) > 1 && (
+                                <div className="bg-gray-50 border-t border-gray-200 px-6 py-4 flex flex-col sm:flex-row items-center justify-between gap-4">
+                                    <div className="text-xs font-bold text-gray-500 uppercase tracking-wider">
+                                        Showing {((currentPage - 1) * ITEMS_PER_PAGE) + 1} to {Math.min(currentPage * ITEMS_PER_PAGE, filteredProjects.length)} of {filteredProjects.length} records
+                                    </div>
+                                    <div className="flex items-center gap-1.5">
+                                        <Button
+                                            onClick={() => setCurrentPage(prev => Math.max(1, prev - 1))}
+                                            disabled={currentPage === 1}
+                                            variant="outline"
+                                            className="h-9 px-3 rounded-lg text-xs font-bold hover:bg-slate-100 bg-white"
+                                        >
+                                            Previous
+                                        </Button>
+
+                                        {Array.from({ length: Math.ceil(filteredProjects.length / ITEMS_PER_PAGE) }, (_, i) => i + 1).map((page) => (
+                                            <Button
+                                                key={page}
+                                                onClick={() => setCurrentPage(page)}
+                                                variant={currentPage === page ? 'default' : 'outline'}
+                                                className={`h-9 w-9 p-0 rounded-lg text-xs font-bold ${
+                                                    currentPage === page ? 'bg-slate-900 text-white hover:bg-slate-800' : 'hover:bg-slate-100 bg-white'
+                                                }`}
+                                            >
+                                                {page}
+                                            </Button>
+                                        ))}
+
+                                        <Button
+                                            onClick={() => setCurrentPage(prev => Math.min(Math.ceil(filteredProjects.length / ITEMS_PER_PAGE), prev + 1))}
+                                            disabled={currentPage === Math.ceil(filteredProjects.length / ITEMS_PER_PAGE)}
+                                            variant="outline"
+                                            className="h-9 px-3 rounded-lg text-xs font-bold hover:bg-slate-100 bg-white"
+                                        >
+                                            Next
+                                        </Button>
+                                    </div>
+                                </div>
+                            )}
                         </div>
                     </div>
                 )}

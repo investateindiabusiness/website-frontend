@@ -1,7 +1,6 @@
 "use client";
 
 import React, { useState, useEffect } from 'react';
-import { useRouter } from 'next/navigation';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
 import { useAuth } from '@/hooks/AuthContext';
@@ -12,14 +11,7 @@ import {
   bookSlot, 
   fetchMyBookings, 
   rectifyBooking, 
-  cancelBooking,
-<<<<<<< HEAD
-  adminCreateSlot,
-  adminDeleteSlot
-=======
-  fetchMyCoupons,
-  validateCoupon
->>>>>>> 270de042b25becc435c3f80441d581e8b3118159
+  cancelBooking 
 } from '@/api';
 import { loadStripe } from '@stripe/stripe-js';
 import { Elements } from '@stripe/react-stripe-js';
@@ -29,7 +21,6 @@ import {
   Image as ImageIcon, 
   DollarSign, 
   Clock, 
-  Monitor, 
   Plus, 
   AlertCircle, 
   CheckCircle, 
@@ -45,7 +36,7 @@ import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 
-// Zone display metadata — names and pricing shown in the sidebar list
+// Zone display metadata
 const ZONE_META = {
   zone1: { name: 'Builder Dashboard Top Banner',       cost: 100, campaignDuration: 7 },
   zone2: { name: 'Investor Dashboard Leaderboard',     cost: 150, campaignDuration: 7 },
@@ -54,27 +45,10 @@ const ZONE_META = {
   zone5: { name: 'Landing Page Hero Spotlight',        cost: 200, campaignDuration: 7 },
 };
 
-// Initialize Stripe outside component render to avoid recreating Stripe object on every render
 const stripePromise = loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY || 'pk_test_placeholder');
 
-const formatDate = (dateStr) => {
-  if (!dateStr) return '';
-  if (/^\d{2}-\d{2}-\d{4}$/.test(dateStr)) return dateStr;
-  const parts = dateStr.split('-');
-  if (parts.length === 3 && parts[0].length === 4) {
-    return `${parts[2]}-${parts[1]}-${parts[0]}`;
-  }
-  const date = new Date(dateStr);
-  if (isNaN(date.getTime())) return dateStr;
-  const day = String(date.getDate()).padStart(2, '0');
-  const month = String(date.getMonth() + 1).padStart(2, '0');
-  const year = date.getFullYear();
-  return `${day}-${month}-${year}`;
-};
-
-export default function BuilderAdvertisements() {
+export default function ServiceProviderAdvertisements() {
   const { user } = useAuth();
-  const router = useRouter();
   
   const [zones, setZones] = useState([]);
   const [selectedZone, setSelectedZone] = useState(null);
@@ -95,7 +69,6 @@ export default function BuilderAdvertisements() {
   const [isSubmittingBooking, setIsSubmittingBooking] = useState(false);
   const [paymentClientSecret, setPaymentClientSecret] = useState(null);
   const [paymentId, setPaymentId] = useState(null);
-  const [checkoutCost, setCheckoutCost] = useState(0);
 
   // Rectify Modal / Form State
   const [rectifyBookingItem, setRectifyBookingItem] = useState(null);
@@ -107,63 +80,16 @@ export default function BuilderAdvertisements() {
   });
   const [isSubmittingRectify, setIsSubmittingRectify] = useState(false);
 
-<<<<<<< HEAD
-  // Slot Creation Form State
-  const [newSlot, setNewSlot] = useState({
-    startDate: '',
-    endDate: '',
-    startTime: '09:00',
-    endTime: '18:00'
-  });
-  const [isCreatingSlot, setIsCreatingSlot] = useState(false);
-
-  useEffect(() => {
-    if (!user) return;
-
-    loadZones(false);
-    loadMyBookings(false);
-
-    const interval = setInterval(() => {
-      loadZones(true);
-      loadMyBookings(true);
-      if (selectedZone) {
-        loadSlots(selectedZone.id, true);
-      }
-    }, 30000);
-
-    return () => clearInterval(interval);
-  }, [user, selectedZone?.id]);
-
-  const loadZones = async (silent = false) => {
-=======
-  // Coupon State
-  const [myCoupons, setMyCoupons] = useState([]);
-  const [couponCodeInput, setCouponCodeInput] = useState('');
-  const [appliedCoupon, setAppliedCoupon] = useState(null);
-  const [isApplyingCoupon, setIsApplyingCoupon] = useState(false);
-  const [couponError, setCouponError] = useState('');
-
   useEffect(() => {
     if (user) {
       loadZones();
       loadMyBookings();
-      loadCoupons();
     }
   }, [user]);
 
-  const loadCoupons = async () => {
-    try {
-      const res = await fetchMyCoupons();
-      setMyCoupons(res.data || []);
-    } catch (err) {
-      console.error("Failed to load coupons", err);
-    }
-  };
-
   const loadZones = async () => {
->>>>>>> 270de042b25becc435c3f80441d581e8b3118159
     try {
-      if (!silent) setLoadingZones(true);
+      setLoadingZones(true);
       const data = await fetchAdZones();
       const enriched = (data.data || []).map((z) => ({
         ...ZONE_META[z.id],
@@ -173,73 +99,55 @@ export default function BuilderAdvertisements() {
         campaignDuration: z.campaignDuration ?? ZONE_META[z.id]?.campaignDuration ?? '—',
       }));
       setZones(enriched);
-      if (selectedZone) {
-        const updated = enriched.find(z => z.id === selectedZone.id);
-        if (updated) setSelectedZone(updated);
-      } else if (enriched.length > 0) {
+      if (enriched.length > 0) {
         const defaultZone = enriched.find(z => z.id === 'zone2') || enriched[0];
         handleSelectZone(defaultZone);
       }
     } catch (error) {
-      if (!silent) {
-        toast({ 
-          title: "Error loading zones", 
-          description: error.message || "Failed to load active advertisement zones.", 
-          variant: "destructive" 
-        });
-      }
+      toast({ 
+        title: "Error loading zones", 
+        description: error.message || "Failed to load active advertisement zones.", 
+        variant: "destructive" 
+      });
     } finally {
-      if (!silent) setLoadingZones(false);
+      setLoadingZones(false);
     }
   };
 
-  const loadMyBookings = async (silent = false) => {
+  const loadMyBookings = async () => {
     try {
-      if (!silent) setLoadingBookings(true);
+      setLoadingBookings(true);
       const data = await fetchMyBookings();
       setMyBookings(data.data || []);
     } catch (error) {
-      if (!silent) {
-        toast({ 
-          title: "Error loading bookings", 
-          description: error.message || "Failed to load your campaigns.", 
-          variant: "destructive" 
-        });
-      }
+      toast({ 
+        title: "Error loading bookings", 
+        description: error.message || "Failed to load your campaigns.", 
+        variant: "destructive" 
+      });
     } finally {
-      if (!silent) setLoadingBookings(false);
-    }
-  };
-
-  const loadSlots = async (zoneId, silent = false) => {
-    try {
-      if (!silent) setLoadingSlots(true);
-      const data = await fetchAvailableSlots(zoneId);
-      setSlots(data.data || []);
-    } catch (error) {
-      if (!silent) {
-        toast({ 
-          title: "Error loading slots", 
-          description: error.message || "Failed to load available slots for this zone.", 
-          variant: "destructive" 
-        });
-      }
-    } finally {
-      if (!silent) setLoadingSlots(false);
+      setLoadingBookings(false);
     }
   };
 
   const handleSelectZone = async (zone) => {
     setSelectedZone(zone);
-    if (zone) {
-      loadSlots(zone.id, false);
+    try {
+      setLoadingSlots(true);
+      const data = await fetchAvailableSlots(zone.id);
+      setSlots(data.data || []);
+    } catch (error) {
+      toast({ 
+        title: "Error loading slots", 
+        description: error.message || "Failed to load available slots for this zone.", 
+        variant: "destructive" 
+      });
+    } finally {
+      setLoadingSlots(false);
     }
   };
 
   const handleOpenBookingModal = (slot) => {
-<<<<<<< HEAD
-    router.push(`/builder/advertisements/book?zoneId=${selectedZone.id}&slotId=${slot.id}&startDate=${slot.startDate}&endDate=${slot.endDate}&timeSlot=${encodeURIComponent(slot.timeSlot || 'All Day')}`);
-=======
     setBookingSlot(slot);
     setAdContent({
       imageUrl: '',
@@ -247,36 +155,12 @@ export default function BuilderAdvertisements() {
       text: '',
       targetUrl: ''
     });
-    setCouponCodeInput('');
-    setAppliedCoupon(null);
-    setCouponError('');
->>>>>>> 270de042b25becc435c3f80441d581e8b3118159
   };
 
   const handleCloseBookingModal = () => {
     setBookingSlot(null);
     setPaymentClientSecret(null);
     setPaymentId(null);
-    setCheckoutCost(0);
-    setCouponCodeInput('');
-    setAppliedCoupon(null);
-    setCouponError('');
-  };
-
-  const handleApplyCoupon = async () => {
-    if (!couponCodeInput) return;
-    try {
-      setIsApplyingCoupon(true);
-      setCouponError('');
-      const res = await validateCoupon(couponCodeInput);
-      setAppliedCoupon(res.data);
-      toast({ title: "Coupon Applied", description: `Discount of ₹${res.data.discountAmount} applied.` });
-    } catch (err) {
-      setCouponError(err.message || 'Invalid coupon');
-      setAppliedCoupon(null);
-    } finally {
-      setIsApplyingCoupon(false);
-    }
   };
 
   const handleBookingSubmit = async (e) => {
@@ -296,16 +180,12 @@ export default function BuilderAdvertisements() {
       const response = await bookSlot({
         zoneId: selectedZone.id,
         slotId: bookingSlot.id,
-        couponCode: appliedCoupon?.code,
         adContent
       });
       
-      // If payment details exist, proceed to checkout
       if (response?.data?.payment?.clientSecret) {
         setPaymentClientSecret(response.data.payment.clientSecret);
-        // API returns `paymentId` (not `id`) in the payment response DTO
-        setPaymentId(response.data.payment.paymentId || null);
-        setCheckoutCost(response.data.cost || 0);
+        setPaymentId(response.data.payment.id);
       } else {
         toast({ 
           title: "Campaign Booked!", 
@@ -340,47 +220,6 @@ export default function BuilderAdvertisements() {
       }
     } catch (error) {
       toast({ title: "Cancellation Failed", description: error.message || "Failed to cancel booking.", variant: "destructive" });
-    }
-  };
-
-  const handleCreateSlotSubmit = async (e) => {
-    e.preventDefault();
-    if (!newSlot.startDate || !newSlot.endDate) {
-      return toast({ title: "Validation Error", description: "Start and End dates are required.", variant: "destructive" });
-    }
-    if (!newSlot.endTime) {
-      return toast({ title: "Validation Error", description: "End time is required.", variant: "destructive" });
-    }
-    try {
-      setIsCreatingSlot(true);
-      const payload = {
-        startDate: newSlot.startDate,
-        endDate: newSlot.endDate,
-        timeSlot: newSlot.endTime
-      };
-      await adminCreateSlot(selectedZone.id, payload);
-      toast({ title: "Slot Created", description: "Booking slot added successfully." });
-      setNewSlot({ startDate: '', endDate: '', startTime: '09:00', endTime: '18:00' });
-      if (selectedZone) {
-        handleSelectZone(selectedZone);
-      }
-    } catch (error) {
-      toast({ title: "Creation Failed", description: error.message || "Failed to create slot.", variant: "destructive" });
-    } finally {
-      setIsCreatingSlot(false);
-    }
-  };
-
-  const handleDeleteSlot = async (slotId) => {
-    if (!confirm("Are you sure you want to delete this booking slot?")) return;
-    try {
-      await adminDeleteSlot(slotId);
-      toast({ title: "Slot Deleted", description: "Unbooked slot removed successfully." });
-      if (selectedZone) {
-        handleSelectZone(selectedZone);
-      }
-    } catch (error) {
-      toast({ title: "Delete Failed", description: error.message || "Failed to delete slot (it might already be booked).", variant: "destructive" });
     }
   };
 
@@ -455,16 +294,16 @@ export default function BuilderAdvertisements() {
       <div className="flex-grow mt-[2rem] md:mt-[4rem] pb-16">
         
         {/* Banner Section */}
-        <div className="bg-gradient-to-r from-[#0b264f] to-[#1a4b8c] text-white pt-8 pb-14 px-4 md:px-8 rounded-b-[2rem] shadow-xl relative overflow-hidden">
+        <div className="bg-gradient-to-r from-slate-800 to-slate-950 text-white pt-8 pb-14 px-4 md:px-8 rounded-b-[2rem] shadow-xl relative overflow-hidden">
           <div className="absolute top-0 right-0 w-80 h-80 bg-white/5 rounded-full -mr-20 -mt-20 blur-3xl pointer-events-none"></div>
           <div className="container mx-auto relative z-10 flex flex-col md:flex-row justify-between items-start md:items-center gap-6">
             <div>
-              <Badge className="bg-orange-500/20 text-orange-200 hover:bg-orange-500/30 border-none mb-3 px-3 py-1">
-                <Sparkles className="w-3.5 h-3.5 mr-1.5" /> Expand Your Viewers
+              <Badge className="bg-orange-500/25 text-orange-200 border-none mb-3 px-3 py-1">
+                <Sparkles className="w-3.5 h-3.5 mr-1.5" /> Expose Your Brand
               </Badge>
-              <h1 className="text-2xl md:text-3xl lg:text-4xl font-bold mb-2">Builder Campaigns</h1>
-              <p className="text-sm md:text-base text-blue-100 opacity-90 max-w-xl">
-                Advertise your premium real estate listings inside active landing pages, dashboards, and search inline sections across Investate India.
+              <h1 className="text-2xl md:text-3xl lg:text-4xl font-bold mb-2">Service Provider Campaigns</h1>
+              <p className="text-sm md:text-base text-slate-300 opacity-90 max-w-xl">
+                Deploy ad banners across builder dashboards and investor details panels to acquire premium developer and NRI contracts.
               </p>
             </div>
           </div>
@@ -497,19 +336,18 @@ export default function BuilderAdvertisements() {
                         onClick={() => handleSelectZone(zone)}
                         className={`w-full text-left p-4 rounded-xl border transition-all duration-200 flex items-center justify-between gap-3 ${
                           selectedZone?.id === zone.id
-                            ? 'border-[#0b264f] bg-[#0b264f]/5 shadow-sm'
+                            ? 'border-slate-800 bg-slate-50 shadow-sm'
                             : 'border-slate-200 bg-white hover:bg-slate-50'
                         }`}
                       >
                         <div className="flex flex-col gap-0.5 min-w-0">
-                          <span className={`text-sm font-bold truncate ${selectedZone?.id === zone.id ? 'text-[#0b264f]' : 'text-slate-800'}`}>
+                          <span className={`text-sm font-bold truncate ${selectedZone?.id === zone.id ? 'text-slate-900' : 'text-slate-800'}`}>
                             {zone.name}
                           </span>
                           <span className="text-xs font-semibold text-orange-500">
                             ₹{zone.cost} / {zone.campaignDuration} days
                           </span>
                         </div>
-
                       </button>
                     ))
                   )}
@@ -518,7 +356,7 @@ export default function BuilderAdvertisements() {
 
               {selectedZone && (
                 <Card className="shadow-sm border border-slate-200/60 rounded-2xl bg-white overflow-hidden">
-                  <div className="bg-[#0b264f] text-white p-4.5 text-center">
+                  <div className="bg-slate-800 text-white p-4.5 text-center">
                     <h3 className="text-sm uppercase tracking-wider font-bold opacity-85">Zone Specification</h3>
                     <h2 className="text-lg font-bold mt-1">{selectedZone.name}</h2>
                   </div>
@@ -534,16 +372,19 @@ export default function BuilderAdvertisements() {
                       </div>
                     </div>
                     
+                    <div className="border-t border-slate-100 pt-4 space-y-1">
+                      <span className="text-[10px] text-slate-400 uppercase font-semibold">Dimensions Format</span>
+                      <p className="text-sm font-semibold text-slate-700">{selectedZone.width}x{selectedZone.height} ({selectedZone.adType})</p>
+                    </div>
+
                     <div className="bg-slate-50 border border-slate-100 rounded-xl p-3.5 space-y-2">
                       <h4 className="text-[11px] font-bold text-slate-500 uppercase tracking-wider">Default Ad Fallback</h4>
                       <p className="text-xs text-slate-600 italic">"{selectedZone.defaultAd?.text}"</p>
                       {selectedZone.defaultAd?.imageUrl && (
-                        <div className="mt-2 rounded-xl overflow-hidden border border-slate-200 bg-white p-1 max-h-32 flex items-center justify-center">
-                          <img 
-                            src={selectedZone.defaultAd.imageUrl} 
-                            alt="Default fallback ad" 
-                            className="max-w-full max-h-28 object-contain rounded-lg"
-                          />
+                        <div className="mt-2 text-[10px]">
+                          <a href={selectedZone.defaultAd.imageUrl} target="_blank" rel="noreferrer" className="text-blue-600 font-semibold flex items-center hover:underline">
+                            View default image <ExternalLink className="w-3 h-3 ml-1" />
+                          </a>
                         </div>
                       )}
                     </div>
@@ -554,58 +395,6 @@ export default function BuilderAdvertisements() {
 
             {/* Column 2: Available slots list */}
             <div className="lg:col-span-3 space-y-6">
-              {selectedZone && (
-                <Card className="shadow-md border-none rounded-2xl overflow-hidden bg-white">
-                  <CardHeader className="bg-slate-50 border-b border-slate-100 py-4 px-6">
-                    <CardTitle className="text-base font-bold text-slate-800">Add Available Slot to {selectedZone.name}</CardTitle>
-                    <CardDescription className="text-xs">Create unbooked slots that builders can select and purchase</CardDescription>
-                  </CardHeader>
-                  <form onSubmit={handleCreateSlotSubmit}>
-                    <CardContent className="p-6">
-                      <div className="grid grid-cols-1 md:grid-cols-4 gap-4 items-end">
-                        <div className="space-y-1.5">
-                          <label className="text-xs font-bold text-slate-600 block">Start Date</label>
-                          <input
-                            type="date"
-                            required
-                            className="w-full border border-slate-200 rounded-xl px-2 py-2.5 text-xs outline-none focus:border-slate-800 text-slate-700 font-medium"
-                            value={newSlot.startDate}
-                            onChange={(e) => setNewSlot({ ...newSlot, startDate: e.target.value })}
-                          />
-                        </div>
-                        <div className="space-y-1.5">
-                          <label className="text-xs font-bold text-slate-600 block">End Date</label>
-                          <input
-                            type="date"
-                            required
-                            className="w-full border border-slate-200 rounded-xl px-2 py-2.5 text-xs outline-none focus:border-slate-800 text-slate-700 font-medium"
-                            value={newSlot.endDate}
-                            onChange={(e) => setNewSlot({ ...newSlot, endDate: e.target.value })}
-                          />
-                        </div>
-                        <div className="space-y-1.5">
-                          <label className="text-xs font-bold text-slate-600 block">End Time</label>
-                          <input
-                            type="time"
-                            required
-                            className="w-full border border-slate-200 rounded-xl px-2 py-2.5 text-xs outline-none focus:border-slate-800 text-slate-700 font-medium"
-                            value={newSlot.endTime}
-                            onChange={(e) => setNewSlot({ ...newSlot, endTime: e.target.value })}
-                          />
-                        </div>
-                        <Button
-                          type="submit"
-                          disabled={isCreatingSlot}
-                          className="bg-[#0b264f] hover:bg-[#081d3c] text-white rounded-xl shadow-md w-full h-[38px] font-semibold text-xs"
-                        >
-                          {isCreatingSlot ? <Loader2 className="w-4 h-4 animate-spin" /> : <><Plus className="w-4 h-4 mr-1.5" /> Create Slot</>}
-                        </Button>
-                      </div>
-                    </CardContent>
-                  </form>
-                </Card>
-              )}
-
               <Card className="shadow-md border-none rounded-2xl overflow-hidden bg-white">
                 <CardHeader className="bg-slate-50 border-b border-slate-100 py-4 px-6">
                   <CardTitle className="text-lg font-bold text-slate-800">Available Booking Calendar</CardTitle>
@@ -614,7 +403,7 @@ export default function BuilderAdvertisements() {
                 <CardContent className="p-6">
                   {loadingSlots ? (
                     <div className="flex flex-col items-center justify-center py-16">
-                      <Loader2 className="w-10 h-10 text-[#0b264f] animate-spin mb-4" />
+                      <Loader2 className="w-10 h-10 text-slate-700 animate-spin mb-4" />
                       <p className="text-sm text-slate-500 font-medium">Checking slot availability...</p>
                     </div>
                   ) : slots.length === 0 ? (
@@ -630,33 +419,24 @@ export default function BuilderAdvertisements() {
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                       {slots.map((slot) => (
                         <div 
-                          key={slot.id} 
-                          className="bg-white border border-slate-200/80 rounded-2xl p-4 flex flex-col justify-between hover:shadow-md transition-shadow relative"
+                           key={slot.id} 
+                           className="bg-white border border-slate-200/80 rounded-2xl p-4 flex flex-col justify-between hover:shadow-md transition-shadow relative"
                         >
                           <div className="space-y-3">
                             <div className="flex justify-between items-start">
-                              <Badge className="bg-[#0b264f]/10 text-[#0b264f] border-none font-bold text-[10px]">
+                              <Badge className="bg-slate-800/10 text-slate-800 border-none font-bold text-[10px]">
                                 {slot.timeSlot || 'All Day'}
                               </Badge>
-                              <div className="flex items-center gap-2">
-                                <span className="text-xs font-bold text-green-600 bg-green-50 px-2 py-0.5 rounded">Available</span>
-                                <Button
-                                  onClick={() => handleDeleteSlot(slot.id)}
-                                  size="sm"
-                                  variant="ghost"
-                                  className="text-red-500 hover:text-red-700 hover:bg-red-50 rounded-xl p-1 h-7 w-7"
-                                  title="Delete Slot"
-                                >
-                                  <Trash2 className="w-3.5 h-3.5" />
-                                </Button>
-                              </div>
+                              <span className="text-xs font-bold text-green-600 bg-green-50 px-2 py-0.5 rounded">Available</span>
                             </div>
                             
                             <div className="space-y-1">
                               <span className="text-[10px] text-slate-400 font-bold uppercase tracking-wider">Slot Schedule</span>
                               <p className="text-sm font-bold text-slate-700 flex items-center gap-1.5">
                                 <Calendar className="w-4 h-4 text-slate-400" />
-                                {formatDate(slot.startDate)} <span className="text-slate-400 font-medium">to</span> {formatDate(slot.endDate)}
+                                {new Date(slot.startDate).toLocaleDateString(undefined, {month: 'short', day: 'numeric', year: 'numeric'})} 
+                                <span className="text-slate-400 font-medium">to</span> 
+                                {new Date(slot.endDate).toLocaleDateString(undefined, {month: 'short', day: 'numeric', year: 'numeric'})}
                               </p>
                             </div>
                           </div>
@@ -664,7 +444,7 @@ export default function BuilderAdvertisements() {
                           <div className="border-t border-slate-100 pt-3.5 mt-4 flex items-center justify-between">
                             <div>
                               <span className="text-[9px] text-slate-400 uppercase font-semibold">Total Price</span>
-                              <p className="text-base font-bold text-[#0b264f]">₹{selectedZone?.cost}</p>
+                              <p className="text-base font-bold text-slate-800">₹{selectedZone?.cost}</p>
                             </div>
                             <Button 
                               onClick={() => handleOpenBookingModal(slot)} 
@@ -695,7 +475,7 @@ export default function BuilderAdvertisements() {
             <CardContent className="p-6">
               {loadingBookings ? (
                 <div className="flex flex-col items-center justify-center py-16">
-                  <Loader2 className="w-10 h-10 text-[#0b264f] animate-spin mb-4" />
+                  <Loader2 className="w-10 h-10 text-slate-700 animate-spin mb-4" />
                   <p className="text-sm text-slate-500">Loading campaign history...</p>
                 </div>
               ) : myBookings.length === 0 ? (
@@ -724,7 +504,7 @@ export default function BuilderAdvertisements() {
                           <tr key={booking.id} className="hover:bg-slate-50/50">
                             <td className="py-4 px-4 font-bold text-slate-800">{zoneName}</td>
                             <td className="py-4 px-4 text-xs font-semibold text-slate-600">
-                              {formatDate(booking.startDate)} to {formatDate(booking.endDate)}
+                              {booking.startDate} to {booking.endDate}
                               <div className="text-[10px] text-slate-400 mt-0.5">{booking.timeSlot}</div>
                             </td>
                             <td className="py-4 px-4 max-w-[280px]">
@@ -796,11 +576,11 @@ export default function BuilderAdvertisements() {
       {bookingSlot && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm transition-opacity">
           <Card className="w-full max-w-lg bg-white rounded-2xl shadow-2xl border-none overflow-hidden animate-in fade-in zoom-in duration-200">
-            <CardHeader className="bg-[#0b264f] text-white p-5">
+            <CardHeader className="bg-slate-800 text-white p-5">
               <div className="flex justify-between items-start">
                 <div>
                   <CardTitle className="text-xl font-bold">{paymentClientSecret ? 'Complete Payment' : 'Campaign Details'}</CardTitle>
-                  <CardDescription className="text-xs text-blue-100/80 mt-1">Book slot for: {selectedZone?.name}</CardDescription>
+                  <CardDescription className="text-xs text-slate-100/80 mt-1">Book slot for: {selectedZone?.name}</CardDescription>
                 </div>
                 <button onClick={handleCloseBookingModal} className="text-white/80 hover:text-white text-xl">✕</button>
               </div>
@@ -809,7 +589,7 @@ export default function BuilderAdvertisements() {
               <CardContent className="p-6">
                 <Elements stripe={stripePromise} options={{ clientSecret: paymentClientSecret, appearance: { theme: 'stripe' } }}>
                   <CheckoutForm 
-                    amount={checkoutCost}
+                    amount={selectedZone?.cost}
                     paymentId={paymentId}
                     onSuccess={() => {
                       handleCloseBookingModal();
@@ -826,58 +606,12 @@ export default function BuilderAdvertisements() {
                 <div className="bg-slate-50 border border-slate-100 rounded-xl p-3.5 text-xs text-slate-600 flex justify-between items-center">
                   <div>
                     <span className="font-semibold text-slate-400 uppercase tracking-wide block text-[9px]">Slot Dates</span>
-                    <strong className="text-slate-800 text-sm">{formatDate(bookingSlot.startDate)} to {formatDate(bookingSlot.endDate)}</strong>
+                    <strong className="text-slate-800 text-sm">{bookingSlot.startDate} to {bookingSlot.endDate}</strong>
                   </div>
                   <div className="text-right">
-                    <span className="font-semibold text-slate-400 uppercase tracking-wide block text-[9px]">Base Cost</span>
+                    <span className="font-semibold text-slate-400 uppercase tracking-wide block text-[9px]">Cost</span>
                     <strong className="text-slate-800 text-sm">₹{selectedZone?.cost}</strong>
                   </div>
-                </div>
-
-                <div className="space-y-1.5 border-t border-slate-100 pt-3">
-                  <label className="text-xs font-bold text-slate-600 block">Apply Coupon</label>
-                  <div className="flex gap-2">
-                    <input 
-                      type="text"
-                      placeholder="Enter coupon code"
-                      className="flex-1 border border-slate-200 rounded-xl px-4 py-2.5 text-sm uppercase outline-none focus:border-[#0b264f]"
-                      value={couponCodeInput}
-                      onChange={(e) => setCouponCodeInput(e.target.value.toUpperCase())}
-                      disabled={!!appliedCoupon}
-                    />
-                    {!appliedCoupon ? (
-                      <Button type="button" onClick={handleApplyCoupon} disabled={!couponCodeInput || isApplyingCoupon} className="bg-slate-800 text-white rounded-xl hover:bg-slate-700">
-                        {isApplyingCoupon ? <Loader2 className="w-4 h-4 animate-spin" /> : "Apply"}
-                      </Button>
-                    ) : (
-                      <Button type="button" onClick={() => { setAppliedCoupon(null); setCouponCodeInput(''); }} variant="outline" className="text-red-500 border-red-200 rounded-xl hover:bg-red-50">
-                        Remove
-                      </Button>
-                    )}
-                  </div>
-                  {couponError && <p className="text-[10px] text-red-500">{couponError}</p>}
-                  {appliedCoupon && (
-                    <div className="flex justify-between items-center text-xs text-green-600 font-semibold bg-green-50 p-2 rounded-lg mt-2">
-                      <span>Discount Applied:</span>
-                      <span>-₹{appliedCoupon.discountAmount}</span>
-                    </div>
-                  )}
-                  {myCoupons.length > 0 && !appliedCoupon && (
-                    <div className="mt-2 text-xs flex gap-2 flex-wrap items-center">
-                      <span className="text-slate-500">Available:</span>
-                      {myCoupons.map(c => (
-                        <button key={c.id} type="button" onClick={() => setCouponCodeInput(c.code)} className="text-[#0b264f] font-bold hover:underline px-2 py-1 bg-blue-50 rounded">
-                          {c.code}
-                        </button>
-                      ))}
-                    </div>
-                  )}
-                  {appliedCoupon && selectedZone && (
-                     <div className="flex justify-between items-center mt-2 font-bold text-sm pt-2 border-t border-slate-100">
-                       <span className="text-slate-700">Final Total:</span>
-                       <span className="text-[#0b264f] text-lg">₹{Math.max(0, selectedZone.cost - appliedCoupon.discountAmount)}</span>
-                     </div>
-                  )}
                 </div>
 
                 <div className="space-y-1.5">
@@ -886,10 +620,11 @@ export default function BuilderAdvertisements() {
                     type="url"
                     required
                     placeholder="https://example.com/ad-image.jpg"
-                    className="w-full border border-slate-200 rounded-xl px-4 py-2.5 text-sm outline-none focus:border-[#0b264f] text-slate-700 placeholder-slate-400"
+                    className="w-full border border-slate-200 rounded-xl px-4 py-2.5 text-sm outline-none focus:border-slate-800 text-slate-700 placeholder-slate-400"
                     value={adContent.imageUrl}
                     onChange={(e) => setAdContent({...adContent, imageUrl: e.target.value})}
                   />
+                  <p className="text-[10px] text-slate-400">Supported Dimensions: {selectedZone?.width} x {selectedZone?.height} px</p>
                 </div>
 
                 <div className="space-y-1.5">
@@ -897,8 +632,8 @@ export default function BuilderAdvertisements() {
                   <input 
                     type="url"
                     required
-                    placeholder="https://mywebsite.com/project-listing"
-                    className="w-full border border-slate-200 rounded-xl px-4 py-2.5 text-sm outline-none focus:border-[#0b264f] text-slate-700 placeholder-slate-400"
+                    placeholder="https://mywebsite.com/my-services"
+                    className="w-full border border-slate-200 rounded-xl px-4 py-2.5 text-sm outline-none focus:border-slate-800 text-slate-700 placeholder-slate-400"
                     value={adContent.targetUrl}
                     onChange={(e) => setAdContent({...adContent, targetUrl: e.target.value})}
                   />
@@ -909,8 +644,8 @@ export default function BuilderAdvertisements() {
                   <textarea 
                     required
                     rows="3"
-                    placeholder="e.g. Invest in Premium Commercial Real Estate starting from..."
-                    className="w-full border border-slate-200 rounded-xl px-4 py-2.5 text-sm outline-none focus:border-[#0b264f] text-slate-700 placeholder-slate-400 resize-none"
+                    placeholder="e.g. Legal due diligence and property verification advisors..."
+                    className="w-full border border-slate-200 rounded-xl px-4 py-2.5 text-sm outline-none focus:border-slate-800 text-slate-700 placeholder-slate-400 resize-none"
                     value={adContent.text}
                     onChange={(e) => setAdContent({...adContent, text: e.target.value})}
                   />
@@ -921,7 +656,7 @@ export default function BuilderAdvertisements() {
                   <input 
                     type="url"
                     placeholder="https://example.com/ad-video.mp4"
-                    className="w-full border border-slate-200 rounded-xl px-4 py-2.5 text-sm outline-none focus:border-[#0b264f] text-slate-700 placeholder-slate-400"
+                    className="w-full border border-slate-200 rounded-xl px-4 py-2.5 text-sm outline-none focus:border-slate-800 text-slate-700 placeholder-slate-400"
                     value={adContent.videoUrl}
                     onChange={(e) => setAdContent({...adContent, videoUrl: e.target.value})}
                   />
@@ -932,7 +667,7 @@ export default function BuilderAdvertisements() {
                 <Button 
                   type="submit" 
                   disabled={isSubmittingBooking}
-                  className="bg-[#0b264f] hover:bg-blue-900 text-white rounded-xl shadow-md min-w-[120px]"
+                  className="bg-slate-800 hover:bg-slate-900 text-white rounded-xl shadow-md min-w-[120px]"
                 >
                   {isSubmittingBooking ? <Loader2 className="w-4 h-4 animate-spin" /> : "Complete Booking"}
                 </Button>
@@ -982,7 +717,7 @@ export default function BuilderAdvertisements() {
                   <input 
                     type="url"
                     required
-                    placeholder="https://mywebsite.com/project-listing"
+                    placeholder="https://mywebsite.com/my-services"
                     className="w-full border border-slate-200 rounded-xl px-4 py-2.5 text-sm outline-none focus:border-amber-500 text-slate-700 placeholder-slate-400"
                     value={rectifyAdContent.targetUrl}
                     onChange={(e) => setRectifyAdContent({...rectifyAdContent, targetUrl: e.target.value})}
@@ -994,7 +729,7 @@ export default function BuilderAdvertisements() {
                   <textarea 
                     required
                     rows="3"
-                    placeholder="e.g. Invest in Premium Commercial Real Estate starting from..."
+                    placeholder="e.g. Legal due diligence and property verification advisors..."
                     className="w-full border border-slate-200 rounded-xl px-4 py-2.5 text-sm outline-none focus:border-amber-500 text-slate-700 placeholder-slate-400 resize-none"
                     value={rectifyAdContent.text}
                     onChange={(e) => setRectifyAdContent({...rectifyAdContent, text: e.target.value})}

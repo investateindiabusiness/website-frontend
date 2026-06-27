@@ -53,6 +53,12 @@ export default function InvestorDashboard() {
 
   const [searchQuery, setSearchQuery] = useState('');
   const [locationFilter, setLocationFilter] = useState('All');
+  const [currentPage, setCurrentPage] = useState(1);
+  const ITEMS_PER_PAGE = 10;
+
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [searchQuery, locationFilter]);
 
   useEffect(() => {
     const loadProjects = async () => {
@@ -206,63 +212,116 @@ export default function InvestorDashboard() {
                 </Button>
               </div>
             ) : (
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8">
-                {filteredProperties.map((property) => (
-                  <div key={property.id} className="group bg-white rounded-[2rem] overflow-hidden shadow-sm hover:shadow-xl transition-all duration-300 border border-gray-100 flex flex-col h-full">
-                    <div className="relative aspect-[4/3] overflow-hidden bg-gray-100">
-                      <img
-                        src={property.image}
-                        alt={property.title}
-                        className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
-                        onError={(e) => { e.target.src = 'https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?w=800&q=80' }}
-                      />
-                      <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent opacity-90"></div>
-                      <div className="absolute top-4 left-4">
-                        <span className="bg-[#EAF0F6] text-[#0b264f] text-xs font-bold px-3 py-1.5 rounded-lg shadow-sm">
-                          {property.status === 'approved' ? 'Under Construction' : property.status}
-                        </span>
-                      </div>
-                      <div className="absolute bottom-4 left-4 right-4 text-white">
-                        <span className="text-xs font-bold bg-[#10B981] text-white inline-flex items-center px-2.5 py-1 rounded-md mb-1 shadow-sm">
-                          <TrendingUp className="w-3.5 h-3.5 mr-1" />
-                          {property.yield}
-                        </span>
-                        <h3 className="text-2xl font-bold leading-tight tracking-tight mt-1 drop-shadow-md">
-                          {property.price}
-                        </h3>
-                      </div>
-                    </div>
+              <div className="bg-white rounded-3xl shadow-sm border border-gray-200 overflow-hidden">
+                <div className="overflow-x-auto">
+                  <table className="w-full text-left border-collapse">
+                    <thead>
+                      <tr className="bg-gray-50/75 border-b border-gray-200 text-gray-600 text-xs font-bold uppercase tracking-wider">
+                        <th className="px-6 py-4">Property</th>
+                        <th className="px-6 py-4">Builder</th>
+                        <th className="px-6 py-4">Location</th>
+                        <th className="px-6 py-4">Yield / ROI</th>
+                        <th className="px-6 py-4">Price</th>
+                        <th className="px-6 py-4 text-right">Actions</th>
+                      </tr>
+                    </thead>
+                    <tbody className="divide-y divide-gray-100">
+                      {filteredProperties.slice((currentPage - 1) * ITEMS_PER_PAGE, currentPage * ITEMS_PER_PAGE).map((property) => {
+                        return (
+                          <tr key={property.id} className="hover:bg-gray-50/50 transition-colors">
+                            <td className="px-6 py-4 whitespace-nowrap">
+                              <div className="flex items-center space-x-3">
+                                <div className="w-16 h-12 rounded-lg overflow-hidden bg-gray-100 flex-shrink-0 border border-gray-200">
+                                  <img
+                                    src={property.image}
+                                    alt={property.title}
+                                    className="w-full h-full object-cover"
+                                    onError={(e) => { e.target.src = 'https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?w=800&q=80'; }}
+                                  />
+                                </div>
+                                <div>
+                                  <div className="text-sm font-bold text-gray-900 capitalize">
+                                    {property.title}
+                                  </div>
+                                  <div className="text-xs text-[#4F46E5] font-semibold">
+                                    {property.type}
+                                  </div>
+                                </div>
+                              </div>
+                            </td>
+                            <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-600">
+                              {property.builder}
+                            </td>
+                            <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-600">
+                              <div className="flex items-center gap-1.5">
+                                <MapPin className="w-3.5 h-3.5 text-orange-500" />
+                                {property.location}
+                              </div>
+                            </td>
+                            <td className="px-6 py-4 whitespace-nowrap">
+                              <span className="text-xs font-bold bg-[#ECFDF5] text-[#059669] border border-[#D1FAE5] inline-flex items-center px-2.5 py-1 rounded-md shadow-sm">
+                                <TrendingUp className="w-3.5 h-3.5 mr-1" />
+                                {property.yield}
+                              </span>
+                            </td>
+                            <td className="px-6 py-4 whitespace-nowrap text-sm font-bold text-gray-900">
+                              {property.price}
+                            </td>
+                            <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+                              <Button 
+                                onClick={() => router.push(`/project/${property.id}`)} 
+                                className="bg-[#0b264f] hover:bg-blue-900 text-white rounded-xl text-xs px-4 py-2"
+                              >
+                                View Details
+                              </Button>
+                            </td>
+                          </tr>
+                        );
+                      })}
+                    </tbody>
+                  </table>
+                </div>
 
-                    <div className="p-6 flex flex-col flex-grow">
-                      <div className="flex-grow">
-                        <h3 className="font-extrabold text-gray-900 text-2xl mb-1.5 capitalize tracking-tight">
-                          {property.title}
-                        </h3>
-                        <p className="text-sm text-gray-400 mb-4 flex items-center font-medium">
-                          <Building2 className="w-4 h-4 mr-2 text-gray-400 stroke-[2]" /> {property.builder}
-                        </p>
-                        <div className="flex items-center text-sm text-gray-600 bg-gray-50/80 px-4 py-2.5 rounded-2xl mb-5 border border-gray-100/50">
-                          <MapPin className="w-4.5 h-4.5 mr-2 text-orange-500 flex-shrink-0" />
-                          <span className="truncate">{property.location}</span>
-                        </div>
-                        <div className="flex flex-wrap gap-2 mb-6">
-                          <span className="text-xs font-bold px-3 py-1.5 bg-[#EEF2FF] text-[#4F46E5] rounded-lg border border-[#E0E7FF]">
-                            {property.type}
-                          </span>
-                          <span className="text-xs font-bold px-3 py-1.5 bg-[#ECFDF5] text-[#059669] rounded-lg border border-[#D1FAE5] flex items-center gap-1">
-                            <CheckCircle className="w-3.5 h-3.5 text-[#059669]" /> Verified
-                          </span>
-                        </div>
-                      </div>
+                {/* Pagination Controls */}
+                {Math.ceil(filteredProperties.length / ITEMS_PER_PAGE) > 1 && (
+                  <div className="bg-gray-50 border-t border-gray-200 px-6 py-4 flex flex-col sm:flex-row items-center justify-between gap-4">
+                    <div className="text-xs font-bold text-gray-500 uppercase tracking-wider">
+                      Showing {((currentPage - 1) * ITEMS_PER_PAGE) + 1} to {Math.min(currentPage * ITEMS_PER_PAGE, filteredProperties.length)} of {filteredProperties.length} records
+                    </div>
+                    <div className="flex items-center gap-1.5">
                       <Button
-                        onClick={() => router.push(`/project/${property.id}`)}
-                        className="w-full bg-[#0b264f] hover:bg-blue-900 text-white font-bold py-4 rounded-[1.25rem] transition-all duration-300 h-13 text-sm tracking-wide"
+                        onClick={() => setCurrentPage(prev => Math.max(1, prev - 1))}
+                        disabled={currentPage === 1}
+                        variant="outline"
+                        className="h-9 px-3 rounded-lg text-xs font-bold hover:bg-slate-100 bg-white"
                       >
-                        View Full Details
+                        Previous
+                      </Button>
+                      
+                      {Array.from({ length: Math.ceil(filteredProperties.length / ITEMS_PER_PAGE) }, (_, i) => i + 1).map((page) => (
+                        <Button
+                          key={page}
+                          onClick={() => setCurrentPage(page)}
+                          variant={currentPage === page ? 'default' : 'outline'}
+                          className={`h-9 w-9 p-0 rounded-lg text-xs font-bold ${
+                            currentPage === page ? 'bg-slate-900 text-white hover:bg-slate-800' : 'hover:bg-slate-100 bg-white'
+                          }`}
+                        >
+                          {page}
+                        </Button>
+                      ))}
+
+                      <Button
+                        onClick={() => setCurrentPage(prev => Math.min(Math.ceil(filteredProperties.length / ITEMS_PER_PAGE), prev + 1))}
+                        disabled={currentPage === Math.ceil(filteredProperties.length / ITEMS_PER_PAGE)}
+                        variant="outline"
+                        className="h-9 px-3 rounded-lg text-xs font-bold hover:bg-slate-100 bg-white"
+                      >
+                        Next
                       </Button>
                     </div>
                   </div>
-                ))}
+                )}
               </div>
             )}
           </div>

@@ -18,14 +18,17 @@ const HeaderContent = ({ transparent = false }) => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [moreDropdownOpen, setMoreDropdownOpen] = useState(false);
   const moreDropdownRef = useRef(null);
+  const [logoMenuOpen, setLogoMenuOpen] = useState(false);
+  const logoMenuRef = useRef(null);
 
-
-
-  // Close "More" dropdown when clicking outside
+  // Close dropdowns when clicking outside
   useEffect(() => {
     const handleClickOutside = (e) => {
       if (moreDropdownRef.current && !moreDropdownRef.current.contains(e.target)) {
         setMoreDropdownOpen(false);
+      }
+      if (logoMenuRef.current && !logoMenuRef.current.contains(e.target)) {
+        setLogoMenuOpen(false);
       }
     };
     document.addEventListener('mousedown', handleClickOutside);
@@ -51,11 +54,13 @@ const HeaderContent = ({ transparent = false }) => {
   const getDashboardPath = (role) => {
     if (role === 'admin') return '/admin/dashboard';
     if (role === 'builder') return '/builder/dashboard';
+    if (role === 'serviceProvider') return '/service-provider/dashboard';
     return '/dashboard';
   };
 
   const isDashboardArea = pathname.startsWith('/admin') ||
-    pathname.startsWith('/builder/') || pathname === '/builder/dashboard' || pathname === '/builder/projects' ||
+    pathname.startsWith('/builder/') || pathname === '/builder/dashboard' || pathname === '/builder/projects' || pathname === '/builder/advertisements' ||
+    pathname.startsWith('/service-provider/') || pathname === '/service-provider/dashboard' || pathname === '/service-provider/advertisements' ||
     pathname === '/dashboard' || pathname === '/properties' || pathname.startsWith('/investor/') || pathname.startsWith('/project/');
 
   const displayUser = isDashboardArea ? user : null;
@@ -66,27 +71,29 @@ const HeaderContent = ({ transparent = false }) => {
       return [
         { label: 'Home', path: '/' },
         { label: 'Builder', path: '/builder' },
+        { label: 'Service Provider', path: '/service-provider' },
         { label: 'About Us', path: '/about-us' },
         { label: 'Gallery', path: '/gallery' },
         { label: 'Contact Us', path: '/contact-us' },
       ];
     }
     switch (displayUser.role) {
+<<<<<<< HEAD
       case 'admin':    return [{ label: 'Dashboard', path: '/admin/dashboard' }, { label: 'Builders', path: '/admin/builders' }, { label: 'Investors', path: '/admin/investors' }, { label: 'Projects', path: '/admin/projects' }];
       case 'builder':  return [{ label: 'Dashboard', path: '/builder/dashboard' }, { label: 'Projects', path: '/builder/projects' }, { label: 'Advertise', path: '/builder/advertisements' }];
       case 'investor': return [{ label: 'Dashboard', path: '/dashboard' }, { label: 'Properties', path: '/properties' }, { label: 'Advertise', path: '/investor/advertisements' }];
+=======
+      case 'admin':    return [];
+      case 'builder':  return [{ label: 'Dashboard', path: '/builder/dashboard' }, { label: 'Projects', path: '/builder/projects' }, { label: 'Advertise', path: '/builder/advertisements' }, { label: 'Coupons', path: '/builder/coupons' }];
+      case 'serviceProvider': return [{ label: 'Dashboard', path: '/service-provider/dashboard' }, { label: 'Advertise', path: '/service-provider/advertisements' }, { label: 'Coupons', path: '/service-provider/coupons' }];
+      case 'investor': return [{ label: 'Dashboard', path: '/dashboard' }, { label: 'Properties', path: '/properties' }, { label: 'Coupons', path: '/investor/coupons' }];
+>>>>>>> 270de042b25becc435c3f80441d581e8b3118159
       default:         return [{ label: 'Home', path: '/' }];
     }
   };
 
   // Secondary admin links — shown in "More" dropdown only
-  const adminMoreLinks = displayUser?.role === 'admin' ? [
-    { label: 'Leads',          path: '/admin/leads' },
-    { label: 'Inquiries',      path: '/admin/inquiries' },
-    { label: 'Helpdesk',       path: '/admin/helpdesk' },
-    { label: 'Newsletter',     path: '/admin/newsletter' },
-    { label: 'Advertisements', path: '/admin/advertisements' },
-  ] : [];
+  const adminMoreLinks = [];
 
   const navLinks = getNavLinks();
 
@@ -100,14 +107,57 @@ const HeaderContent = ({ transparent = false }) => {
       <header className={`fixed w-full top-0 left-0 right-0 z-[1000] transition-all duration-300 bg-[#232325] border-b border-gray-800 text-gray-300`}>
         <div className="h-16 flex items-center justify-between mx-4">
           {/* Logo */}
-          <div className="flex items-center shrink-0">
-            {user ? (
-              <div className="flex items-center cursor-default">
-                <img src="/logo-big.png" alt="LOGO" className="hidden md:block h-32 w-auto object-contain" />
-                <img src="/logo-small-white.png" alt="LOGO" className="block md:hidden h-24 w-auto object-contain" />
-              </div>
+          <div className="flex items-center shrink-0 relative" ref={logoMenuRef}>
+            {user?.role === 'admin' ? (
+              <>
+                <button
+                  onClick={() => setLogoMenuOpen(prev => !prev)}
+                  className="flex items-center focus:outline-none cursor-pointer"
+                >
+                  <img src="/logo-big.png" alt="LOGO" className="hidden md:block h-32 w-auto object-contain" />
+                  <img src="/logo-small-white.png" alt="LOGO" className="block md:hidden h-24 w-auto object-contain" />
+                  <ChevronDown className={`w-4 h-4 ml-1 text-gray-400 transition-transform duration-200 ${logoMenuOpen ? 'rotate-180' : ''}`} />
+                </button>
+
+                {logoMenuOpen && (
+                  <div className="absolute top-full left-0 mt-2 w-64 bg-[#1a1a1c] border border-gray-700/60 rounded-2xl shadow-2xl shadow-black/40 overflow-hidden z-[2000] animate-in fade-in slide-in-from-top-2 duration-150 py-2">
+                    <div className="px-4 py-2 border-b border-gray-800/60 text-xs font-bold text-gray-500 uppercase tracking-wider">
+                      Admin Portal
+                    </div>
+                    {[
+                      { label: 'Dashboard', path: '/admin/dashboard' },
+                      { label: 'Builders', path: '/admin/builders' },
+                      { label: 'Investors', path: '/admin/investors' },
+                      { label: 'Service Providers', path: '/admin/service-providers' },
+                      { label: 'Projects', path: '/admin/projects' },
+                      { label: 'Leads',          path: '/admin/leads' },
+                      { label: 'Inquiries',      path: '/admin/inquiries' },
+                      { label: 'Helpdesk',       path: '/admin/helpdesk' },
+                      { label: 'Newsletter',     path: '/admin/newsletter' },
+                      { label: 'Advertisements', path: '/admin/advertisements' },
+                      { label: 'Coupons',        path: '/admin/coupons' },
+                    ].map((link) => {
+                      const isActive = pathname === link.path;
+                      return (
+                        <Link
+                          key={link.label}
+                          href={link.path}
+                          onClick={() => setLogoMenuOpen(false)}
+                          className={`flex items-center px-4 py-3 text-sm font-medium transition-colors border-b border-gray-800/40 last:border-0 ${
+                            isActive 
+                              ? 'text-[#D48035] bg-orange-500/5 font-semibold' 
+                              : 'text-gray-300 hover:text-[#D48035] hover:bg-gray-800/50'
+                          }`}
+                        >
+                          {link.label}
+                        </Link>
+                      );
+                    })}
+                  </div>
+                )}
+              </>
             ) : (
-              <Link href="/" className="flex items-center">
+              <Link href={logoHref} className="flex items-center">
                 <img src="/logo-big.png" alt="LOGO" className="hidden md:block h-32 w-auto object-contain" />
                 <img src="/logo-small-white.png" alt="LOGO" className="block md:hidden h-24 w-auto object-contain" />
               </Link>
@@ -243,8 +293,9 @@ const HeaderContent = ({ transparent = false }) => {
                 </div>
               ) : (
                 <div className="flex flex-col gap-3">
-                  <Button onClick={() => handleAuthClick('login', 'investor')} className="w-full bg-gray-800 hover:bg-gray-700 text-white py-6">Login/Register as an Investor</Button>
-                  <Button onClick={() => handleAuthClick('login', 'builder')} className="w-full bg-[var(--color-accent,#D48035)] hover:bg-[var(--color-accent-hover,#B45309)] text-white py-6">Login/Register as a Builder</Button>
+                  <Button onClick={() => handleAuthClick('login', 'investor')} className="w-full bg-gray-800 hover:bg-gray-700 text-white py-5 text-xs font-semibold">Login/Register as an Investor</Button>
+                  <Button onClick={() => handleAuthClick('login', 'builder')} className="w-full bg-[var(--color-accent,#D48035)] hover:bg-[var(--color-accent-hover,#B45309)] text-white py-5 text-xs font-semibold">Login/Register as a Builder</Button>
+                  <Button onClick={() => handleAuthClick('login', 'serviceProvider')} className="w-full bg-slate-700 hover:bg-slate-600 text-white py-5 text-xs font-semibold">Login/Register as Service Provider</Button>
                 </div>
               )}
             </div>

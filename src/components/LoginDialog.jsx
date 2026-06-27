@@ -81,7 +81,7 @@ const LoginDialog = ({ isOpen, onOpenChange, onSwitchToRegister, initialData = {
         const normalizedUserDataRole = userData.role === 'partner' ? 'builder' : userData.role;
         if (normalizedUserDataRole !== userType) {
           const registeredRole = normalizedUserDataRole;
-          const displayRole = registeredRole === 'investor' ? 'Investor' : (registeredRole === 'builder' ? 'Builder' : registeredRole);
+          const displayRole = registeredRole === 'investor' ? 'Investor' : (registeredRole === 'builder' ? 'Builder' : (registeredRole === 'serviceProvider' ? 'Service Provider' : registeredRole));
           setAlertModal({
             isOpen: true,
             type: 'role_mismatch',
@@ -110,6 +110,7 @@ const LoginDialog = ({ isOpen, onOpenChange, onSwitchToRegister, initialData = {
 
       if (userData.role === 'admin') router.push('/admin/dashboard');
       else if (userData.role === 'builder') router.push('/builder/dashboard');
+      else if (userData.role === 'serviceProvider') router.push('/service-provider/dashboard');
       else router.push('/dashboard');
 
     } catch (err) {
@@ -388,6 +389,12 @@ const LoginDialog = ({ isOpen, onOpenChange, onSwitchToRegister, initialData = {
       title: "Build the future with", highlight: "precision.",
       desc: "Access your builder dashboard to manage projects, track milestones, and connect with investors seamlessly.",
       emailLabel: "Work Email"
+    },
+    serviceProvider: {
+      image: "https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?q=80&w=2070&auto=format&fit=crop",
+      title: "Promote your services with", highlight: "prestige.",
+      desc: "Access your dashboard to review campaign performance, view registered users count, and book new advertisement campaigns.",
+      emailLabel: "Work Email"
     }
   };
 
@@ -461,7 +468,7 @@ const LoginDialog = ({ isOpen, onOpenChange, onSwitchToRegister, initialData = {
             <div className="w-full max-w-md mx-auto">
               <div className="text-center mb-6">
                 <h2 className="text-2xl font-black tracking-tight text-gray-900 uppercase">
-                  {userType === 'investor' ? 'Investor Login' : 'Builder Login'}
+                  {userType === 'investor' ? 'Investor Login' : (userType === 'builder' ? 'Builder Login' : 'Service Provider Login')}
                 </h2>
                 <p className="text-gray-400 font-bold mt-1 tracking-wide text-xs">Welcome back!</p>
               </div>
