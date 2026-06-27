@@ -465,6 +465,12 @@ export const cancelBooking = (bookingId) =>
 export const fetchActiveAd = (zoneId) =>
   apiRequest(`/api/advertisements/active-ad/${zoneId}`);
 
+export const confirmPayment = (payload) =>
+  apiRequest('/api/payments/confirm', {
+    method: 'POST',
+    body: JSON.stringify(payload),
+  });
+
 // --- Admin Advertisement Endpoints ---
 
 export const adminSeedZones = () =>

@@ -18,6 +18,8 @@ export default function AdminInquiries() {
     const [searchQuery, setSearchQuery] = useState('');
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [selectedInquiry, setSelectedInquiry] = useState(null);
+    const [statusValue, setStatusValue] = useState('New');
+    const [saving, setSaving] = useState(false);
 
     const loadInquiries = async () => {
         try {
@@ -34,6 +36,27 @@ export default function AdminInquiries() {
     useEffect(() => {
         loadInquiries();
     }, []);
+
+    const handleEditClick = (inq) => {
+        setSelectedInquiry(inq);
+        setStatusValue(inq.status || 'New');
+        setIsModalOpen(true);
+    };
+
+    const handleSaveStatus = async () => {
+        if (!selectedInquiry) return;
+        try {
+            setSaving(true);
+            await updateInquiry(selectedInquiry.id, { status: statusValue });
+            toast({ title: "Success", description: "Inquiry status updated successfully" });
+            setIsModalOpen(false);
+            loadInquiries();
+        } catch (error) {
+            toast({ title: "Error", description: "Failed to update status", variant: "destructive" });
+        } finally {
+            setSaving(false);
+        }
+    };
 
     const filteredInquiries = inquiries.filter(inq => 
         (inq.name || '').toLowerCase().includes(searchQuery.toLowerCase()) ||
@@ -76,7 +99,7 @@ export default function AdminInquiries() {
                                         <td className="p-4">{inq.email}</td>
                                         <td className="p-4"><Badge>{inq.status || 'New'}</Badge></td>
                                         <td className="p-4 text-right">
-                                            <Button variant="ghost" size="sm" onClick={() => { setSelectedInquiry(inq); setIsModalOpen(true); }}><Edit className="w-4 h-4" /></Button>
+                                            <Button variant="ghost" size="sm" onClick={() => handleEditClick(inq)}><Edit className="w-4 h-4" /></Button>
                                         </td>
                                     </tr>
                                 ))
@@ -85,6 +108,61 @@ export default function AdminInquiries() {
                     </table>
                 </div>
             </div>
+
+            <Dialog open={isModalOpen} onOpenChange={setIsModalOpen}>
+                <DialogContent className="max-w-md bg-white rounded-2xl p-6" aria-describedby={undefined}>
+                    <DialogHeader>
+                        <DialogTitle className="text-xl font-bold text-gray-900">Inquiry Details</DialogTitle>
+                    </DialogHeader>
+                    {selectedInquiry && (
+                        <div className="space-y-4 mt-4">
+                            <div className="grid grid-cols-2 gap-4 border-b pb-4">
+                                <div>
+                                    <Label className="text-xs text-gray-400 font-semibold uppercase">Investor Name</Label>
+                                    <p className="text-sm font-semibold text-gray-800">{selectedInquiry.name}</p>
+                                </div>
+                                <div>
+                                    <Label className="text-xs text-gray-400 font-semibold uppercase">Email Address</Label>
+                                    <p className="text-sm font-semibold text-gray-800 flex items-center gap-1.5"><Mail className="w-3.5 h-3.5 text-gray-400" /> {selectedInquiry.email}</p>
+                                </div>
+                                <div className="col-span-2 pt-2">
+                                    <Label className="text-xs text-gray-400 font-semibold uppercase">Phone Number</Label>
+                                    <p className="text-sm font-semibold text-gray-800 flex items-center gap-1.5"><Phone className="w-3.5 h-3.5 text-gray-400" /> {selectedInquiry.phone || 'N/A'}</p>
+                                </div>
+                            </div>
+
+                            <div>
+                                <Label className="text-xs text-gray-400 font-semibold uppercase block mb-1">Message / Inquiry Text</Label>
+                                <div className="bg-gray-50 border rounded-xl p-3.5 text-sm text-gray-700 min-h-[80px] max-h-[160px] overflow-y-auto italic">
+                                    "{selectedInquiry.message || selectedInquiry.comment || 'No message provided.'}"
+                                </div>
+                            </div>
+
+                            <div className="space-y-2">
+                                <Label className="text-xs text-gray-400 font-semibold uppercase">Inquiry Status</Label>
+                                <select 
+                                    value={statusValue} 
+                                    onChange={(e) => setStatusValue(e.target.value)} 
+                                    className="w-full h-10 px-3 rounded-lg border border-gray-200 bg-white text-sm outline-none focus:border-[#0b264f] transition-all"
+                                >
+                                    <option value="New">New</option>
+                                    <option value="Contacted">Contacted</option>
+                                    <option value="Resolved">Resolved</option>
+                                    <option value="Closed">Closed</option>
+                                </select>
+                            </div>
+
+                            <div className="flex gap-3 justify-end pt-4 border-t">
+                                <Button variant="outline" onClick={() => setIsModalOpen(false)} disabled={saving}>Cancel</Button>
+                                <Button className="bg-[#0b264f] hover:bg-blue-900 text-white flex items-center gap-1.5" onClick={handleSaveStatus} disabled={saving}>
+                                    <Save className="w-4 h-4" /> {saving ? "Saving..." : "Save Status"}
+                                </Button>
+                            </div>
+                        </div>
+                    )}
+                </DialogContent>
+            </Dialog>
+
             <Footer />
         </div>
     );

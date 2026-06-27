@@ -7,7 +7,7 @@ import Header from '@/components/Header';
 import Footer from '@/components/Footer';
 import AwardsSection from '@/components/AwardsSection';
 import TestimonialsSection from '@/components/TestimonialsSection';
-import AdBanner from '@/components/AdBanner';
+import AdCarousel from '@/components/AdCarousel';
 import dynamic from 'next/dynamic';
 import Image from 'next/image';
 
@@ -363,8 +363,8 @@ export default function Index() {
                 </div>
             </section>
 
-            <div className="container mx-auto px-4 py-8 md:py-12 flex justify-center">
-                <AdBanner zoneId="zone5" />
+            <div className="container mx-auto px-4 py-8 md:py-12">
+                <AdCarousel zoneId="zone5" height={340} />
             </div>
 
             <section className="fullscreen-section section-light" id="about">

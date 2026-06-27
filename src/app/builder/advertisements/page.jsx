@@ -13,6 +13,9 @@ import {
   rectifyBooking, 
   cancelBooking 
 } from '@/api';
+import { loadStripe } from '@stripe/stripe-js';
+import { Elements } from '@stripe/react-stripe-js';
+import CheckoutForm from '@/components/CheckoutForm';
 import { 
   Calendar, 
   Image as ImageIcon, 
@@ -43,6 +46,9 @@ const ZONE_META = {
   zone5: { name: 'Landing Page Hero Spotlight',        cost: 200, campaignDuration: 7 },
 };
 
+// Initialize Stripe outside component render to avoid recreating Stripe object on every render
+const stripePromise = loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY || 'pk_test_placeholder');
+
 export default function BuilderAdvertisements() {
   const { user } = useAuth();
   
@@ -63,6 +69,8 @@ export default function BuilderAdvertisements() {
     targetUrl: ''
   });
   const [isSubmittingBooking, setIsSubmittingBooking] = useState(false);
+  const [paymentClientSecret, setPaymentClientSecret] = useState(null);
+  const [paymentId, setPaymentId] = useState(null);
 
   // Rectify Modal / Form State
   const [rectifyBookingItem, setRectifyBookingItem] = useState(null);
@@ -155,6 +163,8 @@ export default function BuilderAdvertisements() {
 
   const handleCloseBookingModal = () => {
     setBookingSlot(null);
+    setPaymentClientSecret(null);
+    setPaymentId(null);
   };
 
   const handleBookingSubmit = async (e) => {
@@ -171,20 +181,26 @@ export default function BuilderAdvertisements() {
 
     try {
       setIsSubmittingBooking(true);
-      await bookSlot({
+      const response = await bookSlot({
         zoneId: selectedZone.id,
         slotId: bookingSlot.id,
         adContent
       });
-      toast({ 
-        title: "Campaign Booked!", 
-        description: "Your campaign has been submitted and mock payment completed successfully." 
-      });
-      handleCloseBookingModal();
-      loadMyBookings();
-      // Reload slots for the current zone to show it's now booked
-      if (selectedZone) {
-        handleSelectZone(selectedZone);
+      
+      // If payment details exist, proceed to checkout
+      if (response?.data?.payment?.clientSecret) {
+        setPaymentClientSecret(response.data.payment.clientSecret);
+        setPaymentId(response.data.payment.id);
+      } else {
+        toast({ 
+          title: "Campaign Booked!", 
+          description: "Your campaign has been submitted successfully." 
+        });
+        handleCloseBookingModal();
+        loadMyBookings();
+        if (selectedZone) {
+          handleSelectZone(selectedZone);
+        }
       }
     } catch (error) {
       toast({ 
@@ -569,12 +585,28 @@ export default function BuilderAdvertisements() {
             <CardHeader className="bg-[#0b264f] text-white p-5">
               <div className="flex justify-between items-start">
                 <div>
-                  <CardTitle className="text-xl font-bold">Campaign Details</CardTitle>
+                  <CardTitle className="text-xl font-bold">{paymentClientSecret ? 'Complete Payment' : 'Campaign Details'}</CardTitle>
                   <CardDescription className="text-xs text-blue-100/80 mt-1">Book slot for: {selectedZone?.name}</CardDescription>
                 </div>
                 <button onClick={handleCloseBookingModal} className="text-white/80 hover:text-white text-xl">✕</button>
               </div>
             </CardHeader>
+            {paymentClientSecret ? (
+              <CardContent className="p-6">
+                <Elements stripe={stripePromise} options={{ clientSecret: paymentClientSecret, appearance: { theme: 'stripe' } }}>
+                  <CheckoutForm 
+                    amount={selectedZone?.cost}
+                    paymentId={paymentId}
+                    onSuccess={() => {
+                      handleCloseBookingModal();
+                      loadMyBookings();
+                      if (selectedZone) handleSelectZone(selectedZone);
+                    }} 
+                    onCancel={handleCloseBookingModal} 
+                  />
+                </Elements>
+              </CardContent>
+            ) : (
             <form onSubmit={handleBookingSubmit}>
               <CardContent className="p-6 space-y-4">
                 <div className="bg-slate-50 border border-slate-100 rounded-xl p-3.5 text-xs text-slate-600 flex justify-between items-center">
@@ -647,6 +679,7 @@ export default function BuilderAdvertisements() {
                 </Button>
               </div>
             </form>
+            )}
           </Card>
         </div>
       )}
