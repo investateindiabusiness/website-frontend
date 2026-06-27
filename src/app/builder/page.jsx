@@ -6,11 +6,8 @@ import Header from '@/components/Header';
 import Footer from '@/components/Footer';
 import AwardsSection from '@/components/AwardsSection';
 import TestimonialsSection from '@/components/TestimonialsSection';
-import dynamic from 'next/dynamic';
-
-const LoginDialog = dynamic(() => import('@/components/LoginDialog'), { ssr: false });
-const RegisterDialog = dynamic(() => import('@/components/RegisterDialog'), { ssr: false });
 import { Globe, Search, ShieldCheck, Users, FileText, Activity } from 'lucide-react';
+import { useRouter } from 'next/navigation';
 
 const heroSlides = [
     {
@@ -96,10 +93,8 @@ const trustFeatures = [
 
 
 export default function BuilderHome() {
-    const [isLoginOpen, setIsLoginOpen] = useState(false);
-    const [isRegisterOpen, setIsRegisterOpen] = useState(false);
+    const router = useRouter();
     const [activeStepIndex, setActiveStepIndex] = useState(0);
-    const [dialogData, setDialogData] = useState({});
     const [heroIndex, setHeroIndex] = useState(0);
     const [hoveredBuilderCard, setHoveredBuilderCard] = useState(null);
     const [builderChallengePage, setBuilderChallengePage] = useState(0);
@@ -119,24 +114,10 @@ export default function BuilderHome() {
 
     const handleAuthClick = (action, role) => {
         if (action === 'login') {
-            setIsRegisterOpen(false);
-            if (typeof role === 'string') setDialogData({ userType: role });
-            setIsLoginOpen(true);
+            router.push(role === 'builder' ? '/builder/login' : '/investor/login');
         } else {
-            setIsLoginOpen(false);
-            if (typeof role === 'string') setDialogData({ userType: role });
-            setIsRegisterOpen(true);
+            router.push(role === 'builder' ? '/builder/register' : '/investor/register');
         }
-    };
-
-    const handleSwitchToRegister = (dataPayload) => {
-        setIsLoginOpen(false);
-        if (typeof dataPayload === 'string') {
-            setDialogData({ userType: dataPayload });
-        } else if (dataPayload) {
-            setDialogData(dataPayload);
-        }
-        setIsRegisterOpen(true);
     };
 
     useEffect(() => {
@@ -536,18 +517,6 @@ export default function BuilderHome() {
 
             <Footer />
 
-            <LoginDialog
-                isOpen={isLoginOpen}
-                onOpenChange={setIsLoginOpen}
-                onSwitchToRegister={handleSwitchToRegister}
-                initialData={dialogData}
-            />
-            <RegisterDialog
-                isOpen={isRegisterOpen}
-                onOpenChange={setIsRegisterOpen}
-                onLoginClick={() => { setIsRegisterOpen(false); setIsLoginOpen(true); }}
-                initialData={dialogData}
-            />
         </div>
     );
 }

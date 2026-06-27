@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState, useEffect, useRef } from 'react';
+import { useRouter } from 'next/navigation';
 import { motion, AnimatePresence } from 'framer-motion';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
@@ -10,8 +11,7 @@ import AdBanner from '@/components/AdBanner';
 import dynamic from 'next/dynamic';
 import Image from 'next/image';
 
-const LoginDialog = dynamic(() => import('@/components/LoginDialog'), { ssr: false });
-const RegisterDialog = dynamic(() => import('@/components/RegisterDialog'), { ssr: false });
+
 import { toast } from '@/hooks/use-toast';
 import { subscribeToNewsletter } from '@/api';
 import { Loader2, Search, Users, FileText, Gavel, ShieldCheck, Globe } from 'lucide-react';
@@ -192,6 +192,7 @@ const currentFocusList = [
 
 
 export default function Index() {
+    const router = useRouter();
     const benefitsScrollRef = useRef(null);
     const challengesScrollRef = useRef(null);
     const [activeProcessTab, setActiveProcessTab] = useState('investors');
@@ -215,10 +216,7 @@ export default function Index() {
     };
     const [hoveredCard, setHoveredCard] = useState(null);
 
-    const [isLoginOpen, setIsLoginOpen] = useState(false);
-    const [isRegisterOpen, setIsRegisterOpen] = useState(false);
-    const [hasAutoOpened, setHasAutoOpened] = useState(false);
-    const [dialogData, setDialogData] = useState({});
+
 
     const [newsletterEmail, setNewsletterEmail] = useState('');
     const [isSubscribing, setIsSubscribing] = useState(false);
@@ -255,33 +253,11 @@ export default function Index() {
 
     const activeStepData = investorSteps[activeStepIndex];
 
-    const handleSwitchToRegister = (dataPayload) => {
-        setIsLoginOpen(false);
-        if (typeof dataPayload === 'string') {
-            setDialogData({ userType: dataPayload });
-        } else if (dataPayload) {
-            setDialogData(dataPayload);
-        }
-        setIsRegisterOpen(true);
-    };
-
-    const openLogin = (role) => {
-        if (typeof role === 'string') setDialogData({ userType: role });
-        setIsRegisterOpen(false);
-        setIsLoginOpen(true);
-    };
-
-    const openRegister = (role) => {
-        if (typeof role === 'string') setDialogData({ userType: role });
-        setIsLoginOpen(false);
-        setIsRegisterOpen(true);
-    };
-
     const handleAuthClick = (action, role) => {
         if (action === 'login') {
-            openLogin(role);
+            router.push(role === 'builder' ? '/builder/login' : '/investor/login');
         } else {
-            openRegister(role);
+            router.push(role === 'builder' ? '/builder/register' : '/investor/register');
         }
     };
 
@@ -899,18 +875,6 @@ export default function Index() {
 
             <Footer />
 
-            <LoginDialog
-                isOpen={isLoginOpen}
-                onOpenChange={setIsLoginOpen}
-                onSwitchToRegister={handleSwitchToRegister}
-                initialData={dialogData}
-            />
-            <RegisterDialog
-                isOpen={isRegisterOpen}
-                onOpenChange={setIsRegisterOpen}
-                onLoginClick={() => { setIsRegisterOpen(false); setIsLoginOpen(true); }}
-                initialData={dialogData}
-            />
         </div>
     );
 }

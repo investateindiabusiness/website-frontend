@@ -7,10 +7,7 @@ import { Button } from './ui/button';
 import { Menu, X, LogOut, UserCircle, LayoutDashboard, ChevronDown } from 'lucide-react';
 import { useAuth } from '@/hooks/AuthContext';
 import { toast } from '@/hooks/use-toast';
-import dynamic from 'next/dynamic';
 
-const LoginDialog = dynamic(() => import('@/components/LoginDialog'), { ssr: false });
-const RegisterDialog = dynamic(() => import('@/components/RegisterDialog'), { ssr: false });
 
 const HeaderContent = ({ transparent = false }) => {
   const { user, logout } = useAuth();
@@ -22,9 +19,7 @@ const HeaderContent = ({ transparent = false }) => {
   const [moreDropdownOpen, setMoreDropdownOpen] = useState(false);
   const moreDropdownRef = useRef(null);
 
-  const [isLoginOpen, setIsLoginOpen] = useState(false);
-  const [isRegisterOpen, setIsRegisterOpen] = useState(false);
-  const [dialogData, setDialogData] = useState({});
+
 
   // Close "More" dropdown when clicking outside
   useEffect(() => {
@@ -44,53 +39,13 @@ const HeaderContent = ({ transparent = false }) => {
     router.push('/');
   };
 
-  const openLogin = (role) => {
-    if (typeof role === 'string') setDialogData({ userType: role });
-    setIsRegisterOpen(false);
-    setIsLoginOpen(true);
-    setMobileMenuOpen(false);
-  };
-
-  const openRegister = (role) => {
-    if (typeof role === 'string') setDialogData({ userType: role });
-    setIsLoginOpen(false);
-    setIsRegisterOpen(true);
-    setMobileMenuOpen(false);
-  };
-
-  useEffect(() => {
-    const loginParam = searchParams.get('login');
-    const roleParam = searchParams.get('role');
-    const expiredParam = searchParams.get('session_expired');
-
-    if (expiredParam === 'true') {
-      toast({
-        title: "Session Expired",
-        description: "Your session has expired. Please log in again.",
-        variant: "destructive"
-      });
-      const cleanUrl = window.location.pathname + (loginParam ? `?login=${loginParam}&role=${roleParam}` : '');
-      window.history.replaceState({}, '', cleanUrl);
-    }
-
-    if (loginParam === 'true') {
-      openLogin(roleParam || 'investor');
-    }
-  }, [searchParams]);
-
-  const handleSwitchToRegister = (dataPayload) => {
-    setIsLoginOpen(false);
-    if (typeof dataPayload === 'string') {
-      setDialogData({ userType: dataPayload });
-    } else if (dataPayload) {
-      setDialogData(dataPayload);
-    }
-    setIsRegisterOpen(true);
-  };
-
   const handleAuthClick = (action, role) => {
-    if (action === 'login') openLogin(role);
-    else openRegister(role);
+    setMobileMenuOpen(false);
+    if (action === 'login') {
+      router.push(role === 'builder' ? '/builder/login' : '/investor/login');
+    } else {
+      router.push(role === 'builder' ? '/builder/register' : '/investor/register');
+    }
   };
 
   const getDashboardPath = (role) => {
@@ -138,16 +93,25 @@ const HeaderContent = ({ transparent = false }) => {
   // Check if any "More" item is the active page (to highlight the More button)
   const isMoreActive = adminMoreLinks.some(l => pathname === l.path);
 
+  const logoHref = user ? getDashboardPath(user.role) : '/';
+
   return (
     <>
       <header className={`fixed w-full top-0 left-0 right-0 z-[1000] transition-all duration-300 bg-[#232325] border-b border-gray-800 text-gray-300`}>
         <div className="h-16 flex items-center justify-between mx-4">
           {/* Logo */}
           <div className="flex items-center shrink-0">
-            <Link href="/" className="flex items-center">
-              <img src="/logo-big.png" alt="LOGO" className="hidden md:block h-14 w-auto object-contain" />
-              <img src="/logo-small-white.png" alt="LOGO" className="block md:hidden h-14 w-auto object-contain" />
-            </Link>
+            {user ? (
+              <div className="flex items-center cursor-default">
+                <img src="/logo-big.png" alt="LOGO" className="hidden md:block h-14 w-auto object-contain" />
+                <img src="/logo-small-white.png" alt="LOGO" className="block md:hidden h-14 w-auto object-contain" />
+              </div>
+            ) : (
+              <Link href="/" className="flex items-center">
+                <img src="/logo-big.png" alt="LOGO" className="hidden md:block h-14 w-auto object-contain" />
+                <img src="/logo-small-white.png" alt="LOGO" className="block md:hidden h-14 w-auto object-contain" />
+              </Link>
+            )}
           </div>
 
           {/* Desktop Nav */}
@@ -288,22 +252,6 @@ const HeaderContent = ({ transparent = false }) => {
         </div>
       </header>
 
-      <LoginDialog
-        isOpen={isLoginOpen}
-        onOpenChange={setIsLoginOpen}
-        onSwitchToRegister={handleSwitchToRegister}
-        initialData={dialogData}
-      />
-
-      <RegisterDialog
-        isOpen={isRegisterOpen}
-        onOpenChange={setIsRegisterOpen}
-        onLoginClick={() => {
-          setIsRegisterOpen(false);
-          setIsLoginOpen(true);
-        }}
-        initialData={dialogData}
-      />
     </>
   );
 };
