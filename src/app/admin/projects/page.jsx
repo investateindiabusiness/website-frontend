@@ -3,6 +3,7 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
+import AppDataGrid from '@/components/AppDataGrid';
 import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
@@ -11,6 +12,7 @@ import { Building2, Eye, ShieldCheck, CheckCircle, XCircle, MapPin, RefreshCw, F
 import { toast } from '@/hooks/use-toast';
 import { useAuth } from '@/hooks/AuthContext';
 import { fetchAllProjects, approveProject, verifyProjectStatus } from '@/api';
+import { Chip, FormControl, InputLabel, Select, MenuItem, Box, Typography } from '@mui/material';
 
 export default function AdminProjects() {
   const { user } = useAuth();
@@ -20,34 +22,36 @@ export default function AdminProjects() {
   const [viewProjectData, setViewProjectData] = useState(null);
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const [actionLoading, setActionLoading] = useState(false);
-  const [currentPage, setCurrentPage] = useState(1);
-  const ITEMS_PER_PAGE = 10;
-
-  useEffect(() => {
-    setCurrentPage(1);
-  }, [filter]);
+  const [page, setPage] = useState(0);
+  const [rowsPerPage, setRowsPerPage] = useState(20);
+  const [total, setTotal] = useState(0);
+  const [searchInput, setSearchInput] = useState('');
+  const [searchQuery, setSearchQuery] = useState('');
 
   const loadProjects = useCallback(async () => {
+    if (!user) return;
     try {
       setLoading(true);
-      const data = await fetchAllProjects(user?.token);
-      setProjects(data || []);
+      const params = { page: page + 1, limit: rowsPerPage };
+      if (filter !== 'all') params.status = filter === 'pending' ? 'pending_any' : filter;
+      if (searchQuery) params.search = searchQuery;
+      const data = await fetchAllProjects(params);
+      setProjects(data.data || []);
+      setTotal(data.pagination?.total || 0);
     } catch (error) {
-      toast({ title: "Error", description: error.message, variant: "destructive" });
+      toast({ title: 'Error', description: error.message, variant: 'destructive' });
     } finally {
       setLoading(false);
     }
-  }, [user?.token]);
+  }, [user, page, rowsPerPage, filter, searchQuery]);
 
+  useEffect(() => { if (user) loadProjects(); }, [user, loadProjects]);
+
+  // Debounce search
   useEffect(() => {
-    if (user?.token) loadProjects();
-  }, [user, loadProjects]);
-
-  const filteredProjects = projects.filter(project => {
-    if (filter === 'pending') return project.status === 'pending' || project.hasPendingEdits;
-    if (filter === 'approved') return project.status === 'approved' && !project.hasPendingEdits;
-    return true;
-  });
+    const t = setTimeout(() => { setPage(0); setSearchQuery(searchInput); }, 400);
+    return () => clearTimeout(t);
+  }, [searchInput]);
 
   const handleApprove = async (projectId) => {
     try {
@@ -97,6 +101,58 @@ export default function AdminProjects() {
     return 'bg-yellow-100 text-yellow-800';
   };
 
+  const PROJECT_STATUS_MAP = {
+    pending: { label: 'Pending', color: 'warning' },
+    approved: { label: 'Approved', color: 'success' },
+    rejected: { label: 'Rejected', color: 'error' },
+    changes_requested: { label: 'Changes Req.', color: 'default' },
+  };
+
+  const PROJECT_COLUMNS = [
+    {
+      field: 'projectName', headerName: 'Project', minWidth: 220,
+      renderCell: ({ row }) => (
+        <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.5 }}>
+          <Box sx={{ width: 32, height: 32, bgcolor: '#f0f9ff', borderRadius: 1.5, display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
+            <Building2 size={15} color="#0284c7" />
+          </Box>
+          <Box>
+            <Typography variant="caption" sx={{ fontWeight: 700, color: '#111827', display: 'block' }}>{row.projectName || '—'}</Typography>
+            <Typography variant="caption" sx={{ color: '#9ca3af', fontSize: '0.65rem' }}>{row.reraRegistrationNumber || '—'}</Typography>
+          </Box>
+        </Box>
+      )
+    },
+    {
+      field: 'builderName', headerName: 'Builder', width: 160,
+      renderCell: ({ value }) => <Typography variant="caption" sx={{ color: '#4b5563' }}>{value || '—'}</Typography>
+    },
+    {
+      field: 'projectLocation', headerName: 'Location', width: 140,
+      renderCell: ({ value }) => <Typography variant="caption" sx={{ color: '#4b5563' }}>{value || '—'}</Typography>
+    },
+    {
+      field: 'projectType', headerName: 'Type', width: 120,
+      renderCell: ({ value }) => <Chip label={value || '—'} size="small" variant="outlined" sx={{ fontWeight: 600, fontSize: '0.67rem' }} />
+    },
+    {
+      field: 'status', headerName: 'Status', width: 130,
+      renderCell: ({ row }) => {
+        if (row.hasPendingEdits) return <Chip label="Edits Pending" color="warning" size="small" sx={{ fontWeight: 700, fontSize: '0.67rem' }} />;
+        const s = PROJECT_STATUS_MAP[row.status] || { label: row.status || '—', color: 'default' };
+        return <Chip label={s.label} color={s.color} size="small" sx={{ fontWeight: 700, fontSize: '0.67rem' }} />;
+      }
+    },
+    {
+      field: 'actions', headerName: 'Actions', width: 100, align: 'right', stopPropagation: true,
+      renderCell: ({ row }) => (
+        <Button onClick={() => openModal(row)} className="bg-gray-900 hover:bg-gray-800 text-white rounded-xl text-xs px-3 py-1.5">
+          <Eye className="w-3.5 h-3.5 mr-1" /> View
+        </Button>
+      )
+    },
+  ];
+
   return (
     <div className="min-h-screen bg-gray-50 flex flex-col">
       <Header />
@@ -104,153 +160,40 @@ export default function AdminProjects() {
         <div className="flex flex-col md:flex-row md:items-end justify-between mb-8 gap-4">
           <div>
             <h1 className="text-3xl font-bold text-gray-900 mb-2">Manage Projects</h1>
-            <p className="text-gray-600">Approve or reject project listings.</p>
-          </div>
-          <div className="flex items-center gap-3">
-            <Button variant="outline" onClick={loadProjects} disabled={loading} className="gap-2">
-              <RefreshCw className={`w-4 h-4 ${loading ? 'animate-spin' : ''}`} />
-              Refresh
-            </Button>
-            <div className="flex bg-gray-200/50 p-1 rounded-lg">
-              {['all', 'pending', 'approved'].map(f => (
-                <button key={f} onClick={() => setFilter(f)} className={`px-4 py-2 text-sm font-semibold rounded-md transition-all ${filter === f ? 'bg-white shadow-sm text-blue-600' : 'text-gray-600'}`}>
-                  {f.toUpperCase()}
-                </button>
-              ))}
-            </div>
+            <p className="text-gray-600">{total.toLocaleString()} project{total !== 1 ? 's' : ''} total</p>
           </div>
         </div>
 
-        <div className="bg-white rounded-3xl shadow-sm border border-gray-200 overflow-hidden">
-          {loading ? (
-            <div className="flex flex-col items-center justify-center text-gray-500 py-24">
-              <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-orange-600 mb-4"></div>
-              Loading projects...
-            </div>
-          ) : filteredProjects.length === 0 ? (
-            <div className="text-center p-12 text-gray-500">
-              No projects found in this category.
-            </div>
-          ) : (
-            <>
-              <div className="overflow-x-auto">
-                <table className="w-full text-left border-collapse">
-                  <thead>
-                    <tr className="bg-gray-50/75 border-b border-gray-200 text-gray-600 text-xs font-bold uppercase tracking-wider">
-                      <th className="px-6 py-4">Project</th>
-                      <th className="px-6 py-4">Builder</th>
-                      <th className="px-6 py-4">Location</th>
-                      <th className="px-6 py-4">Type / Units</th>
-                      <th className="px-6 py-4">Status</th>
-                      <th className="px-6 py-4 text-right">Actions</th>
-                    </tr>
-                  </thead>
-                  <tbody className="divide-y divide-gray-100">
-                    {filteredProjects.slice((currentPage - 1) * ITEMS_PER_PAGE, currentPage * ITEMS_PER_PAGE).map((project) => {
-                      return (
-                        <tr key={project.id} className="hover:bg-gray-50/50 transition-colors">
-                          <td className="px-6 py-4 whitespace-nowrap">
-                            <div className="flex items-center space-x-3">
-                              <div className="w-16 h-12 rounded-lg overflow-hidden bg-gray-100 flex-shrink-0 border border-gray-200">
-                                <img
-                                  src={project.projectImages?.[0] || 'https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?w=800&q=80'}
-                                  alt={project.projectName}
-                                  className="w-full h-full object-cover"
-                                  onError={(e) => { e.target.src = 'https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?w=800&q=80'; }}
-                                />
-                              </div>
-                              <div>
-                                <div className="text-sm font-bold text-gray-900">
-                                  {project.projectName || 'Unnamed Project'}
-                                </div>
-                                <div className="text-xs text-gray-400">
-                                  ID: {project.id}
-                                </div>
-                              </div>
-                            </div>
-                          </td>
-                          <td className="px-6 py-4 whitespace-nowrap text-sm font-semibold text-blue-700">
-                            {project.builderName || '—'}
-                          </td>
-                          <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-600">
-                            <div className="flex items-center gap-1.5">
-                              <MapPin className="w-3.5 h-3.5 text-orange-500" />
-                              {project.projectLocation || 'N/A'}
-                            </div>
-                          </td>
-                          <td className="px-6 py-4 whitespace-nowrap">
-                            <div className="text-sm text-gray-900 font-medium">
-                              {project.projectType || 'N/A'}
-                            </div>
-                            <div className="text-xs text-gray-400">
-                              {project.totalUnits ? `${project.totalUnits} Units` : 'N/A'}
-                            </div>
-                          </td>
-                          <td className="px-6 py-4 whitespace-nowrap">
-                            <Badge className={`capitalize border-none py-1 px-3 text-xs font-semibold ${getStatusColor(project.status)}`}>
-                              {project.status}
-                            </Badge>
-                          </td>
-                          <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
-                            <Button 
-                              onClick={() => openModal(project)} 
-                              className="bg-gray-900 hover:bg-gray-800 text-white rounded-xl text-xs px-4 py-2"
-                            >
-                              <Eye className="w-3.5 h-3.5 mr-1.5" /> View Details
-                            </Button>
-                          </td>
-                        </tr>
-                      );
-                    })}
-                  </tbody>
-                </table>
-              </div>
-
-              {/* Pagination Controls */}
-              {Math.ceil(filteredProjects.length / ITEMS_PER_PAGE) > 1 && (
-                <div className="bg-gray-50 border-t border-gray-200 px-6 py-4 flex flex-col sm:flex-row items-center justify-between gap-4">
-                  <div className="text-xs font-bold text-gray-500 uppercase tracking-wider">
-                    Showing {((currentPage - 1) * ITEMS_PER_PAGE) + 1} to {Math.min(currentPage * ITEMS_PER_PAGE, filteredProjects.length)} of {filteredProjects.length} records
-                  </div>
-                  <div className="flex items-center gap-1.5">
-                    <Button
-                      onClick={() => setCurrentPage(prev => Math.max(1, prev - 1))}
-                      disabled={currentPage === 1}
-                      variant="outline"
-                      className="h-9 px-3 rounded-lg text-xs font-bold hover:bg-slate-100 bg-white"
-                    >
-                      Previous
-                    </Button>
-                    
-                    {Array.from({ length: Math.ceil(filteredProjects.length / ITEMS_PER_PAGE) }, (_, i) => i + 1).map((page) => (
-                      <Button
-                        key={page}
-                        onClick={() => setCurrentPage(page)}
-                        variant={currentPage === page ? 'default' : 'outline'}
-                        className={`h-9 w-9 p-0 rounded-lg text-xs font-bold ${
-                          currentPage === page ? 'bg-slate-900 text-white hover:bg-slate-800' : 'hover:bg-slate-100 bg-white'
-                        }`}
-                      >
-                        {page}
-                      </Button>
-                    ))}
-
-                    <Button
-                      onClick={() => setCurrentPage(prev => Math.min(Math.ceil(filteredProjects.length / ITEMS_PER_PAGE), prev + 1))}
-                      disabled={currentPage === Math.ceil(filteredProjects.length / ITEMS_PER_PAGE)}
-                      variant="outline"
-                      className="h-9 px-3 rounded-lg text-xs font-bold hover:bg-slate-100 bg-white"
-                    >
-                      Next
-                    </Button>
-                  </div>
-                </div>
-              )}
-            </>
-          )}
-        </div>
+        <AppDataGrid
+          columns={PROJECT_COLUMNS}
+          rows={projects}
+          total={total}
+          page={page}
+          rowsPerPage={rowsPerPage}
+          onPageChange={(p) => setPage(p)}
+          onRowsPerPageChange={(s) => { setRowsPerPage(s); setPage(0); }}
+          loading={loading}
+          searchValue={searchInput}
+          onSearchChange={setSearchInput}
+          searchPlaceholder="Search project name, builder, location…"
+          filterSlot={
+            <FormControl size="small" sx={{ minWidth: 160 }}>
+              <InputLabel>Status</InputLabel>
+              <Select value={filter} label="Status" onChange={(e) => { setFilter(e.target.value); setPage(0); }}>
+                <MenuItem value="all">All</MenuItem>
+                <MenuItem value="pending">Pending</MenuItem>
+                <MenuItem value="approved">Approved</MenuItem>
+                <MenuItem value="rejected">Rejected</MenuItem>
+              </Select>
+            </FormControl>
+          }
+          getRowId={(r) => r.id}
+          emptyMessage="No projects found."
+        />
       </div>
       <Footer />
+
+
 
       {/* ─── Project Details Modal ─── */}
       <Dialog open={!!viewProjectData} onOpenChange={(open) => { if (!open) closeModal(); }}>

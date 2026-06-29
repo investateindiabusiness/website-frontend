@@ -111,26 +111,9 @@ export default function ProjectManager() {
         e.preventDefault();
         setIsLoading(true);
         try {
-            // Generate a temporary client-side ID for folder naming
-            const tempId = isEditing ? currentProject.id : `proj_${Date.now()}`;
+            // Generate a project ID for folder naming
+            const projectId = isEditing ? currentProject.id : `proj_${Date.now()}`;
 
-            // Upload new image files via backend API
-            const uploadedImages = [];
-            for (const img of (currentProject.projectImages || [])) {
-                if (img instanceof File) {
-                    const response = await uploadFile(img, `${tempId}/ProjectDisplayImages`);
-                    uploadedImages.push(response.url);
-                } else uploadedImages.push(img);
-            }
-
-            // Upload new document files via backend API
-            const uploadedDocs = [];
-            for (const docObj of (currentProject.projectDocuments || [])) {
-                if (docObj.file instanceof File) {
-                    const response = await uploadFile(docObj.file, `${tempId}/ProjectDocuments`);
-                    uploadedDocs.push({ docName: docObj.docName, fileName: docObj.file.name, url: response.url });
-                } else uploadedDocs.push(docObj);
-            }
             // Upload images in parallel with client-side canvas compression
             const uploadedImages = await Promise.all(
                 (currentProject.projectImages || []).map(async (img) => {

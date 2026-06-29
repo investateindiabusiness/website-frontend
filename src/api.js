@@ -122,22 +122,10 @@ export const submitBuilderForm1 = (uid, profileData) =>
     body: JSON.stringify(profileData),
   });
 
-// Fetch all Investors
-export const fetchAllInvestors = async (token) => {
-  const response = await fetch(`${API_BASE_URL}/api/investors`, { // Adjust URL if your route path is different
-    method: 'GET',
-    headers: {
-      'Content-Type': 'application/json',
-      'Authorization': `Bearer ${token}`
-    }
-  });
-
-  if (!response.ok) {
-    const err = await response.json();
-    throw new Error(err.message || 'Failed to fetch investors');
-  }
-
-  return response.json();
+// Fetch all Investors (paginated)
+export const fetchAllInvestors = async (params = {}) => {
+  const qs = new URLSearchParams(params).toString();
+  return apiRequest(`/api/investors${qs ? `?${qs}` : ''}`);
 };
 
 export const submitRequestedChanges = (uid, data) =>
@@ -210,26 +198,10 @@ export const updateProfileStep2 = (uid, profileData) =>
 
 // --- Admin Data Endpoints ---
 
-export const fetchAllBuilders = async (token) => {
-  const response = await fetch(`${API_BASE_URL}/api/builders`, {
-    method: 'GET',
-    headers: {
-      'Content-Type': 'application/json',
-      'Authorization': `Bearer ${token}`
-    }
-  });
-
-  const contentType = response.headers.get("content-type");
-  if (!contentType || !contentType.includes("application/json")) {
-    throw new TypeError("Oops, we haven't got JSON! Check if the backend route is correct.");
-  }
-
-  if (!response.ok) {
-    const err = await response.json();
-    throw new Error(err.message || 'Failed to fetch builders');
-  }
-
-  return response.json();
+// Fetch all Builders (paginated)
+export const fetchAllBuilders = async (params = {}) => {
+  const qs = new URLSearchParams(params).toString();
+  return apiRequest(`/api/builders${qs ? `?${qs}` : ''}`);
 };
 
 export const verifyBuilderStatus = async (uid, isVerified, token) => {
@@ -250,8 +222,10 @@ export const verifyBuilderStatus = async (uid, isVerified, token) => {
   return response.json();
 };
 
-export const fetchBuilderProjects = async (builderId) => {
-  return apiRequest(`/api/projects?builderId=${builderId}`, { method: 'GET' });
+// Fetch builder's own projects (paginated)
+export const fetchBuilderProjects = async (builderId, params = {}) => {
+  const qs = new URLSearchParams({ builderId, ...params }).toString();
+  return apiRequest(`/api/projects?${qs}`);
 };
 
 export const createProject = async (projectData) => {
@@ -274,13 +248,10 @@ export const deleteProject = async (projectId) => {
   });
 };
 
-// Fetch ALL projects (for Admin)
-export const fetchAllProjects = async (token) => {
-  // Since Admin needs to see all projects regardless of builderId, we call the base route
-  return apiRequest('/api/projects', {
-    method: 'GET',
-    headers: { 'Authorization': `Bearer ${token}` }
-  });
+// Fetch ALL projects — Admin (paginated)
+export const fetchAllProjects = async (params = {}) => {
+  const qs = new URLSearchParams(params).toString();
+  return apiRequest(`/api/projects${qs ? `?${qs}` : ''}`);
 };
 
 export const verifyProjectStatus = async (projectId, isVerified) => {

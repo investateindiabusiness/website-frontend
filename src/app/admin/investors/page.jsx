@@ -3,7 +3,7 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
-import { Card, CardContent } from '@/components/ui/card';
+import AppDataGrid from '@/components/AppDataGrid';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from '@/components/ui/dialog';
@@ -13,6 +13,7 @@ import { Mail, Phone, ShieldCheck, ShieldAlert, CheckCircle, XCircle, TrendingUp
 import { toast } from '@/hooks/use-toast';
 import { useAuth } from '@/hooks/AuthContext';
 import { fetchAllInvestors, approveInvestorForm1, requestInvestorChanges, verifyInvestorFinal } from '@/api';
+import { Chip, FormControl, InputLabel, Select, MenuItem, Box, Typography } from '@mui/material';
 
 const STANDARD_INVESTOR_KEYS = [
   'uid', 'id', 'email', 'role', 'createdAt', 'updatedAt', 'onboardingStatus', 'isVerified', 'adminRequests', 'password', 'pendingChanges',
@@ -69,17 +70,15 @@ export default function AdminInvestors() {
   const [investors, setInvestors] = useState([]);
   const [loading, setLoading] = useState(true);
   const [filter, setFilter] = useState('all');
-  const [currentPage, setCurrentPage] = useState(1);
-  const ITEMS_PER_PAGE = 10;
-
-  useEffect(() => {
-    setCurrentPage(1);
-  }, [filter]);
+  const [page, setPage] = useState(0);
+  const [rowsPerPage, setRowsPerPage] = useState(20);
+  const [total, setTotal] = useState(0);
+  const [searchInput, setSearchInput] = useState('');
+  const [searchQuery, setSearchQuery] = useState('');
 
   const [isRequestModalOpen, setIsRequestModalOpen] = useState(false);
   const [selectedInvestorId, setSelectedInvestorId] = useState(null);
   const [viewInvestorData, setViewInvestorData] = useState(null);
-
   const [requestedFields, setRequestedFields] = useState([]);
   const [customFieldInput, setCustomFieldInput] = useState('');
 
@@ -95,13 +94,21 @@ export default function AdminInvestors() {
   };
 
   const loadInvestors = useCallback(async () => {
+    if (!user) return;
     try {
       setLoading(true);
-      const data = await fetchAllInvestors(user?.token);
-      setInvestors(data || []);
-    } catch (error) { toast({ title: "Error", description: error.message, variant: "destructive" }); }
-    finally { setLoading(false); }
-  }, [user?.token]);
+      const params = { page: page + 1, limit: rowsPerPage };
+      if (filter !== 'all') params.status = filter;
+      if (searchQuery) params.search = searchQuery;
+      const data = await fetchAllInvestors(params);
+      setInvestors(data.data || []);
+      setTotal(data.pagination?.total || 0);
+    } catch (error) {
+      toast({ title: 'Error', description: error.message, variant: 'destructive' });
+    } finally {
+      setLoading(false);
+    }
+  }, [user, page, rowsPerPage, filter, searchQuery]);
 
   const getActiveFieldsForModal = () => {
     if (!viewInvestorData) return [];
@@ -111,9 +118,13 @@ export default function AdminInvestors() {
     return FORM1_EDITABLE_FIELDS;
   };
 
+  useEffect(() => { if (user) loadInvestors(); }, [user, loadInvestors]);
+
+  // Debounce search
   useEffect(() => {
-    if (user && user.token) loadInvestors();
-  }, [user, loadInvestors]);
+    const t = setTimeout(() => { setPage(0); setSearchQuery(searchInput); }, 400);
+    return () => clearTimeout(t);
+  }, [searchInput]);
 
   const handleApproveForm1 = async (investorId) => {
     try {
@@ -192,12 +203,56 @@ export default function AdminInvestors() {
     toast({ title: "Success", description: "Investors exported successfully!" });
   };
 
-  const filteredInvestors = investors.filter(investor => {
-    if (filter === 'pending') return investor.onboardingStatus === 'form1_pending' || investor.onboardingStatus === 'form2_pending';
-    if (filter === 'changes_requested') return investor.onboardingStatus === 'form1_changes_requested' || investor.onboardingStatus === 'form2_changes_requested';
-    if (filter === 'verified') return investor.onboardingStatus === 'complete' && investor.isVerified === true;
-    return true;
-  });
+  const INV_STATUS_MAP = {
+    form1_pending: { label: 'Form 1 Review', color: 'warning' },
+    form2_pending: { label: 'Final Review', color: 'secondary' },
+    form1_changes_requested: { label: 'Form 1 Changes', color: 'default' },
+    form2_changes_requested: { label: 'Form 2 Changes', color: 'default' },
+    complete: { label: 'Verified', color: 'success' },
+    form1_rejected: { label: 'Rejected', color: 'error' },
+  };
+
+  const INVESTOR_COLUMNS = [
+    {
+      field: 'fullName', headerName: 'Investor', minWidth: 200,
+      renderCell: ({ row }) => (
+        <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.5 }}>
+          <Box sx={{ width: 32, height: 32, bgcolor: '#eff6ff', borderRadius: 1.5, display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
+            <TrendingUp size={15} color="#3b82f6" />
+          </Box>
+          <Box>
+            <Typography variant="caption" sx={{ fontWeight: 700, color: '#111827', display: 'block' }}>
+              {row.fullName || row.companyName || row.name || 'Unnamed'}
+            </Typography>
+            <Typography variant="caption" sx={{ color: '#9ca3af', fontSize: '0.65rem' }}>{row.investorType || 'Individual'}</Typography>
+          </Box>
+        </Box>
+      )
+    },
+    {
+      field: 'email', headerName: 'Email', minWidth: 190,
+      renderCell: ({ value }) => <Typography variant="caption" noWrap sx={{ color: '#4b5563', maxWidth: 190, display: 'block' }}>{value || '—'}</Typography>
+    },
+    {
+      field: 'city', headerName: 'Location', width: 150,
+      renderCell: ({ row }) => <Typography variant="caption" sx={{ color: '#4b5563' }}>{row.city ? `${row.city}, ${row.state}` : '—'}</Typography>
+    },
+    {
+      field: 'onboardingStatus', headerName: 'Status', width: 160,
+      renderCell: ({ value }) => {
+        const s = INV_STATUS_MAP[value] || { label: value || 'Unknown', color: 'default' };
+        return <Chip label={s.label} color={s.color} size="small" sx={{ fontWeight: 700, fontSize: '0.67rem' }} />;
+      }
+    },
+    {
+      field: 'actions', headerName: 'Actions', width: 110, align: 'right', stopPropagation: true,
+      renderCell: ({ row }) => (
+        <Button onClick={() => setViewInvestorData(row)} className="bg-gray-900 hover:bg-gray-800 text-white rounded-xl text-xs px-3 py-1.5">
+          <Eye className="w-3.5 h-3.5 mr-1" /> View
+        </Button>
+      )
+    },
+  ];
 
   return (
     <div className="min-h-screen bg-gray-50 flex flex-col">
@@ -206,152 +261,36 @@ export default function AdminInvestors() {
         <div className="flex flex-col md:flex-row md:items-end justify-between mb-8 gap-4">
           <div>
             <h1 className="text-3xl font-bold text-gray-900 mb-2">Manage Investors</h1>
-            <p className="text-gray-600">Review, verify, and manage investor applications.</p>
-          </div>
-
-          <div className="flex flex-col gap-3 items-start md:items-end">
-            <div className="flex bg-gray-200/50 p-1 rounded-lg flex-wrap">
-              <button onClick={() => setFilter('all')} className={`px-4 py-2 text-sm font-semibold rounded-md transition-all ${filter === 'all' ? 'bg-white shadow-sm text-blue-600' : 'text-gray-600'}`}>All</button>
-              <button onClick={() => setFilter('pending')} className={`px-4 py-2 text-sm font-semibold rounded-md transition-all ${filter === 'pending' ? 'bg-white shadow-sm text-orange-600' : 'text-gray-600'}`}>Needs Review</button>
-              <button onClick={() => setFilter('changes_requested')} className={`px-4 py-2 text-sm font-semibold rounded-md transition-all ${filter === 'changes_requested' ? 'bg-white shadow-sm text-yellow-600' : 'text-gray-600'}`}>Awaiting Changes</button>
-              <button onClick={() => setFilter('verified')} className={`px-4 py-2 text-sm font-semibold rounded-md transition-all ${filter === 'verified' ? 'bg-white shadow-sm text-green-600' : 'text-gray-600'}`}>Verified Investors</button>
-              <Button
-                onClick={downloadCSV}
-                variant="outline"
-                className="bg-white border-green-600 text-green-700 hover:bg-green-50 shadow-sm"
-              >
-                <Download className="w-4 h-4 mr-2" /> Export
-              </Button>
-            </div>
+            <p className="text-gray-600">{total.toLocaleString()} investor{total !== 1 ? 's' : ''} registered</p>
           </div>
         </div>
 
-        <div className="bg-white rounded-3xl shadow-sm border border-gray-200 overflow-hidden">
-          {loading ? (
-            <div className="flex flex-col items-center justify-center text-gray-500 py-24">
-              <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-orange-600 mb-4"></div>
-              Loading investors...
-            </div>
-          ) : filteredInvestors.length === 0 ? (
-            <div className="text-center p-12 text-gray-500">
-              No investors found in this category.
-            </div>
-          ) : (
-            <>
-              <div className="overflow-x-auto">
-                <table className="w-full text-left border-collapse">
-                  <thead>
-                    <tr className="bg-gray-50/75 border-b border-gray-200 text-gray-600 text-xs font-bold uppercase tracking-wider">
-                      <th className="px-6 py-4">Name</th>
-                      <th className="px-6 py-4">Location</th>
-                      <th className="px-6 py-4">Contact Info</th>
-                      <th className="px-6 py-4">Status</th>
-                      <th className="px-6 py-4 text-right">Actions</th>
-                    </tr>
-                  </thead>
-                  <tbody className="divide-y divide-gray-100">
-                    {filteredInvestors.slice((currentPage - 1) * ITEMS_PER_PAGE, currentPage * ITEMS_PER_PAGE).map((investor) => {
-                      const investorId = investor.uid || investor.id;
-                      const renderStatusBadge = () => {
-                        switch (investor.onboardingStatus) {
-                          case 'form1_pending': return <Badge className="bg-yellow-100 text-yellow-700 hover:bg-yellow-100 border-none font-semibold"><Clock className="w-3 h-3 mr-1" /> Form 1 Review</Badge>;
-                          case 'form2_pending': return <Badge className="bg-purple-100 text-purple-700 hover:bg-purple-100 border-none font-semibold"><Clock className="w-3 h-3 mr-1" /> Final Review</Badge>;
-                          case 'form1_changes_requested': return <Badge className="bg-orange-100 text-orange-700 hover:bg-orange-100 border-none font-semibold"><FileWarning className="w-3 h-3 mr-1" /> Form 1 Changes</Badge>;
-                          case 'form2_changes_requested': return <Badge className="bg-orange-100 text-orange-700 hover:bg-orange-100 border-none font-semibold"><FileWarning className="w-3 h-3 mr-1" /> Form 2 Changes</Badge>;
-                          case 'complete': return <Badge className="bg-green-100 text-green-700 hover:bg-green-100 border-none font-semibold"><ShieldCheck className="w-3 h-3 mr-1" /> Verified</Badge>;
-                          default: return <Badge className="bg-gray-100 text-gray-700 hover:bg-gray-100 border-none font-semibold">{investor.onboardingStatus || 'Unknown'}</Badge>;
-                        }
-                      };
-
-                      return (
-                        <tr key={investorId} className="hover:bg-gray-50/50 transition-colors">
-                          <td className="px-6 py-4 whitespace-nowrap">
-                            <div className="flex items-center space-x-3">
-                              <div className="w-10 h-10 rounded-xl bg-blue-50 flex items-center justify-center flex-shrink-0">
-                                <TrendingUp className="h-5 w-5 text-blue-500" />
-                              </div>
-                              <div>
-                                <div className="text-sm font-bold text-gray-900">
-                                  {investor.fullName || investor.companyName || investor.name || 'Unnamed'}
-                                </div>
-                                <div className="text-xs text-gray-400">
-                                  {investor.investorType || 'Individual'}
-                                </div>
-                              </div>
-                            </div>
-                          </td>
-                          <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-600">
-                            {investor.city ? `${investor.city}, ${investor.state}` : 'N/A'}
-                          </td>
-                          <td className="px-6 py-4 whitespace-nowrap">
-                            <div className="flex flex-col gap-0.5 text-sm text-gray-600">
-                              <a href={`mailto:${investor.email}`} className="flex items-center hover:text-orange-600 gap-1.5"><Mail className="h-3.5 w-3.5 text-gray-400" /> {investor.email}</a>
-                              {investor.contactNumber && (
-                                <a href={`tel:${investor.contactNumber}`} className="flex items-center hover:text-orange-600 gap-1.5"><Phone className="h-3.5 w-3.5 text-gray-400" /> {investor.contactNumber}</a>
-                              )}
-                            </div>
-                          </td>
-                          <td className="px-6 py-4 whitespace-nowrap">
-                            {renderStatusBadge()}
-                          </td>
-                          <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
-                            <Button 
-                              onClick={() => setViewInvestorData(investor)} 
-                              className="bg-gray-900 hover:bg-gray-800 text-white rounded-xl text-xs px-4 py-2"
-                            >
-                              <Eye className="w-3.5 h-3.5 mr-1.5" /> View Profile
-                            </Button>
-                          </td>
-                        </tr>
-                      );
-                    })}
-                  </tbody>
-                </table>
-              </div>
-
-              {/* Pagination Controls */}
-              {Math.ceil(filteredInvestors.length / ITEMS_PER_PAGE) > 1 && (
-                <div className="bg-gray-50 border-t border-gray-200 px-6 py-4 flex flex-col sm:flex-row items-center justify-between gap-4">
-                  <div className="text-xs font-bold text-gray-500 uppercase tracking-wider">
-                    Showing {((currentPage - 1) * ITEMS_PER_PAGE) + 1} to {Math.min(currentPage * ITEMS_PER_PAGE, filteredInvestors.length)} of {filteredInvestors.length} records
-                  </div>
-                  <div className="flex items-center gap-1.5">
-                    <Button
-                      onClick={() => setCurrentPage(prev => Math.max(1, prev - 1))}
-                      disabled={currentPage === 1}
-                      variant="outline"
-                      className="h-9 px-3 rounded-lg text-xs font-bold hover:bg-slate-100 bg-white"
-                    >
-                      Previous
-                    </Button>
-                    
-                    {Array.from({ length: Math.ceil(filteredInvestors.length / ITEMS_PER_PAGE) }, (_, i) => i + 1).map((page) => (
-                      <Button
-                        key={page}
-                        onClick={() => setCurrentPage(page)}
-                        variant={currentPage === page ? 'default' : 'outline'}
-                        className={`h-9 w-9 p-0 rounded-lg text-xs font-bold ${
-                          currentPage === page ? 'bg-slate-900 text-white hover:bg-slate-800' : 'hover:bg-slate-100 bg-white'
-                        }`}
-                      >
-                        {page}
-                      </Button>
-                    ))}
-
-                    <Button
-                      onClick={() => setCurrentPage(prev => Math.min(Math.ceil(filteredInvestors.length / ITEMS_PER_PAGE), prev + 1))}
-                      disabled={currentPage === Math.ceil(filteredInvestors.length / ITEMS_PER_PAGE)}
-                      variant="outline"
-                      className="h-9 px-3 rounded-lg text-xs font-bold hover:bg-slate-100 bg-white"
-                    >
-                      Next
-                    </Button>
-                  </div>
-                </div>
-              )}
-            </>
-          )}
-        </div>
+        <AppDataGrid
+          columns={INVESTOR_COLUMNS}
+          rows={investors}
+          total={total}
+          page={page}
+          rowsPerPage={rowsPerPage}
+          onPageChange={(p) => setPage(p)}
+          onRowsPerPageChange={(s) => { setRowsPerPage(s); setPage(0); }}
+          loading={loading}
+          searchValue={searchInput}
+          onSearchChange={setSearchInput}
+          searchPlaceholder="Search name, email, city…"
+          filterSlot={
+            <FormControl size="small" sx={{ minWidth: 180 }}>
+              <InputLabel>Status</InputLabel>
+              <Select value={filter} label="Status" onChange={(e) => { setFilter(e.target.value); setPage(0); }}>
+                <MenuItem value="all">All Investors</MenuItem>
+                <MenuItem value="pending">Needs Review</MenuItem>
+                <MenuItem value="changes_requested">Awaiting Changes</MenuItem>
+                <MenuItem value="verified">Verified</MenuItem>
+              </Select>
+            </FormControl>
+          }
+          getRowId={(r) => r.uid || r.id}
+          emptyMessage="No investors found."
+        />
       </div>
 
       {/* DETAILED VIEW MODAL */}
