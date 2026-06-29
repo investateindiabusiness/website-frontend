@@ -933,54 +933,51 @@ export default function AdminAdvertisements() {
             </form>
           </Card>
         </div>
-      )
-  }
+      )}
 
-  {/* Reject Reason input dialog */ }
-  {
-    rejectingBooking && (
-      <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm transition-opacity">
-        <Card className="w-full max-w-md bg-white rounded-2xl shadow-2xl border-none overflow-hidden animate-in fade-in zoom-in duration-200">
-          <CardHeader className="bg-red-600 text-white p-5">
-            <div className="flex justify-between items-start">
-              <div>
-                <CardTitle className="text-lg font-bold">Reject Campaign Booking</CardTitle>
-                <CardDescription className="text-xs text-red-100/80 mt-1">Provide feedback so the builder can rectify and resubmit</CardDescription>
+      {/* Reject Reason input dialog */}
+      {rejectingBooking && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm transition-opacity">
+          <Card className="w-full max-w-md bg-white rounded-2xl shadow-2xl border-none overflow-hidden animate-in fade-in zoom-in duration-200">
+            <CardHeader className="bg-red-600 text-white p-5">
+              <div className="flex justify-between items-start">
+                <div>
+                  <CardTitle className="text-lg font-bold">Reject Campaign Booking</CardTitle>
+                  <CardDescription className="text-xs text-red-100/80 mt-1">Provide feedback so the builder can rectify and resubmit</CardDescription>
+                </div>
+                <button onClick={handleCloseRejectDialog} className="text-white/80 hover:text-white text-xl">✕</button>
               </div>
-              <button onClick={handleCloseRejectDialog} className="text-white/80 hover:text-white text-xl">✕</button>
-            </div>
-          </CardHeader>
-          <form onSubmit={handleRejectBookingSubmit}>
-            <CardContent className="p-6 space-y-4">
-              <div className="space-y-1.5">
-                <label className="text-xs font-bold text-slate-600 block">Rejection Feedback/Reason <span className="text-red-500">*</span></label>
-                <textarea
-                  required
-                  rows="4"
-                  placeholder="Provide specific reasons (e.g. upload high-res image, fix text formatting, target link is dead)..."
-                  className="w-full border border-slate-200 rounded-xl px-4 py-2.5 text-sm outline-none focus:border-red-500 text-slate-700 placeholder-slate-400 resize-none"
-                  value={rejectionReason}
-                  onChange={(e) => setRejectionReason(e.target.value)}
-                />
+            </CardHeader>
+            <form onSubmit={handleRejectBookingSubmit}>
+              <CardContent className="p-6 space-y-4">
+                <div className="space-y-1.5">
+                  <label className="text-xs font-bold text-slate-600 block">Rejection Feedback/Reason <span className="text-red-500">*</span></label>
+                  <textarea
+                    required
+                    rows="4"
+                    placeholder="Provide specific reasons (e.g. upload high-res image, fix text formatting, target link is dead)..."
+                    className="w-full border border-slate-200 rounded-xl px-4 py-2.5 text-sm outline-none focus:border-red-500 text-slate-700 placeholder-slate-400 resize-none"
+                    value={rejectionReason}
+                    onChange={(e) => setRejectionReason(e.target.value)}
+                  />
+                </div>
+              </CardContent>
+              <div className="bg-slate-50 border-t border-slate-100 p-4 px-6 flex justify-end gap-3 rounded-b-2xl">
+                <Button type="button" variant="outline" onClick={handleCloseRejectDialog} className="rounded-xl">Cancel</Button>
+                <Button
+                  type="submit"
+                  disabled={isSubmittingReview}
+                  className="bg-red-600 hover:bg-red-700 text-white rounded-xl shadow-md min-w-[120px]"
+                >
+                  {isSubmittingReview ? <Loader2 className="w-4 h-4 animate-spin" /> : "Confirm Rejection"}
+                </Button>
               </div>
-            </CardContent>
-            <div className="bg-slate-50 border-t border-slate-100 p-4 px-6 flex justify-end gap-3 rounded-b-2xl">
-              <Button type="button" variant="outline" onClick={handleCloseRejectDialog} className="rounded-xl">Cancel</Button>
-              <Button
-                type="submit"
-                disabled={isSubmittingReview}
-                className="bg-red-600 hover:bg-red-700 text-white rounded-xl shadow-md min-w-[120px]"
-              >
-                {isSubmittingReview ? <Loader2 className="w-4 h-4 animate-spin" /> : "Confirm Rejection"}
-              </Button>
-            </div>
-          </form>
-        </Card>
-      </div>
-    )
-  }
+            </form>
+          </Card>
+        </div>
+      )}
 
-  <Footer />
+      <Footer />
     </div>
   );
 }
