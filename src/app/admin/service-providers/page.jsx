@@ -9,7 +9,7 @@ import { Button } from '@/components/ui/button';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from '@/components/ui/dialog';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { Mail, Phone, ShieldCheck, ShieldAlert, CheckCircle, XCircle, Settings, Clock, FileWarning, Plus, Eye, Download, Loader2 } from 'lucide-react';
+import { Mail, Phone, ShieldCheck, ShieldAlert, CheckCircle, XCircle, Settings, Clock, FileWarning, Plus, Eye, Download, Loader2, TrendingUp } from 'lucide-react';
 import { toast } from '@/hooks/use-toast';
 import { useAuth } from '@/hooks/AuthContext';
 import { 
