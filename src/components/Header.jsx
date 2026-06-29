@@ -78,13 +78,32 @@ const HeaderContent = ({ transparent = false }) => {
       ];
     }
     switch (displayUser.role) {
-      case 'admin': return [{ label: 'Dashboard', path: '/admin/dashboard' }, { label: 'Builders', path: '/admin/builders' }, { label: 'Investors', path: '/admin/investors' }, { label: 'Projects', path: '/admin/projects' }];
-      case 'builder': return [{ label: 'Dashboard', path: '/builder/dashboard' }, { label: 'Projects', path: '/builder/projects' }, { label: 'Advertise', path: '/builder/advertisements' }];
-      case 'investor': return [{ label: 'Dashboard', path: '/dashboard' }, { label: 'Properties', path: '/properties' }, { label: 'Advertise', path: '/investor/advertisements' }];
-      case 'admin': return [];
-      case 'builder': return [{ label: 'Dashboard', path: '/builder/dashboard' }, { label: 'Projects', path: '/builder/projects' }, { label: 'Advertise', path: '/builder/advertisements' }, { label: 'Coupons', path: '/builder/coupons' }];
-      case 'serviceProvider': return [{ label: 'Dashboard', path: '/service-provider/dashboard' }, { label: 'Advertise', path: '/service-provider/advertisements' }, { label: 'Coupons', path: '/service-provider/coupons' }];
-      case 'investor': return [{ label: 'Dashboard', path: '/dashboard' }, { label: 'Properties', path: '/properties' }, { label: 'Coupons', path: '/investor/coupons' }];
+      case 'admin': return [
+        { label: 'Dashboard', path: '/admin/dashboard' },
+        { label: 'Builders', path: '/admin/builders' },
+        { label: 'Investors', path: '/admin/investors' },
+        { label: 'Projects', path: '/admin/projects' },
+        { label: 'Users', path: '/admin/users' },
+      ];
+      case 'builder': return [
+        { label: 'Dashboard', path: '/builder/dashboard' },
+        { label: 'Projects', path: '/builder/projects' },
+        { label: 'Advertise', path: '/builder/advertisements' },
+        { label: 'Payments', path: '/builder/payments' },
+        { label: 'Coupons', path: '/builder/coupons' },
+      ];
+      case 'serviceProvider': return [
+        { label: 'Dashboard', path: '/service-provider/dashboard' },
+        { label: 'Advertise', path: '/service-provider/advertisements' },
+        { label: 'Payments', path: '/service-provider/payments' },
+        { label: 'Coupons', path: '/service-provider/coupons' },
+      ];
+      case 'investor': return [
+        { label: 'Dashboard', path: '/dashboard' },
+        { label: 'Properties', path: '/properties' },
+        { label: 'Payments', path: '/investor/payments' },
+        { label: 'Coupons', path: '/investor/coupons' },
+      ];
       default: return [{ label: 'Home', path: '/' }];
     }
   };
@@ -126,6 +145,7 @@ const HeaderContent = ({ transparent = false }) => {
                       { label: 'Builders', path: '/admin/builders' },
                       { label: 'Investors', path: '/admin/investors' },
                       { label: 'Service Providers', path: '/admin/service-providers' },
+                      { label: 'Users', path: '/admin/users' },
                       { label: 'Projects', path: '/admin/projects' },
                       { label: 'Leads', path: '/admin/leads' },
                       { label: 'Inquiries', path: '/admin/inquiries' },
