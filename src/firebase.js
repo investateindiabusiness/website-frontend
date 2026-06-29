@@ -1,5 +1,6 @@
 import { initializeApp, getApps } from "firebase/app";
 import { getAuth } from "firebase/auth";
+import { getStorage } from "firebase/storage";
 
 const firebaseConfig = {
   apiKey: process.env.NEXT_PUBLIC_FIREBASE_API_KEY,
@@ -13,6 +14,7 @@ const firebaseConfig = {
 
 let app;
 let auth;
+let storage;
 
 if (typeof window !== 'undefined') {
   try {
@@ -21,10 +23,11 @@ if (typeof window !== 'undefined') {
     } else {
       app = getApps().length === 0 ? initializeApp(firebaseConfig) : getApps()[0];
       auth = getAuth(app);
+      storage = getStorage(app);
     }
   } catch (error) {
     console.error("Failed to initialize Firebase:", error);
   }
 }
 
-export { app, auth };
+export { app, auth, storage };

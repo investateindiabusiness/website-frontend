@@ -13,7 +13,8 @@ import {
   adminDeleteSlot,
   adminFetchSlots,
   adminFetchBookings,
-  adminReviewBooking
+  adminReviewBooking,
+  uploadImage
 } from '@/api';
 import {
   Calendar,
@@ -50,6 +51,8 @@ export default function AdminAdvertisements() {
   const [loadingSlots, setLoadingSlots] = useState(false);
   const [loadingBookings, setLoadingBookings] = useState(true);
   const [isSeeding, setIsSeeding] = useState(false);
+  const [isUploadingImage, setIsUploadingImage] = useState(false);
+  const [uploadProgress, setUploadProgress] = useState(0);
 
   // Active view tab: 'zones' or 'bookings'
   const [activeTab, setActiveTab] = useState('bookings');
@@ -149,6 +152,46 @@ export default function AdminAdvertisements() {
       toast({ title: "Seeding Failed", description: error.message || "Failed to seed zones.", variant: "destructive" });
     } finally {
       setIsSeeding(false);
+    }
+  };
+
+  const handleImageUpload = async (e) => {
+    const file = e.target.files[0];
+    if (!file) return;
+
+    // Validate file type
+    if (!file.type.startsWith('image/')) {
+      toast({ title: "Invalid File", description: "Please upload an image file (PNG, JPG, etc).", variant: "destructive" });
+      return;
+    }
+
+    // Validate file size (e.g., 2MB max)
+    if (file.size > 2 * 1024 * 1024) {
+      toast({ title: "File Too Large", description: "Image size should be less than 2MB.", variant: "destructive" });
+      return;
+    }
+
+    try {
+      setIsUploadingImage(true);
+      setUploadProgress(25);
+
+      const response = await uploadImage(file, 'fallback');
+      
+      setUploadProgress(100);
+      const downloadURL = response.url;
+      
+      setEditZoneForm((prev) => ({
+        ...prev,
+        defaultAd: { ...prev.defaultAd, imageUrl: downloadURL }
+      }));
+      toast({ title: "Upload Successful", description: "Image uploaded successfully." });
+      setIsUploadingImage(false);
+      setUploadProgress(0);
+    } catch (error) {
+      console.error("Upload setup error:", error);
+      toast({ title: "Upload Failed", description: error.message || "Could not initialize upload.", variant: "destructive" });
+      setIsUploadingImage(false);
+      setUploadProgress(0);
     }
   };
 
@@ -713,18 +756,62 @@ export default function AdminAdvertisements() {
                     />
                   </div>
 
-                  <div className="space-y-1.5">
-                    <label className="text-xs font-bold text-slate-600 block">Fallback Image URL</label>
-                    <input
-                      type="url"
-                      placeholder="https://example.com/fallback-ad.jpg"
-                      className="w-full border border-slate-200 rounded-xl px-4 py-2.5 text-sm outline-none focus:border-slate-800 text-slate-700"
-                      value={editZoneForm.defaultAd.imageUrl}
-                      onChange={(e) => setEditZoneForm({
-                        ...editZoneForm,
-                        defaultAd: { ...editZoneForm.defaultAd, imageUrl: e.target.value }
-                      })}
-                    />
+                  <div className="space-y-2">
+                    <label className="text-xs font-bold text-slate-600 block">Fallback Image</label>
+                    
+                    {editZoneForm.defaultAd.imageUrl && (
+                      <div className="relative w-full h-32 rounded-xl overflow-hidden border border-slate-200 mb-2 group">
+                        <img 
+                          src={editZoneForm.defaultAd.imageUrl} 
+                          alt="Fallback Ad Preview" 
+                          className="w-full h-full object-cover"
+                        />
+                        <div className="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+                          <Button 
+                            type="button" 
+                            variant="destructive" 
+                            size="sm"
+                            onClick={() => setEditZoneForm({
+                              ...editZoneForm,
+                              defaultAd: { ...editZoneForm.defaultAd, imageUrl: '' }
+                            })}
+                            className="rounded-lg h-8"
+                          >
+                            <Trash2 className="w-4 h-4 mr-2" /> Remove
+                          </Button>
+                        </div>
+                      </div>
+                    )}
+                    
+                    {!editZoneForm.defaultAd.imageUrl && (
+                      <div className="relative">
+                        <input
+                          type="file"
+                          accept="image/*"
+                          onChange={handleImageUpload}
+                          disabled={isUploadingImage}
+                          className="hidden"
+                          id="fallback-image-upload"
+                        />
+                        <label 
+                          htmlFor="fallback-image-upload"
+                          className={`w-full flex items-center justify-center gap-2 border-2 border-dashed border-slate-200 rounded-xl px-4 py-8 text-sm transition-colors cursor-pointer ${isUploadingImage ? 'bg-slate-50 cursor-not-allowed' : 'hover:border-slate-400 hover:bg-slate-50 text-slate-600'}`}
+                        >
+                          {isUploadingImage ? (
+                            <>
+                              <Loader2 className="w-5 h-5 animate-spin text-slate-400" />
+                              <span className="text-slate-500 font-medium">Uploading... {uploadProgress}%</span>
+                            </>
+                          ) : (
+                            <>
+                              <ImageIcon className="w-5 h-5 text-slate-400" />
+                              <span className="font-medium">Click to upload image</span>
+                              <span className="text-xs text-slate-400 block mt-1">(Max 2MB, JPG/PNG)</span>
+                            </>
+                          )}
+                        </label>
+                      </div>
+                    )}
                   </div>
 
                   <div className="space-y-1.5">

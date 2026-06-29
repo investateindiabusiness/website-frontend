@@ -13,11 +13,7 @@ import { Textarea } from '@/components/ui/textarea';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from '@/components/ui/dialog';
 import { toast } from '@/hooks/use-toast';
 import { useAuth } from '@/hooks/AuthContext';
-import { fetchBuilderProjects, createProject, updateProject, deleteProject, submitProjectChanges, appealProjectRejection } from '@/api';
-
-// FIREBASE IMPORTS
-import { getStorage, ref, uploadBytes, getDownloadURL } from 'firebase/storage';
-import { getFirestore, doc, collection as firestoreCollection } from 'firebase/firestore';
+import { fetchBuilderProjects, createProject, updateProject, deleteProject, submitProjectChanges, appealProjectRejection, uploadFile } from '@/api';
 
 const initialFormState = {
     projectName: '', builderName: '', projectOverview: '', projectLocation: '', projectType: 'Residential',
@@ -110,33 +106,28 @@ export default function ProjectManager() {
         e.preventDefault();
         setIsLoading(true);
         try {
-            const db = getFirestore();
-            const storage = getStorage();
-            const projectId = isEditing ? currentProject.id : doc(firestoreCollection(db, 'projects')).id;
+            // Generate a temporary client-side ID for folder naming
+            const tempId = isEditing ? currentProject.id : `proj_${Date.now()}`;
 
+            // Upload new image files via backend API
             const uploadedImages = [];
             for (const img of (currentProject.projectImages || [])) {
                 if (img instanceof File) {
-                    const safeName = img.name.replace(/[^a-zA-Z0-9.\-]/g, '_');
-                    const fileRef = ref(storage, `${projectId}/ProjectDisplayImages/${Date.now()}_${safeName}`);
-                    await uploadBytes(fileRef, img);
-                    const url = await getDownloadURL(fileRef);
-                    uploadedImages.push(url);
+                    const response = await uploadFile(img, `${tempId}/ProjectDisplayImages`);
+                    uploadedImages.push(response.url);
                 } else uploadedImages.push(img);
             }
 
+            // Upload new document files via backend API
             const uploadedDocs = [];
             for (const docObj of (currentProject.projectDocuments || [])) {
                 if (docObj.file instanceof File) {
-                    const safeName = docObj.file.name.replace(/[^a-zA-Z0-9.\-]/g, '_');
-                    const fileRef = ref(storage, `${projectId}/ProjectDocuments/${Date.now()}_${safeName}`);
-                    await uploadBytes(fileRef, docObj.file);
-                    const url = await getDownloadURL(fileRef);
-                    uploadedDocs.push({ docName: docObj.docName, fileName: docObj.file.name, url: url });
+                    const response = await uploadFile(docObj.file, `${tempId}/ProjectDocuments`);
+                    uploadedDocs.push({ docName: docObj.docName, fileName: docObj.file.name, url: response.url });
                 } else uploadedDocs.push(docObj);
             }
 
-            const payload = { ...currentProject, id: projectId, builderId: user.uid, updatedBy: user.email || user.name, projectImages: uploadedImages, projectDocuments: uploadedDocs };
+            const payload = { ...currentProject, builderId: user.uid, updatedBy: user.email || user.name, projectImages: uploadedImages, projectDocuments: uploadedDocs };
 
             if (isEditing) {
                 await updateProject(currentProject.id, payload);

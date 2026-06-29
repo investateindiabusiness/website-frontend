@@ -77,6 +77,37 @@ export const apiRequest = async (endpoint, options = {}) => {
   }
 };
 
+export const apiUploadRequest = async (endpoint, formData) => {
+  let session = null;
+  if (typeof window !== 'undefined') {
+    try {
+      session = JSON.parse(sessionStorage.getItem('user_session'));
+    } catch (e) {
+      console.warn("Failed to parse user session:", e);
+    }
+  }
+
+  const url = `${API_BASE_URL}${endpoint}`;
+  const response = await fetch(url, {
+    method: 'POST',
+    headers: {
+      ...(session?.token ? { 'Authorization': `Bearer ${session.token}` } : {})
+    },
+    body: formData,
+  });
+
+  if (!response.ok) {
+    let errorMessage = `HTTP error! status: ${response.status}`;
+    try {
+      const errorData = await response.json();
+      errorMessage = errorData.message || errorData.error || errorMessage;
+    } catch (e) {}
+    throw new Error(errorMessage);
+  }
+
+  return response.json();
+};
+
 // --- Auth Endpoints ---
 
 export const submitInvestorForm1 = (uid, profileData) =>
@@ -465,11 +496,24 @@ export const cancelBooking = (bookingId) =>
 export const fetchActiveAd = (zoneId) =>
   apiRequest(`/api/advertisements/active-ad/${zoneId}`);
 
-export const confirmPayment = (payload) =>
+export const confirmPayment = (paymentIntentId) =>
   apiRequest('/api/payments/confirm', {
     method: 'POST',
-    body: JSON.stringify(payload),
+    body: JSON.stringify({ paymentIntentId })
   });
+
+// --- UPLOAD ---
+export const uploadImage = (file, folder = 'misc') => {
+  const formData = new FormData();
+  formData.append('image', file);
+  return apiUploadRequest(`/api/upload/image?folder=${folder}`, formData);
+};
+
+export const uploadFile = (file, folder = 'misc') => {
+  const formData = new FormData();
+  formData.append('file', file);
+  return apiUploadRequest(`/api/upload/file?folder=${folder}`, formData);
+};
 
 // --- Admin Advertisement Endpoints ---
 

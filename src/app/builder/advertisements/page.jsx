@@ -11,7 +11,8 @@ import {
   bookSlot, 
   fetchMyBookings, 
   rectifyBooking, 
-  cancelBooking 
+  cancelBooking,
+  uploadImage
 } from '@/api';
 import { loadStripe } from '@stripe/stripe-js';
 import { Elements } from '@stripe/react-stripe-js';
@@ -71,6 +72,8 @@ export default function BuilderAdvertisements() {
   const [isSubmittingBooking, setIsSubmittingBooking] = useState(false);
   const [paymentClientSecret, setPaymentClientSecret] = useState(null);
   const [paymentId, setPaymentId] = useState(null);
+  const [isUploadingImage, setIsUploadingImage] = useState(false);
+  const [uploadProgress, setUploadProgress] = useState(0);
 
   // Rectify Modal / Form State
   const [rectifyBookingItem, setRectifyBookingItem] = useState(null);
@@ -165,6 +168,47 @@ export default function BuilderAdvertisements() {
     setBookingSlot(null);
     setPaymentClientSecret(null);
     setPaymentId(null);
+    setIsUploadingImage(false);
+    setUploadProgress(0);
+  };
+
+  const handleImageUpload = async (e, formType = 'book') => {
+    const file = e.target.files[0];
+    if (!file) return;
+
+    if (!file.type.startsWith('image/')) {
+      toast({ title: "Invalid File", description: "Please upload an image file (PNG, JPG, etc).", variant: "destructive" });
+      return;
+    }
+
+    if (file.size > 2 * 1024 * 1024) {
+      toast({ title: "File Too Large", description: "Image size should be less than 2MB.", variant: "destructive" });
+      return;
+    }
+
+    try {
+      setIsUploadingImage(true);
+      setUploadProgress(25); // Fake progress to show activity
+
+      const response = await uploadImage(file, 'campaigns');
+      
+      setUploadProgress(100);
+      const downloadURL = response.url;
+
+      if (formType === 'book') {
+        setAdContent(prev => ({ ...prev, imageUrl: downloadURL }));
+      } else {
+        setRectifyAdContent(prev => ({ ...prev, imageUrl: downloadURL }));
+      }
+      toast({ title: "Upload Successful", description: "Image uploaded successfully." });
+      setIsUploadingImage(false);
+      setUploadProgress(0);
+    } catch (error) {
+      console.error("Upload setup error:", error);
+      toast({ title: "Upload Failed", description: error.message || "Could not initialize upload.", variant: "destructive" });
+      setIsUploadingImage(false);
+      setUploadProgress(0);
+    }
   };
 
   const handleBookingSubmit = async (e) => {
@@ -621,17 +665,59 @@ export default function BuilderAdvertisements() {
                   </div>
                 </div>
 
-                <div className="space-y-1.5">
-                  <label className="text-xs font-bold text-slate-600 block">Ad Image URL <span className="text-red-500">*</span></label>
-                  <input 
-                    type="url"
-                    required
-                    placeholder="https://example.com/ad-image.jpg"
-                    className="w-full border border-slate-200 rounded-xl px-4 py-2.5 text-sm outline-none focus:border-[#0b264f] text-slate-700 placeholder-slate-400"
-                    value={adContent.imageUrl}
-                    onChange={(e) => setAdContent({...adContent, imageUrl: e.target.value})}
-                  />
-                  <p className="text-[10px] text-slate-400">Supported Dimensions: {selectedZone?.width} x {selectedZone?.height} px</p>
+                <div className="space-y-2">
+                  <label className="text-xs font-bold text-slate-600 block">Ad Image <span className="text-red-500">*</span></label>
+                  
+                  {adContent.imageUrl && (
+                    <div className="relative w-full h-32 rounded-xl overflow-hidden border border-slate-200 mb-2 group">
+                      <img 
+                        src={adContent.imageUrl} 
+                        alt="Ad Preview" 
+                        className="w-full h-full object-cover"
+                      />
+                      <div className="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+                        <Button 
+                          type="button" 
+                          variant="destructive" 
+                          size="sm"
+                          onClick={() => setAdContent({...adContent, imageUrl: ''})}
+                          className="rounded-lg h-8"
+                        >
+                          <Trash2 className="w-4 h-4 mr-2" /> Remove
+                        </Button>
+                      </div>
+                    </div>
+                  )}
+                  
+                  {!adContent.imageUrl && (
+                    <div className="relative">
+                      <input
+                        type="file"
+                        accept="image/*"
+                        onChange={(e) => handleImageUpload(e, 'book')}
+                        disabled={isUploadingImage}
+                        className="hidden"
+                        id="ad-image-upload"
+                      />
+                      <label 
+                        htmlFor="ad-image-upload"
+                        className={`w-full flex items-center justify-center gap-2 border-2 border-dashed border-slate-200 rounded-xl px-4 py-6 text-sm transition-colors cursor-pointer ${isUploadingImage ? 'bg-slate-50 cursor-not-allowed' : 'hover:border-slate-400 hover:bg-slate-50 text-slate-600'}`}
+                      >
+                        {isUploadingImage ? (
+                          <>
+                            <Loader2 className="w-5 h-5 animate-spin text-slate-400" />
+                            <span className="text-slate-500 font-medium">Uploading... {uploadProgress}%</span>
+                          </>
+                        ) : (
+                          <>
+                            <ImageIcon className="w-5 h-5 text-slate-400" />
+                            <span className="font-medium">Click to upload image</span>
+                          </>
+                        )}
+                      </label>
+                    </div>
+                  )}
+                  <p className="text-[10px] text-slate-400">Supported Dimensions: {selectedZone?.width} x {selectedZone?.height} px (Max 2MB)</p>
                 </div>
 
                 <div className="space-y-1.5">
@@ -707,16 +793,58 @@ export default function BuilderAdvertisements() {
                   <p className="italic font-medium">"{rectifyBookingItem.rejectionReason}"</p>
                 </div>
 
-                <div className="space-y-1.5">
-                  <label className="text-xs font-bold text-slate-600 block">Corrected Image URL <span className="text-red-500">*</span></label>
-                  <input 
-                    type="url"
-                    required
-                    placeholder="https://example.com/ad-image-rectified.jpg"
-                    className="w-full border border-slate-200 rounded-xl px-4 py-2.5 text-sm outline-none focus:border-amber-500 text-slate-700 placeholder-slate-400"
-                    value={rectifyAdContent.imageUrl}
-                    onChange={(e) => setRectifyAdContent({...rectifyAdContent, imageUrl: e.target.value})}
-                  />
+                <div className="space-y-2">
+                  <label className="text-xs font-bold text-slate-600 block">Corrected Image <span className="text-red-500">*</span></label>
+                  
+                  {rectifyAdContent.imageUrl && (
+                    <div className="relative w-full h-32 rounded-xl overflow-hidden border border-slate-200 mb-2 group">
+                      <img 
+                        src={rectifyAdContent.imageUrl} 
+                        alt="Ad Preview" 
+                        className="w-full h-full object-cover"
+                      />
+                      <div className="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+                        <Button 
+                          type="button" 
+                          variant="destructive" 
+                          size="sm"
+                          onClick={() => setRectifyAdContent({...rectifyAdContent, imageUrl: ''})}
+                          className="rounded-lg h-8"
+                        >
+                          <Trash2 className="w-4 h-4 mr-2" /> Remove
+                        </Button>
+                      </div>
+                    </div>
+                  )}
+                  
+                  {!rectifyAdContent.imageUrl && (
+                    <div className="relative">
+                      <input
+                        type="file"
+                        accept="image/*"
+                        onChange={(e) => handleImageUpload(e, 'rectify')}
+                        disabled={isUploadingImage}
+                        className="hidden"
+                        id="rectify-image-upload"
+                      />
+                      <label 
+                        htmlFor="rectify-image-upload"
+                        className={`w-full flex items-center justify-center gap-2 border-2 border-dashed border-amber-200 rounded-xl px-4 py-6 text-sm transition-colors cursor-pointer ${isUploadingImage ? 'bg-slate-50 cursor-not-allowed' : 'hover:border-amber-400 hover:bg-amber-50 text-slate-600'}`}
+                      >
+                        {isUploadingImage ? (
+                          <>
+                            <Loader2 className="w-5 h-5 animate-spin text-slate-400" />
+                            <span className="text-slate-500 font-medium">Uploading... {uploadProgress}%</span>
+                          </>
+                        ) : (
+                          <>
+                            <ImageIcon className="w-5 h-5 text-slate-400" />
+                            <span className="font-medium">Click to upload corrected image</span>
+                          </>
+                        )}
+                      </label>
+                    </div>
+                  )}
                 </div>
 
                 <div className="space-y-1.5">
