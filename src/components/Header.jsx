@@ -78,17 +78,14 @@ const HeaderContent = ({ transparent = false }) => {
       ];
     }
     switch (displayUser.role) {
-<<<<<<< HEAD
-      case 'admin':    return [{ label: 'Dashboard', path: '/admin/dashboard' }, { label: 'Builders', path: '/admin/builders' }, { label: 'Investors', path: '/admin/investors' }, { label: 'Projects', path: '/admin/projects' }];
-      case 'builder':  return [{ label: 'Dashboard', path: '/builder/dashboard' }, { label: 'Projects', path: '/builder/projects' }, { label: 'Advertise', path: '/builder/advertisements' }];
+      case 'admin': return [{ label: 'Dashboard', path: '/admin/dashboard' }, { label: 'Builders', path: '/admin/builders' }, { label: 'Investors', path: '/admin/investors' }, { label: 'Projects', path: '/admin/projects' }];
+      case 'builder': return [{ label: 'Dashboard', path: '/builder/dashboard' }, { label: 'Projects', path: '/builder/projects' }, { label: 'Advertise', path: '/builder/advertisements' }];
       case 'investor': return [{ label: 'Dashboard', path: '/dashboard' }, { label: 'Properties', path: '/properties' }, { label: 'Advertise', path: '/investor/advertisements' }];
-=======
-      case 'admin':    return [];
-      case 'builder':  return [{ label: 'Dashboard', path: '/builder/dashboard' }, { label: 'Projects', path: '/builder/projects' }, { label: 'Advertise', path: '/builder/advertisements' }, { label: 'Coupons', path: '/builder/coupons' }];
+      case 'admin': return [];
+      case 'builder': return [{ label: 'Dashboard', path: '/builder/dashboard' }, { label: 'Projects', path: '/builder/projects' }, { label: 'Advertise', path: '/builder/advertisements' }, { label: 'Coupons', path: '/builder/coupons' }];
       case 'serviceProvider': return [{ label: 'Dashboard', path: '/service-provider/dashboard' }, { label: 'Advertise', path: '/service-provider/advertisements' }, { label: 'Coupons', path: '/service-provider/coupons' }];
       case 'investor': return [{ label: 'Dashboard', path: '/dashboard' }, { label: 'Properties', path: '/properties' }, { label: 'Coupons', path: '/investor/coupons' }];
->>>>>>> 270de042b25becc435c3f80441d581e8b3118159
-      default:         return [{ label: 'Home', path: '/' }];
+      default: return [{ label: 'Home', path: '/' }];
     }
   };
 
@@ -130,12 +127,12 @@ const HeaderContent = ({ transparent = false }) => {
                       { label: 'Investors', path: '/admin/investors' },
                       { label: 'Service Providers', path: '/admin/service-providers' },
                       { label: 'Projects', path: '/admin/projects' },
-                      { label: 'Leads',          path: '/admin/leads' },
-                      { label: 'Inquiries',      path: '/admin/inquiries' },
-                      { label: 'Helpdesk',       path: '/admin/helpdesk' },
-                      { label: 'Newsletter',     path: '/admin/newsletter' },
+                      { label: 'Leads', path: '/admin/leads' },
+                      { label: 'Inquiries', path: '/admin/inquiries' },
+                      { label: 'Helpdesk', path: '/admin/helpdesk' },
+                      { label: 'Newsletter', path: '/admin/newsletter' },
                       { label: 'Advertisements', path: '/admin/advertisements' },
-                      { label: 'Coupons',        path: '/admin/coupons' },
+                      { label: 'Coupons', path: '/admin/coupons' },
                     ].map((link) => {
                       const isActive = pathname === link.path;
                       return (
@@ -143,11 +140,10 @@ const HeaderContent = ({ transparent = false }) => {
                           key={link.label}
                           href={link.path}
                           onClick={() => setLogoMenuOpen(false)}
-                          className={`flex items-center px-4 py-3 text-sm font-medium transition-colors border-b border-gray-800/40 last:border-0 ${
-                            isActive 
-                              ? 'text-[#D48035] bg-orange-500/5 font-semibold' 
-                              : 'text-gray-300 hover:text-[#D48035] hover:bg-gray-800/50'
-                          }`}
+                          className={`flex items-center px-4 py-3 text-sm font-medium transition-colors border-b border-gray-800/40 last:border-0 ${isActive
+                            ? 'text-[#D48035] bg-orange-500/5 font-semibold'
+                            : 'text-gray-300 hover:text-[#D48035] hover:bg-gray-800/50'
+                            }`}
                         >
                           {link.label}
                         </Link>
@@ -315,4 +311,4 @@ const Header = (props) => {
   );
 };
 
-export default Header;
+export default Header;

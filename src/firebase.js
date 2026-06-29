@@ -30,7 +30,6 @@ try {
 // Auth is browser-only
 if (typeof window !== 'undefined' && app) {
   try {
-<<<<<<< HEAD
     if (!firebaseConfig.apiKey) {
       console.error("Firebase API Key is missing. Check your environment variables.");
     } else {
@@ -38,9 +37,7 @@ if (typeof window !== 'undefined' && app) {
       auth = getAuth(app);
       storage = getStorage(app);
     }
-=======
     auth = getAuth(app);
->>>>>>> 6de6c6f2ba68d0d0fb52e0e828a4c683fabd25cd
   } catch (error) {
     console.error("Failed to initialize Firebase Auth:", error);
   }

@@ -13,8 +13,8 @@ import {
   fetchMyBookings, 
   rectifyBooking, 
   cancelBooking,
-  adminCreateSlot,
-  adminDeleteSlot
+  createCustomSlot,
+  deleteCustomSlot
 } from '@/api';
 import { loadStripe } from '@stripe/stripe-js';
 import { Elements } from '@stripe/react-stripe-js';
@@ -289,7 +289,7 @@ export default function InvestorAdvertisements() {
         endDate: newSlot.endDate,
         timeSlot: newSlot.endTime
       };
-      await adminCreateSlot(selectedZone.id, payload);
+      await createCustomSlot(selectedZone.id, payload);
       toast({ title: "Slot Created", description: "Booking slot added successfully." });
       setNewSlot({ startDate: '', endDate: '', startTime: '09:00', endTime: '18:00' });
       if (selectedZone) {
@@ -305,7 +305,7 @@ export default function InvestorAdvertisements() {
   const handleDeleteSlot = async (slotId) => {
     if (!confirm("Are you sure you want to delete this booking slot?")) return;
     try {
-      await adminDeleteSlot(slotId);
+      await deleteCustomSlot(slotId);
       toast({ title: "Slot Deleted", description: "Unbooked slot removed successfully." });
       if (selectedZone) {
         handleSelectZone(selectedZone);

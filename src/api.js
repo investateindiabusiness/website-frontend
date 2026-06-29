@@ -496,10 +496,21 @@ export const cancelBooking = (bookingId) =>
 export const fetchActiveAd = (zoneId) =>
   apiRequest(`/api/advertisements/active-ad/${zoneId}`);
 
-export const confirmPayment = (paymentIntentId) =>
+export const createCustomSlot = (zoneId, payload) =>
+  apiRequest(`/api/advertisements/zones/${zoneId}/slots`, {
+    method: 'POST',
+    body: JSON.stringify(payload),
+  });
+
+export const deleteCustomSlot = (slotId) =>
+  apiRequest(`/api/advertisements/slots/${slotId}`, {
+    method: 'DELETE',
+  });
+
+export const confirmPayment = (payload) =>
   apiRequest('/api/payments/confirm', {
     method: 'POST',
-    body: JSON.stringify({ paymentIntentId })
+    body: JSON.stringify(payload)
   });
 
 // --- UPLOAD ---

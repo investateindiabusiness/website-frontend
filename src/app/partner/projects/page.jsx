@@ -114,7 +114,6 @@ export default function ProjectManager() {
             // Generate a temporary client-side ID for folder naming
             const tempId = isEditing ? currentProject.id : `proj_${Date.now()}`;
 
-<<<<<<< HEAD
             // Upload new image files via backend API
             const uploadedImages = [];
             for (const img of (currentProject.projectImages || [])) {
@@ -132,7 +131,6 @@ export default function ProjectManager() {
                     uploadedDocs.push({ docName: docObj.docName, fileName: docObj.file.name, url: response.url });
                 } else uploadedDocs.push(docObj);
             }
-=======
             // Upload images in parallel with client-side canvas compression
             const uploadedImages = await Promise.all(
                 (currentProject.projectImages || []).map(async (img) => {
@@ -164,7 +162,6 @@ export default function ProjectManager() {
                     return docObj;
                 })
             );
->>>>>>> 6de6c6f2ba68d0d0fb52e0e828a4c683fabd25cd
 
             const payload = { ...currentProject, builderId: user.uid, updatedBy: user.email || user.name, projectImages: uploadedImages, projectDocuments: uploadedDocs };
 

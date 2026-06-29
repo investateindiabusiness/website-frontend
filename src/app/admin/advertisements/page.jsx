@@ -192,10 +192,10 @@ export default function AdminAdvertisements() {
       setUploadProgress(25);
 
       const response = await uploadImage(file, 'fallback');
-      
+
       setUploadProgress(100);
       const downloadURL = response.url;
-      
+
       setEditZoneForm((prev) => ({
         ...prev,
         defaultAd: { ...prev.defaultAd, imageUrl: downloadURL }
@@ -329,10 +329,10 @@ export default function AdminAdvertisements() {
         handleSelectZone(selectedZone);
       }
     } catch (error) {
-      toast({ 
-        title: "Slot Creation Failed", 
-        description: error.message || "Failed to create slot.", 
-        variant: "destructive" 
+      toast({
+        title: "Slot Creation Failed",
+        description: error.message || "Failed to create slot.",
+        variant: "destructive"
       });
     } finally {
       setIsCreatingSlot(false);
@@ -621,12 +621,15 @@ export default function AdminAdvertisements() {
                         <div
                           key={zone.id}
                           className={`p-3.5 rounded-xl border transition-all duration-200 flex items-center justify-between gap-2 ${selectedZone?.id === zone.id
-                              ? 'border-slate-800 bg-slate-50 shadow-sm'
-                              : 'border-slate-200'
+                            ? 'border-slate-800 bg-slate-50 shadow-sm'
+                            : 'border-slate-200'
                             }`}
                         >
                           <button
-                            onClick={() => handleSelectZone(zone)}
+                            onClick={() => {
+                              handleSelectZone(zone);
+                              handleOpenEditZone(zone);
+                            }}
                             className="flex-grow text-left flex flex-col gap-0.5"
                           >
                             <span className="text-sm font-bold text-slate-800">{zone.name}</span>
@@ -661,39 +664,39 @@ export default function AdminAdvertisements() {
                         <form onSubmit={handleCreateSlotSubmit} className="grid grid-cols-1 md:grid-cols-4 gap-4 items-end">
                           <div className="space-y-1.5">
                             <label className="text-xs font-bold text-slate-600 block">Start Date</label>
-                            <input 
+                            <input
                               type="date"
                               required
                               className="w-full border border-slate-200 rounded-xl px-4 py-2.5 text-sm outline-none focus:border-slate-800 text-slate-700 bg-white"
                               value={newSlot.startDate}
-                              onChange={(e) => setNewSlot({...newSlot, startDate: e.target.value})}
+                              onChange={(e) => setNewSlot({ ...newSlot, startDate: e.target.value })}
                             />
                           </div>
 
                           <div className="space-y-1.5">
                             <label className="text-xs font-bold text-slate-600 block">End Date</label>
-                            <input 
+                            <input
                               type="date"
                               required
                               className="w-full border border-slate-200 rounded-xl px-4 py-2.5 text-sm outline-none focus:border-slate-800 text-slate-700 bg-white"
                               value={newSlot.endDate}
-                              onChange={(e) => setNewSlot({...newSlot, endDate: e.target.value})}
+                              onChange={(e) => setNewSlot({ ...newSlot, endDate: e.target.value })}
                             />
                           </div>
 
                           <div className="space-y-1.5">
                             <label className="text-xs font-bold text-slate-600 block">End Time</label>
-                            <input 
+                            <input
                               type="time"
                               required
                               className="w-full border border-slate-200 rounded-xl px-4 py-2.5 text-sm outline-none focus:border-slate-800 text-slate-700 bg-white"
                               value={newSlot.endTime}
-                              onChange={(e) => setNewSlot({...newSlot, endTime: e.target.value})}
+                              onChange={(e) => setNewSlot({ ...newSlot, endTime: e.target.value })}
                             />
                           </div>
 
-                          <Button 
-                            type="submit" 
+                          <Button
+                            type="submit"
                             disabled={isCreatingSlot}
                             className="bg-slate-900 hover:bg-slate-950 text-white rounded-xl shadow-md font-semibold h-[42px] w-full"
                           >
@@ -728,7 +731,10 @@ export default function AdminAdvertisements() {
                                     {slot.isBooked ? (
                                       <Badge className="bg-orange-500 text-white border-none font-bold text-[9px] px-1.5 py-0.2">Booked</Badge>
                                     ) : (
-                                      <Badge className="bg-green-600 text-white border-none font-bold text-[9px] px-1.5 py-0.2">Unbooked</Badge>
+                                      <div className="flex items-center gap-1.5">
+                                        <Badge className="bg-green-600 text-white border-none font-bold text-[9px] px-1.5 py-0.2">Unbooked</Badge>
+                                        <span className="text-[10px] text-slate-400 font-medium italic">(If you want, you can book this slot)</span>
+                                      </div>
                                     )}
                                   </div>
                                   <p className="text-xs font-bold text-slate-700">
@@ -842,62 +848,8 @@ export default function AdminAdvertisements() {
                     />
                   </div>
 
-                  <div className="space-y-2">
-                    <label className="text-xs font-bold text-slate-600 block">Fallback Image</label>
-<<<<<<< HEAD
-                    
-                    {editZoneForm.defaultAd.imageUrl && (
-                      <div className="relative w-full h-32 rounded-xl overflow-hidden border border-slate-200 mb-2 group">
-                        <img 
-                          src={editZoneForm.defaultAd.imageUrl} 
-                          alt="Fallback Ad Preview" 
-                          className="w-full h-full object-cover"
-                        />
-                        <div className="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
-                          <Button 
-                            type="button" 
-                            variant="destructive" 
-                            size="sm"
-                            onClick={() => setEditZoneForm({
-                              ...editZoneForm,
-                              defaultAd: { ...editZoneForm.defaultAd, imageUrl: '' }
-                            })}
-                            className="rounded-lg h-8"
-                          >
-                            <Trash2 className="w-4 h-4 mr-2" /> Remove
-                          </Button>
-                        </div>
-                      </div>
-                    )}
-                    
-                    {!editZoneForm.defaultAd.imageUrl && (
-                      <div className="relative">
-                        <input
-                          type="file"
-                          accept="image/*"
-                          onChange={handleImageUpload}
-                          disabled={isUploadingImage}
-                          className="hidden"
-                          id="fallback-image-upload"
-                        />
-                        <label 
-                          htmlFor="fallback-image-upload"
-                          className={`w-full flex items-center justify-center gap-2 border-2 border-dashed border-slate-200 rounded-xl px-4 py-8 text-sm transition-colors cursor-pointer ${isUploadingImage ? 'bg-slate-50 cursor-not-allowed' : 'hover:border-slate-400 hover:bg-slate-50 text-slate-600'}`}
-                        >
-                          {isUploadingImage ? (
-                            <>
-                              <Loader2 className="w-5 h-5 animate-spin text-slate-400" />
-                              <span className="text-slate-500 font-medium">Uploading... {uploadProgress}%</span>
-                            </>
-                          ) : (
-                            <>
-                              <ImageIcon className="w-5 h-5 text-slate-400" />
-                              <span className="font-medium">Click to upload image</span>
-                              <span className="text-xs text-slate-400 block mt-1">(Max 2MB, JPG/PNG)</span>
-                            </>
-                          )}
-                        </label>
-=======
+                  <div className="space-y-1.5">
+                    <label className="text-xs font-bold text-slate-600 block">Fallback Banner Image</label>
                     {editZoneForm.defaultAd.imageUrl ? (
                       <div className="space-y-2">
                         <div className="relative rounded-xl overflow-hidden bg-slate-50 border border-slate-200 aspect-[16/9] max-h-40 flex items-center justify-center p-2">
@@ -912,10 +864,11 @@ export default function AdminAdvertisements() {
                             <input 
                               type="file" 
                               accept="image/*" 
-                              onChange={handleFallbackImageChange} 
+                              onChange={handleImageUpload} 
+                              disabled={isUploadingImage}
                               className="absolute inset-0 w-full h-full opacity-0 cursor-pointer" 
                             />
-                            Change Image
+                            {isUploadingImage ? "Uploading..." : "Change Image"}
                           </label>
                           <Button 
                             type="button" 
@@ -932,13 +885,22 @@ export default function AdminAdvertisements() {
                         <input 
                           type="file" 
                           accept="image/*" 
-                          onChange={handleFallbackImageChange} 
+                          onChange={handleImageUpload} 
+                          disabled={isUploadingImage}
                           className="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-10" 
                         />
-                        <ImageIcon className="w-6 h-6 text-slate-400 group-hover:text-slate-600 transition-colors mb-1.5" />
-                        <span className="text-xs font-bold text-slate-600 group-hover:text-slate-800 transition-colors">Upload Fallback Image</span>
-                        <span className="text-[9px] text-slate-400 mt-0.5">Click to browse file</span>
->>>>>>> 6de6c6f2ba68d0d0fb52e0e828a4c683fabd25cd
+                        {isUploadingImage ? (
+                          <>
+                            <Loader2 className="w-6 h-6 animate-spin text-[#0b264f] mb-1.5" />
+                            <span className="text-xs font-medium text-slate-500">Uploading... {uploadProgress}%</span>
+                          </>
+                        ) : (
+                          <>
+                            <ImageIcon className="w-6 h-6 text-slate-400 group-hover:text-slate-600 transition-colors mb-1.5" />
+                            <span className="text-xs font-bold text-slate-600 group-hover:text-slate-800 transition-colors">Upload Fallback Image</span>
+                            <span className="text-[9px] text-slate-400 mt-0.5">Click to browse file</span>
+                          </>
+                        )}
                       </div>
                     )}
                   </div>
@@ -971,51 +933,54 @@ export default function AdminAdvertisements() {
             </form>
           </Card>
         </div>
-      )}
+      )
+  }
 
-      {/* Reject Reason input dialog */}
-      {rejectingBooking && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm transition-opacity">
-          <Card className="w-full max-w-md bg-white rounded-2xl shadow-2xl border-none overflow-hidden animate-in fade-in zoom-in duration-200">
-            <CardHeader className="bg-red-600 text-white p-5">
-              <div className="flex justify-between items-start">
-                <div>
-                  <CardTitle className="text-lg font-bold">Reject Campaign Booking</CardTitle>
-                  <CardDescription className="text-xs text-red-100/80 mt-1">Provide feedback so the builder can rectify and resubmit</CardDescription>
-                </div>
-                <button onClick={handleCloseRejectDialog} className="text-white/80 hover:text-white text-xl">✕</button>
+  {/* Reject Reason input dialog */ }
+  {
+    rejectingBooking && (
+      <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm transition-opacity">
+        <Card className="w-full max-w-md bg-white rounded-2xl shadow-2xl border-none overflow-hidden animate-in fade-in zoom-in duration-200">
+          <CardHeader className="bg-red-600 text-white p-5">
+            <div className="flex justify-between items-start">
+              <div>
+                <CardTitle className="text-lg font-bold">Reject Campaign Booking</CardTitle>
+                <CardDescription className="text-xs text-red-100/80 mt-1">Provide feedback so the builder can rectify and resubmit</CardDescription>
               </div>
-            </CardHeader>
-            <form onSubmit={handleRejectBookingSubmit}>
-              <CardContent className="p-6 space-y-4">
-                <div className="space-y-1.5">
-                  <label className="text-xs font-bold text-slate-600 block">Rejection Feedback/Reason <span className="text-red-500">*</span></label>
-                  <textarea
-                    required
-                    rows="4"
-                    placeholder="Provide specific reasons (e.g. upload high-res image, fix text formatting, target link is dead)..."
-                    className="w-full border border-slate-200 rounded-xl px-4 py-2.5 text-sm outline-none focus:border-red-500 text-slate-700 placeholder-slate-400 resize-none"
-                    value={rejectionReason}
-                    onChange={(e) => setRejectionReason(e.target.value)}
-                  />
-                </div>
-              </CardContent>
-              <div className="bg-slate-50 border-t border-slate-100 p-4 px-6 flex justify-end gap-3 rounded-b-2xl">
-                <Button type="button" variant="outline" onClick={handleCloseRejectDialog} className="rounded-xl">Cancel</Button>
-                <Button
-                  type="submit"
-                  disabled={isSubmittingReview}
-                  className="bg-red-600 hover:bg-red-700 text-white rounded-xl shadow-md min-w-[120px]"
-                >
-                  {isSubmittingReview ? <Loader2 className="w-4 h-4 animate-spin" /> : "Confirm Rejection"}
-                </Button>
+              <button onClick={handleCloseRejectDialog} className="text-white/80 hover:text-white text-xl">✕</button>
+            </div>
+          </CardHeader>
+          <form onSubmit={handleRejectBookingSubmit}>
+            <CardContent className="p-6 space-y-4">
+              <div className="space-y-1.5">
+                <label className="text-xs font-bold text-slate-600 block">Rejection Feedback/Reason <span className="text-red-500">*</span></label>
+                <textarea
+                  required
+                  rows="4"
+                  placeholder="Provide specific reasons (e.g. upload high-res image, fix text formatting, target link is dead)..."
+                  className="w-full border border-slate-200 rounded-xl px-4 py-2.5 text-sm outline-none focus:border-red-500 text-slate-700 placeholder-slate-400 resize-none"
+                  value={rejectionReason}
+                  onChange={(e) => setRejectionReason(e.target.value)}
+                />
               </div>
-            </form>
-          </Card>
-        </div>
-      )}
+            </CardContent>
+            <div className="bg-slate-50 border-t border-slate-100 p-4 px-6 flex justify-end gap-3 rounded-b-2xl">
+              <Button type="button" variant="outline" onClick={handleCloseRejectDialog} className="rounded-xl">Cancel</Button>
+              <Button
+                type="submit"
+                disabled={isSubmittingReview}
+                className="bg-red-600 hover:bg-red-700 text-white rounded-xl shadow-md min-w-[120px]"
+              >
+                {isSubmittingReview ? <Loader2 className="w-4 h-4 animate-spin" /> : "Confirm Rejection"}
+              </Button>
+            </div>
+          </form>
+        </Card>
+      </div>
+    )
+  }
 
-      <Footer />
+  <Footer />
     </div>
   );
 }
