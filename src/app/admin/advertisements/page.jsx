@@ -16,6 +16,7 @@ import {
   adminReviewBooking,
   uploadImage
 } from '@/api';
+import { compressAdImage } from '@/utils/imageCompressor';
 import {
   Calendar,
   Image as ImageIcon,
@@ -38,6 +39,21 @@ import {
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
+
+const formatDate = (dateStr) => {
+  if (!dateStr) return '';
+  if (/^\d{2}-\d{2}-\d{4}$/.test(dateStr)) return dateStr;
+  const parts = dateStr.split('-');
+  if (parts.length === 3 && parts[0].length === 4) {
+    return `${parts[2]}-${parts[1]}-${parts[0]}`;
+  }
+  const date = new Date(dateStr);
+  if (isNaN(date.getTime())) return dateStr;
+  const day = String(date.getDate()).padStart(2, '0');
+  const month = String(date.getMonth() + 1).padStart(2, '0');
+  const year = date.getFullYear();
+  return `${day}-${month}-${year}`;
+};
 
 export default function AdminAdvertisements() {
   const { user } = useAuth();
@@ -77,18 +93,18 @@ export default function AdminAdvertisements() {
   });
   const [isUpdatingZone, setIsUpdatingZone] = useState(false);
 
-  // Slot creation state
-  const [newSlot, setNewSlot] = useState({
-    startDate: '',
-    endDate: '',
-    timeSlot: 'All Day'
-  });
-  const [isCreatingSlot, setIsCreatingSlot] = useState(false);
-
   // Reject review state
   const [rejectingBooking, setRejectingBooking] = useState(null);
   const [rejectionReason, setRejectionReason] = useState('');
   const [isSubmittingReview, setIsSubmittingReview] = useState(false);
+
+  const [newSlot, setNewSlot] = useState({
+    startDate: '',
+    endDate: '',
+    startTime: '09:00',
+    endTime: '18:00'
+  });
+  const [isCreatingSlot, setIsCreatingSlot] = useState(false);
 
   useEffect(() => {
     if (user && user.role === 'admin') {
@@ -216,11 +232,57 @@ export default function AdminAdvertisements() {
     setEditZoneItem(null);
   };
 
+  const handleFallbackImageChange = async (e) => {
+    const file = e.target.files[0];
+    if (!file) return;
+
+    try {
+      const compressed = await compressAdImage(file);
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setEditZoneForm({
+          ...editZoneForm,
+          defaultAd: { ...editZoneForm.defaultAd, imageUrl: reader.result }
+        });
+      };
+      reader.readAsDataURL(compressed);
+    } catch (err) {
+      toast({ title: 'Image Processing Failed', description: err.message, variant: 'destructive' });
+    }
+  };
+
+  const handleRemoveFallbackImage = () => {
+    setEditZoneForm({
+      ...editZoneForm,
+      defaultAd: { ...editZoneForm.defaultAd, imageUrl: '' }
+    });
+  };
+
   const handleZoneUpdateSubmit = async (e) => {
     e.preventDefault();
     try {
       setIsUpdatingZone(true);
-      await adminUpdateZone(editZoneItem.id, editZoneForm);
+      const payload = {
+        name: editZoneForm.name,
+        defaultZoneName: editZoneItem.defaultZoneName || editZoneItem.name || 'Default Name',
+        platform: editZoneItem.platform || 'Web',
+        category: editZoneItem.category || 'Real Estate',
+        adType: editZoneItem.adType || 'Image',
+        width: Number(editZoneItem.width || 728),
+        height: Number(editZoneItem.height || 90),
+        campaignDuration: Number(editZoneForm.campaignDuration),
+        availableDateRange: editZoneItem.availableDateRange || { start: '2026-06-01', end: '2026-12-31' },
+        availableTimeSlots: editZoneItem.availableTimeSlots || ['All Day'],
+        cost: Number(editZoneForm.cost),
+        status: editZoneForm.status,
+        defaultAd: {
+          imageUrl: editZoneForm.defaultAd?.imageUrl || '',
+          videoUrl: editZoneForm.defaultAd?.videoUrl || '',
+          text: editZoneForm.defaultAd?.text || '',
+          targetUrl: editZoneForm.defaultAd?.targetUrl || ''
+        }
+      };
+      await adminUpdateZone(editZoneItem.id, payload);
       toast({ title: "Zone Updated", description: "Zone configuration saved successfully." });
       handleCloseEditZone();
       loadZones();
@@ -231,27 +293,7 @@ export default function AdminAdvertisements() {
     }
   };
 
-  // Slot creation & deletion
-  const handleCreateSlotSubmit = async (e) => {
-    e.preventDefault();
-    if (!newSlot.startDate || !newSlot.endDate) {
-      return toast({ title: "Validation Error", description: "Start and End dates are required.", variant: "destructive" });
-    }
-    try {
-      setIsCreatingSlot(true);
-      await adminCreateSlot(selectedZone.id, newSlot);
-      toast({ title: "Slot Created", description: "Booking slot added successfully." });
-      setNewSlot({ startDate: '', endDate: '', timeSlot: 'All Day' });
-      if (selectedZone) {
-        handleSelectZone(selectedZone);
-      }
-    } catch (error) {
-      toast({ title: "Creation Failed", description: error.message || "Failed to create slot.", variant: "destructive" });
-    } finally {
-      setIsCreatingSlot(false);
-    }
-  };
-
+  // Slot deletion
   const handleDeleteSlot = async (slotId) => {
     if (!confirm("Are you sure you want to delete this booking slot?")) return;
     try {
@@ -262,6 +304,38 @@ export default function AdminAdvertisements() {
       }
     } catch (error) {
       toast({ title: "Delete Failed", description: error.message || "Failed to delete slot (it might already be booked).", variant: "destructive" });
+    }
+  };
+
+  const handleCreateSlotSubmit = async (e) => {
+    e.preventDefault();
+    if (!newSlot.startDate || !newSlot.endDate) {
+      return toast({ title: "Validation Error", description: "Start and End dates are required.", variant: "destructive" });
+    }
+    if (!newSlot.endTime) {
+      return toast({ title: "Validation Error", description: "End time is required.", variant: "destructive" });
+    }
+    try {
+      setIsCreatingSlot(true);
+      const payload = {
+        startDate: newSlot.startDate,
+        endDate: newSlot.endDate,
+        timeSlot: newSlot.endTime
+      };
+      await adminCreateSlot(selectedZone.id, payload);
+      toast({ title: "Slot Created", description: "Booking slot added successfully." });
+      setNewSlot({ startDate: '', endDate: '', startTime: '09:00', endTime: '18:00' });
+      if (selectedZone) {
+        handleSelectZone(selectedZone);
+      }
+    } catch (error) {
+      toast({ 
+        title: "Slot Creation Failed", 
+        description: error.message || "Failed to create slot.", 
+        variant: "destructive" 
+      });
+    } finally {
+      setIsCreatingSlot(false);
     }
   };
 
@@ -459,7 +533,7 @@ export default function AdminAdvertisements() {
                                 <span className="text-[10px] text-slate-400 bg-slate-100 px-1.5 py-0.5 rounded font-mono w-fit mt-1 block">{zone?.width}x{zone?.height}</span>
                               </td>
                               <td className="py-4 px-4 text-xs font-semibold text-slate-600">
-                                {booking.startDate} to {booking.endDate}
+                                {formatDate(booking.startDate)} to {formatDate(booking.endDate)}
                                 <div className="text-[10px] text-slate-400 mt-0.5">{booking.timeSlot}</div>
                               </td>
                               <td className="py-4 px-4 max-w-[280px]">
@@ -577,45 +651,57 @@ export default function AdminAdvertisements() {
               <div className="lg:col-span-2 space-y-6">
                 {selectedZone ? (
                   <>
-                    {/* Add Slot Card */}
+                    {/* Add Available Slot Form */}
                     <Card className="shadow-md border-none rounded-2xl overflow-hidden bg-white">
                       <CardHeader className="bg-slate-50 border-b border-slate-100 py-4 px-6">
                         <CardTitle className="text-base font-bold text-slate-800">Add Available Slot to {selectedZone.name}</CardTitle>
                         <CardDescription className="text-xs">Create unbooked slots that builders can select and purchase</CardDescription>
                       </CardHeader>
-                      <form onSubmit={handleCreateSlotSubmit}>
-                        <CardContent className="p-6">
-                          <div className="grid grid-cols-1 md:grid-cols-3 gap-4 items-end">
-                            <div className="space-y-1.5">
-                              <label className="text-xs font-bold text-slate-600 block">Start Date</label>
-                              <input
-                                type="date"
-                                required
-                                className="w-full border border-slate-200 rounded-xl px-4 py-2 text-sm outline-none focus:border-slate-800 text-slate-700"
-                                value={newSlot.startDate}
-                                onChange={(e) => setNewSlot({ ...newSlot, startDate: e.target.value })}
-                              />
-                            </div>
-                            <div className="space-y-1.5">
-                              <label className="text-xs font-bold text-slate-600 block">End Date</label>
-                              <input
-                                type="date"
-                                required
-                                className="w-full border border-slate-200 rounded-xl px-4 py-2 text-sm outline-none focus:border-slate-800 text-slate-700"
-                                value={newSlot.endDate}
-                                onChange={(e) => setNewSlot({ ...newSlot, endDate: e.target.value })}
-                              />
-                            </div>
-                            <Button
-                              type="submit"
-                              disabled={isCreatingSlot}
-                              className="bg-slate-800 hover:bg-slate-900 text-white rounded-xl shadow-md w-full md:w-auto h-10"
-                            >
-                              {isCreatingSlot ? <Loader2 className="w-4 h-4 animate-spin" /> : <><Plus className="w-4 h-4 mr-1.5" /> Create Slot</>}
-                            </Button>
+                      <CardContent className="p-6">
+                        <form onSubmit={handleCreateSlotSubmit} className="grid grid-cols-1 md:grid-cols-4 gap-4 items-end">
+                          <div className="space-y-1.5">
+                            <label className="text-xs font-bold text-slate-600 block">Start Date</label>
+                            <input 
+                              type="date"
+                              required
+                              className="w-full border border-slate-200 rounded-xl px-4 py-2.5 text-sm outline-none focus:border-slate-800 text-slate-700 bg-white"
+                              value={newSlot.startDate}
+                              onChange={(e) => setNewSlot({...newSlot, startDate: e.target.value})}
+                            />
                           </div>
-                        </CardContent>
-                      </form>
+
+                          <div className="space-y-1.5">
+                            <label className="text-xs font-bold text-slate-600 block">End Date</label>
+                            <input 
+                              type="date"
+                              required
+                              className="w-full border border-slate-200 rounded-xl px-4 py-2.5 text-sm outline-none focus:border-slate-800 text-slate-700 bg-white"
+                              value={newSlot.endDate}
+                              onChange={(e) => setNewSlot({...newSlot, endDate: e.target.value})}
+                            />
+                          </div>
+
+                          <div className="space-y-1.5">
+                            <label className="text-xs font-bold text-slate-600 block">End Time</label>
+                            <input 
+                              type="time"
+                              required
+                              className="w-full border border-slate-200 rounded-xl px-4 py-2.5 text-sm outline-none focus:border-slate-800 text-slate-700 bg-white"
+                              value={newSlot.endTime}
+                              onChange={(e) => setNewSlot({...newSlot, endTime: e.target.value})}
+                            />
+                          </div>
+
+                          <Button 
+                            type="submit" 
+                            disabled={isCreatingSlot}
+                            className="bg-slate-900 hover:bg-slate-950 text-white rounded-xl shadow-md font-semibold h-[42px] w-full"
+                          >
+                            {isCreatingSlot ? <Loader2 className="w-4 h-4 animate-spin" /> : <Plus className="w-4 h-4 mr-1.5" />}
+                            Create Slot
+                          </Button>
+                        </form>
+                      </CardContent>
                     </Card>
 
                     {/* Existing Slots Calendar */}
@@ -646,7 +732,7 @@ export default function AdminAdvertisements() {
                                     )}
                                   </div>
                                   <p className="text-xs font-bold text-slate-700">
-                                    {slot.startDate} to {slot.endDate}
+                                    {formatDate(slot.startDate)} to {formatDate(slot.endDate)}
                                   </p>
                                 </div>
                                 {!slot.isBooked && (
@@ -758,6 +844,7 @@ export default function AdminAdvertisements() {
 
                   <div className="space-y-2">
                     <label className="text-xs font-bold text-slate-600 block">Fallback Image</label>
+<<<<<<< HEAD
                     
                     {editZoneForm.defaultAd.imageUrl && (
                       <div className="relative w-full h-32 rounded-xl overflow-hidden border border-slate-200 mb-2 group">
@@ -810,6 +897,48 @@ export default function AdminAdvertisements() {
                             </>
                           )}
                         </label>
+=======
+                    {editZoneForm.defaultAd.imageUrl ? (
+                      <div className="space-y-2">
+                        <div className="relative rounded-xl overflow-hidden bg-slate-50 border border-slate-200 aspect-[16/9] max-h-40 flex items-center justify-center p-2">
+                          <img 
+                            src={editZoneForm.defaultAd.imageUrl} 
+                            alt="Fallback Preview" 
+                            className="w-full h-full object-contain rounded-lg"
+                          />
+                        </div>
+                        <div className="flex gap-2">
+                          <label className="relative flex-grow flex items-center justify-center px-4 py-2 border border-slate-200 rounded-xl text-xs font-bold text-slate-600 hover:bg-slate-50 cursor-pointer shadow-sm">
+                            <input 
+                              type="file" 
+                              accept="image/*" 
+                              onChange={handleFallbackImageChange} 
+                              className="absolute inset-0 w-full h-full opacity-0 cursor-pointer" 
+                            />
+                            Change Image
+                          </label>
+                          <Button 
+                            type="button" 
+                            variant="outline" 
+                            onClick={handleRemoveFallbackImage} 
+                            className="rounded-xl text-xs font-bold border-red-200 text-red-500 hover:bg-red-50"
+                          >
+                            Remove
+                          </Button>
+                        </div>
+                      </div>
+                    ) : (
+                      <div className="relative border-2 border-dashed border-slate-200 hover:border-slate-800 rounded-xl p-5 transition-all cursor-pointer group bg-slate-50/50 flex flex-col items-center justify-center min-h-[120px]">
+                        <input 
+                          type="file" 
+                          accept="image/*" 
+                          onChange={handleFallbackImageChange} 
+                          className="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-10" 
+                        />
+                        <ImageIcon className="w-6 h-6 text-slate-400 group-hover:text-slate-600 transition-colors mb-1.5" />
+                        <span className="text-xs font-bold text-slate-600 group-hover:text-slate-800 transition-colors">Upload Fallback Image</span>
+                        <span className="text-[9px] text-slate-400 mt-0.5">Click to browse file</span>
+>>>>>>> 6de6c6f2ba68d0d0fb52e0e828a4c683fabd25cd
                       </div>
                     )}
                   </div>

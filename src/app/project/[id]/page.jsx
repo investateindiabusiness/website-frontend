@@ -19,6 +19,7 @@ import {
 import { apiRequest, submitProjectLead } from '@/api';
 import { useAuth } from '@/hooks/AuthContext';
 import { toast } from '@/hooks/use-toast';
+import { parseProjectImages } from '@/utils/imageCompressor';
 
 export default function ProjectDetail() {
    const { id } = useParams();
@@ -52,7 +53,7 @@ export default function ProjectDetail() {
                ...data,
                title: data.projectName,
                address: data.projectLocation,
-               images: (data.projectImages && data.projectImages.length > 0) ? data.projectImages : ['https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?w=1200&q=80'],
+               images: parseProjectImages(data.projectImages, 'https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?w=1200&q=80'),
                approvedDocuments: approvedDocs,
                details: { ...data }
             });
@@ -88,60 +89,39 @@ export default function ProjectDetail() {
    return (
       <div className="min-h-screen bg-[#F4F5F7] font-sans">
          <Header />
-         <main className="container mx-auto px-4 py-6 mt-[2rem] md:mt-[4rem]">
-            <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-               <div className="lg:col-span-2 space-y-6">
-                  <div className="bg-white p-6 rounded-xl border border-gray-200 shadow-sm">
-                     <div className="flex flex-col md:flex-row justify-between mb-4">
-                        <div>
-                           <h1 className="text-2xl md:text-3xl font-bold text-gray-900">{project.projectName}</h1>
-                           <Badge className="bg-green-100 text-green-800 mt-2"><ShieldCheck className="w-3 h-3 mr-1" /> Verified Project</Badge>
-                           <p className="text-gray-500 flex items-center text-sm mt-2"><MapPin className="h-3.5 w-3.5 mr-1" /> {project.projectLocation}</p>
-                        </div>
-                        <div className="text-left md:text-right mt-4 md:mt-0">
-                           <p className="text-2xl font-bold text-[#0b264f]">{project.sellingPrice}</p>
-                           <p className="text-sm text-green-600 font-semibold">{project.currentConstructionStatus}</p>
-                        </div>
+         <main className="container mx-auto px-4 py-6 mt-[2rem] md:mt-[4rem] max-w-4xl">
+            <div className="space-y-6">
+               <div className="bg-white p-6 rounded-xl border border-gray-200 shadow-sm">
+                  <div className="flex flex-col md:flex-row justify-between mb-4">
+                     <div>
+                        <h1 className="text-2xl md:text-3xl font-bold text-gray-900">{project.projectName}</h1>
+                        <Badge className="bg-green-100 text-green-800 mt-2"><ShieldCheck className="w-3 h-3 mr-1" /> Verified Project</Badge>
+                        <p className="text-gray-500 flex items-center text-sm mt-2"><MapPin className="h-3.5 w-3.5 mr-1" /> {project.projectLocation}</p>
                      </div>
-                     <div className="relative h-[250px] md:h-[400px] rounded-xl overflow-hidden cursor-pointer" onClick={() => setIsGalleryOpen(true)}>
-                        <img src={project.images[0]} alt={project.projectName} className="w-full h-full object-cover" />
-                        <div className="absolute bottom-4 left-4"><Button variant="secondary" size="sm">View Photos ({project.images.length})</Button></div>
+                     <div className="text-left md:text-right mt-4 md:mt-0">
+                        <p className="text-2xl font-bold text-[#0b264f]">{project.sellingPrice}</p>
+                        <p className="text-sm text-green-600 font-semibold">{project.currentConstructionStatus}</p>
                      </div>
                   </div>
-
-                  <div className="bg-white p-6 rounded-xl shadow-sm border border-gray-200">
-                     <h2 className="text-lg font-bold mb-4">Overview</h2>
-                     <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
-                        <DetailItem label="Type" value={project.projectType} icon={<Building2 />} />
-                        <DetailItem label="Units" value={project.totalUnits} icon={<Layers />} />
-                        <DetailItem label="Land Area" value={project.totalLandArea} icon={<Ruler />} />
-                        <DetailItem label="RERA ID" value={project.reraRegistrationNumber} icon={<CheckCircle />} />
-                     </div>
-                  </div>
-
-                  <div className="bg-white p-6 rounded-xl shadow-sm border border-gray-200">
-                     <h2 className="text-lg font-bold mb-4">Project Overview</h2>
-                     <p className="text-gray-600 text-sm leading-relaxed">{project.projectOverview}</p>
+                  <div className="relative h-[250px] md:h-[400px] rounded-xl overflow-hidden cursor-pointer" onClick={() => setIsGalleryOpen(true)}>
+                     <img src={project.images[0]} alt={project.projectName} className="w-full h-full object-cover" />
+                     <div className="absolute bottom-4 left-4"><Button variant="secondary" size="sm">View Photos ({project.images.length})</Button></div>
                   </div>
                </div>
 
-               <div className="lg:col-span-1">
-                  <div className="sticky top-24 space-y-4">
-                     <Card className="border-t-4 border-t-[#0b264f] shadow-lg">
-                        <CardContent className="p-6 text-center">
-                           <h3 className="text-lg font-bold mb-4">Connect with Advisor</h3>
-                           <Button
-                              onClick={(e) => handleInquirySubmit(e, true)}
-                              disabled={isSubmittingLead || hasSubmittedLead}
-                              className={`w-full font-bold h-12 ${hasSubmittedLead ? 'bg-gray-300' : 'bg-green-600 hover:bg-green-700 text-white'}`}
-                           >
-                              {hasSubmittedLead ? 'Request Already Sent' : 'Request a Call Back'}
-                           </Button>
-                        </CardContent>
-                     </Card>
-
-                     <AdCarousel zoneId="zone3" height={250} />
+               <div className="bg-white p-6 rounded-xl shadow-sm border border-gray-200">
+                  <h2 className="text-lg font-bold mb-4">Overview</h2>
+                  <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
+                     <DetailItem label="Type" value={project.projectType} icon={<Building2 />} />
+                     <DetailItem label="Units" value={project.totalUnits} icon={<Layers />} />
+                     <DetailItem label="Land Area" value={project.totalLandArea} icon={<Ruler />} />
+                     <DetailItem label="RERA ID" value={project.reraRegistrationNumber} icon={<CheckCircle />} />
                   </div>
+               </div>
+
+               <div className="bg-white p-6 rounded-xl shadow-sm border border-gray-200">
+                  <h2 className="text-lg font-bold mb-4">Project Overview</h2>
+                  <p className="text-gray-600 text-sm leading-relaxed">{project.projectOverview}</p>
                </div>
             </div>
          </main>

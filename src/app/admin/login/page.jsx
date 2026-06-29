@@ -8,6 +8,7 @@ import { adminLoginRequest } from '@/api';
 import { Shield, Lock, Eye, EyeOff, User, BarChart3, Users } from 'lucide-react';
 import { getAuth, sendPasswordResetEmail } from 'firebase/auth';
 import { app } from '@/firebase';
+import Link from 'next/link';
 
 function AdminLoginForm() {
   const router = useRouter();
@@ -78,10 +79,7 @@ function AdminLoginForm() {
   return (
     <div className="bg-white/80 backdrop-blur-md rounded-[2.25rem] shadow-[0_30px_70px_-15px_rgba(0,0,0,0.08)] border border-slate-100/90 p-8 md:p-10 transition-all duration-300">
 
-      {/* Shield Icon Top Badge */}
-      <div className="w-12 h-12 rounded-2xl border border-orange-500/20 bg-orange-500/5 flex items-center justify-center text-orange-500 mb-6 shadow-sm shadow-orange-500/10">
-        <Shield className="w-6 h-6 stroke-[1.75]" />
-      </div>
+
 
       {/* Card Header */}
       <div className="mb-8">
@@ -225,20 +223,10 @@ export default function AdminLogin() {
         </div>
 
         {/* Logo */}
-        <div className="relative z-10 flex items-center gap-3">
-          <div className="relative flex items-center justify-center w-10 h-10 bg-slate-900 rounded-xl border border-orange-500/30 shadow-md">
-            <svg className="w-5.5 h-5.5 text-orange-500" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinejoin="round">
-              <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
-            </svg>
-            <div className="absolute top-[13px] text-white">
-              <svg className="w-2.5 h-2.5 text-white fill-white" viewBox="0 0 24 24">
-                <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" />
-              </svg>
-            </div>
-          </div>
-          <span className="text-xl font-extrabold tracking-wide text-white">
-            INVESTATE <span className="text-orange-500">INDIA</span>
-          </span>
+        <div className="relative z-10 flex items-center">
+          <Link href="/" className="flex items-center -ml-6 -my-4">
+            <img src="/logo-big.png" alt="INVESTATE INDIA" className="h-44 w-auto object-contain -mt-8 -mb-12" />
+          </Link>
         </div>
 
         {/* Title & Description Container */}

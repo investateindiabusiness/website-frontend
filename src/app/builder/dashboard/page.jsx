@@ -6,7 +6,7 @@ import { Building2, MapPin, Search, Users, TrendingUp, MoreVertical, Wallet, Har
 import { AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
-import AdCarousel from '@/components/AdCarousel';
+import AdBanner from '@/components/AdBanner';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { useAuth } from '@/hooks/AuthContext';
@@ -28,6 +28,12 @@ export default function BuilderDashboard() {
   const [searchQuery, setSearchQuery] = useState('');
   const [projects, setProjects] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
+  const [currentPage, setCurrentPage] = useState(1);
+  const ITEMS_PER_PAGE = 10;
+
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [searchQuery]);
 
   useEffect(() => {
     const loadProjects = async () => {
@@ -94,9 +100,11 @@ export default function BuilderDashboard() {
             </div>
           </div>
         </div>
-        {/* ── Wide Ad Banner — below hero ── */}
-        <div className="container mx-auto px-4 pt-6">
-          <AdCarousel zoneId="zone1" height={340} />
+        {/* ── Ad Banner — below hero ── */}
+        <div className="container mx-auto px-4 pt-6 flex justify-center">
+          <div className="w-full max-w-md">
+            <AdBanner zoneId="zone1" variant="card" />
+          </div>
         </div>
 
         {/* Main Content */}
@@ -169,43 +177,124 @@ export default function BuilderDashboard() {
                 </Button>
               </div>
             ) : (
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                {filteredProjects.map((project) => {
-                  const fallbackImage = 'https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?w=800&q=80';
-                  const coverImage = (project.projectImages?.length > 0 && project.projectImages[0].startsWith('http')) ? project.projectImages[0] : fallbackImage;
-                  return (
-                    <div key={project.id} className="bg-white rounded-3xl overflow-hidden shadow-sm hover:shadow-lg transition-all border border-gray-100 flex flex-col group">
-                      <div className="h-48 md:h-40 relative overflow-hidden bg-gray-100">
-                        <img src={coverImage} alt={project.projectName} onError={(e) => { e.target.src = fallbackImage; }} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
-                        <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent"></div>
-                        <div className="absolute bottom-3 left-4 right-4 flex justify-between items-end text-white">
-                          <div className="min-w-0 flex-1 mr-2">
-                            <h3 className="font-bold text-lg leading-tight mb-1 truncate">{project.projectName}</h3>
-                            <p className="text-xs text-gray-300 flex items-center truncate"><MapPin className="w-3 h-3 mr-1 flex-shrink-0" />{project.projectLocation || 'No location'}</p>
-                          </div>
-                          <Badge className={`${project.status === 'approved' ? 'bg-green-500' : project.status === 'pending' ? 'bg-yellow-500' : 'bg-orange-500'} border-none text-[10px] px-2 py-0.5 capitalize`}>
-                            {project.status === 'approved' ? 'Live' : project.status}
-                          </Badge>
-                        </div>
-                      </div>
-                      <div className="p-4 md:p-5 flex flex-col flex-grow gap-4">
-                        <div className="grid grid-cols-2 gap-3 pb-4 border-b border-gray-100">
-                          <div className="bg-blue-50 rounded-xl p-3">
-                            <p className="text-xs text-blue-600 font-semibold mb-1">Units</p>
-                            <p className="text-lg font-bold text-[#0b264f]">{project.totalUnits || 0}</p>
-                          </div>
-                          <div className="bg-green-50 rounded-xl p-3">
-                            <p className="text-xs text-green-600 font-semibold mb-1">Type</p>
-                            <p className="text-sm font-bold text-green-800 mt-1">{project.projectType || 'Residential'}</p>
-                          </div>
-                        </div>
-                        <Button onClick={() => router.push('/builder/projects')} className="w-full bg-white text-[#0b264f] border border-gray-200 hover:bg-[#0b264f] hover:text-white transition-all shadow-sm">
-                          Manage Project
-                        </Button>
-                      </div>
+              <div className="bg-white rounded-3xl shadow-sm border border-gray-200 overflow-hidden">
+                <div className="overflow-x-auto">
+                  <table className="w-full text-left border-collapse">
+                    <thead>
+                      <tr className="bg-gray-50/75 border-b border-gray-200 text-gray-600 text-xs font-bold uppercase tracking-wider">
+                        <th className="px-6 py-4">Project</th>
+                        <th className="px-6 py-4">Location</th>
+                        <th className="px-6 py-4">Type / Units</th>
+                        <th className="px-6 py-4">Status</th>
+                        <th className="px-6 py-4 text-right">Actions</th>
+                      </tr>
+                    </thead>
+                    <tbody className="divide-y divide-gray-100">
+                      {filteredProjects.slice((currentPage - 1) * ITEMS_PER_PAGE, currentPage * ITEMS_PER_PAGE).map((project) => {
+                        const fallbackImage = 'https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?w=800&q=80';
+                        const coverImage = (project.projectImages?.length > 0 && project.projectImages[0].startsWith('http')) ? project.projectImages[0] : fallbackImage;
+                        return (
+                          <tr key={project.id} className="hover:bg-gray-50/50 transition-colors">
+                            <td className="px-6 py-4 whitespace-nowrap">
+                              <div className="flex items-center space-x-3">
+                                <div className="w-16 h-12 rounded-lg overflow-hidden bg-gray-100 flex-shrink-0 border border-gray-200">
+                                  <img
+                                    src={coverImage}
+                                    alt={project.projectName}
+                                    className="w-full h-full object-cover"
+                                    onError={(e) => { e.target.src = fallbackImage; }}
+                                  />
+                                </div>
+                                <div>
+                                  <div className="text-sm font-bold text-gray-900 capitalize">
+                                    {project.projectName}
+                                  </div>
+                                  <div className="text-xs text-gray-400">
+                                    ID: {project.id}
+                                  </div>
+                                </div>
+                              </div>
+                            </td>
+                            <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-600">
+                              <div className="flex items-center gap-1.5">
+                                <MapPin className="w-3.5 h-3.5 text-orange-500" />
+                                {project.projectLocation || 'No Location'}
+                              </div>
+                            </td>
+                            <td className="px-6 py-4 whitespace-nowrap">
+                              <div className="text-sm font-medium text-gray-900">
+                                {project.projectType || 'Residential'}
+                              </div>
+                              <div className="text-xs text-gray-400">
+                                {project.totalUnits || 0} Units
+                              </div>
+                            </td>
+                            <td className="px-6 py-4 whitespace-nowrap">
+                              <Badge className={`capitalize border-none py-1 px-3 text-xs font-semibold ${
+                                project.status === 'approved' 
+                                  ? 'bg-green-100 text-green-700' 
+                                  : project.status === 'pending'
+                                  ? 'bg-yellow-100 text-yellow-700'
+                                  : 'bg-orange-100 text-orange-700'
+                              }`}>
+                                {project.status === 'approved' ? 'Live' : project.status}
+                              </Badge>
+                            </td>
+                            <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+                              <Button 
+                                onClick={() => router.push('/builder/projects')} 
+                                className="bg-white text-[#0b264f] border border-gray-200 hover:bg-[#0b264f] hover:text-white transition-all shadow-sm rounded-xl text-xs px-4 py-2"
+                              >
+                                Manage Project
+                              </Button>
+                            </td>
+                          </tr>
+                        );
+                      })}
+                    </tbody>
+                  </table>
+                </div>
+
+                {/* Pagination Controls */}
+                {Math.ceil(filteredProjects.length / ITEMS_PER_PAGE) > 1 && (
+                  <div className="bg-gray-50 border-t border-gray-200 px-6 py-4 flex flex-col sm:flex-row items-center justify-between gap-4">
+                    <div className="text-xs font-bold text-gray-500 uppercase tracking-wider">
+                      Showing {((currentPage - 1) * ITEMS_PER_PAGE) + 1} to {Math.min(currentPage * ITEMS_PER_PAGE, filteredProjects.length)} of {filteredProjects.length} records
                     </div>
-                  );
-                })}
+                    <div className="flex items-center gap-1.5">
+                      <Button
+                        onClick={() => setCurrentPage(prev => Math.max(1, prev - 1))}
+                        disabled={currentPage === 1}
+                        variant="outline"
+                        className="h-9 px-3 rounded-lg text-xs font-bold hover:bg-slate-100 bg-white"
+                      >
+                        Previous
+                      </Button>
+                      
+                      {Array.from({ length: Math.ceil(filteredProjects.length / ITEMS_PER_PAGE) }, (_, i) => i + 1).map((page) => (
+                        <Button
+                          key={page}
+                          onClick={() => setCurrentPage(page)}
+                          variant={currentPage === page ? 'default' : 'outline'}
+                          className={`h-9 w-9 p-0 rounded-lg text-xs font-bold ${
+                            currentPage === page ? 'bg-slate-900 text-white hover:bg-slate-800' : 'hover:bg-slate-100 bg-white'
+                          }`}
+                        >
+                          {page}
+                        </Button>
+                      ))}
+
+                      <Button
+                        onClick={() => setCurrentPage(prev => Math.min(Math.ceil(filteredProjects.length / ITEMS_PER_PAGE), prev + 1))}
+                        disabled={currentPage === Math.ceil(filteredProjects.length / ITEMS_PER_PAGE)}
+                        variant="outline"
+                        className="h-9 px-3 rounded-lg text-xs font-bold hover:bg-slate-100 bg-white"
+                      >
+                        Next
+                      </Button>
+                    </div>
+                  </div>
+                )}
               </div>
             )}
           </div>

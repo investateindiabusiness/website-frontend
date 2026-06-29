@@ -12,7 +12,17 @@ import { Textarea } from '@/components/ui/textarea';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from '@/components/ui/dialog';
 import { toast } from '@/hooks/use-toast';
 import { useAuth } from '@/hooks/AuthContext';
+<<<<<<< HEAD
 import { fetchBuilderProjects, createProject, updateProject, deleteProject, submitProjectChanges, appealProjectRejection, uploadFile } from '@/api';
+=======
+import { fetchBuilderProjects, createProject, updateProject, deleteProject, submitProjectChanges, appealProjectRejection } from '@/api';
+import { compressImage } from '@/utils/imageCompressor';
+
+// --- FIREBASE IMPORTS ---
+import { getStorage, ref, uploadBytes, getDownloadURL } from 'firebase/storage';
+import { getFirestore, doc, collection as firestoreCollection } from 'firebase/firestore';
+import { app } from '@/firebase';
+>>>>>>> 6de6c6f2ba68d0d0fb52e0e828a4c683fabd25cd
 
 const initialFormState = {
     projectName: '', builderName: '', projectOverview: '', projectLocation: '', projectType: 'Residential',
@@ -44,6 +54,12 @@ export default function ProjectManager() {
     const [isEditing, setIsEditing] = useState(false);
     const [searchQuery, setSearchQuery] = useState('');
     const [isLoading, setIsLoading] = useState(false);
+    const [currentPage, setCurrentPage] = useState(1);
+    const ITEMS_PER_PAGE = 10;
+
+    useEffect(() => {
+        setCurrentPage(1);
+    }, [searchQuery]);
 
     const [dynamicProjectData, setDynamicProjectData] = useState({});
     const [isAppealModalOpen, setIsAppealModalOpen] = useState(false);
@@ -121,6 +137,7 @@ export default function ProjectManager() {
             // Generate a temporary client-side ID for folder naming (backend will set the real Firestore ID)
             const tempId = isEditing ? currentProject.id : `proj_${Date.now()}`;
 
+<<<<<<< HEAD
             // Upload new image files via backend API
             const uploadedImages = [];
             for (const img of (currentProject.projectImages || [])) {
@@ -146,6 +163,39 @@ export default function ProjectManager() {
                     uploadedDocs.push(docObj);
                 }
             }
+=======
+            // Upload images in parallel with client-side canvas compression
+            const uploadedImages = await Promise.all(
+                (currentProject.projectImages || []).map(async (img) => {
+                    if (img instanceof File) {
+                        const compressed = await compressImage(img);
+                        const safeName = compressed.name.replace(/[^a-zA-Z0-9.\-]/g, '_');
+                        const fileRef = ref(storage, `${projectId}/ProjectDisplayImages/${Date.now()}_${safeName}`);
+                        await uploadBytes(fileRef, compressed);
+                        return await getDownloadURL(fileRef);
+                    }
+                    return img;
+                })
+            );
+
+            // Upload documents in parallel
+            const uploadedDocs = await Promise.all(
+                (currentProject.projectDocuments || []).map(async (docObj) => {
+                    if (docObj.file instanceof File) {
+                        const safeName = docObj.file.name.replace(/[^a-zA-Z0-9.\-]/g, '_');
+                        const fileRef = ref(storage, `${projectId}/ProjectDocuments/${Date.now()}_${safeName}`);
+                        await uploadBytes(fileRef, docObj.file);
+                        const url = await getDownloadURL(fileRef);
+                        return {
+                            docName: docObj.docName,
+                            fileName: docObj.file.name,
+                            url: url
+                        };
+                    }
+                    return docObj;
+                })
+            );
+>>>>>>> 6de6c6f2ba68d0d0fb52e0e828a4c683fabd25cd
 
             const payload = {
                 ...currentProject,
@@ -298,7 +348,7 @@ export default function ProjectManager() {
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        {filteredProjects.length > 0 ? filteredProjects.map((project) => (
+                                        {filteredProjects.length > 0 ? filteredProjects.slice((currentPage - 1) * ITEMS_PER_PAGE, currentPage * ITEMS_PER_PAGE).map((project) => (
                                             <tr key={project.id} className="border-b border-gray-50 hover:bg-gray-50/50 transition-colors">
                                                 <td className="p-4">
                                                     <div className="font-bold text-gray-900 flex items-center gap-2">
@@ -338,6 +388,47 @@ export default function ProjectManager() {
                                     </tbody>
                                 </table>
                             </div>
+
+                            {/* Pagination Controls */}
+                            {Math.ceil(filteredProjects.length / ITEMS_PER_PAGE) > 1 && (
+                                <div className="bg-gray-50 border-t border-gray-200 px-6 py-4 flex flex-col sm:flex-row items-center justify-between gap-4">
+                                    <div className="text-xs font-bold text-gray-500 uppercase tracking-wider">
+                                        Showing {((currentPage - 1) * ITEMS_PER_PAGE) + 1} to {Math.min(currentPage * ITEMS_PER_PAGE, filteredProjects.length)} of {filteredProjects.length} records
+                                    </div>
+                                    <div className="flex items-center gap-1.5">
+                                        <Button
+                                            onClick={() => setCurrentPage(prev => Math.max(1, prev - 1))}
+                                            disabled={currentPage === 1}
+                                            variant="outline"
+                                            className="h-9 px-3 rounded-lg text-xs font-bold hover:bg-slate-100 bg-white"
+                                        >
+                                            Previous
+                                        </Button>
+
+                                        {Array.from({ length: Math.ceil(filteredProjects.length / ITEMS_PER_PAGE) }, (_, i) => i + 1).map((page) => (
+                                            <Button
+                                                key={page}
+                                                onClick={() => setCurrentPage(page)}
+                                                variant={currentPage === page ? 'default' : 'outline'}
+                                                className={`h-9 w-9 p-0 rounded-lg text-xs font-bold ${
+                                                    currentPage === page ? 'bg-slate-900 text-white hover:bg-slate-800' : 'hover:bg-slate-100 bg-white'
+                                                }`}
+                                            >
+                                                {page}
+                                            </Button>
+                                        ))}
+
+                                        <Button
+                                            onClick={() => setCurrentPage(prev => Math.min(Math.ceil(filteredProjects.length / ITEMS_PER_PAGE), prev + 1))}
+                                            disabled={currentPage === Math.ceil(filteredProjects.length / ITEMS_PER_PAGE)}
+                                            variant="outline"
+                                            className="h-9 px-3 rounded-lg text-xs font-bold hover:bg-slate-100 bg-white"
+                                        >
+                                            Next
+                                        </Button>
+                                    </div>
+                                </div>
+                            )}
                         </div>
                     </div>
                 )}

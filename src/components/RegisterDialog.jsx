@@ -13,7 +13,7 @@ import { toast } from '@/hooks/use-toast';
 import { CheckCircle, ChevronRight, Loader2, TrendingUp, Building, UserCheck, FileWarning, ClipboardList } from 'lucide-react';
 import { getAuth, signOut } from 'firebase/auth';
 import { app } from '@/firebase';
-import { registerStep1, submitInvestorForm1, submitBuilderForm1, submitRequestedChanges, submitInvestorForm2, submitBuilderForm2 } from '@/api';
+import { registerStep1, submitInvestorForm1, submitBuilderForm1, submitServiceProviderForm1, submitRequestedChanges, submitInvestorForm2, submitBuilderForm2 } from '@/api';
 import GoogleAuthButton from '@/components/GoogleAuthButton';
 
 const RegisterDialog = ({ isOpen, onOpenChange, onLoginClick, initialData = {} }) => {
@@ -73,6 +73,11 @@ const RegisterDialog = ({ isOpen, onOpenChange, onLoginClick, initialData = {} }
     ongoingProjects: '', projectsCompleted: '', address: '', country: '', state: '', city: '', zip: '', termsAccepted: false
   });
 
+  const [serviceProviderData, setServiceProviderData] = useState({
+    fullName: '', contactNumber: '', serviceCategory: '', yearsOfExperience: '',
+    address: '', country: '', state: '', city: '', zip: '', termsAccepted: false
+  });
+
   const [invForm2, setInvForm2] = useState({
     profession: '', yearlyIncome: '', investmentTenure: '', industryNatureOfWork: '', expectedReturns: '', preferredProjectType: [], preferredGoalStategy: '', investmentPreference: ''
   });
@@ -86,8 +91,16 @@ const RegisterDialog = ({ isOpen, onOpenChange, onLoginClick, initialData = {} }
   const [cities, setCities] = useState([]);
   const [loadingLocation, setLoadingLocation] = useState(false);
 
-  const getActiveData = () => userType === 'investor' ? investorData : builderData;
-  const setActiveData = (data) => userType === 'investor' ? setInvestorData(data) : setBuilderData(data);
+  const getActiveData = () => {
+    if (userType === 'investor') return investorData;
+    if (userType === 'builder') return builderData;
+    return serviceProviderData;
+  };
+  const setActiveData = (data) => {
+    if (userType === 'investor') setInvestorData(data);
+    else if (userType === 'builder') setBuilderData(data);
+    else setServiceProviderData(data);
+  };
 
   const handleProjectTypeToggle = (type) => {
     const allTypes = ['Plots / Land', 'Villa', 'Apartments / Flats', 'Commercial Spaces', 'Farm Land / Agri Projects'];
@@ -134,9 +147,12 @@ const RegisterDialog = ({ isOpen, onOpenChange, onLoginClick, initialData = {} }
         if (isUpdateMode && localInitialData.userData) {
           const uData = localInitialData.userData;
           if (localInitialData.userType === 'investor') setInvestorData(prev => ({ ...prev, ...uData }));
-          else setBuilderData(prev => ({ ...prev, ...uData }));
+          else if (localInitialData.userType === 'builder') setBuilderData(prev => ({ ...prev, ...uData }));
+          else setServiceProviderData(prev => ({ ...prev, ...uData }));
         } else if (localInitialData.userType === 'investor' && !isForm2Mode) {
           setInvestorData(prev => ({ ...prev, fullName: localInitialData.name || '' }));
+        } else if (localInitialData.userType === 'serviceProvider' && !isForm2Mode) {
+          setServiceProviderData(prev => ({ ...prev, fullName: localInitialData.name || '' }));
         }
 
         if (isForm2Mode) {
@@ -203,11 +219,17 @@ const RegisterDialog = ({ isOpen, onOpenChange, onLoginClick, initialData = {} }
         investorData.fullName.trim() !== '' && investorData.contactNumber.trim() !== '' &&
         investorData.country.trim() !== '' && investorData.state.trim() !== '' && investorData.city.trim() !== '' && investorData.termsAccepted
       );
-    } else {
+    } else if (userType === 'builder') {
       return (
         builderData.companyName.trim() !== '' && builderData.yearsOfExperience.toString().trim() !== '' &&
         builderData.contactNameAndDesignation.trim() !== '' && builderData.contactPersonPhone.trim() !== '' &&
         builderData.country.trim() !== '' && builderData.state.trim() !== '' && builderData.city.trim() !== '' && builderData.termsAccepted
+      );
+    } else {
+      return (
+        serviceProviderData.fullName.trim() !== '' && serviceProviderData.contactNumber.trim() !== '' &&
+        serviceProviderData.serviceCategory.trim() !== '' && serviceProviderData.yearsOfExperience.toString().trim() !== '' &&
+        serviceProviderData.country.trim() !== '' && serviceProviderData.state.trim() !== '' && serviceProviderData.city.trim() !== '' && serviceProviderData.termsAccepted
       );
     }
   };
@@ -250,9 +272,12 @@ const RegisterDialog = ({ isOpen, onOpenChange, onLoginClick, initialData = {} }
       } else if (userType === 'investor') {
         await submitInvestorForm1(userId, currentData);
         setStep(3);
-      } else {
+      } else if (userType === 'builder') {
         await submitBuilderForm1(userId, currentData);
         setStep(3);
+      } else {
+        await submitServiceProviderForm1(userId, currentData);
+        setSubmitted(true);
       }
     } catch (error) {
       toast({ title: 'Error', description: error.message || 'Failed to submit.', variant: 'destructive' });
@@ -363,6 +388,13 @@ const RegisterDialog = ({ isOpen, onOpenChange, onLoginClick, initialData = {} }
       highlight: isUpdateMode ? "information." : (isForm2Mode ? "profile." : "without limits."),
       desc: isUpdateMode ? "Please update the requested fields to finalize your builder verification." : (isForm2Mode ? "Almost there! Complete the final details to finalize your builder account." : "Join our exclusive network of top-tier builders. Access global investors and streamline fundraising."),
       features: ["Verified Investor Network", "Automated Compliance", "Fast-track Funding"]
+    },
+    serviceProvider: {
+      image: "https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?q=80&w=2070&auto=format&fit=crop",
+      title: isUpdateMode ? "Update your" : "Connect with builders",
+      highlight: isUpdateMode ? "information." : "and investors.",
+      desc: isUpdateMode ? "Please update the requested fields to finalize your service provider verification." : "Advertise your professional services to a global network of builders and investors.",
+      features: ["Premium Client Acquisition", "Targeted Dashboard Ads", "Rigorously Vetted Platform"]
     }
   };
 
@@ -376,7 +408,7 @@ const RegisterDialog = ({ isOpen, onOpenChange, onLoginClick, initialData = {} }
   // --- CRITICAL FIX: Include ALL fields from both forms to ensure native UI logic catches them and they do not fall back to plain text inputs.
   const STANDARD_FIELDS = [
     'fullName', 'contactNumber', 'investorType', 'investmentRangeMin', 'investmentRangeMax', 'address', 'country', 'state', 'city', 'zip', 'termsAccepted',
-    'companyName', 'yearsOfExperience', 'contactNameAndDesignation', 'contactPersonPhone', 'ongoingProjects', 'projectsCompleted',
+    'companyName', 'yearsOfExperience', 'contactNameAndDesignation', 'contactPersonPhone', 'ongoingProjects', 'projectsCompleted', 'serviceCategory',
     'profession', 'yearlyIncome', 'investmentTenure', 'industryNatureOfWork', 'expectedReturns', 'preferredProjectType', 'preferredGoalStategy', 'investmentPreference',
     'yearOfIncorporation', 'promotersOrDirectors', 'totalSqftDelivered', 'majorCompletedProjects', 'typeOfProjectsOffered', 'companyOverview',
     'experienceWithNriInvestors', 'declaredLitigationDisputes', 'financialOfCompany', 'outstandingDebt', 'bankingPartners'
@@ -682,6 +714,106 @@ const RegisterDialog = ({ isOpen, onOpenChange, onLoginClick, initialData = {} }
                             </div>
                           )}
                         </div>
+                      </div>
+                    )}
+
+                    {/* SERVICE PROVIDER FORM 1 */}
+                    {userType === 'serviceProvider' && (
+                      <div className="space-y-8 animate-in slide-in-from-bottom-6 duration-500">
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                          {shouldShowField('fullName') && (
+                            <div>
+                              <Label className={labelStyle}>Full Name / Entity Name *</Label>
+                              <Input required value={serviceProviderData.fullName} onChange={(e) => setServiceProviderData({ ...serviceProviderData, fullName: e.target.value })} placeholder="Full name / Entity name" className={inputStyle} />
+                            </div>
+                          )}
+                          {shouldShowField('contactNumber') && (
+                            <div>
+                              <Label className={labelStyle}>Contact Number *</Label>
+                              <Input required value={serviceProviderData.contactNumber} onChange={(e) => setServiceProviderData({ ...serviceProviderData, contactNumber: e.target.value.replace(/\D/g, '') })} placeholder="Contact number" className={inputStyle} />
+                            </div>
+                          )}
+                          {shouldShowField('serviceCategory') && (
+                            <div>
+                              <Label className={labelStyle}>Service Category *</Label>
+                              <select required className={selectStyle} value={serviceProviderData.serviceCategory} onChange={(e) => setServiceProviderData({ ...serviceProviderData, serviceCategory: e.target.value })}>
+                                <option value="">Select Category</option>
+                                <option value="Lawyers">Lawyers</option>
+                                <option value="Real Estate Consultants">Real Estate Consultants</option>
+                                <option value="Real Estate Agents / Brokers">Real Estate Agents / Brokers</option>
+                                <option value="Chartered Accountants">Chartered Accountants</option>
+                                <option value="Tax Consultants">Tax Consultants</option>
+                                <option value="Financial Advisors">Financial Advisors</option>
+                                <option value="Mortgage Consultants">Mortgage Consultants</option>
+                                <option value="Banks / Financial Institutions">Banks / Financial Institutions</option>
+                                <option value="Insurance Providers">Insurance Providers</option>
+                                <option value="Property Management Companies">Property Management Companies</option>
+                                <option value="Interior Designers">Interior Designers</option>
+                                <option value="Architects">Architects</option>
+                                <option value="Civil Contractors">Civil Contractors</option>
+                                <option value="Home Loan Consultants">Home Loan Consultants</option>
+                                <option value="Property Valuation Experts">Property Valuation Experts</option>
+                                <option value="Immigration Consultants">Immigration Consultants</option>
+                                <option value="Other Professional Services">Other Professional Services</option>
+                              </select>
+                            </div>
+                          )}
+                          {shouldShowField('yearsOfExperience') && (
+                            <div>
+                              <Label className={labelStyle}>Years of Experience *</Label>
+                              <Input required value={serviceProviderData.yearsOfExperience} onChange={(e) => setServiceProviderData({ ...serviceProviderData, yearsOfExperience: e.target.value.replace(/\D/g, '') })} placeholder="e.g. 5" className={inputStyle} />
+                            </div>
+                          )}
+                        </div>
+
+                        {(shouldShowField('address') || shouldShowField('country') || shouldShowField('zip') || shouldShowField('state') || shouldShowField('city')) && (
+                          <div className="space-y-6 pt-4 border-t border-gray-100">
+                            <Label className="text-xs font-black text-gray-900 uppercase tracking-widest block mb-4">Location Details</Label>
+                            <div className="grid grid-cols-1 gap-6">
+                              {shouldShowField('address') && (
+                                <div>
+                                  <Label className={labelStyle}>Full Address</Label>
+                                  <Input value={serviceProviderData.address} onChange={(e) => setServiceProviderData({ ...serviceProviderData, address: e.target.value })} className={inputStyle} />
+                                </div>
+                              )}
+                            </div>
+                            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                              {shouldShowField('country') && (
+                                <div>
+                                  <Label className={labelStyle}>Country *</Label>
+                                  <select required className={selectStyle} value={serviceProviderData.country} onChange={handleCountryChange}>
+                                    <option value="">Select Country</option>
+                                    {countries.map((c) => <option key={c.name} value={c.name}>{c.name}</option>)}
+                                  </select>
+                                </div>
+                              )}
+                              {shouldShowField('zip') && (
+                                <div>
+                                  <Label className={labelStyle}>{addressLabels.zip}</Label>
+                                  <Input value={serviceProviderData.zip} onChange={(e) => setServiceProviderData({ ...serviceProviderData, zip: e.target.value })} className={inputStyle} />
+                                </div>
+                              )}
+                              {shouldShowField('state') && (
+                                <div>
+                                  <Label className={labelStyle}>{addressLabels.state} *</Label>
+                                  <select required className={selectStyle} value={serviceProviderData.state} onChange={handleStateChange} disabled={!serviceProviderData.country}>
+                                    <option value="">{loadingLocation ? "Loading..." : `Select ${addressLabels.state}`}</option>
+                                    {states.map((s) => <option key={s.name} value={s.name}>{s.name}</option>)}
+                                  </select>
+                                </div>
+                              )}
+                              {shouldShowField('city') && (
+                                <div>
+                                  <Label className={labelStyle}>City *</Label>
+                                  <select required className={selectStyle} value={serviceProviderData.city} onChange={(e) => setServiceProviderData({ ...serviceProviderData, city: e.target.value })} disabled={!serviceProviderData.state}>
+                                    <option value="">{loadingLocation ? "Loading..." : "Select City"}</option>
+                                    {cities.map((city, index) => <option key={index} value={city}>{city}</option>)}
+                                  </select>
+                                </div>
+                              )}
+                            </div>
+                          </div>
+                        )}
                       </div>
                     )}
 

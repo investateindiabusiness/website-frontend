@@ -13,17 +13,8 @@ import {
   fetchMyBookings, 
   rectifyBooking, 
   cancelBooking,
-<<<<<<< HEAD
-  uploadImage
-=======
-<<<<<<< HEAD
   adminCreateSlot,
   adminDeleteSlot
-=======
-  fetchMyCoupons,
-  validateCoupon
->>>>>>> 270de042b25becc435c3f80441d581e8b3118159
->>>>>>> 6de6c6f2ba68d0d0fb52e0e828a4c683fabd25cd
 } from '@/api';
 import { loadStripe } from '@stripe/stripe-js';
 import { Elements } from '@stripe/react-stripe-js';
@@ -76,7 +67,7 @@ const formatDate = (dateStr) => {
   return `${day}-${month}-${year}`;
 };
 
-export default function BuilderAdvertisements() {
+export default function InvestorAdvertisements() {
   const { user } = useAuth();
   const router = useRouter();
   
@@ -99,12 +90,6 @@ export default function BuilderAdvertisements() {
   const [isSubmittingBooking, setIsSubmittingBooking] = useState(false);
   const [paymentClientSecret, setPaymentClientSecret] = useState(null);
   const [paymentId, setPaymentId] = useState(null);
-<<<<<<< HEAD
-  const [isUploadingImage, setIsUploadingImage] = useState(false);
-  const [uploadProgress, setUploadProgress] = useState(0);
-=======
-  const [checkoutCost, setCheckoutCost] = useState(0);
->>>>>>> 6de6c6f2ba68d0d0fb52e0e828a4c683fabd25cd
 
   // Rectify Modal / Form State
   const [rectifyBookingItem, setRectifyBookingItem] = useState(null);
@@ -116,7 +101,6 @@ export default function BuilderAdvertisements() {
   });
   const [isSubmittingRectify, setIsSubmittingRectify] = useState(false);
 
-<<<<<<< HEAD
   // Slot Creation Form State
   const [newSlot, setNewSlot] = useState({
     startDate: '',
@@ -144,33 +128,6 @@ export default function BuilderAdvertisements() {
   }, [user, selectedZone?.id]);
 
   const loadZones = async (silent = false) => {
-=======
-  // Coupon State
-  const [myCoupons, setMyCoupons] = useState([]);
-  const [couponCodeInput, setCouponCodeInput] = useState('');
-  const [appliedCoupon, setAppliedCoupon] = useState(null);
-  const [isApplyingCoupon, setIsApplyingCoupon] = useState(false);
-  const [couponError, setCouponError] = useState('');
-
-  useEffect(() => {
-    if (user) {
-      loadZones();
-      loadMyBookings();
-      loadCoupons();
-    }
-  }, [user]);
-
-  const loadCoupons = async () => {
-    try {
-      const res = await fetchMyCoupons();
-      setMyCoupons(res.data || []);
-    } catch (err) {
-      console.error("Failed to load coupons", err);
-    }
-  };
-
-  const loadZones = async () => {
->>>>>>> 270de042b25becc435c3f80441d581e8b3118159
     try {
       if (!silent) setLoadingZones(true);
       const data = await fetchAdZones();
@@ -246,89 +203,13 @@ export default function BuilderAdvertisements() {
   };
 
   const handleOpenBookingModal = (slot) => {
-<<<<<<< HEAD
-    router.push(`/builder/advertisements/book?zoneId=${selectedZone.id}&slotId=${slot.id}&startDate=${slot.startDate}&endDate=${slot.endDate}&timeSlot=${encodeURIComponent(slot.timeSlot || 'All Day')}`);
-=======
-    setBookingSlot(slot);
-    setAdContent({
-      imageUrl: '',
-      videoUrl: '',
-      text: '',
-      targetUrl: ''
-    });
-    setCouponCodeInput('');
-    setAppliedCoupon(null);
-    setCouponError('');
->>>>>>> 270de042b25becc435c3f80441d581e8b3118159
+    router.push(`/investor/advertisements/book?zoneId=${selectedZone.id}&slotId=${slot.id}&startDate=${slot.startDate}&endDate=${slot.endDate}&timeSlot=${encodeURIComponent(slot.timeSlot || 'All Day')}`);
   };
 
   const handleCloseBookingModal = () => {
     setBookingSlot(null);
     setPaymentClientSecret(null);
     setPaymentId(null);
-<<<<<<< HEAD
-    setIsUploadingImage(false);
-    setUploadProgress(0);
-  };
-
-  const handleImageUpload = async (e, formType = 'book') => {
-    const file = e.target.files[0];
-    if (!file) return;
-
-    if (!file.type.startsWith('image/')) {
-      toast({ title: "Invalid File", description: "Please upload an image file (PNG, JPG, etc).", variant: "destructive" });
-      return;
-    }
-
-    if (file.size > 2 * 1024 * 1024) {
-      toast({ title: "File Too Large", description: "Image size should be less than 2MB.", variant: "destructive" });
-      return;
-    }
-
-    try {
-      setIsUploadingImage(true);
-      setUploadProgress(25); // Fake progress to show activity
-
-      const response = await uploadImage(file, 'campaigns');
-      
-      setUploadProgress(100);
-      const downloadURL = response.url;
-
-      if (formType === 'book') {
-        setAdContent(prev => ({ ...prev, imageUrl: downloadURL }));
-      } else {
-        setRectifyAdContent(prev => ({ ...prev, imageUrl: downloadURL }));
-      }
-      toast({ title: "Upload Successful", description: "Image uploaded successfully." });
-      setIsUploadingImage(false);
-      setUploadProgress(0);
-    } catch (error) {
-      console.error("Upload setup error:", error);
-      toast({ title: "Upload Failed", description: error.message || "Could not initialize upload.", variant: "destructive" });
-      setIsUploadingImage(false);
-      setUploadProgress(0);
-=======
-    setCheckoutCost(0);
-    setCouponCodeInput('');
-    setAppliedCoupon(null);
-    setCouponError('');
-  };
-
-  const handleApplyCoupon = async () => {
-    if (!couponCodeInput) return;
-    try {
-      setIsApplyingCoupon(true);
-      setCouponError('');
-      const res = await validateCoupon(couponCodeInput);
-      setAppliedCoupon(res.data);
-      toast({ title: "Coupon Applied", description: `Discount of ₹${res.data.discountAmount} applied.` });
-    } catch (err) {
-      setCouponError(err.message || 'Invalid coupon');
-      setAppliedCoupon(null);
-    } finally {
-      setIsApplyingCoupon(false);
->>>>>>> 6de6c6f2ba68d0d0fb52e0e828a4c683fabd25cd
-    }
   };
 
   const handleBookingSubmit = async (e) => {
@@ -348,7 +229,6 @@ export default function BuilderAdvertisements() {
       const response = await bookSlot({
         zoneId: selectedZone.id,
         slotId: bookingSlot.id,
-        couponCode: appliedCoupon?.code,
         adContent
       });
       
@@ -357,7 +237,6 @@ export default function BuilderAdvertisements() {
         setPaymentClientSecret(response.data.payment.clientSecret);
         // API returns `paymentId` (not `id`) in the payment response DTO
         setPaymentId(response.data.payment.paymentId || null);
-        setCheckoutCost(response.data.cost || 0);
       } else {
         toast({ 
           title: "Campaign Booked!", 
@@ -514,9 +393,9 @@ export default function BuilderAdvertisements() {
               <Badge className="bg-orange-500/20 text-orange-200 hover:bg-orange-500/30 border-none mb-3 px-3 py-1">
                 <Sparkles className="w-3.5 h-3.5 mr-1.5" /> Expand Your Viewers
               </Badge>
-              <h1 className="text-2xl md:text-3xl lg:text-4xl font-bold mb-2">Builder Campaigns</h1>
+              <h1 className="text-2xl md:text-3xl lg:text-4xl font-bold mb-2">Investor Campaigns</h1>
               <p className="text-sm md:text-base text-blue-100 opacity-90 max-w-xl">
-                Advertise your premium real estate listings inside active landing pages, dashboards, and search inline sections across Investate India.
+                Advertise your listings inside active landing pages, dashboards, and search inline sections across Investate India.
               </p>
             </div>
           </div>
@@ -610,7 +489,7 @@ export default function BuilderAdvertisements() {
                 <Card className="shadow-md border-none rounded-2xl overflow-hidden bg-white">
                   <CardHeader className="bg-slate-50 border-b border-slate-100 py-4 px-6">
                     <CardTitle className="text-base font-bold text-slate-800">Add Available Slot to {selectedZone.name}</CardTitle>
-                    <CardDescription className="text-xs">Create unbooked slots that builders can select and purchase</CardDescription>
+                    <CardDescription className="text-xs">Create unbooked slots that you can select and purchase</CardDescription>
                   </CardHeader>
                   <form onSubmit={handleCreateSlotSubmit}>
                     <CardContent className="p-6">
@@ -861,7 +740,7 @@ export default function BuilderAdvertisements() {
               <CardContent className="p-6">
                 <Elements stripe={stripePromise} options={{ clientSecret: paymentClientSecret, appearance: { theme: 'stripe' } }}>
                   <CheckoutForm 
-                    amount={checkoutCost}
+                    amount={selectedZone?.cost}
                     paymentId={paymentId}
                     onSuccess={() => {
                       handleCloseBookingModal();
@@ -881,110 +760,9 @@ export default function BuilderAdvertisements() {
                     <strong className="text-slate-800 text-sm">{formatDate(bookingSlot.startDate)} to {formatDate(bookingSlot.endDate)}</strong>
                   </div>
                   <div className="text-right">
-                    <span className="font-semibold text-slate-400 uppercase tracking-wide block text-[9px]">Base Cost</span>
+                    <span className="font-semibold text-slate-400 uppercase tracking-wide block text-[9px]">Cost</span>
                     <strong className="text-slate-800 text-sm">₹{selectedZone?.cost}</strong>
                   </div>
-                </div>
-
-<<<<<<< HEAD
-                <div className="space-y-2">
-                  <label className="text-xs font-bold text-slate-600 block">Ad Image <span className="text-red-500">*</span></label>
-                  
-                  {adContent.imageUrl && (
-                    <div className="relative w-full h-32 rounded-xl overflow-hidden border border-slate-200 mb-2 group">
-                      <img 
-                        src={adContent.imageUrl} 
-                        alt="Ad Preview" 
-                        className="w-full h-full object-cover"
-                      />
-                      <div className="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
-                        <Button 
-                          type="button" 
-                          variant="destructive" 
-                          size="sm"
-                          onClick={() => setAdContent({...adContent, imageUrl: ''})}
-                          className="rounded-lg h-8"
-                        >
-                          <Trash2 className="w-4 h-4 mr-2" /> Remove
-                        </Button>
-                      </div>
-                    </div>
-                  )}
-                  
-                  {!adContent.imageUrl && (
-                    <div className="relative">
-                      <input
-                        type="file"
-                        accept="image/*"
-                        onChange={(e) => handleImageUpload(e, 'book')}
-                        disabled={isUploadingImage}
-                        className="hidden"
-                        id="ad-image-upload"
-                      />
-                      <label 
-                        htmlFor="ad-image-upload"
-                        className={`w-full flex items-center justify-center gap-2 border-2 border-dashed border-slate-200 rounded-xl px-4 py-6 text-sm transition-colors cursor-pointer ${isUploadingImage ? 'bg-slate-50 cursor-not-allowed' : 'hover:border-slate-400 hover:bg-slate-50 text-slate-600'}`}
-                      >
-                        {isUploadingImage ? (
-                          <>
-                            <Loader2 className="w-5 h-5 animate-spin text-slate-400" />
-                            <span className="text-slate-500 font-medium">Uploading... {uploadProgress}%</span>
-                          </>
-                        ) : (
-                          <>
-                            <ImageIcon className="w-5 h-5 text-slate-400" />
-                            <span className="font-medium">Click to upload image</span>
-                          </>
-                        )}
-                      </label>
-                    </div>
-                  )}
-                  <p className="text-[10px] text-slate-400">Supported Dimensions: {selectedZone?.width} x {selectedZone?.height} px (Max 2MB)</p>
-=======
-                <div className="space-y-1.5 border-t border-slate-100 pt-3">
-                  <label className="text-xs font-bold text-slate-600 block">Apply Coupon</label>
-                  <div className="flex gap-2">
-                    <input 
-                      type="text"
-                      placeholder="Enter coupon code"
-                      className="flex-1 border border-slate-200 rounded-xl px-4 py-2.5 text-sm uppercase outline-none focus:border-[#0b264f]"
-                      value={couponCodeInput}
-                      onChange={(e) => setCouponCodeInput(e.target.value.toUpperCase())}
-                      disabled={!!appliedCoupon}
-                    />
-                    {!appliedCoupon ? (
-                      <Button type="button" onClick={handleApplyCoupon} disabled={!couponCodeInput || isApplyingCoupon} className="bg-slate-800 text-white rounded-xl hover:bg-slate-700">
-                        {isApplyingCoupon ? <Loader2 className="w-4 h-4 animate-spin" /> : "Apply"}
-                      </Button>
-                    ) : (
-                      <Button type="button" onClick={() => { setAppliedCoupon(null); setCouponCodeInput(''); }} variant="outline" className="text-red-500 border-red-200 rounded-xl hover:bg-red-50">
-                        Remove
-                      </Button>
-                    )}
-                  </div>
-                  {couponError && <p className="text-[10px] text-red-500">{couponError}</p>}
-                  {appliedCoupon && (
-                    <div className="flex justify-between items-center text-xs text-green-600 font-semibold bg-green-50 p-2 rounded-lg mt-2">
-                      <span>Discount Applied:</span>
-                      <span>-₹{appliedCoupon.discountAmount}</span>
-                    </div>
-                  )}
-                  {myCoupons.length > 0 && !appliedCoupon && (
-                    <div className="mt-2 text-xs flex gap-2 flex-wrap items-center">
-                      <span className="text-slate-500">Available:</span>
-                      {myCoupons.map(c => (
-                        <button key={c.id} type="button" onClick={() => setCouponCodeInput(c.code)} className="text-[#0b264f] font-bold hover:underline px-2 py-1 bg-blue-50 rounded">
-                          {c.code}
-                        </button>
-                      ))}
-                    </div>
-                  )}
-                  {appliedCoupon && selectedZone && (
-                     <div className="flex justify-between items-center mt-2 font-bold text-sm pt-2 border-t border-slate-100">
-                       <span className="text-slate-700">Final Total:</span>
-                       <span className="text-[#0b264f] text-lg">₹{Math.max(0, selectedZone.cost - appliedCoupon.discountAmount)}</span>
-                     </div>
-                  )}
                 </div>
 
                 <div className="space-y-1.5">
@@ -997,7 +775,6 @@ export default function BuilderAdvertisements() {
                     value={adContent.imageUrl}
                     onChange={(e) => setAdContent({...adContent, imageUrl: e.target.value})}
                   />
->>>>>>> 6de6c6f2ba68d0d0fb52e0e828a4c683fabd25cd
                 </div>
 
                 <div className="space-y-1.5">
@@ -1073,58 +850,16 @@ export default function BuilderAdvertisements() {
                   <p className="italic font-medium">"{rectifyBookingItem.rejectionReason}"</p>
                 </div>
 
-                <div className="space-y-2">
-                  <label className="text-xs font-bold text-slate-600 block">Corrected Image <span className="text-red-500">*</span></label>
-                  
-                  {rectifyAdContent.imageUrl && (
-                    <div className="relative w-full h-32 rounded-xl overflow-hidden border border-slate-200 mb-2 group">
-                      <img 
-                        src={rectifyAdContent.imageUrl} 
-                        alt="Ad Preview" 
-                        className="w-full h-full object-cover"
-                      />
-                      <div className="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
-                        <Button 
-                          type="button" 
-                          variant="destructive" 
-                          size="sm"
-                          onClick={() => setRectifyAdContent({...rectifyAdContent, imageUrl: ''})}
-                          className="rounded-lg h-8"
-                        >
-                          <Trash2 className="w-4 h-4 mr-2" /> Remove
-                        </Button>
-                      </div>
-                    </div>
-                  )}
-                  
-                  {!rectifyAdContent.imageUrl && (
-                    <div className="relative">
-                      <input
-                        type="file"
-                        accept="image/*"
-                        onChange={(e) => handleImageUpload(e, 'rectify')}
-                        disabled={isUploadingImage}
-                        className="hidden"
-                        id="rectify-image-upload"
-                      />
-                      <label 
-                        htmlFor="rectify-image-upload"
-                        className={`w-full flex items-center justify-center gap-2 border-2 border-dashed border-amber-200 rounded-xl px-4 py-6 text-sm transition-colors cursor-pointer ${isUploadingImage ? 'bg-slate-50 cursor-not-allowed' : 'hover:border-amber-400 hover:bg-amber-50 text-slate-600'}`}
-                      >
-                        {isUploadingImage ? (
-                          <>
-                            <Loader2 className="w-5 h-5 animate-spin text-slate-400" />
-                            <span className="text-slate-500 font-medium">Uploading... {uploadProgress}%</span>
-                          </>
-                        ) : (
-                          <>
-                            <ImageIcon className="w-5 h-5 text-slate-400" />
-                            <span className="font-medium">Click to upload corrected image</span>
-                          </>
-                        )}
-                      </label>
-                    </div>
-                  )}
+                <div className="space-y-1.5">
+                  <label className="text-xs font-bold text-slate-600 block">Corrected Image URL <span className="text-red-500">*</span></label>
+                  <input 
+                    type="url"
+                    required
+                    placeholder="https://example.com/ad-image-rectified.jpg"
+                    className="w-full border border-slate-200 rounded-xl px-4 py-2.5 text-sm outline-none focus:border-amber-500 text-slate-700 placeholder-slate-400"
+                    value={rectifyAdContent.imageUrl}
+                    onChange={(e) => setRectifyAdContent({...rectifyAdContent, imageUrl: e.target.value})}
+                  />
                 </div>
 
                 <div className="space-y-1.5">
