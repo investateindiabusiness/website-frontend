@@ -58,8 +58,8 @@ export default function ProjectManager() {
     const loadProjects = useCallback(async () => {
         if (!user?.uid) return;
         try {
-            const data = await fetchBuilderProjects(user.uid);
-            setProjects(data);
+            const res = await fetchBuilderProjects(user.uid);
+            setProjects(res?.data || res || []);
         } catch (error) {
             toast({ title: "Error loading projects", description: error.message, variant: "destructive" });
         }

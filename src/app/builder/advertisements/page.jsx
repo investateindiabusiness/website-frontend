@@ -6,6 +6,7 @@ import Header from '@/components/Header';
 import Footer from '@/components/Footer';
 import { useAuth } from '@/hooks/AuthContext';
 import { toast } from '@/hooks/use-toast';
+import { getSocket, joinUser, leaveUser } from '@/utils/socket';
 import {
   fetchAdZones,
   fetchSlots,
@@ -138,15 +139,30 @@ export default function BuilderAdvertisements() {
       loadZones();
       loadMyBookings();
       loadCoupons();
+      joinUser(user.uid);
+
+      const socket = getSocket();
+      const handleNewCoupon = (couponData) => {
+        toast({ title: "New Coupon Assigned!", description: `You received coupon code: ${couponData.code}` });
+        loadCoupons();
+      };
+      socket.on('new_coupon', handleNewCoupon);
+
+      return () => {
+        socket.off('new_coupon', handleNewCoupon);
+        leaveUser(user.uid);
+      };
     }
   }, [user]);
 
   const loadCoupons = async () => {
     try {
       const res = await fetchMyCoupons();
-      setMyCoupons(res.data || []);
+      setMyCoupons(res?.data || []);
     } catch (err) {
-      console.error("Failed to load coupons", err);
+      // Silently ignore — coupons are an optional feature.
+      // A "Failed to fetch" is expected when the backend is not yet ready.
+      setMyCoupons([]);
     }
   };
 

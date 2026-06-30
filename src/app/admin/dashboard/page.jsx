@@ -52,31 +52,31 @@ export default function AdminDashboard() {
 
   return (
     <div className="font-sans">
-        <div className="mb-8 flex flex-col md:flex-row md:items-center md:justify-between gap-4">
-          <div>
-            <h1 className="text-3xl font-bold text-gray-900 mb-2">Admin Dashboard</h1>
-            <p className="text-gray-600">Welcome back! Manage your platform here.</p>
-          </div>
-          <Button variant="outline" onClick={loadDashboardData} disabled={loading}>
-            {loading ? <Loader2 className="w-4 h-4 mr-2 animate-spin" /> : <RefreshCw className="w-4 h-4 mr-2" />}
-            Refresh Data
-          </Button>
+      <div className="mb-8 flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+        <div>
+          <h1 className="text-3xl font-bold text-gray-900 mb-2">Admin Dashboard</h1>
+          <p className="text-gray-600">Welcome back! Manage your platform here.</p>
         </div>
+        <Button variant="outline" onClick={loadDashboardData} disabled={loading}>
+          {loading ? <Loader2 className="w-4 h-4 mr-2 animate-spin" /> : <RefreshCw className="w-4 h-4 mr-2" />}
+          Refresh Data
+        </Button>
+      </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
-          <StatCard title="Total Projects" value={stats.totalProjects} icon={<Building2 />} color="blue" />
-          <StatCard title="Active Builders" value={stats.totalBuilders} icon={<Users />} color="green" />
-          <StatCard title="Project Leads" value={stats.totalLeads} icon={<MessageSquare />} color="orange" />
-          <StatCard title="General Inquiries" value={stats.inquiries} icon={<FileText />} color="purple" />
-        </div>
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+        <StatCard title="Total Projects" value={stats.totalProjects} icon={<Building2 />} color="blue" />
+        <StatCard title="Active Builders" value={stats.totalBuilders} icon={<Users />} color="green" />
+        <StatCard title="Project Leads" value={stats.totalLeads} icon={<MessageSquare />} color="orange" />
+        <StatCard title="General Inquiries" value={stats.inquiries} icon={<FileText />} color="purple" />
+      </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-5 gap-4 mb-8">
-          <Button onClick={() => router.push('/admin/projects')} className="bg-blue-600 h-auto py-6 flex-col gap-2"><Building2 /> Manage Projects</Button>
-          <Button onClick={() => router.push('/admin/builders')} className="bg-green-600 h-auto py-6 flex-col gap-2"><Users /> Manage Builders</Button>
-          <Button onClick={() => router.push('/admin/leads')} className="bg-orange-600 h-auto py-6 flex-col gap-2"><MessageSquare /> Project Leads</Button>
-          <Button onClick={() => router.push('/admin/inquiries')} className="bg-purple-600 h-auto py-6 flex-col gap-2"><FileText /> Inquiries</Button>
-          <Button onClick={() => router.push('/admin/helpdesk')} className="bg-[#D48035] h-auto py-6 flex-col gap-2"><MessageSquare /> Helpdesk</Button>
-        </div>
+      <div className="grid grid-cols-1 md:grid-cols-5 gap-4 mb-8">
+        <Button onClick={() => router.push('/admin/projects')} className="bg-blue-600 h-auto py-6 flex-col gap-2"><Building2 /> Manage Projects</Button>
+        <Button onClick={() => router.push('/admin/builders')} className="bg-green-600 h-auto py-6 flex-col gap-2"><Users /> Manage Builders</Button>
+        <Button onClick={() => router.push('/admin/leads')} className="bg-orange-600 h-auto py-6 flex-col gap-2"><MessageSquare /> Project Leads</Button>
+        <Button onClick={() => router.push('/admin/inquiries')} className="bg-purple-600 h-auto py-6 flex-col gap-2"><FileText /> Inquiries</Button>
+        <Button onClick={() => router.push('/admin/helpdesk')} className="bg-[#D48035] h-auto py-6 flex-col gap-2"><MessageSquare /> Helpdesk</Button>
+      </div>
     </div>
   );
 }

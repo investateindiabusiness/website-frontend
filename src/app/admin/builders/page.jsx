@@ -4,6 +4,10 @@ import React, { useState, useEffect, useCallback } from 'react';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
 import AppDataGrid from '@/components/AppDataGrid';
+<<<<<<< HEAD
+=======
+import { Card, CardContent } from '@/components/ui/card';
+>>>>>>> d12a5f943b677122b8897d63c2b1db3a42564419
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from '@/components/ui/dialog';
@@ -96,6 +100,11 @@ export default function AdminBuilders() {
       const data = await fetchAllBuilders(params);
       setBuilders(data.data || []);
       setTotal(data.pagination?.total || 0);
+<<<<<<< HEAD
+=======
+      const data = await fetchAllBuilders(user?.token);
+      setBuilders(data.data || []);
+>>>>>>> d12a5f943b677122b8897d63c2b1db3a42564419
     } catch (error) {
       toast({ title: 'Error', description: error.message, variant: 'destructive' });
     } finally {
@@ -252,6 +261,131 @@ export default function AdminBuilders() {
           </div>
         </div>
 
+        <div className="bg-white rounded-3xl shadow-sm border border-gray-200 overflow-hidden">
+          {loading ? (
+            <div className="flex flex-col items-center justify-center text-gray-500 py-24">
+              <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-orange-600 mb-4"></div>
+              Loading builders...
+            </div>
+          ) : filteredBuilders.length === 0 ? (
+            <div className="text-center p-12 text-gray-500">
+              No builders found in this category.
+            </div>
+          ) : (
+            <>
+              <div className="overflow-x-auto">
+                <table className="w-full text-left border-collapse">
+                  <thead>
+                    <tr className="bg-gray-50/75 border-b border-gray-200 text-gray-600 text-xs font-bold uppercase tracking-wider">
+                      <th className="px-6 py-4">Company Name</th>
+                      <th className="px-6 py-4">Location</th>
+                      <th className="px-6 py-4">Contact Info</th>
+                      <th className="px-6 py-4">Status</th>
+                      <th className="px-6 py-4 text-right">Actions</th>
+                    </tr>
+                  </thead>
+                  <tbody className="divide-y divide-gray-100">
+                    {filteredBuilders.slice((currentPage - 1) * ITEMS_PER_PAGE, currentPage * ITEMS_PER_PAGE).map((builder) => {
+                      const builderId = builder.uid || builder.id;
+                      const renderStatusBadge = () => {
+                        switch (builder.onboardingStatus) {
+                          case 'form1_pending': return <Badge className="bg-yellow-100 text-yellow-700 hover:bg-yellow-100 border-none font-semibold"><Clock className="w-3 h-3 mr-1" /> Form 1 Review</Badge>;
+                          case 'form2_pending': return <Badge className="bg-purple-100 text-purple-700 hover:bg-purple-100 border-none font-semibold"><Clock className="w-3 h-3 mr-1" /> Final Review</Badge>;
+                          case 'form1_changes_requested': return <Badge className="bg-orange-100 text-orange-700 hover:bg-orange-100 border-none font-semibold"><FileWarning className="w-3 h-3 mr-1" /> Changes Req.</Badge>;
+                          case 'complete': return <Badge className="bg-green-100 text-green-700 hover:bg-green-100 border-none font-semibold"><ShieldCheck className="w-3 h-3 mr-1" /> Verified</Badge>;
+                          case 'form1_approved': return <Badge className="bg-blue-100 text-blue-700 hover:bg-blue-100 border-none font-semibold"><Clock className="w-3 h-3 mr-1" /> Form 1 Approved</Badge>;
+                          default: return <Badge className="bg-gray-100 text-gray-700 hover:bg-gray-100 border-none font-semibold">{builder.onboardingStatus || 'Unknown'}</Badge>;
+                        }
+                      };
+
+                      return (
+                        <tr key={builderId} className="hover:bg-gray-50/50 transition-colors">
+                          <td className="px-6 py-4 whitespace-nowrap">
+                            <div className="flex items-center space-x-3">
+                              <div className="w-10 h-10 rounded-xl bg-orange-50 flex items-center justify-center flex-shrink-0">
+                                <Building2 className="h-5 w-5 text-orange-400" />
+                              </div>
+                              <div>
+                                <div className="text-sm font-bold text-gray-900">
+                                  {builder.companyName || builder.name || 'Unnamed Company'}
+                                </div>
+                                <div className="text-xs text-gray-400">
+                                  {builder.entityType || 'Company'} • <span className="font-mono bg-gray-100 px-1 rounded cursor-text select-all" title="User ID (UID)">{builderId}</span>
+                                </div>
+                              </div>
+                            </div>
+                          </td>
+                          <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-600">
+                            {builder.city ? `${builder.city}, ${builder.state}` : 'N/A'}
+                          </td>
+                          <td className="px-6 py-4 whitespace-nowrap">
+                            <div className="flex flex-col gap-0.5 text-sm text-gray-600">
+                              <a href={`mailto:${builder.email}`} className="flex items-center hover:text-orange-600 gap-1.5"><Mail className="h-3.5 w-3.5 text-gray-400" /> {builder.email}</a>
+                              {builder.contactPersonPhone && (
+                                <a href={`tel:${builder.contactPersonPhone}`} className="flex items-center hover:text-orange-600 gap-1.5"><Phone className="h-3.5 w-3.5 text-gray-400" /> {builder.contactPersonPhone}</a>
+                              )}
+                            </div>
+                          </td>
+                          <td className="px-6 py-4 whitespace-nowrap">
+                            {renderStatusBadge()}
+                          </td>
+                          <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+                            <Button
+                              onClick={() => setViewBuilderData(builder)}
+                              className="bg-gray-900 hover:bg-gray-800 text-white rounded-xl text-xs px-4 py-2"
+                            >
+                              <Eye className="w-3.5 h-3.5 mr-1.5" /> View Profile
+                            </Button>
+                          </td>
+                        </tr>
+                      );
+                    })}
+                  </tbody>
+                </table>
+              </div>
+
+              {/* Pagination Controls */}
+              {Math.ceil(filteredBuilders.length / ITEMS_PER_PAGE) > 1 && (
+                <div className="bg-gray-50 border-t border-gray-200 px-6 py-4 flex flex-col sm:flex-row items-center justify-between gap-4">
+                  <div className="text-xs font-bold text-gray-500 uppercase tracking-wider">
+                    Showing {((currentPage - 1) * ITEMS_PER_PAGE) + 1} to {Math.min(currentPage * ITEMS_PER_PAGE, filteredBuilders.length)} of {filteredBuilders.length} records
+                  </div>
+                  <div className="flex items-center gap-1.5">
+                    <Button
+                      onClick={() => setCurrentPage(prev => Math.max(1, prev - 1))}
+                      disabled={currentPage === 1}
+                      variant="outline"
+                      className="h-9 px-3 rounded-lg text-xs font-bold hover:bg-slate-100 bg-white"
+                    >
+                      Previous
+                    </Button>
+
+                    {Array.from({ length: Math.ceil(filteredBuilders.length / ITEMS_PER_PAGE) }, (_, i) => i + 1).map((page) => (
+                      <Button
+                        key={page}
+                        onClick={() => setCurrentPage(page)}
+                        variant={currentPage === page ? 'default' : 'outline'}
+                        className={`h-9 w-9 p-0 rounded-lg text-xs font-bold ${currentPage === page ? 'bg-slate-900 text-white hover:bg-slate-800' : 'hover:bg-slate-100 bg-white'
+                          }`}
+                      >
+                        {page}
+                      </Button>
+                    ))}
+
+                    <Button
+                      onClick={() => setCurrentPage(prev => Math.min(Math.ceil(filteredBuilders.length / ITEMS_PER_PAGE), prev + 1))}
+                      disabled={currentPage === Math.ceil(filteredBuilders.length / ITEMS_PER_PAGE)}
+                      variant="outline"
+                      className="h-9 px-3 rounded-lg text-xs font-bold hover:bg-slate-100 bg-white"
+                    >
+                      Next
+                    </Button>
+                  </div>
+                </div>
+              )}
+            </>
+          )}
+        </div>
         <AppDataGrid
           columns={BUILDER_COLUMNS}
           rows={builders}

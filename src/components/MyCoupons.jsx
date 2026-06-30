@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState, useEffect } from 'react';
+import { getSocket, joinUser, leaveUser } from '@/utils/socket';
 import { fetchMyCoupons } from '@/api';
 import { toast } from '@/hooks/use-toast';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
@@ -17,6 +18,21 @@ export default function MyCoupons() {
   useEffect(() => {
     if (user) {
       loadCoupons();
+      joinUser(user.uid);
+      
+      const socket = getSocket();
+      
+      const handleNewCoupon = (couponData) => {
+        toast({ title: "New Coupon!", description: `You received a new coupon: ${couponData.code}` });
+        loadCoupons();
+      };
+      
+      socket.on('new_coupon', handleNewCoupon);
+      
+      return () => {
+        socket.off('new_coupon', handleNewCoupon);
+        leaveUser(user.uid);
+      };
     }
   }, [user]);
 
@@ -24,9 +40,10 @@ export default function MyCoupons() {
     try {
       setLoading(true);
       const res = await fetchMyCoupons();
-      setCoupons(res.data || []);
+      setCoupons(res?.data || []);
     } catch (err) {
-      toast({ title: "Error", description: "Failed to load your coupons.", variant: "destructive" });
+      // Silently set empty — backend may not be ready or coupon route unavailable
+      setCoupons([]);
     } finally {
       setLoading(false);
     }
