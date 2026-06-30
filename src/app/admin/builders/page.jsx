@@ -269,7 +269,7 @@ export default function AdminBuilders() {
                                   {builder.companyName || builder.name || 'Unnamed Company'}
                                 </div>
                                 <div className="text-xs text-gray-400">
-                                  Builder Partner
+                                  {builder.entityType || 'Company'} • <span className="font-mono bg-gray-100 px-1 rounded cursor-text select-all" title="User ID (UID)">{builderId}</span>
                                 </div>
                               </div>
                             </div>

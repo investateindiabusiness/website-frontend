@@ -40,8 +40,8 @@ export default function BuilderDashboard() {
       if (!user?.uid) return;
       try {
         setIsLoading(true);
-        const data = await fetchBuilderProjects(user.uid);
-        setProjects(data || []);
+        const res = await fetchBuilderProjects(user.uid);
+        setProjects(res?.data || res || []);
       } catch (error) {
         toast({ title: "Error", description: "Failed to load your projects.", variant: "destructive" });
       } finally {

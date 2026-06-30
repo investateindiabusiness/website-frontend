@@ -6,6 +6,7 @@ import Header from '@/components/Header';
 import Footer from '@/components/Footer';
 import { useAuth } from '@/hooks/AuthContext';
 import { toast } from '@/hooks/use-toast';
+import { getSocket, joinUser, leaveUser } from '@/utils/socket';
 import { bookSlot, fetchAdZones, fetchMyCoupons, validateCoupon } from '@/api';
 import { loadStripe } from '@stripe/stripe-js';
 import { Elements } from '@stripe/react-stripe-js';
@@ -79,6 +80,19 @@ function BookingFormContent() {
     if (user && zoneId) {
       loadZoneDetails();
       loadAvailableCoupons();
+      joinUser(user.uid);
+
+      const socket = getSocket();
+      const handleNewCoupon = (couponData) => {
+        toast({ title: "New Coupon!", description: `You received coupon code: ${couponData.code}` });
+        loadAvailableCoupons();
+      };
+      socket.on('new_coupon', handleNewCoupon);
+
+      return () => {
+        socket.off('new_coupon', handleNewCoupon);
+        leaveUser(user.uid);
+      };
     }
   }, [user, zoneId]);
 

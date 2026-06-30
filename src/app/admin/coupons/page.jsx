@@ -24,7 +24,6 @@ export default function AdminCoupons() {
     type: 'custom',
     maxUses: 1,
     assignedTo: '',
-    assignedRole: 'all',
     validUntil: ''
   });
 
@@ -64,7 +63,7 @@ export default function AdminCoupons() {
       await createAdminCoupon(payload);
       toast({ title: "Coupon Created", description: "The coupon has been successfully created." });
       setIsModalOpen(false);
-      setFormData({ code: '', discountAmount: '', type: 'custom', maxUses: 1, assignedTo: '', assignedRole: 'all', validUntil: '' });
+      setFormData({ code: '', discountAmount: '', type: 'custom', maxUses: 1, assignedTo: '', validUntil: '' });
       loadCoupons();
     } catch (err) {
       toast({ title: "Creation Failed", description: err.message, variant: "destructive" });
@@ -157,7 +156,7 @@ export default function AdminCoupons() {
                             </Badge>
                           </td>
                           <td className="py-4 px-6 text-xs text-slate-500">
-                            {c.assignedTo ? <span title={c.assignedTo}>Specific User</span> : c.assignedRole === 'all' ? 'All Roles' : c.assignedRole}
+                            {c.assignedTo ? <span title={c.assignedTo}>User ID: {c.assignedTo}</span> : 'Global'}
                           </td>
                           <td className="py-4 px-6 text-xs font-medium text-slate-500">
                             {c.usedCount} / {c.maxUses}
@@ -263,18 +262,9 @@ export default function AdminCoupons() {
                   </div>
                 </div>
                 <div className="grid grid-cols-2 gap-4">
-                  <div className="space-y-1.5">
-                    <label className="text-xs font-bold text-slate-600">Assigned Role</label>
-                    <select value={formData.assignedRole} onChange={e => setFormData({...formData, assignedRole: e.target.value})} className="w-full border rounded-xl px-4 py-2.5 text-sm bg-white">
-                      <option value="all">All Roles</option>
-                      <option value="investor">Investors</option>
-                      <option value="builder">Builders</option>
-                      <option value="serviceProvider">Service Providers</option>
-                    </select>
-                  </div>
-                  <div className="space-y-1.5">
+                  <div className="space-y-1.5 col-span-2">
                     <label className="text-xs font-bold text-slate-600">Assigned User (UID)</label>
-                    <input value={formData.assignedTo} onChange={e => setFormData({...formData, assignedTo: e.target.value})} placeholder="Optional UID" className="w-full border rounded-xl px-4 py-2.5 text-sm" />
+                    <input value={formData.assignedTo} onChange={e => setFormData({...formData, assignedTo: e.target.value})} placeholder="Optional: Enter User ID to restrict to a specific user" className="w-full border rounded-xl px-4 py-2.5 text-sm" />
                   </div>
                 </div>
               </CardContent>

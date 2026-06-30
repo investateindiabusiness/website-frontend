@@ -25,9 +25,9 @@ export default function AdminDashboard() {
         fetchAllLeads(),
         fetchAllInquiries()
       ]);
-      setProjects(projectsData || []);
-      setLeads(leadsData || []);
-      setInquiries(inquiriesData || []);
+      setProjects(projectsData?.data || projectsData || []);
+      setLeads(leadsData?.data || leadsData || []);
+      setInquiries(inquiriesData?.data || inquiriesData || []);
     } catch (error) {
       console.error("Failed to load dashboard data:", error);
     } finally {

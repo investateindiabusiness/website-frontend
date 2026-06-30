@@ -272,7 +272,7 @@ export default function AdminInvestors() {
                                   {investor.fullName || investor.companyName || investor.name || 'Unnamed'}
                                 </div>
                                 <div className="text-xs text-gray-400">
-                                  {investor.investorType || 'Individual'}
+                                  {investor.investorType || 'Individual'} • <span className="font-mono bg-gray-100 px-1 rounded cursor-text select-all" title="User ID (UID)">{investorId}</span>
                                 </div>
                               </div>
                             </div>
