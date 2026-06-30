@@ -21,13 +21,13 @@ export default function AdminDashboard() {
     try {
       setLoading(true);
       const [projectsData, leadsData, inquiriesData] = await Promise.all([
-        fetchAllProjects(user?.token),
+        fetchAllProjects({ page: 1, limit: 1000 }),
         fetchAllLeads(),
         fetchAllInquiries()
       ]);
-      setProjects(projectsData || []);
-      setLeads(leadsData || []);
-      setInquiries(inquiriesData || []);
+      setProjects(Array.isArray(projectsData?.data) ? projectsData.data : []);
+      setLeads(Array.isArray(leadsData) ? leadsData : (leadsData?.data || []));
+      setInquiries(Array.isArray(inquiriesData) ? inquiriesData : (inquiriesData?.data || []));
     } catch (error) {
       console.error("Failed to load dashboard data:", error);
     } finally {
@@ -39,11 +39,15 @@ export default function AdminDashboard() {
     if (user) loadDashboardData();
   }, [user, loadDashboardData]);
 
+  const safeProjects = Array.isArray(projects) ? projects : [];
+  const safeLeads = Array.isArray(leads) ? leads : [];
+  const safeInquiries = Array.isArray(inquiries) ? inquiries : [];
+
   const stats = {
-    totalProjects: projects.length,
-    totalBuilders: new Set(projects.filter(p => p.builderName).map(p => p.builderName)).size,
-    totalLeads: leads.length,
-    inquiries: inquiries.length
+    totalProjects: safeProjects.length,
+    totalBuilders: new Set(safeProjects.filter(p => p.builderName).map(p => p.builderName)).size,
+    totalLeads: safeLeads.length,
+    inquiries: safeInquiries.length
   };
 
   return (

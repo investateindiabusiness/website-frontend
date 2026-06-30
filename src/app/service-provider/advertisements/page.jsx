@@ -7,7 +7,7 @@ import { useAuth } from '@/hooks/AuthContext';
 import { toast } from '@/hooks/use-toast';
 import { 
   fetchAdZones, 
-  fetchAvailableSlots, 
+  fetchSlots, 
   bookSlot, 
   fetchMyBookings, 
   rectifyBooking, 
@@ -80,6 +80,11 @@ export default function ServiceProviderAdvertisements() {
   });
   const [isSubmittingRectify, setIsSubmittingRectify] = useState(false);
 
+  // Calendar Navigation & Interaction States
+  const [calendarDate, setCalendarDate] = useState(new Date());
+  const [selectedSlot, setSelectedSlot] = useState(null);
+  const [hoveredSlot, setHoveredSlot] = useState(null);
+
   useEffect(() => {
     if (user) {
       loadZones();
@@ -132,14 +137,16 @@ export default function ServiceProviderAdvertisements() {
 
   const handleSelectZone = async (zone) => {
     setSelectedZone(zone);
+    setSelectedSlot(null);
+    setHoveredSlot(null);
     try {
       setLoadingSlots(true);
-      const data = await fetchAvailableSlots(zone.id);
+      const data = await fetchSlots(zone.id);
       setSlots(data.data || []);
     } catch (error) {
       toast({ 
         title: "Error loading slots", 
-        description: error.message || "Failed to load available slots for this zone.", 
+        description: error.message || "Failed to load advertisement slots for this zone.", 
         variant: "destructive" 
       });
     } finally {
@@ -155,6 +162,53 @@ export default function ServiceProviderAdvertisements() {
       text: '',
       targetUrl: ''
     });
+  };
+
+  const getSlotForDate = (dateString) => {
+    const bookedCampaign = slots.find(s => s.isBooked && s.startDate <= dateString && s.endDate >= dateString);
+    if (bookedCampaign) return bookedCampaign;
+
+    const currentDate = new Date().toISOString().split('T')[0];
+    if (dateString < currentDate) return null;
+
+    if (selectedZone) {
+      const duration = selectedZone.campaignDuration || 7;
+      const start = new Date(dateString);
+      const end = new Date(start);
+      end.setDate(end.getDate() + duration - 1);
+      const endDateString = end.toISOString().split('T')[0];
+
+      const hasOverlap = slots.some(c => c.isBooked && dateString <= c.endDate && endDateString >= c.startDate);
+      if (hasOverlap) return null;
+
+      return {
+        id: `virtual-${dateString}`,
+        startDate: dateString,
+        endDate: endDateString,
+        timeSlot: 'All Day',
+        isBooked: false,
+        isVirtual: true
+      };
+    }
+    return null;
+  };
+
+  const calendarYear = calendarDate.getFullYear();
+  const calendarMonth = calendarDate.getMonth();
+  const daysInMonth = new Date(calendarYear, calendarMonth + 1, 0).getDate();
+  const firstDayIndex = new Date(calendarYear, calendarMonth, 1).getDay();
+
+  const monthNames = [
+    "January", "February", "March", "April", "May", "June",
+    "July", "August", "September", "October", "November", "December"
+  ];
+
+  const prevMonth = () => {
+    setCalendarDate(new Date(calendarYear, calendarMonth - 1, 1));
+  };
+
+  const nextMonth = () => {
+    setCalendarDate(new Date(calendarYear, calendarMonth + 1, 1));
   };
 
   const handleCloseBookingModal = () => {
@@ -179,7 +233,7 @@ export default function ServiceProviderAdvertisements() {
       setIsSubmittingBooking(true);
       const response = await bookSlot({
         zoneId: selectedZone.id,
-        slotId: bookingSlot.id,
+        startDate: bookingSlot.startDate,
         adContent
       });
       
@@ -396,9 +450,11 @@ export default function ServiceProviderAdvertisements() {
             {/* Column 2: Available slots list */}
             <div className="lg:col-span-3 space-y-6">
               <Card className="shadow-md border-none rounded-2xl overflow-hidden bg-white">
-                <CardHeader className="bg-slate-50 border-b border-slate-100 py-4 px-6">
-                  <CardTitle className="text-lg font-bold text-slate-800">Available Booking Calendar</CardTitle>
-                  <CardDescription className="text-xs">Reserve slots to start showing your listings in {selectedZone?.name}</CardDescription>
+                <CardHeader className="bg-slate-50 border-b border-slate-100 py-4 px-6 flex items-center justify-between">
+                  <div>
+                    <CardTitle className="text-lg font-bold text-slate-800">Available Booking Calendar</CardTitle>
+                    <CardDescription className="text-xs">Select a green date slot to schedule your advertisement campaign in {selectedZone?.name}</CardDescription>
+                  </div>
                 </CardHeader>
                 <CardContent className="p-6">
                   {loadingSlots ? (
@@ -406,60 +462,148 @@ export default function ServiceProviderAdvertisements() {
                       <Loader2 className="w-10 h-10 text-slate-700 animate-spin mb-4" />
                       <p className="text-sm text-slate-500 font-medium">Checking slot availability...</p>
                     </div>
-                  ) : slots.length === 0 ? (
-                    <div className="flex flex-col items-center justify-center py-16 text-center">
-                      <Calendar className="w-12 h-12 text-slate-300 mb-3" />
-                      <h3 className="text-base font-bold text-slate-800 mb-1">No Available Slots in "{selectedZone?.name}"</h3>
-                      <p className="text-xs text-slate-500 max-w-sm">
-                        No upcoming booking slots have been created for this zone yet, or all existing slots are in the past.
-                        Please select a different zone or contact the admin to add new slots.
-                      </p>
-                    </div>
                   ) : (
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                      {slots.map((slot) => (
-                        <div 
-                           key={slot.id} 
-                           className="bg-white border border-slate-200/80 rounded-2xl p-4 flex flex-col justify-between hover:shadow-md transition-shadow relative"
-                        >
-                          <div className="space-y-3">
-                            <div className="flex justify-between items-start">
-                              <Badge className="bg-slate-800/10 text-slate-800 border-none font-bold text-[10px]">
-                                {slot.timeSlot || 'All Day'}
-                              </Badge>
-                              <span className="text-xs font-bold text-green-600 bg-green-50 px-2 py-0.5 rounded">Available</span>
-                            </div>
-                            
-                            <div className="space-y-1">
-                              <span className="text-[10px] text-slate-400 font-bold uppercase tracking-wider">Slot Schedule</span>
-                              <p className="text-sm font-bold text-slate-700 flex items-center gap-1.5">
-                                <Calendar className="w-4 h-4 text-slate-400" />
-                                {new Date(slot.startDate).toLocaleDateString(undefined, {month: 'short', day: 'numeric', year: 'numeric'})} 
-                                <span className="text-slate-400 font-medium">to</span> 
-                                {new Date(slot.endDate).toLocaleDateString(undefined, {month: 'short', day: 'numeric', year: 'numeric'})}
-                              </p>
-                            </div>
-                          </div>
-
-                          <div className="border-t border-slate-100 pt-3.5 mt-4 flex items-center justify-between">
-                            <div>
-                              <span className="text-[9px] text-slate-400 uppercase font-semibold">Total Price</span>
-                              <p className="text-base font-bold text-slate-800">₹{selectedZone?.cost}</p>
-                            </div>
-                            <Button 
-                              onClick={() => handleOpenBookingModal(slot)} 
-                              size="sm" 
-                              className="bg-orange-500 hover:bg-orange-600 text-white rounded-xl shadow-sm"
-                            >
-                              <Plus className="w-4 h-4 mr-1.5" /> Book Ad Slot
-                            </Button>
-                          </div>
+                    <div className="space-y-6">
+                      {/* Month Controller */}
+                      <div className="flex items-center justify-between border-b border-slate-100 pb-4">
+                        <h3 className="text-base font-bold text-slate-800">
+                          {monthNames[calendarMonth]} {calendarYear}
+                        </h3>
+                        <div className="flex gap-2">
+                          <button
+                            type="button"
+                            onClick={prevMonth}
+                            className="p-1.5 hover:bg-slate-100 rounded-lg text-slate-600 transition-colors border border-slate-200 shadow-sm"
+                          >
+                            ❮
+                          </button>
+                          <button
+                            type="button"
+                            onClick={nextMonth}
+                            className="p-1.5 hover:bg-slate-100 rounded-lg text-slate-600 transition-colors border border-slate-200 shadow-sm"
+                          >
+                            ❯
+                          </button>
                         </div>
-                      ))}
+                      </div>
+
+                      {/* Calendar Grid */}
+                      <div className="grid grid-cols-7 gap-2 text-center text-xs font-semibold text-slate-500 mb-2">
+                        <div>Sun</div>
+                        <div>Mon</div>
+                        <div>Tue</div>
+                        <div>Wed</div>
+                        <div>Thu</div>
+                        <div>Fri</div>
+                        <div>Sat</div>
+                      </div>
+                      
+                      <div className="grid grid-cols-7 gap-2">
+                        {Array.from({ length: firstDayIndex }).map((_, idx) => (
+                          <div key={`empty-${idx}`} className="h-10 md:h-12"></div>
+                        ))}
+                        {Array.from({ length: daysInMonth }).map((_, idx) => {
+                          const day = idx + 1;
+                          const dateStr = `${calendarYear}-${String(calendarMonth + 1).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
+                          const slot = getSlotForDate(dateStr);
+
+                          let dayBg = "bg-white hover:bg-slate-50 border border-slate-100 text-slate-700";
+                          let isClickable = false;
+                          let title = "";
+
+                          if (slot) {
+                            if (slot.isBooked) {
+                              dayBg = "bg-red-500 text-white font-bold cursor-not-allowed shadow-sm";
+                              title = `Booked slot: ${formatDate(slot.startDate)} to ${formatDate(slot.endDate)}`;
+                            } else {
+                              const isSelected = selectedSlot?.startDate && slot.startDate === selectedSlot.startDate;
+                              const isHovered = hoveredSlot && !hoveredSlot.isBooked && dateStr >= hoveredSlot.startDate && dateStr <= hoveredSlot.endDate;
+                              dayBg = isSelected
+                                ? "bg-green-700 text-white font-bold ring-2 ring-green-500 shadow-md cursor-pointer"
+                                : isHovered
+                                  ? "bg-green-400 text-white font-semibold cursor-pointer shadow-sm"
+                                  : "bg-green-500 text-white font-semibold hover:bg-green-600 cursor-pointer shadow-sm";
+                              isClickable = true;
+                              title = `Available slot: ${formatDate(slot.startDate)} to ${formatDate(slot.endDate)}`;
+                            }
+                          }
+
+                          return (
+                            <div
+                              key={`day-${day}`}
+                              className={`h-10 md:h-12 flex flex-col items-center justify-center rounded-lg text-xs md:text-sm transition-all duration-150 relative select-none ${dayBg}`}
+                              onClick={() => {
+                                if (isClickable && slot) {
+                                  setSelectedSlot(slot);
+                                }
+                              }}
+                              onMouseEnter={() => {
+                                if (slot && !slot.isBooked) {
+                                  setHoveredSlot(slot);
+                                }
+                              }}
+                              onMouseLeave={() => {
+                                setHoveredSlot(null);
+                              }}
+                              title={title}
+                            >
+                              <span>{day}</span>
+                              {slot && (
+                                <span className="absolute bottom-0.5 text-[8px] opacity-75 font-mono">
+                                  {slot.isBooked ? "Booked" : "Open"}
+                                </span>
+                              )}
+                            </div>
+                          );
+                        })}
+                      </div>
+
+                      {/* Legend */}
+                      <div className="flex items-center gap-4 text-xs font-semibold text-slate-500 pt-2 border-t border-slate-100">
+                        <div className="flex items-center gap-1.5">
+                          <div className="w-3.5 h-3.5 bg-green-500 rounded"></div>
+                          <span>Available</span>
+                        </div>
+                        <div className="flex items-center gap-1.5">
+                          <div className="w-3.5 h-3.5 bg-red-500 rounded"></div>
+                          <span>Booked</span>
+                        </div>
+                        <div className="flex items-center gap-1.5">
+                          <div className="w-3.5 h-3.5 bg-white border border-slate-200 rounded"></div>
+                          <span>No Slot</span>
+                        </div>
+                      </div>
                     </div>
                   )}
                 </CardContent>
               </Card>
+
+              {/* Selected Slot Information Card */}
+              {selectedSlot && (
+                <Card className="border border-green-200 bg-green-50/50 rounded-2xl p-4 shadow-sm animate-in fade-in slide-in-from-bottom-2 duration-200">
+                  <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
+                    <div>
+                      <h4 className="text-xs font-bold text-green-800 uppercase tracking-wide">Selected Available Slot</h4>
+                      <p className="text-sm font-bold text-slate-800 mt-1">
+                        {formatDate(selectedSlot.startDate)} to {formatDate(selectedSlot.endDate)}
+                      </p>
+                      <p className="text-xs text-slate-500 mt-0.5 font-medium">Time Slot: {selectedSlot.timeSlot || 'All Day'}</p>
+                    </div>
+                    <div className="flex items-center gap-4 w-full md:w-auto justify-between md:justify-end border-t md:border-none border-slate-100 pt-3 md:pt-0">
+                      <div>
+                        <span className="text-[10px] text-slate-400 uppercase font-semibold block">Total Price</span>
+                        <p className="text-base font-bold text-slate-800">₹{selectedZone?.cost}</p>
+                      </div>
+                      <Button
+                        onClick={() => handleOpenBookingModal(selectedSlot)}
+                        className="bg-green-600 hover:bg-green-700 text-white rounded-xl shadow-md font-semibold px-5"
+                      >
+                        Book Ad Slot
+                      </Button>
+                    </div>
+                  </div>
+                </Card>
+              )}
             </div>
             
           </div>

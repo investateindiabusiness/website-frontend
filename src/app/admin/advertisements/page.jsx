@@ -79,8 +79,7 @@ export default function AdminAdvertisements() {
   const [editZoneItem, setEditZoneItem] = useState(null);
   const [editZoneForm, setEditZoneForm] = useState({
     name: '',
-    cost: 0,
-    campaignDuration: 7,
+    costPerDay: 0,
     status: 'active',
     defaultAd: {
       imageUrl: '',
@@ -95,14 +94,6 @@ export default function AdminAdvertisements() {
   const [rejectingBooking, setRejectingBooking] = useState(null);
   const [rejectionReason, setRejectionReason] = useState('');
   const [isSubmittingReview, setIsSubmittingReview] = useState(false);
-
-  const [newSlot, setNewSlot] = useState({
-    startDate: '',
-    endDate: '',
-    startTime: '09:00',
-    endTime: '18:00'
-  });
-  const [isCreatingSlot, setIsCreatingSlot] = useState(false);
 
   useEffect(() => {
     if (user && user.role === 'admin') {
@@ -214,8 +205,7 @@ export default function AdminAdvertisements() {
     setEditZoneItem(zone);
     setEditZoneForm({
       name: zone.name,
-      cost: zone.cost,
-      campaignDuration: zone.campaignDuration,
+      costPerDay: zone.costPerDay,
       status: zone.status || 'active',
       defaultAd: {
         imageUrl: zone.defaultAd?.imageUrl || '',
@@ -268,10 +258,9 @@ export default function AdminAdvertisements() {
         adType: editZoneItem.adType || 'Image',
         width: Number(editZoneItem.width || 728),
         height: Number(editZoneItem.height || 90),
-        campaignDuration: Number(editZoneForm.campaignDuration),
+        costPerDay: Number(editZoneForm.costPerDay),
         availableDateRange: editZoneItem.availableDateRange || { start: '2026-06-01', end: '2026-12-31' },
         availableTimeSlots: editZoneItem.availableTimeSlots || ['All Day'],
-        cost: Number(editZoneForm.cost),
         status: editZoneForm.status,
         defaultAd: {
           imageUrl: editZoneForm.defaultAd?.imageUrl || '',
@@ -288,52 +277,6 @@ export default function AdminAdvertisements() {
       toast({ title: "Update Failed", description: error.message || "Failed to update zone.", variant: "destructive" });
     } finally {
       setIsUpdatingZone(false);
-    }
-  };
-
-  // Slot deletion
-  const handleDeleteSlot = async (slotId) => {
-    if (!confirm("Are you sure you want to delete this booking slot?")) return;
-    try {
-      await adminDeleteSlot(slotId);
-      toast({ title: "Slot Deleted", description: "Unbooked slot removed successfully." });
-      if (selectedZone) {
-        handleSelectZone(selectedZone);
-      }
-    } catch (error) {
-      toast({ title: "Delete Failed", description: error.message || "Failed to delete slot (it might already be booked).", variant: "destructive" });
-    }
-  };
-
-  const handleCreateSlotSubmit = async (e) => {
-    e.preventDefault();
-    if (!newSlot.startDate || !newSlot.endDate) {
-      return toast({ title: "Validation Error", description: "Start and End dates are required.", variant: "destructive" });
-    }
-    if (!newSlot.endTime) {
-      return toast({ title: "Validation Error", description: "End time is required.", variant: "destructive" });
-    }
-    try {
-      setIsCreatingSlot(true);
-      const payload = {
-        startDate: newSlot.startDate,
-        endDate: newSlot.endDate,
-        timeSlot: newSlot.endTime
-      };
-      await adminCreateSlot(selectedZone.id, payload);
-      toast({ title: "Slot Created", description: "Booking slot added successfully." });
-      setNewSlot({ startDate: '', endDate: '', startTime: '09:00', endTime: '18:00' });
-      if (selectedZone) {
-        handleSelectZone(selectedZone);
-      }
-    } catch (error) {
-      toast({
-        title: "Slot Creation Failed",
-        description: error.message || "Failed to create slot.",
-        variant: "destructive"
-      });
-    } finally {
-      setIsCreatingSlot(false);
     }
   };
 
@@ -630,7 +573,7 @@ export default function AdminAdvertisements() {
                             className="flex-grow text-left flex flex-col gap-0.5"
                           >
                             <span className="text-sm font-bold text-slate-800">{zone.name}</span>
-                            <span className="text-[10px] text-slate-500">₹{zone.cost} / {zone.campaignDuration} days</span>
+                            <span className="text-[10px] text-slate-500">₹{zone.costPerDay}/day</span>
                           </button>
                           <Button
                             onClick={() => handleOpenEditZone(zone)}
@@ -651,103 +594,86 @@ export default function AdminAdvertisements() {
               <div className="lg:col-span-2 space-y-6">
                 {selectedZone ? (
                   <>
-                    {/* Add Available Slot Form */}
+                    {/* Zone Details / Settings Panel */}
                     <Card className="shadow-md border-none rounded-2xl overflow-hidden bg-white">
-                      <CardHeader className="bg-slate-50 border-b border-slate-100 py-4 px-6">
-                        <CardTitle className="text-base font-bold text-slate-800">Add Available Slot to {selectedZone.name}</CardTitle>
-                        <CardDescription className="text-xs">Create unbooked slots that builders can select and purchase</CardDescription>
+                      <CardHeader className="bg-slate-50 border-b border-slate-100 py-4 px-6 flex justify-between items-center">
+                        <div>
+                          <CardTitle className="text-base font-bold text-slate-800">Zone Specifications</CardTitle>
+                          <CardDescription className="text-xs">Details and default ad configuration for {selectedZone.name}</CardDescription>
+                        </div>
+                        <Button
+                          onClick={() => handleOpenEditZone(selectedZone)}
+                          size="sm"
+                          className="bg-slate-900 hover:bg-slate-950 text-white rounded-xl shadow-sm text-xs font-semibold"
+                        >
+                          <Settings className="w-3.5 h-3.5 mr-1" /> Edit Zone
+                        </Button>
                       </CardHeader>
-                      <CardContent className="p-6">
-                        <form onSubmit={handleCreateSlotSubmit} className="grid grid-cols-1 md:grid-cols-4 gap-4 items-end">
-                          <div className="space-y-1.5">
-                            <label className="text-xs font-bold text-slate-600 block">Start Date</label>
-                            <input
-                              type="date"
-                              required
-                              className="w-full border border-slate-200 rounded-xl px-4 py-2.5 text-sm outline-none focus:border-slate-800 text-slate-700 bg-white"
-                              value={newSlot.startDate}
-                              onChange={(e) => setNewSlot({ ...newSlot, startDate: e.target.value })}
-                            />
+                      <CardContent className="p-6 space-y-4">
+                        <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+                          <div className="space-y-1">
+                             <span className="text-[10px] text-slate-400 uppercase font-semibold">Cost / Day</span>
+                             <p className="text-sm font-bold text-slate-700">₹{selectedZone.costPerDay}</p>
+                           </div>
+                           <div className="space-y-1">
+                             <span className="text-[10px] text-slate-400 uppercase font-semibold">Billing</span>
+                             <p className="text-sm font-bold text-slate-700">Per Day (Flexible)</p>
+                           </div>
+                          <div className="space-y-1">
+                            <span className="text-[10px] text-slate-400 uppercase font-semibold">Format Size</span>
+                            <p className="text-sm font-bold text-slate-700">{selectedZone.width}x{selectedZone.height}</p>
                           </div>
-
-                          <div className="space-y-1.5">
-                            <label className="text-xs font-bold text-slate-600 block">End Date</label>
-                            <input
-                              type="date"
-                              required
-                              className="w-full border border-slate-200 rounded-xl px-4 py-2.5 text-sm outline-none focus:border-slate-800 text-slate-700 bg-white"
-                              value={newSlot.endDate}
-                              onChange={(e) => setNewSlot({ ...newSlot, endDate: e.target.value })}
-                            />
+                          <div className="space-y-1">
+                            <span className="text-[10px] text-slate-400 uppercase font-semibold">Status</span>
+                            <p className="text-sm font-bold text-slate-700 capitalize">{selectedZone.status || 'Active'}</p>
                           </div>
+                        </div>
 
-                          <div className="space-y-1.5">
-                            <label className="text-xs font-bold text-slate-600 block">End Time</label>
-                            <input
-                              type="time"
-                              required
-                              className="w-full border border-slate-200 rounded-xl px-4 py-2.5 text-sm outline-none focus:border-slate-800 text-slate-700 bg-white"
-                              value={newSlot.endTime}
-                              onChange={(e) => setNewSlot({ ...newSlot, endTime: e.target.value })}
-                            />
+                        {selectedZone.defaultAd && (
+                          <div className="bg-slate-50 border border-slate-100 rounded-xl p-4 space-y-3">
+                            <h4 className="text-[11px] font-bold text-slate-500 uppercase tracking-wider">Default Ad Fallback</h4>
+                            <p className="text-xs text-slate-600 italic">"{selectedZone.defaultAd.text || 'No text provided'}"</p>
+                            {selectedZone.defaultAd.imageUrl && (
+                              <div className="rounded-lg overflow-hidden border border-slate-200 bg-white p-1 max-w-sm max-h-32 flex items-center justify-center">
+                                <img
+                                  src={selectedZone.defaultAd.imageUrl}
+                                  alt="Default fallback ad"
+                                  className="max-w-full max-h-28 object-contain rounded-lg"
+                                />
+                              </div>
+                            )}
                           </div>
-
-                          <Button
-                            type="submit"
-                            disabled={isCreatingSlot}
-                            className="bg-slate-900 hover:bg-slate-950 text-white rounded-xl shadow-md font-semibold h-[42px] w-full"
-                          >
-                            {isCreatingSlot ? <Loader2 className="w-4 h-4 animate-spin" /> : <Plus className="w-4 h-4 mr-1.5" />}
-                            Create Slot
-                          </Button>
-                        </form>
+                        )}
                       </CardContent>
                     </Card>
 
-                    {/* Existing Slots Calendar */}
+                    {/* Booked Dates Listing */}
                     <Card className="shadow-md border-none rounded-2xl overflow-hidden bg-white">
                       <CardHeader className="bg-slate-50 border-b border-slate-100 py-4 px-6">
-                        <CardTitle className="text-base font-bold text-slate-800">Current Slot Entries</CardTitle>
-                        <CardDescription className="text-xs">List of generated slots. Only unbooked slots can be deleted.</CardDescription>
+                        <CardTitle className="text-base font-bold text-slate-800">Booked Campaign Dates</CardTitle>
+                        <CardDescription className="text-xs">Active and upcoming date reservations for this zone.</CardDescription>
                       </CardHeader>
                       <CardContent className="p-6">
                         {loadingSlots ? (
                           <div className="flex flex-col items-center justify-center py-12">
                             <Loader2 className="w-8 h-8 text-slate-400 animate-spin mb-2" />
-                            <p className="text-xs text-slate-400">Loading slot listings...</p>
+                            <p className="text-xs text-slate-400">Loading booked campaigns...</p>
                           </div>
                         ) : slots.length === 0 ? (
-                          <div className="text-center py-10 text-slate-400 text-xs">No slot items created for this placement zone.</div>
+                          <div className="text-center py-10 text-slate-400 text-xs">No active or upcoming bookings for this zone.</div>
                         ) : (
                           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                             {slots.map((slot) => (
                               <div key={slot.id} className="border border-slate-100 bg-slate-50/50 rounded-xl p-4 flex justify-between items-center">
                                 <div className="space-y-1.5">
                                   <div className="flex items-center gap-2">
-                                    <span className="text-[10px] font-bold text-slate-500 bg-slate-100 px-1.5 py-0.5 rounded">{slot.timeSlot}</span>
-                                    {slot.isBooked ? (
-                                      <Badge className="bg-orange-500 text-white border-none font-bold text-[9px] px-1.5 py-0.2">Booked</Badge>
-                                    ) : (
-                                      <div className="flex items-center gap-1.5">
-                                        <Badge className="bg-green-600 text-white border-none font-bold text-[9px] px-1.5 py-0.2">Unbooked</Badge>
-                                        <span className="text-[10px] text-slate-400 font-medium italic">(If you want, you can book this slot)</span>
-                                      </div>
-                                    )}
+                                    <Badge className="bg-red-500 text-white border-none font-bold text-[9px] px-1.5 py-0.2">Booked</Badge>
+                                    <span className="text-[10px] text-slate-500 font-medium">By: {slot.userEmail}</span>
                                   </div>
                                   <p className="text-xs font-bold text-slate-700">
                                     {formatDate(slot.startDate)} to {formatDate(slot.endDate)}
                                   </p>
                                 </div>
-                                {!slot.isBooked && (
-                                  <Button
-                                    onClick={() => handleDeleteSlot(slot.id)}
-                                    size="sm"
-                                    variant="ghost"
-                                    className="text-red-500 hover:text-red-700 hover:bg-red-50 rounded-lg p-2 h-9 w-9"
-                                  >
-                                    <Trash2 className="w-4 h-4" />
-                                  </Button>
-                                )}
                               </div>
                             ))}
                           </div>
@@ -756,7 +682,7 @@ export default function AdminAdvertisements() {
                     </Card>
                   </>
                 ) : (
-                  <div className="text-center py-12 text-slate-400 text-sm">Select a zone to manage its slots.</div>
+                  <div className="text-center py-12 text-slate-400 text-sm">Select a zone to manage its settings.</div>
                 )}
               </div>
 
@@ -792,28 +718,18 @@ export default function AdminAdvertisements() {
                   />
                 </div>
 
-                <div className="grid grid-cols-2 gap-4">
-                  <div className="space-y-1.5">
-                    <label className="text-xs font-bold text-slate-600 block">Cost per Slot (₹)</label>
-                    <input
-                      type="number"
-                      required
-                      className="w-full border border-slate-200 rounded-xl px-4 py-2.5 text-sm outline-none focus:border-slate-800 text-slate-700"
-                      value={editZoneForm.cost}
-                      onChange={(e) => setEditZoneForm({ ...editZoneForm, cost: parseInt(e.target.value) || 0 })}
-                    />
-                  </div>
-                  <div className="space-y-1.5">
-                    <label className="text-xs font-bold text-slate-600 block">Slot Duration (Days)</label>
-                    <input
-                      type="number"
-                      required
-                      className="w-full border border-slate-200 rounded-xl px-4 py-2.5 text-sm outline-none focus:border-slate-800 text-slate-700"
-                      value={editZoneForm.campaignDuration}
-                      onChange={(e) => setEditZoneForm({ ...editZoneForm, campaignDuration: parseInt(e.target.value) || 0 })}
-                    />
-                  </div>
-                </div>
+                <div className="space-y-1.5">
+                   <label className="text-xs font-bold text-slate-600 block">Cost Per Day (₹)</label>
+                   <input
+                     type="number"
+                     required
+                     min="0"
+                     className="w-full border border-slate-200 rounded-xl px-4 py-2.5 text-sm outline-none focus:border-slate-800 text-slate-700"
+                     value={editZoneForm.costPerDay}
+                     onChange={(e) => setEditZoneForm({ ...editZoneForm, costPerDay: parseInt(e.target.value) || 0 })}
+                   />
+                   <p className="text-[10px] text-slate-400">Investors will be charged this rate × number of days they select.</p>
+                 </div>
 
                 <div className="space-y-1.5">
                   <label className="text-xs font-bold text-slate-600 block">Active Status</label>

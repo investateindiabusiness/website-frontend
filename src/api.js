@@ -444,6 +444,9 @@ export const fetchAdZones = () =>
 export const fetchAvailableSlots = (zoneId) =>
   apiRequest(`/api/advertisements/zones/${zoneId}/available-slots`);
 
+export const fetchSlots = (zoneId) =>
+  apiRequest(`/api/advertisements/zones/${zoneId}/slots`);
+
 export const bookSlot = (payload) =>
   apiRequest('/api/advertisements/bookings', {
     method: 'POST',

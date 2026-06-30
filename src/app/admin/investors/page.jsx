@@ -1,13 +1,9 @@
 "use client";
 
 import React, { useState, useEffect, useCallback } from 'react';
-<<<<<<< HEAD
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
 import AppDataGrid from '@/components/AppDataGrid';
-=======
-import { Card, CardContent } from '@/components/ui/card';
->>>>>>> b45f8ca72775da32480ac84c17e5ec1ec14c0f6e
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from '@/components/ui/dialog';
@@ -101,7 +97,6 @@ export default function AdminInvestors() {
     if (!user) return;
     try {
       setLoading(true);
-<<<<<<< HEAD
       const params = { page: page + 1, limit: rowsPerPage };
       if (filter !== 'all') params.status = filter;
       if (searchQuery) params.search = searchQuery;
@@ -114,13 +109,6 @@ export default function AdminInvestors() {
       setLoading(false);
     }
   }, [user, page, rowsPerPage, filter, searchQuery]);
-=======
-      const data = await fetchAllInvestors(user?.token);
-      setInvestors(data.data || []);
-    } catch (error) { toast({ title: "Error", description: error.message, variant: "destructive" }); }
-    finally { setLoading(false); }
-  }, [user?.token]);
->>>>>>> b45f8ca72775da32480ac84c17e5ec1ec14c0f6e
 
   const getActiveFieldsForModal = () => {
     if (!viewInvestorData) return [];

@@ -1,12 +1,9 @@
 "use client";
 
 import React, { useState, useEffect, useCallback } from 'react';
-<<<<<<< HEAD
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
 import AppDataGrid from '@/components/AppDataGrid';
-=======
->>>>>>> b45f8ca72775da32480ac84c17e5ec1ec14c0f6e
 import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';

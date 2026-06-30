@@ -16,11 +16,11 @@ import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/com
 import { compressAdImage } from '@/utils/imageCompressor';
 
 const ZONE_META = {
-  zone1: { name: 'Builder Dashboard Top Banner',       cost: 100, campaignDuration: 7, width: 728, height: 90 },
-  zone2: { name: 'Investor Dashboard Leaderboard',     cost: 150, campaignDuration: 7, width: 728, height: 90 },
-  zone3: { name: 'Investor Project Details Sidebar',   cost: 120, campaignDuration: 7, width: 300, height: 250 },
-  zone4: { name: 'Project Search Results Inline Ad',   cost: 80,  campaignDuration: 7, width: 728, height: 90 },
-  zone5: { name: 'Landing Page Hero Spotlight',        cost: 200, campaignDuration: 7, width: 970, height: 250 },
+  zone1: { name: 'Builder Dashboard Top Banner',       costPerDay: 15, width: 728, height: 90 },
+  zone2: { name: 'Investor Dashboard Leaderboard',     costPerDay: 22, width: 728, height: 90 },
+  zone3: { name: 'Investor Project Details Sidebar',   costPerDay: 18, width: 300, height: 250 },
+  zone4: { name: 'Project Search Results Inline Ad',   costPerDay: 12, width: 728, height: 90 },
+  zone5: { name: 'Landing Page Hero Spotlight',        costPerDay: 30, width: 970, height: 250 },
 };
 
 const stripePromise = loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY || 'pk_test_placeholder');
@@ -46,7 +46,6 @@ function BookingFormContent() {
   const { user } = useAuth();
 
   const zoneId = searchParams.get('zoneId');
-  const slotId = searchParams.get('slotId');
   const startDate = searchParams.get('startDate');
   const endDate = searchParams.get('endDate');
   const timeSlot = searchParams.get('timeSlot') || 'All Day';
@@ -105,7 +104,7 @@ function BookingFormContent() {
           ...ZONE_META[zoneId],
           ...zoneObj,
           name: zoneObj.name || ZONE_META[zoneId]?.name || zoneId,
-          cost: zoneObj.cost ?? ZONE_META[zoneId]?.cost ?? 0,
+          costPerDay: zoneObj.costPerDay ?? ZONE_META[zoneId]?.costPerDay ?? 0,
         });
       } else {
         setSelectedZone({
@@ -173,7 +172,16 @@ function BookingFormContent() {
     setCouponCodeInput('');
   };
 
-  const discountedCost = Math.max(0, (selectedZone?.cost || 0) - (appliedCoupon?.discountAmount || 0));
+  // Calculate selectionDays and totalCost dynamically
+  const getSelectionDays = () => {
+    if (!startDate || !endDate) return 0;
+    const msPerDay = 1000 * 60 * 60 * 24;
+    return Math.round((new Date(endDate) - new Date(startDate)) / msPerDay) + 1;
+  };
+  const selectionDays = getSelectionDays();
+  const calculatedBaseCost = (selectedZone?.costPerDay || 0) * selectionDays;
+
+  const discountedCost = Math.max(0, calculatedBaseCost - (appliedCoupon?.discountAmount || 0));
 
   const handleBookingSubmit = async (e) => {
     e.preventDefault();
@@ -194,8 +202,8 @@ function BookingFormContent() {
       // Send compressed base64 image directly — no Firebase upload needed
       const response = await bookSlot({
         zoneId,
-        slotId,
-        timeSlot,
+        startDate,
+        endDate,
         couponCode: appliedCoupon?.code,
         adContent: {
           ...adContent,

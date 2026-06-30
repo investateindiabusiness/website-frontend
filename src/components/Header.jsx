@@ -58,10 +58,15 @@ const HeaderContent = ({ transparent = false }) => {
     return '/dashboard';
   };
 
-  const isDashboardArea = pathname.startsWith('/admin') ||
-    pathname.startsWith('/builder/') || pathname === '/builder/dashboard' || pathname === '/builder/projects' || pathname === '/builder/advertisements' ||
-    pathname.startsWith('/service-provider/') || pathname === '/service-provider/dashboard' || pathname === '/service-provider/advertisements' ||
-    pathname === '/dashboard' || pathname === '/properties' || pathname.startsWith('/investor/') || pathname.startsWith('/project/');
+  const isDashboardArea =
+    pathname.startsWith('/admin') ||
+    pathname.startsWith('/builder') ||
+    pathname.startsWith('/service-provider') ||
+    pathname.startsWith('/investor') ||
+    pathname.startsWith('/partner') ||
+    pathname.startsWith('/project') ||
+    pathname === '/dashboard' ||
+    pathname === '/properties';
 
   const displayUser = isDashboardArea ? user : null;
 
@@ -101,6 +106,7 @@ const HeaderContent = ({ transparent = false }) => {
       case 'investor': return [
         { label: 'Dashboard', path: '/dashboard' },
         { label: 'Properties', path: '/properties' },
+        { label: 'Advertise', path: '/investor/advertisements' },
         { label: 'Payments', path: '/investor/payments' },
         { label: 'Coupons', path: '/investor/coupons' },
       ];

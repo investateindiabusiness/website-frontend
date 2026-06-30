@@ -194,8 +194,7 @@ function BookingFormContent() {
       // Send compressed base64 image directly — no Firebase upload needed
       const response = await bookSlot({
         zoneId,
-        slotId,
-        timeSlot,
+        startDate,
         couponCode: appliedCoupon?.code,
         adContent: {
           ...adContent,
