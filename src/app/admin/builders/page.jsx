@@ -92,7 +92,7 @@ export default function AdminBuilders() {
     try {
       setLoading(true);
       const data = await fetchAllBuilders(user?.token);
-      setBuilders(data || []);
+      setBuilders(data.data || []);
     } catch (error) {
       toast({ title: "Error", description: error.message, variant: "destructive" });
     } finally {

@@ -96,7 +96,7 @@ export default function AdminInvestors() {
     try {
       setLoading(true);
       const data = await fetchAllInvestors(user?.token);
-      setInvestors(data || []);
+      setInvestors(data.data || []);
     } catch (error) { toast({ title: "Error", description: error.message, variant: "destructive" }); }
     finally { setLoading(false); }
   }, [user?.token]);
