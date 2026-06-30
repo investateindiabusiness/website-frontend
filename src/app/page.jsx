@@ -871,6 +871,11 @@ export default function Index() {
             </section>
             */}
 
+            {/* Zone 5 — Landing Spotlight Ad (970x250) */}
+            <div className="container mx-auto px-4 py-8 flex justify-center">
+              <AdBanner zoneId="zone5" />
+            </div>
+
             <Footer />
 
         </div>

@@ -1,9 +1,7 @@
-"use client";
+﻿"use client";
 
 import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
-import Header from '@/components/Header';
-import Footer from '@/components/Footer';
 import { useAuth } from '@/hooks/AuthContext';
 import { toast } from '@/hooks/use-toast';
 import { getSocket, joinUser, leaveUser } from '@/utils/socket';
@@ -501,7 +499,6 @@ export default function BuilderAdvertisements() {
 
   return (
     <div className="min-h-screen bg-gray-50 flex flex-col font-sans overflow-x-hidden">
-      <Header />
 
       <div className="flex-grow mt-[2rem] md:mt-[4rem] pb-16">
 
@@ -1202,7 +1199,6 @@ export default function BuilderAdvertisements() {
         </div>
       )}
 
-      <Footer />
     </div>
   );
 }

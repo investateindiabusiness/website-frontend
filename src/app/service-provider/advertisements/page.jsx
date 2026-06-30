@@ -1,8 +1,6 @@
 "use client";
 
 import React, { useState, useEffect } from 'react';
-import Header from '@/components/Header';
-import Footer from '@/components/Footer';
 import { useAuth } from '@/hooks/AuthContext';
 import { toast } from '@/hooks/use-toast';
 import { 
@@ -11,8 +9,11 @@ import {
   bookSlot, 
   fetchMyBookings, 
   rectifyBooking, 
-  cancelBooking 
+  cancelBooking,
+  uploadImage,
+  uploadFile
 } from '@/api';
+import { compressAdImage } from '@/utils/imageCompressor';
 import { loadStripe } from '@stripe/stripe-js';
 import { Elements } from '@stripe/react-stripe-js';
 import CheckoutForm from '@/components/CheckoutForm';
@@ -30,7 +31,9 @@ import {
   Loader2, 
   Sparkles,
   ExternalLink,
-  Settings
+  Settings,
+  Video as VideoIcon,
+  FileText as TextIcon
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
@@ -60,12 +63,22 @@ export default function ServiceProviderAdvertisements() {
 
   // Booking Modal / Form State
   const [bookingSlot, setBookingSlot] = useState(null);
+  
+  const [campaignFormat, setCampaignFormat] = useState('image'); // 'image' | 'video' | 'text'
   const [adContent, setAdContent] = useState({
     imageUrl: '',
     videoUrl: '',
     text: '',
     targetUrl: ''
   });
+  
+  const [imageFile, setImageFile] = useState(null);
+  const [imagePreview, setImagePreview] = useState('');
+  const [videoFile, setVideoFile] = useState(null);
+  const [videoPreview, setVideoPreview] = useState('');
+  const [isUploadingFile, setIsUploadingFile] = useState(false);
+  const [uploadProgress, setUploadProgress] = useState(0);
+
   const [isSubmittingBooking, setIsSubmittingBooking] = useState(false);
   const [paymentClientSecret, setPaymentClientSecret] = useState(null);
   const [paymentId, setPaymentId] = useState(null);
@@ -78,6 +91,11 @@ export default function ServiceProviderAdvertisements() {
     text: '',
     targetUrl: ''
   });
+  const [rectifyImageFile, setRectifyImageFile] = useState(null);
+  const [rectifyImagePreview, setRectifyImagePreview] = useState('');
+  const [rectifyVideoFile, setRectifyVideoFile] = useState(null);
+  const [rectifyVideoPreview, setRectifyVideoPreview] = useState('');
+  const [isRectifyUploadingFile, setIsRectifyUploadingFile] = useState(false);
   const [isSubmittingRectify, setIsSubmittingRectify] = useState(false);
 
   // Calendar Navigation & Interaction States
@@ -215,15 +233,127 @@ export default function ServiceProviderAdvertisements() {
     setBookingSlot(null);
     setPaymentClientSecret(null);
     setPaymentId(null);
+    setImageFile(null);
+    setImagePreview('');
+    setVideoFile(null);
+    setVideoPreview('');
+    setIsUploadingFile(false);
+    setUploadProgress(0);
+  };
+
+  const validateImageDimensions = (file, reqWidth, reqHeight) => {
+    return new Promise((resolve) => {
+      const img = new window.Image();
+      img.src = URL.createObjectURL(file);
+      img.onload = () => {
+        URL.revokeObjectURL(img.src);
+        if (img.width !== reqWidth || img.height !== reqHeight) {
+          resolve({
+            valid: false,
+            error: `Selected image dimensions (${img.width}x${img.height}px) do not match the required zone dimensions (${reqWidth}x${reqHeight}px).`
+          });
+        } else {
+          resolve({ valid: true });
+        }
+      };
+      img.onerror = () => {
+        resolve({ valid: false, error: "Failed to read image dimensions. Please make sure it's a valid image file." });
+      };
+    });
+  };
+
+  const handleImageChange = async (e) => {
+    const file = e.target.files[0];
+    if (!file) return;
+
+    if (!selectedZone) {
+      toast({ title: 'Error', description: 'Zone details not loaded yet.', variant: 'destructive' });
+      return;
+    }
+
+    const reqWidth = selectedZone.width || 728;
+    const reqHeight = selectedZone.height || 90;
+
+    const check = await validateImageDimensions(file, reqWidth, reqHeight);
+    if (!check.valid) {
+      toast({ title: 'Invalid Image Size', description: check.error, variant: 'destructive' });
+      e.target.value = '';
+      return;
+    }
+
+    try {
+      setIsUploadingFile(true);
+      setUploadProgress(30);
+      
+      const compressed = await compressAdImage(file);
+      setUploadProgress(60);
+      
+      const res = await uploadImage(compressed, 'campaigns');
+      setUploadProgress(100);
+      
+      setImageFile(file);
+      setImagePreview(res.url);
+      setAdContent(prev => ({ ...prev, imageUrl: res.url }));
+      toast({ title: 'Upload Successful', description: 'Image uploaded to Firebase storage.' });
+    } catch (err) {
+      toast({ title: 'Upload Failed', description: err.message || 'Could not upload image.', variant: 'destructive' });
+      setImageFile(null);
+      setImagePreview('');
+    } finally {
+      setIsUploadingFile(false);
+      setUploadProgress(0);
+    }
+  };
+
+  const handleVideoChange = async (e) => {
+    const file = e.target.files[0];
+    if (!file) return;
+
+    if (file.size > 10 * 1024 * 1024) {
+      toast({ title: 'File Too Large', description: 'Video size should be less than 10MB.', variant: 'destructive' });
+      return;
+    }
+
+    try {
+      setIsUploadingFile(true);
+      setUploadProgress(40);
+      
+      const res = await uploadFile(file, 'campaigns');
+      setUploadProgress(100);
+      
+      setVideoFile(file);
+      setVideoPreview(res.url);
+      setAdContent(prev => ({ ...prev, videoUrl: res.url }));
+      toast({ title: 'Upload Successful', description: 'Video uploaded to Firebase storage.' });
+    } catch (err) {
+      toast({ title: 'Upload Failed', description: err.message || 'Could not upload video.', variant: 'destructive' });
+      setVideoFile(null);
+      setVideoPreview('');
+    } finally {
+      setIsUploadingFile(false);
+      setUploadProgress(0);
+    }
+  };
+
+  const handleRemoveImage = () => {
+    setImageFile(null);
+    setImagePreview('');
+    setAdContent(prev => ({ ...prev, imageUrl: '' }));
+  };
+
+  const handleRemoveVideo = () => {
+    setVideoFile(null);
+    setVideoPreview('');
+    setAdContent(prev => ({ ...prev, videoUrl: '' }));
   };
 
   const handleBookingSubmit = async (e) => {
     e.preventDefault();
-    if (!adContent.imageUrl) {
-      return toast({ title: "Validation Error", description: "Ad image URL is required.", variant: "destructive" });
+    if (campaignFormat === 'image' && !adContent.imageUrl) {
+      return toast({ title: "Validation Error", description: "Ad image upload is required.", variant: "destructive" });
     }
-    if (!adContent.targetUrl) {
-      return toast({ title: "Validation Error", description: "Ad redirect URL is required.", variant: "destructive" });
+    if (campaignFormat === 'video' && !adContent.videoUrl) {
+      return toast({ title: "Validation Error", description: "Ad video upload is required.", variant: "destructive" });
     }
     if (!adContent.text) {
       return toast({ title: "Validation Error", description: "Ad caption text is required.", variant: "destructive" });
@@ -234,7 +364,11 @@ export default function ServiceProviderAdvertisements() {
       const response = await bookSlot({
         zoneId: selectedZone.id,
         startDate: bookingSlot.startDate,
-        adContent
+        adContent: {
+          ...adContent,
+          imageUrl: campaignFormat === 'image' ? adContent.imageUrl : '',
+          videoUrl: campaignFormat === 'video' ? adContent.videoUrl : ''
+        }
       });
       
       if (response?.data?.payment?.clientSecret) {
@@ -285,16 +419,62 @@ export default function ServiceProviderAdvertisements() {
       text: booking.adContent?.text || '',
       targetUrl: booking.adContent?.targetUrl || ''
     });
+    setRectifyImagePreview(booking.adContent?.imageUrl || '');
+    setRectifyVideoPreview(booking.adContent?.videoUrl || '');
+    setRectifyImageFile(null);
+    setRectifyVideoFile(null);
   };
 
   const handleCloseRectifyModal = () => {
     setRectifyBookingItem(null);
+    setRectifyImageFile(null);
+    setRectifyImagePreview('');
+    setRectifyVideoFile(null);
+    setRectifyVideoPreview('');
+  };
+
+  const handleRectifyImageChange = async (e) => {
+    const file = e.target.files[0];
+    if (!file) return;
+    try {
+      setIsRectifyUploadingFile(true);
+      const compressed = await compressAdImage(file);
+      const res = await uploadImage(compressed, 'campaigns');
+      setRectifyImageFile(file);
+      setRectifyImagePreview(res.url);
+      setRectifyAdContent(prev => ({ ...prev, imageUrl: res.url }));
+      toast({ title: 'Upload Successful', description: 'Corrected image uploaded to Firebase.' });
+    } catch (err) {
+      toast({ title: 'Upload Failed', description: err.message || 'Could not upload image.', variant: 'destructive' });
+    } finally {
+      setIsRectifyUploadingFile(false);
+    }
+  };
+
+  const handleRectifyVideoChange = async (e) => {
+    const file = e.target.files[0];
+    if (!file) return;
+    if (file.size > 10 * 1024 * 1024) {
+      return toast({ title: 'File Too Large', description: 'Video must be under 10MB.', variant: 'destructive' });
+    }
+    try {
+      setIsRectifyUploadingFile(true);
+      const res = await uploadFile(file, 'campaigns');
+      setRectifyVideoFile(file);
+      setRectifyVideoPreview(res.url);
+      setRectifyAdContent(prev => ({ ...prev, videoUrl: res.url }));
+      toast({ title: 'Upload Successful', description: 'Corrected video uploaded to Firebase.' });
+    } catch (err) {
+      toast({ title: 'Upload Failed', description: err.message || 'Could not upload video.', variant: 'destructive' });
+    } finally {
+      setIsRectifyUploadingFile(false);
+    }
   };
 
   const handleRectifySubmit = async (e) => {
     e.preventDefault();
-    if (!rectifyAdContent.imageUrl) {
-      return toast({ title: "Validation Error", description: "Ad image URL is required.", variant: "destructive" });
+    if (!rectifyAdContent.imageUrl && !rectifyAdContent.videoUrl) {
+      return toast({ title: "Validation Error", description: "Please upload an image or video for the corrected ad.", variant: "destructive" });
     }
     if (!rectifyAdContent.targetUrl) {
       return toast({ title: "Validation Error", description: "Ad redirect URL is required.", variant: "destructive" });
@@ -343,7 +523,6 @@ export default function ServiceProviderAdvertisements() {
 
   return (
     <div className="min-h-screen bg-gray-50 flex flex-col font-sans overflow-x-hidden">
-      <Header />
       
       <div className="flex-grow mt-[2rem] md:mt-[4rem] pb-16">
         
@@ -758,18 +937,147 @@ export default function ServiceProviderAdvertisements() {
                   </div>
                 </div>
 
-                <div className="space-y-1.5">
-                  <label className="text-xs font-bold text-slate-600 block">Ad Image URL <span className="text-red-500">*</span></label>
-                  <input 
-                    type="url"
-                    required
-                    placeholder="https://example.com/ad-image.jpg"
-                    className="w-full border border-slate-200 rounded-xl px-4 py-2.5 text-sm outline-none focus:border-slate-800 text-slate-700 placeholder-slate-400"
-                    value={adContent.imageUrl}
-                    onChange={(e) => setAdContent({...adContent, imageUrl: e.target.value})}
-                  />
-                  <p className="text-[10px] text-slate-400">Supported Dimensions: {selectedZone?.width} x {selectedZone?.height} px</p>
+                {/* Resolution specifications & Campaign Format Selector */}
+                <div className="bg-indigo-50/50 border border-indigo-100 rounded-2xl p-4.5 space-y-4">
+                  <div>
+                    <span className="font-semibold text-indigo-400 uppercase tracking-wide block text-[9px] mb-1">Required Zone Specification</span>
+                    <p className="text-slate-800 text-sm font-bold flex items-center gap-1.5">
+                      <ImageIcon className="w-4 h-4 text-indigo-500" />
+                      Image Format: {selectedZone?.width || 728} x {selectedZone?.height || 90} px (Exact size required)
+                    </p>
+                    <p className="text-slate-500 text-[10px] mt-1">We accept PNG, JPG, and WEBP formats under 2MB.</p>
+                  </div>
+
+                  <div className="border-t border-slate-100 pt-3">
+                    <label className="text-xs font-bold text-slate-600 block mb-2">Campaign Format</label>
+                    <div className="grid grid-cols-3 gap-2">
+                      {[
+                        { id: 'image', label: 'Image', icon: <ImageIcon className="w-3.5 h-3.5" /> },
+                        { id: 'video', label: 'Video', icon: <VideoIcon className="w-3.5 h-3.5" /> },
+                        { id: 'text', label: 'Text Only', icon: <TextIcon className="w-3.5 h-3.5" /> },
+                      ].map(fmt => (
+                        <button
+                          key={fmt.id}
+                          type="button"
+                          onClick={() => {
+                            setCampaignFormat(fmt.id);
+                            setAdContent(prev => ({ ...prev, imageUrl: '', videoUrl: '' }));
+                            setImageFile(null);
+                            setImagePreview('');
+                            setVideoFile(null);
+                            setVideoPreview('');
+                          }}
+                          className={`flex items-center justify-center gap-1.5 py-2.5 px-3 rounded-xl border text-xs font-semibold transition-all ${
+                            campaignFormat === fmt.id
+                              ? 'border-slate-800 bg-slate-100 text-slate-900 shadow-sm'
+                              : 'border-slate-200 bg-white text-slate-600 hover:bg-slate-50'
+                          }`}
+                        >
+                          {fmt.icon}
+                          {fmt.label}
+                        </button>
+                      ))}
+                    </div>
+                  </div>
                 </div>
+
+                {/* Render Image upload if 'image' selected */}
+                {campaignFormat === 'image' && (
+                  <div className="space-y-2.5">
+                    <label className="text-xs font-bold text-slate-600 block">Ad Image <span className="text-red-500">*</span></label>
+                    
+                    {!imageFile ? (
+                      <div className="relative border-2 border-dashed border-slate-200 hover:border-slate-800 rounded-2xl p-6 transition-all cursor-pointer group bg-slate-50/50 flex flex-col items-center justify-center min-h-[140px]">
+                        <input 
+                          type="file" 
+                          accept="image/*" 
+                          required
+                          onChange={handleImageChange} 
+                          className="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-10" 
+                        />
+                        {isUploadingFile ? (
+                          <>
+                            <Loader2 className="w-8 h-8 text-indigo-500 animate-spin mb-2" />
+                            <span className="text-sm font-bold text-slate-600">Uploading to Firebase Storage...</span>
+                            <span className="text-[10px] text-slate-400 mt-1">Please wait ({uploadProgress}%)</span>
+                          </>
+                        ) : (
+                          <>
+                            <ImageIcon className="w-8 h-8 text-slate-400 group-hover:text-slate-800 transition-colors mb-2" />
+                            <span className="text-sm font-bold text-slate-600 group-hover:text-slate-800 transition-colors">Select Ad Image File</span>
+                            <span className="text-[10px] text-slate-400 mt-1">Requires exact resolution: {selectedZone?.width || 728}x{selectedZone?.height || 90}</span>
+                          </>
+                        )}
+                      </div>
+                    ) : (
+                      <div className="space-y-3">
+                        <div className="border-2 border-dashed border-emerald-200 bg-emerald-50/40 text-emerald-700 rounded-xl p-3.5 text-xs font-bold flex items-center justify-between shadow-sm">
+                          <span className="flex items-center gap-2 truncate">
+                            <CheckCircle className="w-4 h-4 text-emerald-600 flex-shrink-0" />
+                            <span className="truncate">{imageFile.name}</span>
+                          </span>
+                          <button type="button" onClick={handleRemoveImage} className="text-slate-400 hover:text-red-500 font-bold ml-2 text-sm transition-colors">✕</button>
+                        </div>
+                        <div className="relative rounded-2xl overflow-hidden bg-slate-50 border border-slate-200/80 aspect-[16/9] max-h-56 flex items-center justify-center p-2">
+                          <img 
+                            src={imagePreview} 
+                            alt="Ad Image Preview" 
+                            className="w-full h-full object-contain rounded-lg"
+                          />
+                        </div>
+                      </div>
+                    )}
+                  </div>
+                )}
+
+                {/* Render Video upload if 'video' selected */}
+                {campaignFormat === 'video' && (
+                  <div className="space-y-2.5">
+                    <label className="text-xs font-bold text-slate-600 block">Ad Video File <span className="text-red-500">*</span></label>
+                    
+                    {!videoFile ? (
+                      <div className="relative border-2 border-dashed border-slate-200 hover:border-slate-800 rounded-2xl p-6 transition-all cursor-pointer group bg-slate-50/50 flex flex-col items-center justify-center min-h-[140px]">
+                        <input 
+                          type="file" 
+                          accept="video/*" 
+                          required
+                          onChange={handleVideoChange} 
+                          className="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-10" 
+                        />
+                        {isUploadingFile ? (
+                          <>
+                            <Loader2 className="w-8 h-8 text-indigo-500 animate-spin mb-2" />
+                            <span className="text-sm font-bold text-slate-600">Uploading video to Firebase Storage...</span>
+                            <span className="text-[10px] text-slate-400 mt-1">Please wait ({uploadProgress}%)</span>
+                          </>
+                        ) : (
+                          <>
+                            <VideoIcon className="w-8 h-8 text-slate-400 group-hover:text-slate-800 transition-colors mb-2" />
+                            <span className="text-sm font-bold text-slate-600 group-hover:text-slate-800 transition-colors">Select Ad Video File</span>
+                            <span className="text-[10px] text-slate-400 mt-1">Supports MP4, WEBM format (Max 10MB)</span>
+                          </>
+                        )}
+                      </div>
+                    ) : (
+                      <div className="space-y-3">
+                        <div className="border-2 border-dashed border-emerald-200 bg-emerald-50/40 text-emerald-700 rounded-xl p-3.5 text-xs font-bold flex items-center justify-between shadow-sm">
+                          <span className="flex items-center gap-2 truncate">
+                            <CheckCircle className="w-4 h-4 text-emerald-600 flex-shrink-0" />
+                            <span className="truncate">{videoFile.name}</span>
+                          </span>
+                          <button type="button" onClick={handleRemoveVideo} className="text-slate-400 hover:text-red-500 font-bold ml-2 text-sm transition-colors">✕</button>
+                        </div>
+                        <div className="relative rounded-2xl overflow-hidden bg-slate-50 border border-slate-200/80 aspect-[16/9] max-h-56 flex items-center justify-center p-2">
+                          <video 
+                            src={videoPreview} 
+                            controls
+                            className="w-full h-full object-contain rounded-lg"
+                          />
+                        </div>
+                      </div>
+                    )}
+                  </div>
+                )}
 
                 <div className="space-y-1.5">
                   <label className="text-xs font-bold text-slate-600 block">Target Redirect URL <span className="text-red-500">*</span></label>
@@ -792,17 +1100,6 @@ export default function ServiceProviderAdvertisements() {
                     className="w-full border border-slate-200 rounded-xl px-4 py-2.5 text-sm outline-none focus:border-slate-800 text-slate-700 placeholder-slate-400 resize-none"
                     value={adContent.text}
                     onChange={(e) => setAdContent({...adContent, text: e.target.value})}
-                  />
-                </div>
-
-                <div className="space-y-1.5">
-                  <label className="text-xs font-bold text-slate-600 block">Ad Video URL (Optional)</label>
-                  <input 
-                    type="url"
-                    placeholder="https://example.com/ad-video.mp4"
-                    className="w-full border border-slate-200 rounded-xl px-4 py-2.5 text-sm outline-none focus:border-slate-800 text-slate-700 placeholder-slate-400"
-                    value={adContent.videoUrl}
-                    onChange={(e) => setAdContent({...adContent, videoUrl: e.target.value})}
                   />
                 </div>
               </CardContent>
@@ -844,21 +1141,51 @@ export default function ServiceProviderAdvertisements() {
                   <p className="italic font-medium">"{rectifyBookingItem.rejectionReason}"</p>
                 </div>
 
-                <div className="space-y-1.5">
-                  <label className="text-xs font-bold text-slate-600 block">Corrected Image URL <span className="text-red-500">*</span></label>
-                  <input 
-                    type="url"
-                    required
-                    placeholder="https://example.com/ad-image-rectified.jpg"
-                    className="w-full border border-slate-200 rounded-xl px-4 py-2.5 text-sm outline-none focus:border-amber-500 text-slate-700 placeholder-slate-400"
-                    value={rectifyAdContent.imageUrl}
-                    onChange={(e) => setRectifyAdContent({...rectifyAdContent, imageUrl: e.target.value})}
-                  />
+                {/* Corrected Image Upload */}
+                <div className="space-y-2">
+                  <label className="text-xs font-bold text-slate-600 block">Corrected Ad Image</label>
+                  {rectifyImagePreview ? (
+                    <div className="space-y-2">
+                      <div className="relative w-full rounded-xl overflow-hidden border border-slate-200 bg-slate-50 aspect-[16/9] max-h-40 flex items-center justify-center p-2">
+                        <img src={rectifyImagePreview} alt="Corrected Ad" className="w-full h-full object-contain rounded-lg" />
+                      </div>
+                      <button type="button" onClick={() => { setRectifyImageFile(null); setRectifyImagePreview(''); setRectifyAdContent(prev => ({ ...prev, imageUrl: '' })); }} className="text-xs text-red-500 hover:underline font-semibold">✕ Remove image</button>
+                    </div>
+                  ) : (
+                    <div className="relative border-2 border-dashed border-amber-200 hover:border-amber-400 rounded-2xl p-5 flex flex-col items-center justify-center min-h-[100px] cursor-pointer group transition-all">
+                      <input type="file" accept="image/*" onChange={handleRectifyImageChange} className="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-10" />
+                      {isRectifyUploadingFile ? (
+                        <><Loader2 className="w-6 h-6 text-amber-500 animate-spin mb-1" /><span className="text-xs font-medium text-slate-500">Uploading...</span></>
+                      ) : (
+                        <><ImageIcon className="w-6 h-6 text-slate-400 group-hover:text-amber-500 transition-colors mb-1" /><span className="text-xs font-semibold text-slate-500 group-hover:text-amber-600">Click to upload corrected image</span></>
+                      )}
+                    </div>
+                  )}
+                </div>
+
+                {/* Corrected Video Upload */}
+                <div className="space-y-2">
+                  <label className="text-xs font-bold text-slate-600 block">Corrected Ad Video (Optional)</label>
+                  {rectifyVideoPreview ? (
+                    <div className="space-y-2">
+                      <video src={rectifyVideoPreview} controls className="w-full rounded-xl border border-slate-200 max-h-36" />
+                      <button type="button" onClick={() => { setRectifyVideoFile(null); setRectifyVideoPreview(''); setRectifyAdContent(prev => ({ ...prev, videoUrl: '' })); }} className="text-xs text-red-500 hover:underline font-semibold">✕ Remove video</button>
+                    </div>
+                  ) : (
+                    <div className="relative border-2 border-dashed border-slate-200 hover:border-amber-300 rounded-2xl p-5 flex flex-col items-center justify-center min-h-[80px] cursor-pointer group transition-all">
+                      <input type="file" accept="video/*" onChange={handleRectifyVideoChange} className="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-10" />
+                      {isRectifyUploadingFile ? (
+                        <><Loader2 className="w-6 h-6 text-slate-400 animate-spin mb-1" /><span className="text-xs font-medium text-slate-500">Uploading...</span></>
+                      ) : (
+                        <><VideoIcon className="w-6 h-6 text-slate-400 group-hover:text-amber-500 transition-colors mb-1" /><span className="text-xs font-semibold text-slate-500 group-hover:text-amber-600">Click to upload corrected video (optional)</span></>
+                      )}
+                    </div>
+                  )}
                 </div>
 
                 <div className="space-y-1.5">
                   <label className="text-xs font-bold text-slate-600 block">Target Redirect URL <span className="text-red-500">*</span></label>
-                  <input 
+                  <input
                     type="url"
                     required
                     placeholder="https://mywebsite.com/my-services"
@@ -870,24 +1197,13 @@ export default function ServiceProviderAdvertisements() {
 
                 <div className="space-y-1.5">
                   <label className="text-xs font-bold text-slate-600 block">Ad Caption / Text <span className="text-red-500">*</span></label>
-                  <textarea 
+                  <textarea
                     required
                     rows="3"
                     placeholder="e.g. Legal due diligence and property verification advisors..."
                     className="w-full border border-slate-200 rounded-xl px-4 py-2.5 text-sm outline-none focus:border-amber-500 text-slate-700 placeholder-slate-400 resize-none"
                     value={rectifyAdContent.text}
                     onChange={(e) => setRectifyAdContent({...rectifyAdContent, text: e.target.value})}
-                  />
-                </div>
-
-                <div className="space-y-1.5">
-                  <label className="text-xs font-bold text-slate-600 block">Ad Video URL (Optional)</label>
-                  <input 
-                    type="url"
-                    placeholder="https://example.com/ad-video.mp4"
-                    className="w-full border border-slate-200 rounded-xl px-4 py-2.5 text-sm outline-none focus:border-amber-500 text-slate-700 placeholder-slate-400"
-                    value={rectifyAdContent.videoUrl}
-                    onChange={(e) => setRectifyAdContent({...rectifyAdContent, videoUrl: e.target.value})}
                   />
                 </div>
               </CardContent>
@@ -906,7 +1222,6 @@ export default function ServiceProviderAdvertisements() {
         </div>
       )}
 
-      <Footer />
     </div>
   );
 }

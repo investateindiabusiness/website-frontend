@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
@@ -6,8 +6,6 @@ import {
   Building2, MapPin, Search, TrendingUp, CheckCircle, 
   Filter, Loader2, ArrowRight
 } from 'lucide-react';
-import Header from '@/components/Header';
-import Footer from '@/components/Footer';
 import AdBanner from '@/components/AdBanner';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
@@ -80,7 +78,6 @@ export default function InvestorProperties() {
 
   return (
     <div className="min-h-screen bg-[#F4F5F7] flex flex-col font-sans overflow-x-hidden">
-      <Header />
       <main className="flex-grow mt-[4rem] pb-16">
         <div className="container mx-auto px-4 py-8">
 
@@ -266,7 +263,6 @@ export default function InvestorProperties() {
             )}
         </div>
       </main>
-      <Footer />
     </div>
   );
 }
