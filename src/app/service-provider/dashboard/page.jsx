@@ -1,11 +1,9 @@
-"use client";
+﻿"use client";
 
 import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { Building2, Users, TrendingUp, Wallet, BadgePercent, AlertCircle, Loader2, Plus, Calendar, Settings } from 'lucide-react';
 import { AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
-import Header from '@/components/Header';
-import Footer from '@/components/Footer';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { useAuth } from '@/hooks/AuthContext';
@@ -62,7 +60,6 @@ export default function ServiceProviderDashboard() {
 
   return (
     <div className="min-h-screen bg-gray-50 flex flex-col font-sans overflow-x-hidden">
-      <Header />
 
       <div className="flex-grow mt-16 md:mt-[4rem] pb-12">
         <div className="bg-gradient-to-r from-slate-800 to-slate-950 text-white pt-6 pb-12 md:pt-10 md:pb-20 px-4 md:px-8 rounded-b-[2rem] md:rounded-b-[2.5rem] shadow-xl relative overflow-hidden">
@@ -164,7 +161,6 @@ export default function ServiceProviderDashboard() {
           </div>
         </div>
       </div>
-      <Footer />
     </div>
   );
 }

@@ -4,9 +4,10 @@ import React, { useState, useEffect, useRef, Suspense } from 'react';
 import Link from 'next/link';
 import { useRouter, usePathname, useSearchParams } from 'next/navigation';
 import { Button } from './ui/button';
-import { Menu, X, LogOut, UserCircle, LayoutDashboard, ChevronDown } from 'lucide-react';
+import { Menu, X, LogOut, UserCircle, LayoutDashboard, ChevronDown, User, Pencil } from 'lucide-react';
 import { useAuth } from '@/hooks/AuthContext';
 import { toast } from '@/hooks/use-toast';
+import { apiRequest } from '@/api';
 
 
 const HeaderContent = ({ transparent = false }) => {
@@ -20,6 +21,12 @@ const HeaderContent = ({ transparent = false }) => {
   const moreDropdownRef = useRef(null);
   const [logoMenuOpen, setLogoMenuOpen] = useState(false);
   const logoMenuRef = useRef(null);
+  const [profileDropdownOpen, setProfileDropdownOpen] = useState(false);
+  const profileDropdownRef = useRef(null);
+  const [showProfileModal, setShowProfileModal] = useState(false);
+  const [showEditModal, setShowEditModal] = useState(false);
+  const [editForm, setEditForm] = useState({ name: '', contactNumber: '', address: '' });
+  const [isSavingProfile, setIsSavingProfile] = useState(false);
 
   // Close dropdowns when clicking outside
   useEffect(() => {
@@ -30,6 +37,9 @@ const HeaderContent = ({ transparent = false }) => {
       if (logoMenuRef.current && !logoMenuRef.current.contains(e.target)) {
         setLogoMenuOpen(false);
       }
+      if (profileDropdownRef.current && !profileDropdownRef.current.contains(e.target)) {
+        setProfileDropdownOpen(false);
+      }
     };
     document.addEventListener('mousedown', handleClickOutside);
     return () => document.removeEventListener('mousedown', handleClickOutside);
@@ -39,7 +49,35 @@ const HeaderContent = ({ transparent = false }) => {
     logout();
     setMobileMenuOpen(false);
     setMoreDropdownOpen(false);
+    setProfileDropdownOpen(false);
     router.push('/');
+  };
+
+  const handleOpenEdit = () => {
+    setEditForm({
+      name: displayUser?.name || '',
+      contactNumber: displayUser?.contactNumber || '',
+      address: displayUser?.address || ''
+    });
+    setShowEditModal(true);
+    setProfileDropdownOpen(false);
+  };
+
+  const handleSaveProfile = async (e) => {
+    e.preventDefault();
+    try {
+      setIsSavingProfile(true);
+      await apiRequest('/api/auth/profile', {
+        method: 'PATCH',
+        body: JSON.stringify(editForm)
+      });
+      toast({ title: 'Profile Updated', description: 'Your profile has been saved successfully.' });
+      setShowEditModal(false);
+    } catch (err) {
+      toast({ title: 'Update Failed', description: err.message || 'Could not update profile.', variant: 'destructive' });
+    } finally {
+      setIsSavingProfile(false);
+    }
   };
 
   const handleAuthClick = (action, role) => {
@@ -136,8 +174,8 @@ const HeaderContent = ({ transparent = false }) => {
                   onClick={() => setLogoMenuOpen(prev => !prev)}
                   className="flex items-center focus:outline-none cursor-pointer"
                 >
-                  <img src="/logo-big.png" alt="LOGO" className="hidden md:block h-32 w-auto object-contain" />
-                  <img src="/logo-small-white.png" alt="LOGO" className="block md:hidden h-24 w-auto object-contain" />
+                  <img src="/logo-big.png" alt="LOGO" className="hidden md:block h-10 w-auto object-contain" />
+                  <img src="/logo-small-white.png" alt="LOGO" className="block md:hidden h-8 w-auto object-contain" />
                   <ChevronDown className={`w-4 h-4 ml-1 text-gray-400 transition-transform duration-200 ${logoMenuOpen ? 'rotate-180' : ''}`} />
                 </button>
 
@@ -180,8 +218,8 @@ const HeaderContent = ({ transparent = false }) => {
               </>
             ) : (
               <Link href={logoHref} className="flex items-center">
-                <img src="/logo-big.png" alt="LOGO" className="hidden md:block h-32 w-auto object-contain" />
-                <img src="/logo-small-white.png" alt="LOGO" className="block md:hidden h-24 w-auto object-contain" />
+                <img src="/logo-big.png" alt="LOGO" className="hidden md:block h-10 w-auto object-contain" />
+                <img src="/logo-small-white.png" alt="LOGO" className="block md:hidden h-8 w-auto object-contain" />
               </Link>
             )}
           </div>
@@ -244,18 +282,45 @@ const HeaderContent = ({ transparent = false }) => {
 
           {/* Desktop Auth Actions */}
           {displayUser ? (
-            <div className="hidden md:flex items-center gap-3 mr-4 shrink-0">
-              <Link href={getDashboardPath(displayUser.role)} className="flex items-center gap-2 text-xs font-bold bg-gray-800/60 px-4 py-2 rounded-full border border-gray-700/50 text-gray-200 shadow-inner hover:bg-gray-700 transition-all">
-                <UserCircle className="w-4 h-4 text-orange-500 flex-shrink-0" />
-                <span className="max-w-[120px] truncate">{displayUser.name || displayUser.email?.split('@')[0]}</span>
-                <span className="text-[9px] uppercase tracking-wider bg-orange-500/10 text-orange-400 px-1.5 py-0.5 rounded border border-orange-500/20">{displayUser.role}</span>
-              </Link>
-              <Button
-                onClick={handleLogout}
-                className="h-9 px-4 text-xs font-black uppercase tracking-widest text-red-400 bg-transparent hover:text-red-300 hover:bg-red-950/20 flex items-center gap-1.5 rounded-full transition-all border border-red-900/30 hover:border-red-900/50"
-              >
-                <LogOut className="w-3.5 h-3.5" /> Logout
-              </Button>
+            <div className="hidden md:flex items-center gap-3 mr-4 shrink-0" ref={profileDropdownRef}>
+              <div className="relative">
+                <button
+                  onClick={() => setProfileDropdownOpen(prev => !prev)}
+                  className="flex items-center gap-2 text-xs font-bold bg-gray-800/60 px-4 py-2 rounded-full border border-gray-700/50 text-gray-200 shadow-inner hover:bg-gray-700 transition-all"
+                >
+                  <UserCircle className="w-4 h-4 text-orange-500 flex-shrink-0" />
+                  <span className="max-w-[120px] truncate">{displayUser.name || displayUser.email?.split('@')[0]}</span>
+                  <span className="text-[9px] uppercase tracking-wider bg-orange-500/10 text-orange-400 px-1.5 py-0.5 rounded border border-orange-500/20">{displayUser.role}</span>
+                  <ChevronDown className={`w-3 h-3 text-gray-400 transition-transform duration-200 ${profileDropdownOpen ? 'rotate-180' : ''}`} />
+                </button>
+
+                {profileDropdownOpen && (
+                  <div className="absolute top-full right-0 mt-2 w-52 bg-[#1a1a1c] border border-gray-700/60 rounded-2xl shadow-2xl shadow-black/40 overflow-hidden z-[2000] animate-in fade-in slide-in-from-top-2 duration-150 py-2">
+                    <div className="px-4 py-2 border-b border-gray-800/60">
+                      <p className="text-[10px] text-gray-500 uppercase tracking-wider font-bold">Account</p>
+                      <p className="text-xs text-gray-300 font-medium truncate mt-0.5">{displayUser.email}</p>
+                    </div>
+                    <button
+                      onClick={() => { setShowProfileModal(true); setProfileDropdownOpen(false); }}
+                      className="flex items-center gap-3 w-full px-4 py-3 text-sm text-gray-300 hover:text-[#D48035] hover:bg-gray-800/50 transition-colors"
+                    >
+                      <User className="w-4 h-4" /> View Profile
+                    </button>
+                    <button
+                      onClick={handleOpenEdit}
+                      className="flex items-center gap-3 w-full px-4 py-3 text-sm text-gray-300 hover:text-[#D48035] hover:bg-gray-800/50 transition-colors border-b border-gray-800/40"
+                    >
+                      <Pencil className="w-4 h-4" /> Edit Profile
+                    </button>
+                    <button
+                      onClick={handleLogout}
+                      className="flex items-center gap-3 w-full px-4 py-3 text-sm text-red-400 hover:text-red-300 hover:bg-red-950/20 transition-colors"
+                    >
+                      <LogOut className="w-4 h-4" /> Logout
+                    </button>
+                  </div>
+                )}
+              </div>
             </div>
           ) : null}
 
@@ -324,6 +389,87 @@ const HeaderContent = ({ transparent = false }) => {
           </div>
         </div>
       </header>
+
+      {/* View Profile Modal */}
+      {showProfileModal && displayUser && (
+        <div className="fixed inset-0 z-[9999] flex items-center justify-center p-4 bg-black/70 backdrop-blur-sm">
+          <div className="bg-[#1a1a1c] border border-gray-700/60 rounded-2xl shadow-2xl w-full max-w-sm overflow-hidden animate-in fade-in zoom-in duration-200">
+            <div className="flex items-center justify-between px-6 py-4 border-b border-gray-800">
+              <h2 className="text-white font-bold text-lg">My Profile</h2>
+              <button onClick={() => setShowProfileModal(false)} className="text-gray-400 hover:text-white">✕</button>
+            </div>
+            <div className="p-6 space-y-3">
+              <div className="flex items-center justify-center mb-4">
+                <div className="w-16 h-16 rounded-full bg-orange-500/20 border border-orange-500/30 flex items-center justify-center">
+                  <UserCircle className="w-10 h-10 text-orange-400" />
+                </div>
+              </div>
+              {[['Name', displayUser.name], ['Email', displayUser.email], ['Role', displayUser.role], ['Contact', displayUser.contactNumber], ['Address', displayUser.address]].map(([label, val]) => val ? (
+                <div key={label} className="flex justify-between text-sm border-b border-gray-800 pb-2">
+                  <span className="text-gray-500 font-medium">{label}</span>
+                  <span className="text-gray-200 font-semibold text-right max-w-[60%] truncate">{val}</span>
+                </div>
+              ) : null)}
+            </div>
+            <div className="px-6 py-4 flex justify-end gap-2">
+              <Button onClick={handleOpenEdit} className="bg-[#D48035] hover:bg-[#B45309] text-white text-xs rounded-xl">
+                <Pencil className="w-3.5 h-3.5 mr-1.5" /> Edit Profile
+              </Button>
+              <Button variant="outline" onClick={() => setShowProfileModal(false)} className="text-xs rounded-xl border-gray-700 text-gray-300 hover:bg-gray-800">Close</Button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Edit Profile Modal */}
+      {showEditModal && (
+        <div className="fixed inset-0 z-[9999] flex items-center justify-center p-4 bg-black/70 backdrop-blur-sm">
+          <div className="bg-[#1a1a1c] border border-gray-700/60 rounded-2xl shadow-2xl w-full max-w-sm overflow-hidden animate-in fade-in zoom-in duration-200">
+            <div className="flex items-center justify-between px-6 py-4 border-b border-gray-800">
+              <h2 className="text-white font-bold text-lg">Edit Profile</h2>
+              <button onClick={() => setShowEditModal(false)} className="text-gray-400 hover:text-white">✕</button>
+            </div>
+            <form onSubmit={handleSaveProfile} className="p-6 space-y-4">
+              <div>
+                <label className="text-xs text-gray-400 font-bold block mb-1">Full Name</label>
+                <input
+                  type="text"
+                  value={editForm.name}
+                  onChange={e => setEditForm({ ...editForm, name: e.target.value })}
+                  placeholder="Your full name"
+                  className="w-full bg-gray-800/60 border border-gray-700 rounded-xl px-4 py-2.5 text-sm text-gray-200 outline-none focus:border-orange-500 transition-colors"
+                />
+              </div>
+              <div>
+                <label className="text-xs text-gray-400 font-bold block mb-1">Contact Number</label>
+                <input
+                  type="text"
+                  value={editForm.contactNumber}
+                  onChange={e => setEditForm({ ...editForm, contactNumber: e.target.value })}
+                  placeholder="+91 9876543210"
+                  className="w-full bg-gray-800/60 border border-gray-700 rounded-xl px-4 py-2.5 text-sm text-gray-200 outline-none focus:border-orange-500 transition-colors"
+                />
+              </div>
+              <div>
+                <label className="text-xs text-gray-400 font-bold block mb-1">Address</label>
+                <input
+                  type="text"
+                  value={editForm.address}
+                  onChange={e => setEditForm({ ...editForm, address: e.target.value })}
+                  placeholder="Your address"
+                  className="w-full bg-gray-800/60 border border-gray-700 rounded-xl px-4 py-2.5 text-sm text-gray-200 outline-none focus:border-orange-500 transition-colors"
+                />
+              </div>
+              <div className="flex justify-end gap-2 pt-2">
+                <Button type="button" variant="outline" onClick={() => setShowEditModal(false)} className="text-xs rounded-xl border-gray-700 text-gray-300 hover:bg-gray-800">Cancel</Button>
+                <Button type="submit" disabled={isSavingProfile} className="bg-[#D48035] hover:bg-[#B45309] text-white text-xs rounded-xl min-w-[80px]">
+                  {isSavingProfile ? <span className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin inline-block" /> : 'Save'}
+                </Button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
 
     </>
   );

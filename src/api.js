@@ -14,12 +14,15 @@ export const apiRequest = async (endpoint, options = {}) => {
 
   const headers = {
     'Content-Type': 'application/json',
+    'Cache-Control': 'no-cache',
+    'Pragma': 'no-cache',
     ...(session?.token && { 'Authorization': `Bearer ${session.token}` }),
     ...options.headers,
   };
 
   try {
     const response = await fetch(`${API_BASE_URL}${endpoint}`, {
+      cache: 'no-store',
       ...options,
       headers,
     });
@@ -598,3 +601,9 @@ export const validateCoupon = (code) => apiRequest('/api/coupons/validate', {
   method: 'POST',
   body: JSON.stringify({ code })
 });
+
+// --- Admin Users Search API ---
+export const fetchAdminUsers = (params = {}) => {
+  const query = new URLSearchParams(params).toString();
+  return apiRequest(`/api/admin/users${query ? `?${query}` : ''}`);
+};

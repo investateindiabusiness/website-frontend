@@ -30,20 +30,42 @@ import {
 const DRAWER_WIDTH = 240;
 const DRAWER_COLLAPSED = 64;
 
-const NAV_ITEMS = [
-  { label: 'Dashboard',        path: '/admin/dashboard',        icon: <DashboardIcon /> },
-  { label: 'Builders',         path: '/admin/builders',          icon: <BuilderIcon /> },
-  { label: 'Investors',        path: '/admin/investors',         icon: <InvestorIcon /> },
-  { label: 'Service Providers',path: '/admin/service-providers', icon: <ServiceProviderIcon /> },
-  { label: 'Users',            path: '/admin/users',             icon: <UsersIcon /> },
-  { label: 'Projects',         path: '/admin/projects',          icon: <ProjectsIcon /> },
-  { label: 'Leads',            path: '/admin/leads',             icon: <LeadsIcon /> },
-  { label: 'Inquiries',        path: '/admin/inquiries',         icon: <InquiriesIcon /> },
-  { label: 'Helpdesk',         path: '/admin/helpdesk',          icon: <HelpdeskIcon /> },
-  { label: 'Advertisements',   path: '/admin/advertisements',    icon: <AdsIcon /> },
-  { label: 'Newsletter',       path: '/admin/newsletter',        icon: <NewsletterIcon /> },
-  { label: 'Coupons',          path: '/admin/coupons',           icon: <CouponsIcon /> },
-];
+const NAV_ITEMS_BY_ROLE = {
+  admin: [
+    { label: 'Dashboard',        path: '/admin/dashboard',        icon: <DashboardIcon /> },
+    { label: 'Builders',         path: '/admin/builders',          icon: <BuilderIcon /> },
+    { label: 'Investors',        path: '/admin/investors',         icon: <InvestorIcon /> },
+    { label: 'Service Providers',path: '/admin/service-providers', icon: <ServiceProviderIcon /> },
+    { label: 'Users',            path: '/admin/users',             icon: <UsersIcon /> },
+    { label: 'Projects',         path: '/admin/projects',          icon: <ProjectsIcon /> },
+    { label: 'Leads',            path: '/admin/leads',             icon: <LeadsIcon /> },
+    { label: 'Inquiries',        path: '/admin/inquiries',         icon: <InquiriesIcon /> },
+    { label: 'Helpdesk',         path: '/admin/helpdesk',          icon: <HelpdeskIcon /> },
+    { label: 'Advertisements',   path: '/admin/advertisements',    icon: <AdsIcon /> },
+    { label: 'Newsletter',       path: '/admin/newsletter',        icon: <NewsletterIcon /> },
+    { label: 'Coupons',          path: '/admin/coupons',           icon: <CouponsIcon /> },
+  ],
+  builder: [
+    { label: 'Dashboard',     path: '/builder/dashboard',       icon: <DashboardIcon /> },
+    { label: 'Projects',      path: '/builder/projects',        icon: <ProjectsIcon /> },
+    { label: 'Advertise',     path: '/builder/advertisements',  icon: <AdsIcon /> },
+    { label: 'Payments',      path: '/builder/payments',        icon: <LeadsIcon /> },
+    { label: 'Coupons',       path: '/builder/coupons',         icon: <CouponsIcon /> },
+  ],
+  investor: [
+    { label: 'Dashboard',     path: '/dashboard',              icon: <DashboardIcon /> },
+    { label: 'Properties',    path: '/properties',             icon: <ProjectsIcon /> },
+    { label: 'Advertise',     path: '/investor/advertisements',icon: <AdsIcon /> },
+    { label: 'Payments',      path: '/investor/payments',      icon: <LeadsIcon /> },
+    { label: 'Coupons',       path: '/investor/coupons',       icon: <CouponsIcon /> },
+  ],
+  serviceProvider: [
+    { label: 'Dashboard',     path: '/service-provider/dashboard',       icon: <DashboardIcon /> },
+    { label: 'Advertise',     path: '/service-provider/advertisements',  icon: <AdsIcon /> },
+    { label: 'Payments',      path: '/service-provider/payments',        icon: <LeadsIcon /> },
+    { label: 'Coupons',       path: '/service-provider/coupons',         icon: <CouponsIcon /> },
+  ],
+};
 
 export default function AdminSidebar({ children }) {
   const { user, logout } = useAuth();
@@ -53,6 +75,9 @@ export default function AdminSidebar({ children }) {
   const [mobileOpen, setMobileOpen] = useState(false);
 
   const drawerWidth = collapsed ? DRAWER_COLLAPSED : DRAWER_WIDTH;
+  const NAV_ITEMS = NAV_ITEMS_BY_ROLE[user?.role] || NAV_ITEMS_BY_ROLE.admin;
+  const roleLabel = user?.role === 'serviceProvider' ? 'Service Provider' :
+    user?.role ? user.role.charAt(0).toUpperCase() + user.role.slice(1) : 'User';
 
   const handleLogout = () => {
     logout();
@@ -97,14 +122,14 @@ export default function AdminSidebar({ children }) {
         <Box sx={{ px: 2, py: 2, borderBottom: '1px solid rgba(255,255,255,0.08)' }}>
           <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.5 }}>
             <Avatar sx={{ width: 36, height: 36, bgcolor: '#D48035', fontSize: '0.85rem', fontWeight: 700 }}>
-              {(user?.name || 'A')[0].toUpperCase()}
+              {(user?.name || user?.email || 'U')[0].toUpperCase()}
             </Avatar>
             <Box>
               <Typography variant="caption" sx={{ fontWeight: 700, color: 'white', display: 'block', lineHeight: 1.3 }}>
-                {user?.name || 'Admin'}
+                {user?.name || user?.email?.split('@')[0] || 'User'}
               </Typography>
               <Typography variant="caption" sx={{ color: 'rgba(255,255,255,0.45)', fontSize: '0.65rem' }}>
-                Administrator
+                {roleLabel}
               </Typography>
             </Box>
           </Box>

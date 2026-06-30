@@ -5,6 +5,7 @@ import { useParams, useRouter } from 'next/navigation';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
 import AdCarousel from '@/components/AdCarousel';
+import AdBanner from '@/components/AdBanner';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
@@ -122,6 +123,11 @@ export default function ProjectDetail() {
                <div className="bg-white p-6 rounded-xl shadow-sm border border-gray-200">
                   <h2 className="text-lg font-bold mb-4">Project Overview</h2>
                   <p className="text-gray-600 text-sm leading-relaxed">{project.projectOverview}</p>
+               </div>
+
+               {/* Zone 3 — Investor Project Sidebar Ad (300x250) */}
+               <div className="flex justify-center">
+                 <AdBanner zoneId="zone3" />
                </div>
             </div>
          </main>

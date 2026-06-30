@@ -2,8 +2,6 @@
 
 import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
-import Header from '@/components/Header';
-import Footer from '@/components/Footer';
 import { useAuth } from '@/hooks/AuthContext';
 import { toast } from '@/hooks/use-toast';
 import { 
@@ -12,8 +10,11 @@ import {
   bookSlot, 
   fetchMyBookings, 
   rectifyBooking, 
-  cancelBooking
+  cancelBooking,
+  uploadImage,
+  uploadFile
 } from '@/api';
+import { compressAdImage } from '@/utils/imageCompressor';
 import { loadStripe } from '@stripe/stripe-js';
 import { Elements } from '@stripe/react-stripe-js';
 import CheckoutForm from '@/components/CheckoutForm';
@@ -32,7 +33,9 @@ import {
   Loader2, 
   Sparkles,
   ExternalLink,
-  Settings
+  Settings,
+  Video as VideoIcon,
+  FileText as TextIcon
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
@@ -97,6 +100,11 @@ export default function InvestorAdvertisements() {
     text: '',
     targetUrl: ''
   });
+  const [rectifyImageFile, setRectifyImageFile] = useState(null);
+  const [rectifyImagePreview, setRectifyImagePreview] = useState('');
+  const [rectifyVideoFile, setRectifyVideoFile] = useState(null);
+  const [rectifyVideoPreview, setRectifyVideoPreview] = useState('');
+  const [isRectifyUploadingFile, setIsRectifyUploadingFile] = useState(false);
   const [isSubmittingRectify, setIsSubmittingRectify] = useState(false);
 
   // Calendar Navigation & Range Selection States
@@ -345,16 +353,63 @@ export default function InvestorAdvertisements() {
       text: booking.adContent?.text || '',
       targetUrl: booking.adContent?.targetUrl || ''
     });
+    // Pre-fill previews if already uploaded URLs exist
+    setRectifyImagePreview(booking.adContent?.imageUrl || '');
+    setRectifyVideoPreview(booking.adContent?.videoUrl || '');
+    setRectifyImageFile(null);
+    setRectifyVideoFile(null);
   };
 
   const handleCloseRectifyModal = () => {
     setRectifyBookingItem(null);
+    setRectifyImageFile(null);
+    setRectifyImagePreview('');
+    setRectifyVideoFile(null);
+    setRectifyVideoPreview('');
+  };
+
+  const handleRectifyImageChange = async (e) => {
+    const file = e.target.files[0];
+    if (!file) return;
+    try {
+      setIsRectifyUploadingFile(true);
+      const compressed = await compressAdImage(file);
+      const res = await uploadImage(compressed, 'campaigns');
+      setRectifyImageFile(file);
+      setRectifyImagePreview(res.url);
+      setRectifyAdContent(prev => ({ ...prev, imageUrl: res.url }));
+      toast({ title: 'Upload Successful', description: 'Corrected image uploaded to Firebase.' });
+    } catch (err) {
+      toast({ title: 'Upload Failed', description: err.message || 'Could not upload image.', variant: 'destructive' });
+    } finally {
+      setIsRectifyUploadingFile(false);
+    }
+  };
+
+  const handleRectifyVideoChange = async (e) => {
+    const file = e.target.files[0];
+    if (!file) return;
+    if (file.size > 10 * 1024 * 1024) {
+      return toast({ title: 'File Too Large', description: 'Video must be under 10MB.', variant: 'destructive' });
+    }
+    try {
+      setIsRectifyUploadingFile(true);
+      const res = await uploadFile(file, 'campaigns');
+      setRectifyVideoFile(file);
+      setRectifyVideoPreview(res.url);
+      setRectifyAdContent(prev => ({ ...prev, videoUrl: res.url }));
+      toast({ title: 'Upload Successful', description: 'Corrected video uploaded to Firebase.' });
+    } catch (err) {
+      toast({ title: 'Upload Failed', description: err.message || 'Could not upload video.', variant: 'destructive' });
+    } finally {
+      setIsRectifyUploadingFile(false);
+    }
   };
 
   const handleRectifySubmit = async (e) => {
     e.preventDefault();
-    if (!rectifyAdContent.imageUrl) {
-      return toast({ title: "Validation Error", description: "Ad image URL is required.", variant: "destructive" });
+    if (!rectifyAdContent.imageUrl && !rectifyAdContent.videoUrl) {
+      return toast({ title: "Validation Error", description: "Please upload an image or video for the corrected ad.", variant: "destructive" });
     }
     if (!rectifyAdContent.targetUrl) {
       return toast({ title: "Validation Error", description: "Ad redirect URL is required.", variant: "destructive" });
@@ -403,7 +458,6 @@ export default function InvestorAdvertisements() {
 
   return (
     <div className="min-h-screen bg-gray-50 flex flex-col font-sans overflow-x-hidden">
-      <Header />
       
       <div className="flex-grow mt-[2rem] md:mt-[4rem] pb-16">
         
@@ -907,21 +961,50 @@ export default function InvestorAdvertisements() {
                   <p className="italic font-medium">"{rectifyBookingItem.rejectionReason}"</p>
                 </div>
 
-                <div className="space-y-1.5">
-                  <label className="text-xs font-bold text-slate-600 block">Corrected Image URL <span className="text-red-500">*</span></label>
-                  <input 
-                    type="url"
-                    required
-                    placeholder="https://example.com/ad-image-rectified.jpg"
-                    className="w-full border border-slate-200 rounded-xl px-4 py-2.5 text-sm outline-none focus:border-amber-500 text-slate-700 placeholder-slate-400"
-                    value={rectifyAdContent.imageUrl}
-                    onChange={(e) => setRectifyAdContent({...rectifyAdContent, imageUrl: e.target.value})}
-                  />
+                {/* Corrected Image Upload */}
+                <div className="space-y-2">
+                  <label className="text-xs font-bold text-slate-600 block">Corrected Ad Image</label>
+                  {rectifyImagePreview ? (
+                    <div className="space-y-2">
+                      <div className="relative w-full rounded-xl overflow-hidden border border-slate-200 bg-slate-50 aspect-[16/9] max-h-40 flex items-center justify-center p-2">
+                        <img src={rectifyImagePreview} alt="Corrected Ad" className="w-full h-full object-contain rounded-lg" />
+                      </div>
+                      <button type="button" onClick={() => { setRectifyImageFile(null); setRectifyImagePreview(''); setRectifyAdContent(prev => ({ ...prev, imageUrl: '' })); }} className="text-xs text-red-500 hover:underline font-semibold">✕ Remove image</button>
+                    </div>
+                  ) : (
+                    <div className="relative border-2 border-dashed border-amber-200 hover:border-amber-400 rounded-2xl p-5 flex flex-col items-center justify-center min-h-[100px] cursor-pointer group transition-all">
+                      <input type="file" accept="image/*" onChange={handleRectifyImageChange} className="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-10" />
+                      {isRectifyUploadingFile ? (
+                        <><Loader2 className="w-6 h-6 text-amber-500 animate-spin mb-1" /><span className="text-xs font-medium text-slate-500">Uploading...</span></>
+                      ) : (
+                        <><ImageIcon className="w-6 h-6 text-slate-400 group-hover:text-amber-500 transition-colors mb-1" /><span className="text-xs font-semibold text-slate-500 group-hover:text-amber-600">Click to upload corrected image</span></>
+                      )}
+                    </div>
+                  )}
                 </div>
 
+                {/* Corrected Video Upload */}
+                <div className="space-y-2">
+                  <label className="text-xs font-bold text-slate-600 block">Corrected Ad Video (Optional)</label>
+                  {rectifyVideoPreview ? (
+                    <div className="space-y-2">
+                      <video src={rectifyVideoPreview} controls className="w-full rounded-xl border border-slate-200 max-h-36" />
+                      <button type="button" onClick={() => { setRectifyVideoFile(null); setRectifyVideoPreview(''); setRectifyAdContent(prev => ({ ...prev, videoUrl: '' })); }} className="text-xs text-red-500 hover:underline font-semibold">✕ Remove video</button>
+                    </div>
+                  ) : (
+                    <div className="relative border-2 border-dashed border-slate-200 hover:border-amber-300 rounded-2xl p-5 flex flex-col items-center justify-center min-h-[80px] cursor-pointer group transition-all">
+                      <input type="file" accept="video/*" onChange={handleRectifyVideoChange} className="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-10" />
+                      {isRectifyUploadingFile ? (
+                        <><Loader2 className="w-6 h-6 text-slate-400 animate-spin mb-1" /><span className="text-xs font-medium text-slate-500">Uploading...</span></>
+                      ) : (
+                        <><VideoIcon className="w-6 h-6 text-slate-400 group-hover:text-amber-500 transition-colors mb-1" /><span className="text-xs font-semibold text-slate-500 group-hover:text-amber-600">Click to upload corrected video (optional)</span></>
+                      )}
+                    </div>
+                  )}
+                </div>
                 <div className="space-y-1.5">
                   <label className="text-xs font-bold text-slate-600 block">Target Redirect URL <span className="text-red-500">*</span></label>
-                  <input 
+                  <input
                     type="url"
                     required
                     placeholder="https://mywebsite.com/project-listing"
@@ -933,24 +1016,13 @@ export default function InvestorAdvertisements() {
 
                 <div className="space-y-1.5">
                   <label className="text-xs font-bold text-slate-600 block">Ad Caption / Text <span className="text-red-500">*</span></label>
-                  <textarea 
+                  <textarea
                     required
                     rows="3"
                     placeholder="e.g. Invest in Premium Commercial Real Estate starting from..."
                     className="w-full border border-slate-200 rounded-xl px-4 py-2.5 text-sm outline-none focus:border-amber-500 text-slate-700 placeholder-slate-400 resize-none"
                     value={rectifyAdContent.text}
                     onChange={(e) => setRectifyAdContent({...rectifyAdContent, text: e.target.value})}
-                  />
-                </div>
-
-                <div className="space-y-1.5">
-                  <label className="text-xs font-bold text-slate-600 block">Ad Video URL (Optional)</label>
-                  <input 
-                    type="url"
-                    placeholder="https://example.com/ad-video.mp4"
-                    className="w-full border border-slate-200 rounded-xl px-4 py-2.5 text-sm outline-none focus:border-amber-500 text-slate-700 placeholder-slate-400"
-                    value={rectifyAdContent.videoUrl}
-                    onChange={(e) => setRectifyAdContent({...rectifyAdContent, videoUrl: e.target.value})}
                   />
                 </div>
               </CardContent>
@@ -969,7 +1041,6 @@ export default function InvestorAdvertisements() {
         </div>
       )}
 
-      <Footer />
     </div>
   );
 }

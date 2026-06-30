@@ -4,10 +4,7 @@ import React, { useState, useEffect, useCallback } from 'react';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
 import AppDataGrid from '@/components/AppDataGrid';
-<<<<<<< HEAD
-=======
-import { Card, CardContent } from '@/components/ui/card';
->>>>>>> d12a5f943b677122b8897d63c2b1db3a42564419
+
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from '@/components/ui/dialog';
@@ -100,11 +97,7 @@ export default function AdminBuilders() {
       const data = await fetchAllBuilders(params);
       setBuilders(data.data || []);
       setTotal(data.pagination?.total || 0);
-<<<<<<< HEAD
-=======
-      const data = await fetchAllBuilders(user?.token);
-      setBuilders(data.data || []);
->>>>>>> d12a5f943b677122b8897d63c2b1db3a42564419
+
     } catch (error) {
       toast({ title: 'Error', description: error.message, variant: 'destructive' });
     } finally {
