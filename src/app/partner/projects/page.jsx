@@ -13,12 +13,8 @@ import { Textarea } from '@/components/ui/textarea';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from '@/components/ui/dialog';
 import { toast } from '@/hooks/use-toast';
 import { useAuth } from '@/hooks/AuthContext';
-import { fetchBuilderProjects, createProject, updateProject, deleteProject, submitProjectChanges, appealProjectRejection } from '@/api';
+import { fetchBuilderProjects, createProject, updateProject, deleteProject, submitProjectChanges, appealProjectRejection, uploadFile } from '@/api';
 import { compressImage } from '@/utils/imageCompressor';
-
-// FIREBASE IMPORTS
-import { getStorage, ref, uploadBytes, getDownloadURL } from 'firebase/storage';
-import { getFirestore, doc, collection as firestoreCollection } from 'firebase/firestore';
 
 const initialFormState = {
     projectName: '', builderName: '', projectOverview: '', projectLocation: '', projectType: 'Residential',
@@ -131,38 +127,6 @@ export default function ProjectManager() {
                     uploadedDocs.push({ docName: docObj.docName, fileName: docObj.file.name, url: response.url });
                 } else uploadedDocs.push(docObj);
             }
-            // Upload images in parallel with client-side canvas compression
-            const uploadedImages = await Promise.all(
-                (currentProject.projectImages || []).map(async (img) => {
-                    if (img instanceof File) {
-                        const compressed = await compressImage(img);
-                        const safeName = compressed.name.replace(/[^a-zA-Z0-9.\-]/g, '_');
-                        const fileRef = ref(storage, `${projectId}/ProjectDisplayImages/${Date.now()}_${safeName}`);
-                        await uploadBytes(fileRef, compressed);
-                        return await getDownloadURL(fileRef);
-                    }
-                    return img;
-                })
-            );
-
-            // Upload documents in parallel
-            const uploadedDocs = await Promise.all(
-                (currentProject.projectDocuments || []).map(async (docObj) => {
-                    if (docObj.file instanceof File) {
-                        const safeName = docObj.file.name.replace(/[^a-zA-Z0-9.\-]/g, '_');
-                        const fileRef = ref(storage, `${projectId}/ProjectDocuments/${Date.now()}_${safeName}`);
-                        await uploadBytes(fileRef, docObj.file);
-                        const url = await getDownloadURL(fileRef);
-                        return {
-                            docName: docObj.docName,
-                            fileName: docObj.file.name,
-                            url: url
-                        };
-                    }
-                    return docObj;
-                })
-            );
-
             const payload = { ...currentProject, builderId: user.uid, updatedBy: user.email || user.name, projectImages: uploadedImages, projectDocuments: uploadedDocs };
 
             if (isEditing) {

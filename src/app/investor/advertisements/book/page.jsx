@@ -6,11 +6,11 @@ import Header from '@/components/Header';
 import Footer from '@/components/Footer';
 import { useAuth } from '@/hooks/AuthContext';
 import { toast } from '@/hooks/use-toast';
-import { bookSlot, fetchAdZones } from '@/api';
+import { bookSlot, fetchAdZones, fetchMyCoupons, validateCoupon } from '@/api';
 import { loadStripe } from '@stripe/stripe-js';
 import { Elements } from '@stripe/react-stripe-js';
 import CheckoutForm from '@/components/CheckoutForm';
-import { Calendar, Loader2, ArrowLeft, Image as ImageIcon, CheckCircle, Clock } from 'lucide-react';
+import { Calendar, Loader2, ArrowLeft, Image as ImageIcon, CheckCircle, Clock, Tag } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { compressAdImage } from '@/utils/imageCompressor';
@@ -67,12 +67,32 @@ function BookingFormContent() {
   const [spinnerMsg, setSpinnerMsg] = useState('Complete Booking');
   const [paymentClientSecret, setPaymentClientSecret] = useState(null);
   const [paymentId, setPaymentId] = useState(null);
+  
+  // Coupon States
+  const [coupons, setCoupons] = useState([]);
+  const [loadingCoupons, setLoadingCoupons] = useState(false);
+  const [couponCodeInput, setCouponCodeInput] = useState('');
+  const [appliedCoupon, setAppliedCoupon] = useState(null);
+  const [validatingCoupon, setValidatingCoupon] = useState(false);
 
   useEffect(() => {
     if (user && zoneId) {
       loadZoneDetails();
+      loadAvailableCoupons();
     }
   }, [user, zoneId]);
+
+  const loadAvailableCoupons = async () => {
+    try {
+      setLoadingCoupons(true);
+      const res = await fetchMyCoupons();
+      setCoupons(res.data || []);
+    } catch (error) {
+      console.error("Failed to load user coupons:", error);
+    } finally {
+      setLoadingCoupons(false);
+    }
+  };
 
   const loadZoneDetails = async () => {
     try {
@@ -130,6 +150,31 @@ function BookingFormContent() {
     setImageBase64('');
   };
 
+  const handleApplyCoupon = async (codeToApply) => {
+    const code = (codeToApply || couponCodeInput).trim().toUpperCase();
+    if (!code) return;
+    try {
+      setValidatingCoupon(true);
+      const res = await validateCoupon(code);
+      if (res.data) {
+        setAppliedCoupon(res.data);
+        setCouponCodeInput(code);
+        toast({ title: "Coupon Applied!", description: `Discount of ₹${res.data.discountAmount} applied.` });
+      }
+    } catch (error) {
+      toast({ title: "Invalid Coupon", description: error.message || "Failed to validate coupon.", variant: "destructive" });
+    } finally {
+      setValidatingCoupon(false);
+    }
+  };
+
+  const handleRemoveCoupon = () => {
+    setAppliedCoupon(null);
+    setCouponCodeInput('');
+  };
+
+  const discountedCost = Math.max(0, (selectedZone?.cost || 0) - (appliedCoupon?.discountAmount || 0));
+
   const handleBookingSubmit = async (e) => {
     e.preventDefault();
     if (!imageFile || !imageBase64) {
@@ -151,6 +196,7 @@ function BookingFormContent() {
         zoneId,
         slotId,
         timeSlot,
+        couponCode: appliedCoupon?.code,
         adContent: {
           ...adContent,
           imageUrl: imageBase64
@@ -216,7 +262,7 @@ function BookingFormContent() {
         <CardContent className="p-8">
           <Elements stripe={stripePromise} options={{ clientSecret: paymentClientSecret, appearance: { theme: 'stripe' } }}>
             <CheckoutForm 
-              amount={selectedZone?.cost}
+              amount={discountedCost}
               paymentId={paymentId}
               onSuccess={() => {
                 toast({ title: "Payment Complete!", description: "Your campaign booking is fully paid and active." });
@@ -262,8 +308,67 @@ function BookingFormContent() {
 
               <div className="border-t border-slate-100 pt-3 flex justify-between items-center">
                 <span className="text-[9px] font-semibold text-slate-400 uppercase tracking-wide">Total Cost</span>
-                <strong className="text-[#0b264f] text-base font-bold">₹{selectedZone?.cost}</strong>
+                <div className="text-right">
+                  {appliedCoupon && (
+                    <span className="text-xs text-slate-400 line-through mr-2">₹{selectedZone?.cost}</span>
+                  )}
+                  <strong className="text-[#0b264f] text-base font-bold">₹{discountedCost}</strong>
+                </div>
               </div>
+            </div>
+
+            {/* Coupons Section */}
+            <div className="space-y-3">
+              <label className="text-xs font-bold text-slate-600 block">Apply Coupon</label>
+              <div className="flex gap-2">
+                <input 
+                  type="text"
+                  placeholder="ENTER CODE"
+                  disabled={!!appliedCoupon}
+                  className="flex-1 border border-slate-200 rounded-xl px-4 py-3 text-sm outline-none focus:border-[#0b264f] uppercase font-semibold text-slate-700 placeholder-slate-400 shadow-sm"
+                  value={couponCodeInput}
+                  onChange={(e) => setCouponCodeInput(e.target.value)}
+                />
+                {appliedCoupon ? (
+                  <Button
+                    type="button"
+                    variant="outline"
+                    onClick={handleRemoveCoupon}
+                    className="rounded-xl border-red-200 text-red-600 hover:bg-red-50"
+                  >
+                    Remove
+                  </Button>
+                ) : (
+                  <Button
+                    type="button"
+                    onClick={() => handleApplyCoupon()}
+                    disabled={validatingCoupon || !couponCodeInput}
+                    className="bg-[#0b264f] hover:bg-blue-900 text-white rounded-xl"
+                  >
+                    {validatingCoupon ? <Loader2 className="w-4 h-4 animate-spin" /> : "Apply"}
+                  </Button>
+                )}
+              </div>
+
+              {/* Available Coupons List */}
+              {coupons.length > 0 && !appliedCoupon && (
+                <div className="space-y-2 mt-2">
+                  <span className="text-[10px] font-semibold text-slate-400 uppercase tracking-wide block">Your Available Coupons:</span>
+                  <div className="flex flex-wrap gap-2">
+                    {coupons.map((coupon) => (
+                      <button
+                        key={coupon.id}
+                        type="button"
+                        onClick={() => handleApplyCoupon(coupon.code)}
+                        className="flex items-center gap-1.5 bg-indigo-50 border border-indigo-100 hover:border-indigo-300 hover:bg-indigo-100/50 text-indigo-700 text-xs font-bold px-3 py-2 rounded-xl transition-all shadow-sm"
+                      >
+                        <Tag className="w-3.5 h-3.5" />
+                        <span>{coupon.code} (Save ₹{coupon.discountAmount})</span>
+                      </button>
+                    ))}
+                  </div>
+                </div>
+              )}
             </div>
 
             <div className="space-y-2.5">
