@@ -1,6 +1,9 @@
 "use client";
 
 import React, { useState, useEffect, useCallback } from 'react';
+import Header from '@/components/Header';
+import Footer from '@/components/Footer';
+import AppDataGrid from '@/components/AppDataGrid';
 import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
@@ -11,6 +14,7 @@ import { Mail, Phone, ShieldCheck, ShieldAlert, CheckCircle, XCircle, Building2,
 import { toast } from '@/hooks/use-toast';
 import { useAuth } from '@/hooks/AuthContext';
 import { fetchAllBuilders, apiRequest } from '@/api';
+import { Chip, FormControl, InputLabel, Select, MenuItem, Box, Typography } from '@mui/material';
 
 // Standard keys so we can separate them from dynamically requested fields
 const STANDARD_BUILDER_KEYS = [
@@ -54,19 +58,16 @@ export default function AdminBuilders() {
   const [builders, setBuilders] = useState([]);
   const [loading, setLoading] = useState(true);
   const [filter, setFilter] = useState('all');
-  const [currentPage, setCurrentPage] = useState(1);
-  const ITEMS_PER_PAGE = 10;
-
-  useEffect(() => {
-    setCurrentPage(1);
-  }, [filter]);
+  const [page, setPage] = useState(0);
+  const [rowsPerPage, setRowsPerPage] = useState(20);
+  const [total, setTotal] = useState(0);
+  const [searchInput, setSearchInput] = useState('');
+  const [searchQuery, setSearchQuery] = useState('');
 
   const [isRequestModalOpen, setIsRequestModalOpen] = useState(false);
   const [selectedBuilderId, setSelectedBuilderId] = useState(null);
-
   const [requestedFields, setRequestedFields] = useState([]);
   const [customFieldInput, setCustomFieldInput] = useState('');
-
   const [viewBuilderData, setViewBuilderData] = useState(null);
 
   const handleToggleField = (fieldId) => {
@@ -82,27 +83,36 @@ export default function AdminBuilders() {
 
   const getActiveFieldsForModal = () => {
     if (!viewBuilderData) return [];
-    if (['form2_pending', 'form2_changes_requested'].includes(viewBuilderData.onboardingStatus)) {
-      return FORM2_BUILDER_FIELDS;
-    }
+    if (['form2_pending', 'form2_changes_requested'].includes(viewBuilderData.onboardingStatus)) return FORM2_BUILDER_FIELDS;
     return FORM1_BUILDER_FIELDS;
   };
 
   const loadBuilders = useCallback(async () => {
+    if (!user) return;
     try {
       setLoading(true);
+      const params = { page: page + 1, limit: rowsPerPage };
+      if (filter !== 'all') params.status = filter;
+      if (searchQuery) params.search = searchQuery;
+      const data = await fetchAllBuilders(params);
+      setBuilders(data.data || []);
+      setTotal(data.pagination?.total || 0);
       const data = await fetchAllBuilders(user?.token);
       setBuilders(data.data || []);
     } catch (error) {
-      toast({ title: "Error", description: error.message, variant: "destructive" });
+      toast({ title: 'Error', description: error.message, variant: 'destructive' });
     } finally {
       setLoading(false);
     }
-  }, [user?.token]);
+  }, [user, page, rowsPerPage, filter, searchQuery]);
 
+  useEffect(() => { if (user) loadBuilders(); }, [user, loadBuilders]);
+
+  // Debounce search
   useEffect(() => {
-    if (user && user.token) loadBuilders();
-  }, [user, loadBuilders]);
+    const t = setTimeout(() => { setPage(0); setSearchQuery(searchInput); }, 400);
+    return () => clearTimeout(t);
+  }, [searchInput]);
 
   const handleApproveForm1 = async (builderId) => {
     try {
@@ -179,19 +189,60 @@ export default function AdminBuilders() {
     toast({ title: "Success", description: "Builders exported successfully!" });
   };
 
-  const filteredBuilders = builders.filter(builder => {
-    if (filter === 'pending') return builder.onboardingStatus === 'form1_pending' || builder.onboardingStatus === 'form2_pending';
-    if (filter === 'changes_requested') return builder.onboardingStatus === 'form1_changes_requested';
-    if (filter === 'verified') return builder.onboardingStatus === 'complete' && builder.isVerified === true;
-    return true;
-  });
-
-  // Helper to safely render text, preventing React object crashes
   const safeRender = (val) => {
     if (val === null || val === undefined || val === '') return '-';
     if (typeof val === 'object') return JSON.stringify(val);
     return String(val);
   };
+
+  const STATUS_CHIP_MAP = {
+    form1_pending: { label: 'Form 1 Review', color: 'warning' },
+    form2_pending: { label: 'Final Review', color: 'secondary' },
+    form1_changes_requested: { label: 'Changes Req.', color: 'default' },
+    complete: { label: 'Verified', color: 'success' },
+    form1_approved: { label: 'Form 1 Approved', color: 'info' },
+    form1_rejected: { label: 'Rejected', color: 'error' },
+  };
+
+  const BUILDER_COLUMNS = [
+    {
+      field: 'companyName', headerName: 'Company', minWidth: 200,
+      renderCell: ({ row }) => (
+        <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.5 }}>
+          <Box sx={{ width: 32, height: 32, bgcolor: '#fff7ed', borderRadius: 1.5, display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
+            <Building2 size={16} color="#f97316" />
+          </Box>
+          <Box>
+            <Typography variant="caption" sx={{ fontWeight: 700, color: '#111827', display: 'block' }}>{row.companyName || row.name || 'Unnamed'}</Typography>
+            <Typography variant="caption" sx={{ color: '#9ca3af', fontSize: '0.65rem' }}>{row.email || '—'}</Typography>
+          </Box>
+        </Box>
+      )
+    },
+    {
+      field: 'city', headerName: 'Location', width: 160,
+      renderCell: ({ row }) => <Typography variant="caption" sx={{ color: '#4b5563' }}>{row.city ? `${row.city}, ${row.state}` : '—'}</Typography>
+    },
+    {
+      field: 'contactPersonPhone', headerName: 'Phone', width: 140,
+      renderCell: ({ value }) => <Typography variant="caption" sx={{ color: '#4b5563' }}>{value || '—'}</Typography>
+    },
+    {
+      field: 'onboardingStatus', headerName: 'Status', width: 160,
+      renderCell: ({ value }) => {
+        const s = STATUS_CHIP_MAP[value] || { label: value || 'Unknown', color: 'default' };
+        return <Chip label={s.label} color={s.color} size="small" sx={{ fontWeight: 700, fontSize: '0.67rem' }} />;
+      }
+    },
+    {
+      field: 'actions', headerName: 'Actions', width: 120, align: 'right', stopPropagation: true,
+      renderCell: ({ row }) => (
+        <Button onClick={() => setViewBuilderData(row)} className="bg-gray-900 hover:bg-gray-800 text-white rounded-xl text-xs px-3 py-1.5">
+          <Eye className="w-3.5 h-3.5 mr-1" /> View
+        </Button>
+      )
+    },
+  ];
 
   return (
     <div className="">
@@ -200,23 +251,7 @@ export default function AdminBuilders() {
         <div className="flex flex-col md:flex-row md:items-end justify-between mb-8 gap-4">
           <div>
             <h1 className="text-3xl font-bold text-gray-900 mb-2">Manage Builders</h1>
-            <p className="text-gray-600">Review, verify, and manage builder applications.</p>
-          </div>
-
-          <div className="flex flex-col gap-3 items-start md:items-end">
-            <div className="flex bg-gray-200/50 p-1 rounded-lg flex-wrap">
-              <button onClick={() => setFilter('all')} className={`px-4 py-2 text-sm font-semibold rounded-md transition-all ${filter === 'all' ? 'bg-white shadow-sm text-blue-600' : 'text-gray-600'}`}>All</button>
-              <button onClick={() => setFilter('pending')} className={`px-4 py-2 text-sm font-semibold rounded-md transition-all ${filter === 'pending' ? 'bg-white shadow-sm text-orange-600' : 'text-gray-600'}`}>Needs Review</button>
-              <button onClick={() => setFilter('changes_requested')} className={`px-4 py-2 text-sm font-semibold rounded-md transition-all ${filter === 'changes_requested' ? 'bg-white shadow-sm text-yellow-600' : 'text-gray-600'}`}>Awaiting Changes</button>
-              <button onClick={() => setFilter('verified')} className={`px-4 py-2 text-sm font-semibold rounded-md transition-all ${filter === 'verified' ? 'bg-white shadow-sm text-green-600' : 'text-gray-600'}`}>Verified Partners</button>
-              <Button
-                onClick={downloadCSV}
-                variant="outline"
-                className="bg-white border-green-600 text-green-700 hover:bg-green-50 shadow-sm"
-              >
-                <Download className="w-4 h-4 mr-2" /> Export
-              </Button>
-            </div>
+            <p className="text-gray-600">{total.toLocaleString()} builder{total !== 1 ? 's' : ''} registered</p>
           </div>
         </div>
 
@@ -289,8 +324,8 @@ export default function AdminBuilders() {
                             {renderStatusBadge()}
                           </td>
                           <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
-                            <Button 
-                              onClick={() => setViewBuilderData(builder)} 
+                            <Button
+                              onClick={() => setViewBuilderData(builder)}
                               className="bg-gray-900 hover:bg-gray-800 text-white rounded-xl text-xs px-4 py-2"
                             >
                               <Eye className="w-3.5 h-3.5 mr-1.5" /> View Profile
@@ -318,15 +353,14 @@ export default function AdminBuilders() {
                     >
                       Previous
                     </Button>
-                    
+
                     {Array.from({ length: Math.ceil(filteredBuilders.length / ITEMS_PER_PAGE) }, (_, i) => i + 1).map((page) => (
                       <Button
                         key={page}
                         onClick={() => setCurrentPage(page)}
                         variant={currentPage === page ? 'default' : 'outline'}
-                        className={`h-9 w-9 p-0 rounded-lg text-xs font-bold ${
-                          currentPage === page ? 'bg-slate-900 text-white hover:bg-slate-800' : 'hover:bg-slate-100 bg-white'
-                        }`}
+                        className={`h-9 w-9 p-0 rounded-lg text-xs font-bold ${currentPage === page ? 'bg-slate-900 text-white hover:bg-slate-800' : 'hover:bg-slate-100 bg-white'
+                          }`}
                       >
                         {page}
                       </Button>
@@ -346,6 +380,32 @@ export default function AdminBuilders() {
             </>
           )}
         </div>
+        <AppDataGrid
+          columns={BUILDER_COLUMNS}
+          rows={builders}
+          total={total}
+          page={page}
+          rowsPerPage={rowsPerPage}
+          onPageChange={(p) => setPage(p)}
+          onRowsPerPageChange={(s) => { setRowsPerPage(s); setPage(0); }}
+          loading={loading}
+          searchValue={searchInput}
+          onSearchChange={setSearchInput}
+          searchPlaceholder="Search company, email, city…"
+          filterSlot={
+            <FormControl size="small" sx={{ minWidth: 180 }}>
+              <InputLabel>Status</InputLabel>
+              <Select value={filter} label="Status" onChange={(e) => { setFilter(e.target.value); setPage(0); }}>
+                <MenuItem value="all">All Builders</MenuItem>
+                <MenuItem value="pending">Needs Review</MenuItem>
+                <MenuItem value="changes_requested">Awaiting Changes</MenuItem>
+                <MenuItem value="verified">Verified</MenuItem>
+              </Select>
+            </FormControl>
+          }
+          getRowId={(r) => r.uid || r.id}
+          emptyMessage="No builders found."
+        />
       </div>
 
       {/* DETAILED VIEW MODAL */}
