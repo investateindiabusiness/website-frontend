@@ -100,6 +100,7 @@ export default function AdminAdvertisements() {
   const [rejectingBooking, setRejectingBooking] = useState(null);
   const [rejectionReason, setRejectionReason] = useState("");
   const [isSubmittingReview, setIsSubmittingReview] = useState(false);
+  const [previewBooking, setPreviewBooking] = useState(null);
 
   useEffect(() => {
     if (user && user.role === "admin") {
@@ -477,24 +478,28 @@ export default function AdminAdvertisements() {
           <div className="flex border-b border-slate-200 gap-6">
             <button
               onClick={() => setActiveTab("bookings")}
-              className={`pb-3 font-bold text-sm transition-all relative ${
+              className={`pb-3 font-bold text-sm transition-all relative flex items-center gap-2 ${
                 activeTab === "bookings"
-                  ? "text-slate-800 border-b-2 border-slate-800"
+                  ? "text-slate-900 border-b-2 border-slate-900"
                   : "text-slate-400 hover:text-slate-600"
               }`}
             >
-              Campaign Bookings (
-              {
-                bookings.filter((b) => b.approvalStatus === "pending_review")
-                  .length
-              }{" "}
-              Pending)
+              Campaign Bookings
+              {bookings.filter((b) => b.approvalStatus === "pending_review").length > 0 ? (
+                <span className="bg-red-500 text-white text-[10px] px-2 py-0.5 rounded-full font-bold flex items-center justify-center">
+                  {bookings.filter((b) => b.approvalStatus === "pending_review").length} Pending
+                </span>
+              ) : (
+                <span className="bg-slate-100 text-slate-500 text-[10px] px-2 py-0.5 rounded-full font-semibold">
+                  0 Pending
+                </span>
+              )}
             </button>
             <button
               onClick={() => setActiveTab("zones")}
-              className={`pb-3 font-bold text-sm transition-all relative ${
+              className={`pb-3 font-bold text-sm transition-all relative flex items-center gap-2 ${
                 activeTab === "zones"
-                  ? "text-slate-800 border-b-2 border-slate-800"
+                  ? "text-slate-900 border-b-2 border-slate-900"
                   : "text-slate-400 hover:text-slate-600"
               }`}
             >
@@ -659,33 +664,39 @@ export default function AdminAdvertisements() {
                                 </div>
                               </td>
                               <td className="py-4 px-4 text-center">
-                                {booking.approvalStatus ===
-                                  "pending_review" && (
-                                  <div className="flex items-center justify-center gap-1.5">
-                                    <Button
-                                      onClick={() =>
-                                        handleApproveBooking(booking.id)
-                                      }
-                                      size="sm"
-                                      disabled={isSubmittingReview}
-                                      className="bg-green-600 hover:bg-green-700 text-white rounded-lg p-2 h-8 w-8"
-                                      title="Approve"
-                                    >
-                                      <Check className="w-4 h-4" />
-                                    </Button>
-                                    <Button
-                                      onClick={() =>
-                                        handleOpenRejectDialog(booking)
-                                      }
-                                      size="sm"
-                                      disabled={isSubmittingReview}
-                                      className="bg-red-600 hover:bg-red-700 text-white rounded-lg p-2 h-8 w-8"
-                                      title="Reject with Comments"
-                                    >
-                                      <X className="w-4 h-4" />
-                                    </Button>
-                                  </div>
-                                )}
+                                <div className="flex items-center justify-center gap-1.5">
+                                  <Button
+                                    onClick={() => setPreviewBooking(booking)}
+                                    size="sm"
+                                    variant="outline"
+                                    className="rounded-lg h-8 px-2.5 text-xs font-semibold border-slate-200 text-slate-700 hover:bg-slate-50 flex items-center gap-1"
+                                    title="Preview details"
+                                  >
+                                    Preview
+                                  </Button>
+                                  {booking.approvalStatus === "pending_review" && (
+                                    <>
+                                      <Button
+                                        onClick={() => handleApproveBooking(booking.id)}
+                                        size="sm"
+                                        disabled={isSubmittingReview}
+                                        className="bg-green-600 hover:bg-green-700 text-white rounded-lg p-2 h-8 w-8"
+                                        title="Approve"
+                                      >
+                                        <Check className="w-4 h-4" />
+                                      </Button>
+                                      <Button
+                                        onClick={() => handleOpenRejectDialog(booking)}
+                                        size="sm"
+                                        disabled={isSubmittingReview}
+                                        className="bg-red-600 hover:bg-red-700 text-white rounded-lg p-2 h-8 w-8"
+                                        title="Reject with Comments"
+                                      >
+                                        <X className="w-4 h-4" />
+                                      </Button>
+                                    </>
+                                  )}
+                                </div>
                               </td>
                             </tr>
                           );
@@ -1129,6 +1140,167 @@ export default function AdminAdvertisements() {
         </div>
       )}
 
+      {/* Ad Campaign Preview Modal */}
+      {previewBooking && (() => {
+        const zone = zones.find((z) => z.id === previewBooking.zoneId);
+        return (
+          <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm transition-opacity">
+            <Card className="w-full max-w-2xl bg-white rounded-2xl shadow-2xl border-none overflow-hidden animate-in fade-in zoom-in duration-200">
+              <CardHeader className="bg-slate-900 text-white p-5">
+                <div className="flex justify-between items-start">
+                  <div>
+                    <CardTitle className="text-xl font-bold flex items-center gap-2">
+                      <ImageIcon className="w-5 h-5 text-blue-400" /> Ad Campaign Details
+                    </CardTitle>
+                    <CardDescription className="text-xs text-slate-300 mt-1">
+                      Campaign ID: {previewBooking.id}
+                    </CardDescription>
+                  </div>
+                  <button
+                    onClick={() => setPreviewBooking(null)}
+                    className="text-white/80 hover:text-white text-xl"
+                  >
+                    ✕
+                  </button>
+                </div>
+              </CardHeader>
+              
+              <CardContent className="p-6 space-y-6 max-h-[70vh] overflow-y-auto text-slate-700">
+                {/* 1. Placement & User Details */}
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4 pb-4 border-b border-slate-100">
+                  <div className="space-y-1">
+                    <span className="text-[10px] text-slate-400 uppercase font-bold tracking-wider block">Placement Zone</span>
+                    <p className="text-sm font-bold text-slate-800">{zone?.name || previewBooking.zoneId}</p>
+                    <span className="text-[10px] bg-slate-100 text-slate-600 px-2 py-0.5 rounded font-mono font-semibold">
+                      Format: {zone?.width}x{zone?.height}
+                    </span>
+                  </div>
+                  <div className="space-y-1">
+                    <span className="text-[10px] text-slate-400 uppercase font-bold tracking-wider block">Submitted By</span>
+                    <p className="text-sm font-bold text-slate-800">{previewBooking.userEmail}</p>
+                    <span className="text-[10px] text-slate-400 block font-mono">UID: {previewBooking.userId}</span>
+                  </div>
+                </div>
+
+                {/* 2. Schedule & Financials */}
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-4 pb-4 border-b border-slate-100">
+                  <div className="space-y-1">
+                    <span className="text-[10px] text-slate-400 uppercase font-bold tracking-wider block">Campaign Schedule</span>
+                    <p className="text-xs font-semibold text-slate-700">
+                      {formatDate(previewBooking.startDate)} to {formatDate(previewBooking.endDate)}
+                    </p>
+                  </div>
+                  <div className="space-y-1">
+                    <span className="text-[10px] text-slate-400 uppercase font-bold tracking-wider block">Time Slot</span>
+                    <p className="text-xs font-semibold text-slate-700 capitalize">{previewBooking.timeSlot || 'All Day'}</p>
+                  </div>
+                  <div className="space-y-1">
+                    <span className="text-[10px] text-slate-400 uppercase font-bold tracking-wider block">Total Revenue</span>
+                    <p className="text-base font-extrabold text-slate-900">₹{previewBooking.cost}</p>
+                  </div>
+                </div>
+
+                {/* 3. Status Information */}
+                <div className="pb-4 border-b border-slate-100 space-y-1.5">
+                  <span className="text-[10px] text-slate-400 uppercase font-bold tracking-wider block">Approval Status</span>
+                  <div className="flex items-center gap-2">
+                    {getStatusBadge(previewBooking.approvalStatus)}
+                  </div>
+                  {previewBooking.approvalStatus === "rejected" && previewBooking.rejectionReason && (
+                    <div className="bg-red-50 border border-red-100 rounded-xl p-3.5 mt-2">
+                      <p className="text-[11px] font-bold text-red-700 uppercase tracking-wide mb-1">Rejection Feedback</p>
+                      <p className="text-xs text-red-600 italic">"{previewBooking.rejectionReason}"</p>
+                    </div>
+                  )}
+                </div>
+
+                {/* 4. Advertisement Creative (Ad Text & Banner Preview) */}
+                <div className="space-y-3.5">
+                  <span className="text-[10px] text-slate-400 uppercase font-bold tracking-wider block">Submitted Creative Details</span>
+                  
+                  <div className="bg-slate-50 border border-slate-100 rounded-xl p-4 space-y-3">
+                    <div className="space-y-1">
+                      <span className="text-[9px] text-slate-400 uppercase font-bold block">Ad Description Text</span>
+                      <p className="text-xs font-semibold text-slate-700 bg-white border border-slate-200 rounded-lg p-2.5">
+                        {previewBooking.adContent?.text || <span className="text-slate-400 italic">No text provided</span>}
+                      </p>
+                    </div>
+
+                    <div className="space-y-1">
+                      <span className="text-[9px] text-slate-400 uppercase font-bold block">Target Redirect URL</span>
+                      {previewBooking.adContent?.targetUrl ? (
+                        <a
+                          href={previewBooking.adContent.targetUrl}
+                          target="_blank"
+                          rel="noreferrer"
+                          className="text-xs text-blue-600 hover:underline flex items-center gap-1 font-semibold"
+                        >
+                          {previewBooking.adContent.targetUrl} <ExternalLink className="w-3.5 h-3.5" />
+                        </a>
+                      ) : (
+                        <p className="text-xs text-slate-400 italic">No redirect URL configured</p>
+                      )}
+                    </div>
+                  </div>
+
+                  {previewBooking.adContent?.imageUrl && (
+                    <div className="space-y-1.5">
+                      <span className="text-[9px] text-slate-400 uppercase font-bold block">Banner Image Preview</span>
+                      <div className="rounded-xl overflow-hidden border border-slate-200 bg-slate-50 p-2 max-w-full flex items-center justify-center min-h-[120px]">
+                        <img
+                          src={previewBooking.adContent.imageUrl}
+                          alt="Campaign Creative Preview"
+                          className="max-w-full max-h-60 object-contain rounded-lg shadow-sm"
+                          onError={(e) => { e.target.src = 'https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?w=800&q=80'; }}
+                        />
+                      </div>
+                    </div>
+                  )}
+                </div>
+              </CardContent>
+
+              <div className="bg-slate-50 border-t border-slate-100 p-4 px-6 flex justify-between items-center rounded-b-2xl">
+                <div>
+                  <Button
+                    type="button"
+                    variant="outline"
+                    onClick={() => setPreviewBooking(null)}
+                    className="rounded-xl"
+                  >
+                    Close Preview
+                  </Button>
+                </div>
+
+                {previewBooking.approvalStatus === "pending_review" && (
+                  <div className="flex gap-2">
+                    <Button
+                      onClick={() => {
+                        handleOpenRejectDialog(previewBooking);
+                        setPreviewBooking(null);
+                      }}
+                      disabled={isSubmittingReview}
+                      className="bg-red-600 hover:bg-red-700 text-white rounded-xl shadow-md px-4"
+                    >
+                      <X className="w-4 h-4 mr-1.5" /> Reject
+                    </Button>
+                    <Button
+                      onClick={async () => {
+                        await handleApproveBooking(previewBooking.id);
+                        setPreviewBooking(null);
+                      }}
+                      disabled={isSubmittingReview}
+                      className="bg-green-600 hover:bg-green-700 text-white rounded-xl shadow-md px-4"
+                    >
+                      <Check className="w-4 h-4 mr-1.5" /> Approve
+                    </Button>
+                  </div>
+                )}
+              </div>
+            </Card>
+          </div>
+        );
+      })()}
+      
       {/* Reject Reason input dialog */}
       {rejectingBooking && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm transition-opacity">

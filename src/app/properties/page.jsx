@@ -1,4 +1,4 @@
-﻿"use client";
+"use client";
 
 import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
@@ -35,12 +35,13 @@ export default function InvestorProperties() {
     const loadProjects = async () => {
       try {
         setLoadingProjects(true);
-        const data = await apiRequest('/api/projects?role=investor', {
+        const response = await apiRequest('/api/projects?role=investor', {
           method: 'GET',
           headers: user?.token ? { 'Authorization': `Bearer ${user.token}` } : undefined
         });
         
-        const mappedData = data
+        const projectsList = response?.data || [];
+        const mappedData = projectsList
           .filter(p => p.status === 'approved')
           .map(p => ({
             id: p.id,
@@ -57,6 +58,7 @@ export default function InvestorProperties() {
 
         setProperties(mappedData);
       } catch (error) {
+        console.error("Error loading properties:", error);
         toast({ title: "Error", description: "Failed to load properties.", variant: "destructive" });
       } finally {
         setLoadingProjects(false);

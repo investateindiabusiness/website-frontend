@@ -89,12 +89,14 @@ export default function AppDataGrid({
               value={searchValue}
               onChange={(e) => onSearchChange(e.target.value)}
               sx={{ minWidth: 260 }}
-              InputProps={{
-                startAdornment: (
-                  <InputAdornment position="start">
-                    <SearchIcon fontSize="small" sx={{ color: '#9ca3af' }} />
-                  </InputAdornment>
-                ),
+              slotProps={{
+                input: {
+                  startAdornment: (
+                    <InputAdornment position="start">
+                      <SearchIcon fontSize="small" sx={{ color: '#9ca3af' }} />
+                    </InputAdornment>
+                  ),
+                }
               }}
             />
           )}
