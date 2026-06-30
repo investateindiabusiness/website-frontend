@@ -4,6 +4,7 @@ import React, { useState } from 'react';
 import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
 import { useAuth } from '@/hooks/AuthContext';
+import NotificationBell from './NotificationBell';
 import {
   Drawer, List, ListItem, ListItemButton, ListItemIcon, ListItemText,
   Box, Avatar, Typography, Divider, IconButton, Tooltip, Collapse,
@@ -92,7 +93,7 @@ export default function AdminSidebar({ children }) {
         </IconButton>
       </Box>
 
-      {/* User Info */}
+    {/* User Info */}
       {!collapsed && (
         <Box sx={{ px: 2, py: 2, borderBottom: '1px solid rgba(255,255,255,0.08)' }}>
           <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.5 }}>
@@ -256,6 +257,22 @@ export default function AdminSidebar({ children }) {
             <MenuIcon />
           </IconButton>
           <img src="/logo-small-white.png" alt="Logo" style={{ height: 36, objectFit: 'contain' }} />
+          <Box sx={{ ml: 'auto' }}>
+            <NotificationBell iconColor="rgba(255,255,255,0.7)" hoverColor="white" />
+          </Box>
+        </Box>
+
+        {/* Desktop top bar */}
+        <Box sx={{
+          display: { xs: 'none', md: 'flex' },
+          alignItems: 'center',
+          justifyContent: 'flex-end',
+          px: 3, py: 1.5,
+          bgcolor: 'white',
+          borderBottom: '1px solid #e2e8f0',
+          position: 'sticky', top: 0, zIndex: 100,
+        }}>
+          <NotificationBell iconColor="#64748b" hoverColor="#0f172a" />
         </Box>
 
         {/* Page Content */}
