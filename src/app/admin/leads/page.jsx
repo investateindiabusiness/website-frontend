@@ -1,8 +1,6 @@
 "use client";
 
 import React, { useState, useEffect } from 'react';
-import Header from '@/components/Header';
-import Footer from '@/components/Footer';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
@@ -63,8 +61,7 @@ export default function AdminLeads() {
     );
 
     return (
-        <div className="min-h-screen bg-gray-50 flex flex-col font-sans">
-            <Header />
+        <div className="font-sans">
             <div className="flex-grow container mx-auto px-4 py-24 max-w-7xl">
                 <div className="flex flex-col md:flex-row justify-between items-end gap-6 mb-8">
                     <div><h1 className="text-3xl font-bold text-gray-900 mb-2">Lead Management</h1><p className="text-gray-600">Track and manage investor inquiries.</p></div>
@@ -171,8 +168,6 @@ export default function AdminLeads() {
                     )}
                 </DialogContent>
             </Dialog>
-
-            <Footer />
         </div>
     );
 }

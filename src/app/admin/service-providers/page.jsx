@@ -1,15 +1,13 @@
 "use client";
 
 import React, { useState, useEffect, useCallback } from 'react';
-import Header from '@/components/Header';
-import Footer from '@/components/Footer';
 import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from '@/components/ui/dialog';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { Mail, Phone, ShieldCheck, ShieldAlert, CheckCircle, XCircle, Settings, Clock, FileWarning, Plus, Eye, Download, Loader2 } from 'lucide-react';
+import { Mail, Phone, ShieldCheck, ShieldAlert, CheckCircle, XCircle, Settings, Clock, FileWarning, Plus, Eye, Download, Loader2, TrendingUp } from 'lucide-react';
 import { toast } from '@/hooks/use-toast';
 import { useAuth } from '@/hooks/AuthContext';
 import { 
@@ -161,9 +159,8 @@ export default function AdminServiceProviders() {
   });
 
   return (
-    <div className="min-h-screen bg-gray-50 flex flex-col font-sans">
-      <Header />
-      <div className="flex-grow mt-16 md:mt-24 pb-12">
+    <div className="font-sans">
+      <div className="flex-grow md:mt-24 pb-12">
         <div className="container mx-auto px-4">
           <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-8 gap-4">
             <div>
@@ -490,8 +487,6 @@ export default function AdminServiceProviders() {
           </div>
         </DialogContent>
       </Dialog>
-
-      <Footer />
     </div>
   );
 }

@@ -3,7 +3,8 @@
 import React, { useState, useEffect } from 'react';
 import { fetchActiveAd, fetchMyBookings } from '@/api';
 import { useAuth } from '@/hooks/AuthContext';
-import { ExternalLink, Loader2, TrendingUp, CheckCircle, Building2, MapPin } from 'lucide-react';
+import { getSocket, joinZone, leaveZone } from '@/utils/socket';
+import { ExternalLink, Loader2, TrendingUp, CheckCircle, Building2, MapPin, PlusCircle } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 
 // Zone pixel dimensions from the API spec
@@ -44,11 +45,37 @@ export default function AdBanner({ zoneId, variant = 'default' }) {
         if (active) setLoading(false);
       }
     };
+    
     loadAd();
-    return () => { active = false; };
+    joinZone(zoneId);
+
+    const socket = getSocket();
+    const handleAdUpdate = ({ zoneId: updatedZoneId, adData }) => {
+      if (updatedZoneId === zoneId && active) {
+        console.log(`[AdBanner] Received real-time update for ${zoneId}`);
+        setAd(adData);
+      }
+    };
+
+    socket.on('activeAdUpdated', handleAdUpdate);
+
+    return () => { 
+      active = false;
+      leaveZone(zoneId);
+      socket.off('activeAdUpdated', handleAdUpdate);
+    };
   }, [zoneId]);
 
   const zone = ZONE_CONFIG[zoneId] || { width: 728, height: 90 };
+  
+  // Determine booking url based on role
+  const getBookingUrl = () => {
+    if (!user) return '/builder/advertisements';
+    if (user.role === 'admin') return '/admin/advertisements';
+    if (user.role === 'investor') return '/investor/advertisements';
+    if (user.role === 'serviceProvider') return '/service-provider/advertisements';
+    return '/builder/advertisements';
+  };
 
   /* ─────────────────────────────────────────
      CARD VARIANT — sits inside the property grid
@@ -291,23 +318,22 @@ export default function AdBanner({ zoneId, variant = 'default' }) {
       {/* Dark gradient left→right */}
       <div
         className="absolute inset-0"
-        style={{ background: 'linear-gradient(to right, rgba(0,0,0,0.75) 0%, rgba(0,0,0,0.45) 50%, rgba(0,0,0,0.08) 100%)' }}
+        style={{ background: 'linear-gradient(to right, rgba(11,38,79,0.9) 0%, rgba(26,75,140,0.8) 50%, rgba(26,75,140,0.4) 100%)' }}
       />
-      {/* SPONSORED badge — top right */}
-      <div className="absolute top-3 right-3 flex items-center gap-1.5 bg-black/55 backdrop-blur-sm text-white text-[10px] font-bold tracking-widest px-3 py-1.5 rounded-full border border-white/20 uppercase pointer-events-none">
-        SPONSORED
-        <ExternalLink className="w-3 h-3 opacity-70" />
+      {/* ADVERTISE badge — top right */}
+      <div className="absolute top-3 right-3 flex items-center gap-1.5 bg-white/10 backdrop-blur-sm text-white text-[10px] font-bold tracking-widest px-3 py-1.5 rounded-full border border-white/20 uppercase pointer-events-none">
+        Advertise Here
       </div>
       {/* Text + CTA */}
       <div className="absolute inset-0 flex flex-col justify-center px-8 max-w-lg">
         <h2 className="text-white font-extrabold text-2xl md:text-3xl leading-tight mb-4 drop-shadow-lg">
-          Invest in premium real estate today!
+          Showcase your projects here
         </h2>
         <a
-          href="/properties"
+          href={getBookingUrl()}
           className="inline-flex items-center gap-2 bg-orange-500 hover:bg-orange-600 active:bg-orange-700 text-white font-bold text-sm px-5 py-2.5 rounded-lg shadow-lg transition-all duration-200 w-fit"
         >
-          Learn More <ExternalLink className="w-4 h-4" />
+          Book this Space <PlusCircle className="w-4 h-4" />
         </a>
       </div>
     </div>
@@ -347,15 +373,19 @@ export default function AdBanner({ zoneId, variant = 'default' }) {
         </div>
       ) : (
         <div
-          className="w-full rounded-2xl flex flex-col items-center justify-center text-center gap-2 bg-gradient-to-r from-[#0b264f] to-[#1a4b8c] text-white px-6"
+          className="w-full rounded-2xl flex flex-col items-center justify-center text-center gap-3 bg-gradient-to-r from-gray-100 to-gray-200 border-2 border-dashed border-gray-300 px-6 cursor-pointer hover:border-orange-400 hover:bg-orange-50 transition-colors"
           style={{ height: zone.height, minHeight: 90 }}
+          onClick={(e) => {
+            e.stopPropagation();
+            window.location.href = getBookingUrl();
+          }}
         >
-          <p className="text-sm md:text-base font-bold leading-snug max-w-[85%]">{text}</p>
-          {targetUrl && (
-            <span className="text-[10px] uppercase font-bold text-orange-400 tracking-wider flex items-center gap-1 group-hover:underline">
-              Learn More <ExternalLink className="w-3 h-3" />
-            </span>
-          )}
+          <p className="text-sm md:text-base font-bold text-gray-700 leading-snug max-w-[85%] flex items-center gap-2">
+            <PlusCircle className="w-5 h-5 text-gray-400" /> Book this Ad Space
+          </p>
+          <span className="text-[10px] uppercase font-bold text-orange-600 tracking-wider flex items-center gap-1">
+            Boost your visibility today
+          </span>
         </div>
       )}
     </div>

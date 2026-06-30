@@ -1,9 +1,12 @@
 "use client";
 
 import React, { useState, useEffect, useCallback } from 'react';
+<<<<<<< HEAD
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
 import AppDataGrid from '@/components/AppDataGrid';
+=======
+>>>>>>> b45f8ca72775da32480ac84c17e5ec1ec14c0f6e
 import { useAuth } from '@/hooks/AuthContext';
 import { apiRequest } from '@/api';
 import {
@@ -120,6 +123,7 @@ export default function AdminUsersPage() {
   }, [searchInput]);
 
   return (
+<<<<<<< HEAD
     <div className="min-h-screen bg-gray-50 flex flex-col font-sans">
       <Header />
       <div className="flex-grow container mx-auto px-4 py-8 mt-16">
@@ -132,6 +136,54 @@ export default function AdminUsersPage() {
               {total.toLocaleString()} total registered users
             </Typography>
           </Box>
+=======
+    <div className="font-sans">
+      <div className="flex-grow container mx-auto px-4 py-8">
+
+        {/* Page Title */}
+        <div className="mb-6">
+          <h1 className="text-2xl font-bold text-gray-900 flex items-center gap-2">
+            <ShieldIcon style={{ fontSize: 28, color: '#0b264f' }} />
+            User Management
+          </h1>
+          <p className="text-gray-500 text-sm mt-1">All registered users — investors, builders, and service providers.</p>
+        </div>
+
+        {/* Filters */}
+        <Box sx={{ display: 'flex', gap: 2, mb: 3, flexWrap: 'wrap', alignItems: 'center' }}>
+          <TextField
+            size="small"
+            placeholder="Search by name, email or UID..."
+            value={searchInput}
+            onChange={(e) => setSearchInput(e.target.value)}
+            sx={{ minWidth: 280 }}
+            slotProps={{
+              input: {
+                startAdornment: (
+                  <InputAdornment position="start">
+                    <SearchIcon fontSize="small" sx={{ color: '#9ca3af' }} />
+                  </InputAdornment>
+                )
+              }
+            }}
+          />
+
+          <FormControl size="small" sx={{ minWidth: 180 }}>
+            <InputLabel>Role</InputLabel>
+            <Select
+              value={roleFilter}
+              label="Role"
+              onChange={(e) => { setRoleFilter(e.target.value); setPage(0); }}
+            >
+              <MenuItem value="all">All Roles</MenuItem>
+              <MenuItem value="investor">Investor</MenuItem>
+              <MenuItem value="builder">Builder</MenuItem>
+              <MenuItem value="serviceProvider">Service Provider</MenuItem>
+              <MenuItem value="admin">Admin</MenuItem>
+            </Select>
+          </FormControl>
+
+>>>>>>> b45f8ca72775da32480ac84c17e5ec1ec14c0f6e
           <Tooltip title="Refresh">
             <IconButton onClick={fetchUsers} disabled={loading} sx={{ border: '1px solid #e5e7eb' }}>
               <RefreshIcon fontSize="small" />
@@ -167,7 +219,6 @@ export default function AdminUsersPage() {
           emptyMessage="No users found."
         />
       </div>
-      <Footer />
     </div>
   );
 }

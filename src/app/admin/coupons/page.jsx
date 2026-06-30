@@ -1,8 +1,6 @@
 "use client";
 
 import React, { useState, useEffect } from 'react';
-import Header from '@/components/Header';
-import Footer from '@/components/Footer';
 import { fetchAdminCoupons, createAdminCoupon, deleteAdminCoupon, resetAdminCoupon } from '@/api';
 import { toast } from '@/hooks/use-toast';
 import { Button } from '@/components/ui/button';
@@ -101,7 +99,6 @@ export default function AdminCoupons() {
 
   return (
     <div className="min-h-screen bg-slate-50 flex flex-col font-sans">
-      <Header />
       <div className="flex-grow flex pt-[4rem]">
         <main className="flex-1 p-6 md:p-10 overflow-x-hidden">
           

@@ -1,8 +1,6 @@
 "use client";
 
 import React, { useState, useEffect } from 'react';
-import Header from '@/components/Header';
-import Footer from '@/components/Footer';
 import { useAuth } from '@/hooks/AuthContext';
 import { toast } from '@/hooks/use-toast';
 import {
@@ -408,8 +406,7 @@ export default function AdminAdvertisements() {
   if (!user || user.role !== 'admin') return null;
 
   return (
-    <div className="min-h-screen bg-gray-50 flex flex-col font-sans overflow-x-hidden">
-      <Header />
+    <div className="font-sans overflow-x-hidden">
 
       <div className="flex-grow mt-[2rem] md:mt-[4rem] pb-16">
 
@@ -853,27 +850,27 @@ export default function AdminAdvertisements() {
                     {editZoneForm.defaultAd.imageUrl ? (
                       <div className="space-y-2">
                         <div className="relative rounded-xl overflow-hidden bg-slate-50 border border-slate-200 aspect-[16/9] max-h-40 flex items-center justify-center p-2">
-                          <img 
-                            src={editZoneForm.defaultAd.imageUrl} 
-                            alt="Fallback Preview" 
+                          <img
+                            src={editZoneForm.defaultAd.imageUrl}
+                            alt="Fallback Preview"
                             className="w-full h-full object-contain rounded-lg"
                           />
                         </div>
                         <div className="flex gap-2">
                           <label className="relative flex-grow flex items-center justify-center px-4 py-2 border border-slate-200 rounded-xl text-xs font-bold text-slate-600 hover:bg-slate-50 cursor-pointer shadow-sm">
-                            <input 
-                              type="file" 
-                              accept="image/*" 
-                              onChange={handleImageUpload} 
+                            <input
+                              type="file"
+                              accept="image/*"
+                              onChange={handleImageUpload}
                               disabled={isUploadingImage}
-                              className="absolute inset-0 w-full h-full opacity-0 cursor-pointer" 
+                              className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
                             />
                             {isUploadingImage ? "Uploading..." : "Change Image"}
                           </label>
-                          <Button 
-                            type="button" 
-                            variant="outline" 
-                            onClick={handleRemoveFallbackImage} 
+                          <Button
+                            type="button"
+                            variant="outline"
+                            onClick={handleRemoveFallbackImage}
                             className="rounded-xl text-xs font-bold border-red-200 text-red-500 hover:bg-red-50"
                           >
                             Remove
@@ -882,12 +879,12 @@ export default function AdminAdvertisements() {
                       </div>
                     ) : (
                       <div className="relative border-2 border-dashed border-slate-200 hover:border-slate-800 rounded-xl p-5 transition-all cursor-pointer group bg-slate-50/50 flex flex-col items-center justify-center min-h-[120px]">
-                        <input 
-                          type="file" 
-                          accept="image/*" 
-                          onChange={handleImageUpload} 
+                        <input
+                          type="file"
+                          accept="image/*"
+                          onChange={handleImageUpload}
                           disabled={isUploadingImage}
-                          className="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-10" 
+                          className="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-10"
                         />
                         {isUploadingImage ? (
                           <>
@@ -976,8 +973,6 @@ export default function AdminAdvertisements() {
           </Card>
         </div>
       )}
-
-      <Footer />
     </div>
   );
 }

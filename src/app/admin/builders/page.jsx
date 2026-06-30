@@ -1,9 +1,13 @@
 "use client";
 
 import React, { useState, useEffect, useCallback } from 'react';
+<<<<<<< HEAD
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
 import AppDataGrid from '@/components/AppDataGrid';
+=======
+import { Card, CardContent } from '@/components/ui/card';
+>>>>>>> b45f8ca72775da32480ac84c17e5ec1ec14c0f6e
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from '@/components/ui/dialog';
@@ -90,12 +94,17 @@ export default function AdminBuilders() {
     if (!user) return;
     try {
       setLoading(true);
+<<<<<<< HEAD
       const params = { page: page + 1, limit: rowsPerPage };
       if (filter !== 'all') params.status = filter;
       if (searchQuery) params.search = searchQuery;
       const data = await fetchAllBuilders(params);
       setBuilders(data.data || []);
       setTotal(data.pagination?.total || 0);
+=======
+      const data = await fetchAllBuilders(user?.token);
+      setBuilders(data.data || []);
+>>>>>>> b45f8ca72775da32480ac84c17e5ec1ec14c0f6e
     } catch (error) {
       toast({ title: 'Error', description: error.message, variant: 'destructive' });
     } finally {
@@ -242,8 +251,7 @@ export default function AdminBuilders() {
   ];
 
   return (
-    <div className="min-h-screen bg-gray-50 flex flex-col">
-      <Header />
+    <div className="">
 
       <div className="flex-1 container mx-auto px-4 py-24 max-w-7xl">
         <div className="flex flex-col md:flex-row md:items-end justify-between mb-8 gap-4">
@@ -440,8 +448,6 @@ export default function AdminBuilders() {
           </div>
         </DialogContent>
       </Dialog>
-
-      <Footer />
     </div>
   );
 }
