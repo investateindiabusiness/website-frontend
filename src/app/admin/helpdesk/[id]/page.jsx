@@ -4,8 +4,6 @@ import React, { useState, useEffect, useRef } from 'react';
 import { useRouter, useParams } from 'next/navigation';
 import { useAuth } from '@/hooks/AuthContext';
 import { fetchTicketDetails, fetchTicketMessages, sendTicketMessage, changeTicketStatus } from '@/api';
-import Header from '@/components/Header';
-import Footer from '@/components/Footer';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { toast } from '@/hooks/use-toast';
@@ -267,8 +265,7 @@ export default function AdminTicketDetailsPage() {
 
   if (!user || loading) {
     return (
-      <div className="min-h-screen bg-gray-50 flex flex-col font-sans">
-        <Header />
+      <div className="font-sans">
         <div className="flex-grow flex items-center justify-center">
           <div className="flex flex-col items-center">
             <Loader2 className="w-10 h-10 text-[#D48035] animate-spin mb-4" />
@@ -297,9 +294,8 @@ export default function AdminTicketDetailsPage() {
 
   return (
     <div className="min-h-screen bg-gray-50/50 flex flex-col font-sans">
-      <Header />
 
-      <main className="flex-grow mt-[4rem] md:mt-[5rem] pb-12 px-4 md:px-8 max-w-6xl mx-auto w-full flex flex-col h-[calc(100vh-8rem)]">
+      <main className="flex-grow md:mt-[5rem] pb-12 px-4 md:px-8 max-w-6xl mx-auto w-full flex flex-col h-[calc(100vh-8rem)]">
         
         <div className="mb-6 shrink-0 flex justify-between items-center">
           <Button 
@@ -494,8 +490,6 @@ export default function AdminTicketDetailsPage() {
           
         </div>
       </main>
-
-      <Footer />
     </div>
   );
 }

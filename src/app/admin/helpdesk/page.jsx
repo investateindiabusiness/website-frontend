@@ -4,8 +4,6 @@ import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { useAuth } from '@/hooks/AuthContext';
 import { fetchAllTickets } from '@/api';
-import Header from '@/components/Header';
-import Footer from '@/components/Footer';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { toast } from '@/hooks/use-toast';
@@ -126,9 +124,8 @@ export default function AdminHelpdesk() {
 
   return (
     <div className="min-h-screen bg-gray-50/50 flex flex-col font-sans">
-      <Header />
 
-      <main className="flex-grow mt-[4rem] md:mt-[5rem] pb-12 px-4 md:px-8 max-w-7xl mx-auto w-full">
+      <main className="flex-grow md:mt-[5rem] pb-12 px-4 md:px-8 max-w-7xl mx-auto w-full">
 
         <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-8">
           <div>
@@ -230,8 +227,6 @@ export default function AdminHelpdesk() {
         )}
 
       </main>
-
-      <Footer />
     </div>
   );
 }

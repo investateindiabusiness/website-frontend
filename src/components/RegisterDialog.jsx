@@ -10,10 +10,10 @@ import { Label } from '@/components/ui/label';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Textarea } from '@/components/ui/textarea';
 import { toast } from '@/hooks/use-toast';
-import { CheckCircle, ChevronRight, Loader2, TrendingUp, Building, UserCheck, FileWarning, ClipboardList } from 'lucide-react';
+import { CheckCircle, ChevronRight, Loader2, TrendingUp, Building, UserCheck, FileWarning, ClipboardList, Gift, CalendarCheck2, Crown, Sparkles } from 'lucide-react';
 import { getAuth, signOut } from 'firebase/auth';
 import { app } from '@/firebase';
-import { registerStep1, submitInvestorForm1, submitBuilderForm1, submitServiceProviderForm1, submitRequestedChanges, submitInvestorForm2, submitBuilderForm2 } from '@/api';
+import { registerStep1, submitInvestorForm1, submitBuilderForm1, submitServiceProviderForm1, submitRequestedChanges, submitInvestorForm2, submitBuilderForm2, apiRequest } from '@/api';
 import GoogleAuthButton from '@/components/GoogleAuthButton';
 
 const RegisterDialog = ({ isOpen, onOpenChange, onLoginClick, initialData = {} }) => {
@@ -25,6 +25,14 @@ const RegisterDialog = ({ isOpen, onOpenChange, onLoginClick, initialData = {} }
   const [userId, setUserId] = useState(null);
   const [loading, setLoading] = useState(false);
   const [submitted, setSubmitted] = useState(false);
+  const [launchConfig, setLaunchConfig] = useState(null);
+
+  // Fetch launch configuration on mount
+  useEffect(() => {
+    apiRequest('/api/auth/launch-config')
+      .then(data => { if (data?.success) setLaunchConfig(data); })
+      .catch(() => {}); // non-critical, silently fail
+  }, []);
 
   const [localInitialData, setLocalInitialData] = useState(initialData);
 
@@ -514,22 +522,69 @@ const RegisterDialog = ({ isOpen, onOpenChange, onLoginClick, initialData = {} }
         <div className="flex-1 overflow-y-auto relative custom-scrollbar bg-white flex flex-col">
           <div className="flex-1 p-6 md:px-12 lg:px-14 py-8 md:py-10 flex flex-col justify-center">
             {submitted ? (
-              <div className="text-center py-6 animate-in zoom-in duration-500">
-                <div className="bg-green-50 w-20 h-20 rounded-full flex items-center justify-center mx-auto mb-6 shadow-inner">
+              <div className="text-center py-4 animate-in zoom-in duration-500 space-y-6">
+                {/* Success Icon */}
+                <div className="bg-green-50 w-20 h-20 rounded-full flex items-center justify-center mx-auto shadow-inner">
                   <CheckCircle className="h-10 w-10 text-green-500" />
                 </div>
-                <h2 className="text-3xl font-black text-gray-900 mb-4 tracking-tight">
-                  {isUpdateMode ? 'Update Submitted!' : 'Success!'}
-                </h2>
-                <p className="text-gray-500 mb-8 max-w-md mx-auto text-base leading-relaxed">
-                  {isUpdateMode 
-                    ? "Your changes have been sent to our administration team for final review." 
-                    : isForm2Mode 
-                      ? "Your final details have been sent to our administration team. We will activate your account shortly." 
-                      : "Your initial details have been sent to our administration team for verification. We will notify you once approved."}
-                </p>
-                <Button 
-                  onClick={() => { onOpenChange(false); onLoginClick(); }} 
+
+                <div>
+                  <h2 className="text-3xl font-black text-gray-900 mb-2 tracking-tight">
+                    {isUpdateMode ? 'Update Submitted!' : 'Welcome Aboard! 🎉'}
+                  </h2>
+                  <p className="text-gray-500 max-w-sm mx-auto text-sm leading-relaxed">
+                    {isUpdateMode
+                      ? "Your changes have been sent to our administration team for final review."
+                      : isForm2Mode
+                        ? "Your final details have been sent to our administration team. We will activate your account shortly."
+                        : "Your initial details have been submitted. We will notify you once approved."}
+                  </p>
+                </div>
+
+                {/* Free Trial Info Card — only shown on new registration */}
+                {!isUpdateMode && launchConfig && (
+                  <div className="mx-auto max-w-xs bg-gradient-to-br from-[#0b264f] to-[#1a4b8c] text-white rounded-2xl p-5 shadow-xl space-y-4">
+                    {/* Premium Badge */}
+                    <div className="flex items-center justify-center gap-2 bg-white/15 rounded-full px-3 py-1.5 w-fit mx-auto">
+                      <Crown className="w-4 h-4 text-yellow-300" />
+                      <span className="text-xs font-black uppercase tracking-widest text-yellow-200">1 Year Free Premium</span>
+                    </div>
+
+                    {/* Date of Joining */}
+                    <div className="flex items-start gap-3 bg-white/10 rounded-xl p-3">
+                      <div className="bg-white/20 p-2 rounded-lg flex-shrink-0">
+                        <CalendarCheck2 className="w-4 h-4 text-white" />
+                      </div>
+                      <div className="text-left">
+                        <p className="text-white/60 text-[10px] font-bold uppercase tracking-wider">Date of Joining</p>
+                        <p className="text-white font-black text-sm">{new Date().toLocaleDateString('en-IN', { day: '2-digit', month: 'long', year: 'numeric' })}</p>
+                      </div>
+                    </div>
+
+                    {/* Free Trial Expiry */}
+                    <div className="flex items-start gap-3 bg-white/10 rounded-xl p-3">
+                      <div className="bg-orange-500/50 p-2 rounded-lg flex-shrink-0">
+                        <Gift className="w-4 h-4 text-orange-200" />
+                      </div>
+                      <div className="text-left">
+                        <p className="text-white/60 text-[10px] font-bold uppercase tracking-wider">Free Trial Valid Till</p>
+                        <p className="text-orange-200 font-black text-sm">
+                          {new Date(launchConfig.freeTrialExpiryDate).toLocaleDateString('en-IN', { day: '2-digit', month: 'long', year: 'numeric' })}
+                        </p>
+                      </div>
+                    </div>
+
+                    <div className="flex items-center gap-2 bg-white/10 rounded-xl p-3">
+                      <Sparkles className="w-4 h-4 text-yellow-300 flex-shrink-0" />
+                      <p className="text-[11px] text-white/80 font-semibold text-left leading-snug">
+                        Enjoy all <span className="text-yellow-300 font-black">premium features</span> for free for 1 year from the product launch date.
+                      </p>
+                    </div>
+                  </div>
+                )}
+
+                <Button
+                  onClick={() => { onOpenChange(false); onLoginClick(); }}
                   className="bg-gray-900 hover:bg-black px-10 py-6 text-base font-black rounded-[1.25rem] shadow-2xl shadow-black/10 transition-all hover:scale-105 active:scale-95"
                 >
                   Return to Login

@@ -4,6 +4,7 @@ import React, { useEffect } from 'react';
 import { useRouter, usePathname } from 'next/navigation';
 import { useAuth } from '@/hooks/AuthContext';
 import { toast } from '@/hooks/use-toast';
+import AdminSidebar from '@/components/AdminSidebar';
 
 export default function AdminLayout({ children }) {
   const { user, loading, logout } = useAuth();
@@ -18,8 +19,6 @@ export default function AdminLayout({ children }) {
         }
       } else if (user.role !== 'admin') {
         if (pathname === '/admin/login') {
-          // If a non-admin tries to go to the admin login page, automatically log them out
-          // so they can actually see the login form and log in as an admin.
           logout();
         } else {
           toast({
@@ -41,5 +40,11 @@ export default function AdminLayout({ children }) {
     );
   }
 
-  return <>{children}</>;
+  // Don't wrap the login page in the sidebar
+  if (pathname === '/admin/login') {
+    return <>{children}</>;
+  }
+
+  return <AdminSidebar>{children}</AdminSidebar>;
 }
+

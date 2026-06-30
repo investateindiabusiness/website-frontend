@@ -1,8 +1,6 @@
 "use client";
 
 import React, { useState, useEffect } from 'react';
-import Header from '@/components/Header';
-import Footer from '@/components/Footer';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
@@ -64,8 +62,7 @@ export default function AdminInquiries() {
     );
 
     return (
-        <div className="min-h-screen bg-gray-50 flex flex-col font-sans">
-            <Header />
+        <div className="font-sans">
             <div className="flex-grow container mx-auto px-4 py-24 max-w-7xl">
                 <div className="flex flex-col md:flex-row justify-between items-end gap-6 mb-8">
                     <div><h1 className="text-3xl font-bold text-gray-900 mb-2">General Inquiries</h1><p className="text-gray-600">Submissions from Contact Us page.</p></div>
@@ -162,8 +159,6 @@ export default function AdminInquiries() {
                     )}
                 </DialogContent>
             </Dialog>
-
-            <Footer />
         </div>
     );
 }

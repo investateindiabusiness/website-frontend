@@ -3,8 +3,6 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { useRouter } from 'next/navigation';
 import { Building2, FileText, Users, MessageSquare, Loader2, Calendar, RefreshCw } from 'lucide-react';
-import Header from '@/components/Header';
-import Footer from '@/components/Footer';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { useAuth } from '@/hooks/AuthContext';
@@ -49,9 +47,7 @@ export default function AdminDashboard() {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50 flex flex-col font-sans">
-      <Header />
-      <div className="container mx-auto px-4 py-8 flex-grow mt-16 md:mt-[4rem]">
+    <div className="font-sans">
         <div className="mb-8 flex flex-col md:flex-row md:items-center md:justify-between gap-4">
           <div>
             <h1 className="text-3xl font-bold text-gray-900 mb-2">Admin Dashboard</h1>
@@ -77,8 +73,6 @@ export default function AdminDashboard() {
           <Button onClick={() => router.push('/admin/inquiries')} className="bg-purple-600 h-auto py-6 flex-col gap-2"><FileText /> Inquiries</Button>
           <Button onClick={() => router.push('/admin/helpdesk')} className="bg-[#D48035] h-auto py-6 flex-col gap-2"><MessageSquare /> Helpdesk</Button>
         </div>
-      </div>
-      <Footer />
     </div>
   );
 }

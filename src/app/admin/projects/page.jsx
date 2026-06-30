@@ -1,8 +1,6 @@
 "use client";
 
 import React, { useState, useEffect, useCallback } from 'react';
-import Header from '@/components/Header';
-import Footer from '@/components/Footer';
 import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
@@ -98,8 +96,7 @@ export default function AdminProjects() {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50 flex flex-col">
-      <Header />
+    <div className="">
       <div className="flex-1 container mx-auto px-4 py-24 max-w-7xl">
         <div className="flex flex-col md:flex-row md:items-end justify-between mb-8 gap-4">
           <div>
@@ -250,7 +247,6 @@ export default function AdminProjects() {
           )}
         </div>
       </div>
-      <Footer />
 
       {/* ─── Project Details Modal ─── */}
       <Dialog open={!!viewProjectData} onOpenChange={(open) => { if (!open) closeModal(); }}>
