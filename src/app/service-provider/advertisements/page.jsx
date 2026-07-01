@@ -129,7 +129,9 @@ export default function ServiceProviderAdvertisements() {
     try {
       setLoadingZones(true);
       const data = await fetchAdZones();
-      const enriched = (data.data || []).map((z) => ({
+      const enriched = (data.data || [])
+        .filter((z) => !z.allowedBookers || z.allowedBookers.includes('serviceProvider'))
+        .map((z) => ({
         ...ZONE_META[z.id],
         ...z,
         name: z.name || ZONE_META[z.id]?.name || z.id,

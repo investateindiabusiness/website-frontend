@@ -169,7 +169,7 @@ export default function BuilderAdvertisements() {
       if (!silent) setLoadingZones(true);
       const data = await fetchAdZones();
       const enriched = (data.data || [])
-        .filter((z) => z.id !== 'zone5')
+        .filter((z) => !z.allowedBookers || z.allowedBookers.includes('builder'))
         .map((z) => ({
           ...ZONE_META[z.id],
           ...z,

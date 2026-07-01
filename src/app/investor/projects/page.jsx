@@ -10,6 +10,7 @@ import { MapPin, Building2, Search, Filter, Loader2 } from 'lucide-react';
 import { apiRequest } from '@/api';
 import { toast } from '@/hooks/use-toast';
 import { parseProjectImages } from '@/utils/imageCompressor';
+import AdBanner from '@/components/AdBanner';
 
 export default function InvestorProjects() {
   const router = useRouter();
@@ -92,35 +93,43 @@ export default function InvestorProjects() {
               <Loader2 className="animate-spin mb-2" />
               Loading projects...
             </div>
-          ) : filteredProjects.map((project) => (
-            <Card
-              key={project.id}
-              className="overflow-hidden cursor-pointer border-none shadow-lg hover:shadow-xl transition-all hover:-translate-y-1"
-              onClick={() => router.push(`/project/${project.id}`)}
-            >
-              <div className="relative h-56 overflow-hidden">
-                <img
-                  src={parseProjectImages(project.projectImages)[0]}
-                  alt={project.projectName}
-                  className="w-full h-full object-cover transition-transform hover:scale-110"
-                />
-                <div className="absolute top-4 right-4 flex flex-col gap-2">
-                  <Badge className="bg-blue-500 text-white">{project.status}</Badge>
+          ) : filteredProjects.map((project, index) => (
+            <React.Fragment key={project.id}>
+              <Card
+                className="overflow-hidden cursor-pointer border-none shadow-lg hover:shadow-xl transition-all hover:-translate-y-1"
+                onClick={() => router.push(`/project/${project.id}`)}
+              >
+                <div className="relative h-56 overflow-hidden">
+                  <img
+                    src={parseProjectImages(project.projectImages)[0]}
+                    alt={project.projectName}
+                    className="w-full h-full object-cover transition-transform hover:scale-110"
+                  />
+                  <div className="absolute top-4 right-4 flex flex-col gap-2">
+                    <Badge className="bg-blue-500 text-white">{project.status}</Badge>
+                  </div>
                 </div>
-              </div>
-              <CardContent className="p-6">
-                <div className="flex items-center text-sm text-gray-500 mb-2">
-                  <MapPin className="h-4 w-4 mr-1" />
-                  {project.projectLocation}
+                <CardContent className="p-6">
+                  <div className="flex items-center text-sm text-gray-500 mb-2">
+                    <MapPin className="h-4 w-4 mr-1" />
+                    {project.projectLocation}
+                  </div>
+                  <h3 className="text-xl font-bold text-gray-900 mb-2">{project.projectName}</h3>
+                  <div className="flex items-center text-sm text-gray-600 mb-4">
+                    <Building2 className="h-4 w-4 mr-1" />
+                    {project.builderName}
+                  </div>
+                  <Button className="w-full bg-blue-600 hover:bg-blue-700">View Full Details</Button>
+                </CardContent>
+              </Card>
+
+              {/* Inject Zone 4 ad after every 5th project card */}
+              {(index + 1) % 5 === 0 && (
+                <div className="col-span-full flex justify-center py-2">
+                  <AdBanner zoneId="zone4" />
                 </div>
-                <h3 className="text-xl font-bold text-gray-900 mb-2">{project.projectName}</h3>
-                <div className="flex items-center text-sm text-gray-600 mb-4">
-                  <Building2 className="h-4 w-4 mr-1" />
-                  {project.builderName}
-                </div>
-                <Button className="w-full bg-blue-600 hover:bg-blue-700">View Full Details</Button>
-              </CardContent>
-            </Card>
+              )}
+            </React.Fragment>
           ))}
         </div>
       </div>
