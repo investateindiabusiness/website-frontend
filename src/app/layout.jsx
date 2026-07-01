@@ -12,6 +12,18 @@ export const metadata = {
   alternates: {
     canonical: '/',
   },
+  icons: {
+    icon: [
+      { url: '/images/image copy.png', sizes: '32x32', type: 'image/png' },
+      { url: '/images/image copy.png', sizes: '64x64', type: 'image/png' },
+      { url: '/images/image copy.png', sizes: '128x128', type: 'image/png' },
+      { url: '/images/image copy.png', sizes: '256x256', type: 'image/png' },
+      { url: '/images/image copy.png', sizes: '512x512', type: 'image/png' },
+      { url: '/images/image copy.png', sizes: '1024x1024', type: 'image/png' },
+    ],
+    apple: '/images/Media (2).jpg',
+    shortcut: '/images/Media (2).jpg',
+  },
   openGraph: {
     title: 'Global NRIs Investment in India Real Estate | Investate',
     description: 'Investate India is the trusted gateway for Global NRIs investment in India real estate. Explore premium vetted properties with absolute transparency.',
@@ -62,7 +74,7 @@ export default function RootLayout({ children }) {
   return (
     <html lang="en">
       <head>
-        <link rel="icon" type="image/png" href="/logo-small-black.png" />
+        <link rel="icon" type="image/png" href="/images/INVESTATE_INDIA_LOGO_WITH_BG.png?v=2" />
         <link rel="stylesheet" href="/theme.css?v=1.0.2" />
         <link rel="stylesheet" href="/index-page.css?v=1.0.2" />
         <script

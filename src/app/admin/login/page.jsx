@@ -225,7 +225,7 @@ export default function AdminLogin() {
         {/* Logo */}
         <div className="relative z-10 flex items-center">
           <Link href="/" className="flex items-center">
-            <img src="/logo-big.png" alt="INVESTATE INDIA" className="h-24 w-auto object-contain" />
+            <img src="/logo-big.png" alt="INVESTATE INDIA" className="h-14 w-auto object-contain" />
           </Link>
         </div>
 
