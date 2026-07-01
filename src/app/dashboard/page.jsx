@@ -67,7 +67,9 @@ export default function InvestorDashboard() {
           headers: { 'Authorization': `Bearer ${user?.token}` }
         });
 
-        const mappedData = data
+        const projectsArray = data.data || [];
+
+        const mappedData = projectsArray
           .filter(p => p.status === 'approved')
           .map(p => ({
             id: p.id,
@@ -84,7 +86,7 @@ export default function InvestorDashboard() {
 
         setProperties(mappedData);
       } catch (error) {
-        toast({ title: "Error", description: "Failed to load properties.", variant: "destructive" });
+        console.warn('Failed to load properties:', error?.message);
       } finally {
         setLoadingProjects(false);
       }

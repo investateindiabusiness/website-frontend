@@ -340,7 +340,8 @@ export default function BuilderAdvertisements() {
       setIsSubmittingBooking(true);
       const response = await bookSlot({
         zoneId: selectedZone.id,
-        slotId: bookingSlot.id,
+        startDate: bookingSlot.startDate,
+        endDate: bookingSlot.endDate,
         couponCode: appliedCoupon?.code,
         adContent
       });

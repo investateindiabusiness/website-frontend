@@ -10,7 +10,8 @@ export const getSocket = () => {
   if (!socket) {
     socket = io(API_BASE_URL, {
       withCredentials: true,
-      autoConnect: true
+      autoConnect: true,
+      transports: ['websocket'], // bypass polling to prevent xhr poll errors
     });
 
     socket.on('connect', () => {

@@ -129,6 +129,18 @@ export default function AdminInvestors() {
     return () => clearTimeout(t);
   }, [searchInput]);
 
+  // Aliases for the table rendering — server-side filtering means filteredInvestors === investors
+  const ITEMS_PER_PAGE = rowsPerPage;
+  const filteredInvestors = investors;
+  const currentPage = page + 1; // API uses 0-based; display uses 1-based
+  const setCurrentPage = (newPage) => {
+    if (typeof newPage === 'function') {
+      setPage(prev => newPage(prev + 1) - 1);
+    } else {
+      setPage(newPage - 1);
+    }
+  };
+
   const handleApproveForm1 = async (investorId) => {
     try {
       await approveInvestorForm1(investorId);

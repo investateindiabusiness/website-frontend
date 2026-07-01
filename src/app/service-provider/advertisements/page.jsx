@@ -364,13 +364,14 @@ export default function ServiceProviderAdvertisements() {
       const response = await bookSlot({
         zoneId: selectedZone.id,
         startDate: bookingSlot.startDate,
+        endDate: bookingSlot.endDate,
         adContent: {
           ...adContent,
           imageUrl: campaignFormat === 'image' ? adContent.imageUrl : '',
           videoUrl: campaignFormat === 'video' ? adContent.videoUrl : ''
         }
       });
-      
+
       if (response?.data?.payment?.clientSecret) {
         setPaymentClientSecret(response.data.payment.clientSecret);
         setPaymentId(response.data.payment.id);
