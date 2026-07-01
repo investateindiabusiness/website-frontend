@@ -1,6 +1,7 @@
 import { io } from 'socket.io-client';
 
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL || '';
+const SOCKET_URL = API_BASE_URL.replace('/api', '');
 
 let socket;
 let currentUserId = null;
@@ -8,7 +9,7 @@ const joinedZones = new Set();
 
 export const getSocket = () => {
   if (!socket) {
-    socket = io(API_BASE_URL, {
+    socket = io(SOCKET_URL, {
       withCredentials: true,
       autoConnect: true,
       transports: ['websocket'], // bypass polling to prevent xhr poll errors

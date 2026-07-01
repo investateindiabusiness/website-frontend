@@ -135,7 +135,7 @@ export default function InvestorAdvertisements() {
       if (!silent) setLoadingZones(true);
       const data = await fetchAdZones();
       const enriched = (data.data || [])
-        .filter((z) => z.id !== 'zone5')
+        .filter((z) => !z.allowedBookers || z.allowedBookers.includes('investor'))
         .map((z) => ({
           ...ZONE_META[z.id],   // fallback defaults if backend is missing a field
           ...z,                 // backend values win (costPerDay come from DB)
