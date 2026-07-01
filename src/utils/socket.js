@@ -1,7 +1,15 @@
 import { io } from 'socket.io-client';
 
-const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL || '';
-const SOCKET_URL = API_BASE_URL.replace('/api', '');
+const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL || 'http://localhost:5001';
+// Strip /api suffix if present, keep only the origin for Socket.io
+const SOCKET_URL = (() => {
+  try {
+    const url = new URL(API_BASE_URL.replace(/\/api\/?$/, ''));
+    return url.origin; // e.g. "http://localhost:5001"
+  } catch {
+    return 'http://localhost:5001';
+  }
+})();
 
 let socket;
 let currentUserId = null;
@@ -12,7 +20,8 @@ export const getSocket = () => {
     socket = io(SOCKET_URL, {
       withCredentials: true,
       autoConnect: true,
-      transports: ['websocket'], // bypass polling to prevent xhr poll errors
+      transports: ['polling', 'websocket'], // start with polling, upgrade to ws
+      upgrade: true
     });
 
     socket.on('connect', () => {
