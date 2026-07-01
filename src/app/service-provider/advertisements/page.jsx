@@ -3,12 +3,12 @@
 import React, { useState, useEffect } from 'react';
 import { useAuth } from '@/hooks/AuthContext';
 import { toast } from '@/hooks/use-toast';
-import { 
-  fetchAdZones, 
-  fetchSlots, 
-  bookSlot, 
-  fetchMyBookings, 
-  rectifyBooking, 
+import {
+  fetchAdZones,
+  fetchSlots,
+  bookSlot,
+  fetchMyBookings,
+  rectifyBooking,
   cancelBooking,
   uploadImage,
   uploadFile
@@ -17,18 +17,18 @@ import { compressAdImage } from '@/utils/imageCompressor';
 import { loadStripe } from '@stripe/stripe-js';
 import { Elements } from '@stripe/react-stripe-js';
 import CheckoutForm from '@/components/CheckoutForm';
-import { 
-  Calendar, 
-  Image as ImageIcon, 
-  DollarSign, 
-  Clock, 
-  Plus, 
-  AlertCircle, 
-  CheckCircle, 
-  XCircle, 
-  Edit, 
-  Trash2, 
-  Loader2, 
+import {
+  Calendar,
+  Image as ImageIcon,
+  DollarSign,
+  Clock,
+  Plus,
+  AlertCircle,
+  CheckCircle,
+  XCircle,
+  Edit,
+  Trash2,
+  Loader2,
   Sparkles,
   ExternalLink,
   Settings,
@@ -41,18 +41,33 @@ import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/com
 
 // Zone display metadata
 const ZONE_META = {
-  zone1: { name: 'Builder Dashboard Top Banner',       cost: 100, campaignDuration: 7 },
-  zone2: { name: 'Investor Dashboard Leaderboard',     cost: 150, campaignDuration: 7 },
-  zone3: { name: 'Investor Project Details Sidebar',   cost: 120, campaignDuration: 7 },
-  zone4: { name: 'Project Search Results Inline Ad',   cost: 80,  campaignDuration: 7 },
-  zone5: { name: 'Landing Page Hero Spotlight',        cost: 200, campaignDuration: 7 },
+  zone1: { name: 'Builder Dashboard Top Banner', cost: 100, campaignDuration: 7 },
+  zone2: { name: 'Investor Dashboard Leaderboard', cost: 150, campaignDuration: 7 },
+  zone3: { name: 'Investor Project Details Sidebar', cost: 120, campaignDuration: 7 },
+  zone4: { name: 'Project Search Results Inline Ad', cost: 80, campaignDuration: 7 },
+  zone5: { name: 'Landing Page Hero Spotlight', cost: 200, campaignDuration: 7 },
 };
 
 const stripePromise = loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY || 'pk_test_placeholder');
 
+const formatDate = (dateStr) => {
+  if (!dateStr) return '';
+  if (/^\d{2}-\d{2}-\d{4}$/.test(dateStr)) return dateStr;
+  const parts = dateStr.split('-');
+  if (parts.length === 3 && parts[0].length === 4) {
+    return `${parts[2]}-${parts[1]}-${parts[0]}`;
+  }
+  const date = new Date(dateStr);
+  if (isNaN(date.getTime())) return dateStr;
+  const day = String(date.getDate()).padStart(2, '0');
+  const month = String(date.getMonth() + 1).padStart(2, '0');
+  const year = date.getFullYear();
+  return `${day}-${month}-${year}`;
+};
+
 export default function ServiceProviderAdvertisements() {
   const { user } = useAuth();
-  
+
   const [zones, setZones] = useState([]);
   const [selectedZone, setSelectedZone] = useState(null);
   const [slots, setSlots] = useState([]);
@@ -63,7 +78,7 @@ export default function ServiceProviderAdvertisements() {
 
   // Booking Modal / Form State
   const [bookingSlot, setBookingSlot] = useState(null);
-  
+
   const [campaignFormat, setCampaignFormat] = useState('image'); // 'image' | 'video' | 'text'
   const [adContent, setAdContent] = useState({
     imageUrl: '',
@@ -71,7 +86,7 @@ export default function ServiceProviderAdvertisements() {
     text: '',
     targetUrl: ''
   });
-  
+
   const [imageFile, setImageFile] = useState(null);
   const [imagePreview, setImagePreview] = useState('');
   const [videoFile, setVideoFile] = useState(null);
@@ -127,10 +142,10 @@ export default function ServiceProviderAdvertisements() {
         handleSelectZone(defaultZone);
       }
     } catch (error) {
-      toast({ 
-        title: "Error loading zones", 
-        description: error.message || "Failed to load active advertisement zones.", 
-        variant: "destructive" 
+      toast({
+        title: "Error loading zones",
+        description: error.message || "Failed to load active advertisement zones.",
+        variant: "destructive"
       });
     } finally {
       setLoadingZones(false);
@@ -143,10 +158,10 @@ export default function ServiceProviderAdvertisements() {
       const data = await fetchMyBookings();
       setMyBookings(data.data || []);
     } catch (error) {
-      toast({ 
-        title: "Error loading bookings", 
-        description: error.message || "Failed to load your campaigns.", 
-        variant: "destructive" 
+      toast({
+        title: "Error loading bookings",
+        description: error.message || "Failed to load your campaigns.",
+        variant: "destructive"
       });
     } finally {
       setLoadingBookings(false);
@@ -162,10 +177,10 @@ export default function ServiceProviderAdvertisements() {
       const data = await fetchSlots(zone.id);
       setSlots(data.data || []);
     } catch (error) {
-      toast({ 
-        title: "Error loading slots", 
-        description: error.message || "Failed to load advertisement slots for this zone.", 
-        variant: "destructive" 
+      toast({
+        title: "Error loading slots",
+        description: error.message || "Failed to load advertisement slots for this zone.",
+        variant: "destructive"
       });
     } finally {
       setLoadingSlots(false);
@@ -284,13 +299,13 @@ export default function ServiceProviderAdvertisements() {
     try {
       setIsUploadingFile(true);
       setUploadProgress(30);
-      
+
       const compressed = await compressAdImage(file);
       setUploadProgress(60);
-      
+
       const res = await uploadImage(compressed, 'campaigns');
       setUploadProgress(100);
-      
+
       setImageFile(file);
       setImagePreview(res.url);
       setAdContent(prev => ({ ...prev, imageUrl: res.url }));
@@ -317,10 +332,10 @@ export default function ServiceProviderAdvertisements() {
     try {
       setIsUploadingFile(true);
       setUploadProgress(40);
-      
+
       const res = await uploadFile(file, 'campaigns');
       setUploadProgress(100);
-      
+
       setVideoFile(file);
       setVideoPreview(res.url);
       setAdContent(prev => ({ ...prev, videoUrl: res.url }));
@@ -376,9 +391,9 @@ export default function ServiceProviderAdvertisements() {
         setPaymentClientSecret(response.data.payment.clientSecret);
         setPaymentId(response.data.payment.id);
       } else {
-        toast({ 
-          title: "Campaign Booked!", 
-          description: "Your campaign has been submitted successfully." 
+        toast({
+          title: "Campaign Booked!",
+          description: "Your campaign has been submitted successfully."
         });
         handleCloseBookingModal();
         loadMyBookings();
@@ -387,10 +402,10 @@ export default function ServiceProviderAdvertisements() {
         }
       }
     } catch (error) {
-      toast({ 
-        title: "Booking Failed", 
-        description: error.message || "Failed to book slot.", 
-        variant: "destructive" 
+      toast({
+        title: "Booking Failed",
+        description: error.message || "Failed to book slot.",
+        variant: "destructive"
       });
     } finally {
       setIsSubmittingBooking(false);
@@ -489,17 +504,17 @@ export default function ServiceProviderAdvertisements() {
       await rectifyBooking(rectifyBookingItem.id, {
         adContent: rectifyAdContent
       });
-      toast({ 
-        title: "Campaign Re-submitted!", 
-        description: "Your corrected campaign has been re-submitted for review." 
+      toast({
+        title: "Campaign Re-submitted!",
+        description: "Your corrected campaign has been re-submitted for review."
       });
       handleCloseRectifyModal();
       loadMyBookings();
     } catch (error) {
-      toast({ 
-        title: "Re-submission Failed", 
-        description: error.message || "Failed to update campaign details.", 
-        variant: "destructive" 
+      toast({
+        title: "Re-submission Failed",
+        description: error.message || "Failed to update campaign details.",
+        variant: "destructive"
       });
     } finally {
       setIsSubmittingRectify(false);
@@ -524,9 +539,9 @@ export default function ServiceProviderAdvertisements() {
 
   return (
     <div className="min-h-screen bg-gray-50 flex flex-col font-sans overflow-x-hidden">
-      
+
       <div className="flex-grow pb-16">
-        
+
         {/* Banner Section */}
         <div className="bg-gradient-to-r from-slate-800 to-slate-950 text-white pt-8 pb-14 px-4 md:px-8 rounded-b-[2rem] shadow-xl relative overflow-hidden">
           <div className="absolute top-0 right-0 w-80 h-80 bg-white/5 rounded-full -mr-20 -mt-20 blur-3xl pointer-events-none"></div>
@@ -545,9 +560,9 @@ export default function ServiceProviderAdvertisements() {
 
         {/* Main Content Area */}
         <div className="container mx-auto px-4 -mt-6 relative z-20 space-y-8">
-          
+
           <div className="grid grid-cols-1 lg:grid-cols-5 gap-6 items-start">
-            
+
             {/* Column 1: Zones list & selected details */}
             <div className="lg:col-span-2 space-y-6">
               <Card className="shadow-md border-none rounded-2xl overflow-hidden bg-white">
@@ -568,11 +583,10 @@ export default function ServiceProviderAdvertisements() {
                       <button
                         key={zone.id}
                         onClick={() => handleSelectZone(zone)}
-                        className={`w-full text-left p-4 rounded-xl border transition-all duration-200 flex items-center justify-between gap-3 ${
-                          selectedZone?.id === zone.id
-                            ? 'border-slate-800 bg-slate-50 shadow-sm'
-                            : 'border-slate-200 bg-white hover:bg-slate-50'
-                        }`}
+                        className={`w-full text-left p-4 rounded-xl border transition-all duration-200 flex items-center justify-between gap-3 ${selectedZone?.id === zone.id
+                          ? 'border-slate-800 bg-slate-50 shadow-sm'
+                          : 'border-slate-200 bg-white hover:bg-slate-50'
+                          }`}
                       >
                         <div className="flex flex-col gap-0.5 min-w-0">
                           <span className={`text-sm font-bold truncate ${selectedZone?.id === zone.id ? 'text-slate-900' : 'text-slate-800'}`}>
@@ -605,7 +619,7 @@ export default function ServiceProviderAdvertisements() {
                         <p className="text-base font-bold text-slate-800">{selectedZone.campaignDuration} Days</p>
                       </div>
                     </div>
-                    
+
                     <div className="border-t border-slate-100 pt-4 space-y-1">
                       <span className="text-[10px] text-slate-400 uppercase font-semibold">Dimensions Format</span>
                       <p className="text-sm font-semibold text-slate-700">{selectedZone.width}x{selectedZone.height} ({selectedZone.adType})</p>
@@ -677,7 +691,7 @@ export default function ServiceProviderAdvertisements() {
                         <div>Fri</div>
                         <div>Sat</div>
                       </div>
-                      
+
                       <div className="grid grid-cols-7 gap-2">
                         {Array.from({ length: firstDayIndex }).map((_, idx) => (
                           <div key={`empty-${idx}`} className="h-10 md:h-12"></div>
@@ -785,7 +799,7 @@ export default function ServiceProviderAdvertisements() {
                 </Card>
               )}
             </div>
-            
+
           </div>
 
           {/* Section 2: User's Current Bookings / Campaigns */}
@@ -895,7 +909,7 @@ export default function ServiceProviderAdvertisements() {
 
         </div>
       </div>
-      
+
       {/* Booking Form Dialog Modal */}
       {bookingSlot && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm transition-opacity">
@@ -912,209 +926,208 @@ export default function ServiceProviderAdvertisements() {
             {paymentClientSecret ? (
               <CardContent className="p-6">
                 <Elements stripe={stripePromise} options={{ clientSecret: paymentClientSecret, appearance: { theme: 'stripe' } }}>
-                  <CheckoutForm 
+                  <CheckoutForm
                     amount={selectedZone?.cost}
                     paymentId={paymentId}
                     onSuccess={() => {
                       handleCloseBookingModal();
                       loadMyBookings();
                       if (selectedZone) handleSelectZone(selectedZone);
-                    }} 
-                    onCancel={handleCloseBookingModal} 
+                    }}
+                    onCancel={handleCloseBookingModal}
                   />
                 </Elements>
               </CardContent>
             ) : (
-            <form onSubmit={handleBookingSubmit}>
-              <CardContent className="p-6 space-y-4">
-                <div className="bg-slate-50 border border-slate-100 rounded-xl p-3.5 text-xs text-slate-600 flex justify-between items-center">
-                  <div>
-                    <span className="font-semibold text-slate-400 uppercase tracking-wide block text-[9px]">Slot Dates</span>
-                    <strong className="text-slate-800 text-sm">{bookingSlot.startDate} to {bookingSlot.endDate}</strong>
-                  </div>
-                  <div className="text-right">
-                    <span className="font-semibold text-slate-400 uppercase tracking-wide block text-[9px]">Cost</span>
-                    <strong className="text-slate-800 text-sm">₹{selectedZone?.cost}</strong>
-                  </div>
-                </div>
-
-                {/* Resolution specifications & Campaign Format Selector */}
-                <div className="bg-indigo-50/50 border border-indigo-100 rounded-2xl p-4.5 space-y-4">
-                  <div>
-                    <span className="font-semibold text-indigo-400 uppercase tracking-wide block text-[9px] mb-1">Required Zone Specification</span>
-                    <p className="text-slate-800 text-sm font-bold flex items-center gap-1.5">
-                      <ImageIcon className="w-4 h-4 text-indigo-500" />
-                      Image Format: {selectedZone?.width || 728} x {selectedZone?.height || 90} px (Exact size required)
-                    </p>
-                    <p className="text-slate-500 text-[10px] mt-1">We accept PNG, JPG, and WEBP formats under 2MB.</p>
-                  </div>
-
-                  <div className="border-t border-slate-100 pt-3">
-                    <label className="text-xs font-bold text-slate-600 block mb-2">Campaign Format</label>
-                    <div className="grid grid-cols-3 gap-2">
-                      {[
-                        { id: 'image', label: 'Image', icon: <ImageIcon className="w-3.5 h-3.5" /> },
-                        { id: 'video', label: 'Video', icon: <VideoIcon className="w-3.5 h-3.5" /> },
-                        { id: 'text', label: 'Text Only', icon: <TextIcon className="w-3.5 h-3.5" /> },
-                      ].map(fmt => (
-                        <button
-                          key={fmt.id}
-                          type="button"
-                          onClick={() => {
-                            setCampaignFormat(fmt.id);
-                            setAdContent(prev => ({ ...prev, imageUrl: '', videoUrl: '' }));
-                            setImageFile(null);
-                            setImagePreview('');
-                            setVideoFile(null);
-                            setVideoPreview('');
-                          }}
-                          className={`flex items-center justify-center gap-1.5 py-2.5 px-3 rounded-xl border text-xs font-semibold transition-all ${
-                            campaignFormat === fmt.id
-                              ? 'border-slate-800 bg-slate-100 text-slate-900 shadow-sm'
-                              : 'border-slate-200 bg-white text-slate-600 hover:bg-slate-50'
-                          }`}
-                        >
-                          {fmt.icon}
-                          {fmt.label}
-                        </button>
-                      ))}
+              <form onSubmit={handleBookingSubmit}>
+                <CardContent className="p-6 space-y-4">
+                  <div className="bg-slate-50 border border-slate-100 rounded-xl p-3.5 text-xs text-slate-600 flex justify-between items-center">
+                    <div>
+                      <span className="font-semibold text-slate-400 uppercase tracking-wide block text-[9px]">Slot Dates</span>
+                      <strong className="text-slate-800 text-sm">{bookingSlot.startDate} to {bookingSlot.endDate}</strong>
+                    </div>
+                    <div className="text-right">
+                      <span className="font-semibold text-slate-400 uppercase tracking-wide block text-[9px]">Cost</span>
+                      <strong className="text-slate-800 text-sm">₹{selectedZone?.cost}</strong>
                     </div>
                   </div>
-                </div>
 
-                {/* Render Image upload if 'image' selected */}
-                {campaignFormat === 'image' && (
-                  <div className="space-y-2.5">
-                    <label className="text-xs font-bold text-slate-600 block">Ad Image <span className="text-red-500">*</span></label>
-                    
-                    {!imageFile ? (
-                      <div className="relative border-2 border-dashed border-slate-200 hover:border-slate-800 rounded-2xl p-6 transition-all cursor-pointer group bg-slate-50/50 flex flex-col items-center justify-center min-h-[140px]">
-                        <input 
-                          type="file" 
-                          accept="image/*" 
-                          required
-                          onChange={handleImageChange} 
-                          className="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-10" 
-                        />
-                        {isUploadingFile ? (
-                          <>
-                            <Loader2 className="w-8 h-8 text-indigo-500 animate-spin mb-2" />
-                            <span className="text-sm font-bold text-slate-600">Uploading to Firebase Storage...</span>
-                            <span className="text-[10px] text-slate-400 mt-1">Please wait ({uploadProgress}%)</span>
-                          </>
-                        ) : (
-                          <>
-                            <ImageIcon className="w-8 h-8 text-slate-400 group-hover:text-slate-800 transition-colors mb-2" />
-                            <span className="text-sm font-bold text-slate-600 group-hover:text-slate-800 transition-colors">Select Ad Image File</span>
-                            <span className="text-[10px] text-slate-400 mt-1">Requires exact resolution: {selectedZone?.width || 728}x{selectedZone?.height || 90}</span>
-                          </>
-                        )}
+                  {/* Resolution specifications & Campaign Format Selector */}
+                  <div className="bg-indigo-50/50 border border-indigo-100 rounded-2xl p-4.5 space-y-4">
+                    <div>
+                      <span className="font-semibold text-indigo-400 uppercase tracking-wide block text-[9px] mb-1">Required Zone Specification</span>
+                      <p className="text-slate-800 text-sm font-bold flex items-center gap-1.5">
+                        <ImageIcon className="w-4 h-4 text-indigo-500" />
+                        Image Format: {selectedZone?.width || 728} x {selectedZone?.height || 90} px (Exact size required)
+                      </p>
+                      <p className="text-slate-500 text-[10px] mt-1">We accept PNG, JPG, and WEBP formats under 2MB.</p>
+                    </div>
+
+                    <div className="border-t border-slate-100 pt-3">
+                      <label className="text-xs font-bold text-slate-600 block mb-2">Campaign Format</label>
+                      <div className="grid grid-cols-3 gap-2">
+                        {[
+                          { id: 'image', label: 'Image', icon: <ImageIcon className="w-3.5 h-3.5" /> },
+                          { id: 'video', label: 'Video', icon: <VideoIcon className="w-3.5 h-3.5" /> },
+                          { id: 'text', label: 'Text Only', icon: <TextIcon className="w-3.5 h-3.5" /> },
+                        ].map(fmt => (
+                          <button
+                            key={fmt.id}
+                            type="button"
+                            onClick={() => {
+                              setCampaignFormat(fmt.id);
+                              setAdContent(prev => ({ ...prev, imageUrl: '', videoUrl: '' }));
+                              setImageFile(null);
+                              setImagePreview('');
+                              setVideoFile(null);
+                              setVideoPreview('');
+                            }}
+                            className={`flex items-center justify-center gap-1.5 py-2.5 px-3 rounded-xl border text-xs font-semibold transition-all ${campaignFormat === fmt.id
+                              ? 'border-slate-800 bg-slate-100 text-slate-900 shadow-sm'
+                              : 'border-slate-200 bg-white text-slate-600 hover:bg-slate-50'
+                              }`}
+                          >
+                            {fmt.icon}
+                            {fmt.label}
+                          </button>
+                        ))}
                       </div>
-                    ) : (
-                      <div className="space-y-3">
-                        <div className="border-2 border-dashed border-emerald-200 bg-emerald-50/40 text-emerald-700 rounded-xl p-3.5 text-xs font-bold flex items-center justify-between shadow-sm">
-                          <span className="flex items-center gap-2 truncate">
-                            <CheckCircle className="w-4 h-4 text-emerald-600 flex-shrink-0" />
-                            <span className="truncate">{imageFile.name}</span>
-                          </span>
-                          <button type="button" onClick={handleRemoveImage} className="text-slate-400 hover:text-red-500 font-bold ml-2 text-sm transition-colors">✕</button>
-                        </div>
-                        <div className="relative rounded-2xl overflow-hidden bg-slate-50 border border-slate-200/80 aspect-[16/9] max-h-56 flex items-center justify-center p-2">
-                          <img 
-                            src={imagePreview} 
-                            alt="Ad Image Preview" 
-                            className="w-full h-full object-contain rounded-lg"
-                          />
-                        </div>
-                      </div>
-                    )}
+                    </div>
                   </div>
-                )}
 
-                {/* Render Video upload if 'video' selected */}
-                {campaignFormat === 'video' && (
-                  <div className="space-y-2.5">
-                    <label className="text-xs font-bold text-slate-600 block">Ad Video File <span className="text-red-500">*</span></label>
-                    
-                    {!videoFile ? (
-                      <div className="relative border-2 border-dashed border-slate-200 hover:border-slate-800 rounded-2xl p-6 transition-all cursor-pointer group bg-slate-50/50 flex flex-col items-center justify-center min-h-[140px]">
-                        <input 
-                          type="file" 
-                          accept="video/*" 
-                          required
-                          onChange={handleVideoChange} 
-                          className="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-10" 
-                        />
-                        {isUploadingFile ? (
-                          <>
-                            <Loader2 className="w-8 h-8 text-indigo-500 animate-spin mb-2" />
-                            <span className="text-sm font-bold text-slate-600">Uploading video to Firebase Storage...</span>
-                            <span className="text-[10px] text-slate-400 mt-1">Please wait ({uploadProgress}%)</span>
-                          </>
-                        ) : (
-                          <>
-                            <VideoIcon className="w-8 h-8 text-slate-400 group-hover:text-slate-800 transition-colors mb-2" />
-                            <span className="text-sm font-bold text-slate-600 group-hover:text-slate-800 transition-colors">Select Ad Video File</span>
-                            <span className="text-[10px] text-slate-400 mt-1">Supports MP4, WEBM format (Max 10MB)</span>
-                          </>
-                        )}
-                      </div>
-                    ) : (
-                      <div className="space-y-3">
-                        <div className="border-2 border-dashed border-emerald-200 bg-emerald-50/40 text-emerald-700 rounded-xl p-3.5 text-xs font-bold flex items-center justify-between shadow-sm">
-                          <span className="flex items-center gap-2 truncate">
-                            <CheckCircle className="w-4 h-4 text-emerald-600 flex-shrink-0" />
-                            <span className="truncate">{videoFile.name}</span>
-                          </span>
-                          <button type="button" onClick={handleRemoveVideo} className="text-slate-400 hover:text-red-500 font-bold ml-2 text-sm transition-colors">✕</button>
-                        </div>
-                        <div className="relative rounded-2xl overflow-hidden bg-slate-50 border border-slate-200/80 aspect-[16/9] max-h-56 flex items-center justify-center p-2">
-                          <video 
-                            src={videoPreview} 
-                            controls
-                            className="w-full h-full object-contain rounded-lg"
+                  {/* Render Image upload if 'image' selected */}
+                  {campaignFormat === 'image' && (
+                    <div className="space-y-2.5">
+                      <label className="text-xs font-bold text-slate-600 block">Ad Image <span className="text-red-500">*</span></label>
+
+                      {!imageFile ? (
+                        <div className="relative border-2 border-dashed border-slate-200 hover:border-slate-800 rounded-2xl p-6 transition-all cursor-pointer group bg-slate-50/50 flex flex-col items-center justify-center min-h-[140px]">
+                          <input
+                            type="file"
+                            accept="image/*"
+                            required
+                            onChange={handleImageChange}
+                            className="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-10"
                           />
+                          {isUploadingFile ? (
+                            <>
+                              <Loader2 className="w-8 h-8 text-indigo-500 animate-spin mb-2" />
+                              <span className="text-sm font-bold text-slate-600">Uploading to Firebase Storage...</span>
+                              <span className="text-[10px] text-slate-400 mt-1">Please wait ({uploadProgress}%)</span>
+                            </>
+                          ) : (
+                            <>
+                              <ImageIcon className="w-8 h-8 text-slate-400 group-hover:text-slate-800 transition-colors mb-2" />
+                              <span className="text-sm font-bold text-slate-600 group-hover:text-slate-800 transition-colors">Select Ad Image File</span>
+                              <span className="text-[10px] text-slate-400 mt-1">Requires exact resolution: {selectedZone?.width || 728}x{selectedZone?.height || 90}</span>
+                            </>
+                          )}
                         </div>
-                      </div>
-                    )}
+                      ) : (
+                        <div className="space-y-3">
+                          <div className="border-2 border-dashed border-emerald-200 bg-emerald-50/40 text-emerald-700 rounded-xl p-3.5 text-xs font-bold flex items-center justify-between shadow-sm">
+                            <span className="flex items-center gap-2 truncate">
+                              <CheckCircle className="w-4 h-4 text-emerald-600 flex-shrink-0" />
+                              <span className="truncate">{imageFile.name}</span>
+                            </span>
+                            <button type="button" onClick={handleRemoveImage} className="text-slate-400 hover:text-red-500 font-bold ml-2 text-sm transition-colors">✕</button>
+                          </div>
+                          <div className="relative rounded-2xl overflow-hidden bg-slate-50 border border-slate-200/80 aspect-[16/9] max-h-56 flex items-center justify-center p-2">
+                            <img
+                              src={imagePreview}
+                              alt="Ad Image Preview"
+                              className="w-full h-full object-contain rounded-lg"
+                            />
+                          </div>
+                        </div>
+                      )}
+                    </div>
+                  )}
+
+                  {/* Render Video upload if 'video' selected */}
+                  {campaignFormat === 'video' && (
+                    <div className="space-y-2.5">
+                      <label className="text-xs font-bold text-slate-600 block">Ad Video File <span className="text-red-500">*</span></label>
+
+                      {!videoFile ? (
+                        <div className="relative border-2 border-dashed border-slate-200 hover:border-slate-800 rounded-2xl p-6 transition-all cursor-pointer group bg-slate-50/50 flex flex-col items-center justify-center min-h-[140px]">
+                          <input
+                            type="file"
+                            accept="video/*"
+                            required
+                            onChange={handleVideoChange}
+                            className="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-10"
+                          />
+                          {isUploadingFile ? (
+                            <>
+                              <Loader2 className="w-8 h-8 text-indigo-500 animate-spin mb-2" />
+                              <span className="text-sm font-bold text-slate-600">Uploading video to Firebase Storage...</span>
+                              <span className="text-[10px] text-slate-400 mt-1">Please wait ({uploadProgress}%)</span>
+                            </>
+                          ) : (
+                            <>
+                              <VideoIcon className="w-8 h-8 text-slate-400 group-hover:text-slate-800 transition-colors mb-2" />
+                              <span className="text-sm font-bold text-slate-600 group-hover:text-slate-800 transition-colors">Select Ad Video File</span>
+                              <span className="text-[10px] text-slate-400 mt-1">Supports MP4, WEBM format (Max 10MB)</span>
+                            </>
+                          )}
+                        </div>
+                      ) : (
+                        <div className="space-y-3">
+                          <div className="border-2 border-dashed border-emerald-200 bg-emerald-50/40 text-emerald-700 rounded-xl p-3.5 text-xs font-bold flex items-center justify-between shadow-sm">
+                            <span className="flex items-center gap-2 truncate">
+                              <CheckCircle className="w-4 h-4 text-emerald-600 flex-shrink-0" />
+                              <span className="truncate">{videoFile.name}</span>
+                            </span>
+                            <button type="button" onClick={handleRemoveVideo} className="text-slate-400 hover:text-red-500 font-bold ml-2 text-sm transition-colors">✕</button>
+                          </div>
+                          <div className="relative rounded-2xl overflow-hidden bg-slate-50 border border-slate-200/80 aspect-[16/9] max-h-56 flex items-center justify-center p-2">
+                            <video
+                              src={videoPreview}
+                              controls
+                              className="w-full h-full object-contain rounded-lg"
+                            />
+                          </div>
+                        </div>
+                      )}
+                    </div>
+                  )}
+
+                  <div className="space-y-1.5">
+                    <label className="text-xs font-bold text-slate-600 block">Target Redirect URL <span className="text-red-500">*</span></label>
+                    <input
+                      type="url"
+                      required
+                      placeholder="https://mywebsite.com/my-services"
+                      className="w-full border border-slate-200 rounded-xl px-4 py-2.5 text-sm outline-none focus:border-slate-800 text-slate-700 placeholder-slate-400"
+                      value={adContent.targetUrl}
+                      onChange={(e) => setAdContent({ ...adContent, targetUrl: e.target.value })}
+                    />
                   </div>
-                )}
 
-                <div className="space-y-1.5">
-                  <label className="text-xs font-bold text-slate-600 block">Target Redirect URL <span className="text-red-500">*</span></label>
-                  <input 
-                    type="url"
-                    required
-                    placeholder="https://mywebsite.com/my-services"
-                    className="w-full border border-slate-200 rounded-xl px-4 py-2.5 text-sm outline-none focus:border-slate-800 text-slate-700 placeholder-slate-400"
-                    value={adContent.targetUrl}
-                    onChange={(e) => setAdContent({...adContent, targetUrl: e.target.value})}
-                  />
+                  <div className="space-y-1.5">
+                    <label className="text-xs font-bold text-slate-600 block">Ad Caption / Text <span className="text-red-500">*</span></label>
+                    <textarea
+                      required
+                      rows="3"
+                      placeholder="e.g. Legal due diligence and property verification advisors..."
+                      className="w-full border border-slate-200 rounded-xl px-4 py-2.5 text-sm outline-none focus:border-slate-800 text-slate-700 placeholder-slate-400 resize-none"
+                      value={adContent.text}
+                      onChange={(e) => setAdContent({ ...adContent, text: e.target.value })}
+                    />
+                  </div>
+                </CardContent>
+                <div className="bg-slate-50 border-t border-slate-100 p-4 px-6 flex justify-end gap-3 rounded-b-2xl">
+                  <Button type="button" variant="outline" onClick={handleCloseBookingModal} className="rounded-xl">Cancel</Button>
+                  <Button
+                    type="submit"
+                    disabled={isSubmittingBooking}
+                    className="bg-slate-800 hover:bg-slate-900 text-white rounded-xl shadow-md min-w-[120px]"
+                  >
+                    {isSubmittingBooking ? <Loader2 className="w-4 h-4 animate-spin" /> : "Complete Booking"}
+                  </Button>
                 </div>
-
-                <div className="space-y-1.5">
-                  <label className="text-xs font-bold text-slate-600 block">Ad Caption / Text <span className="text-red-500">*</span></label>
-                  <textarea 
-                    required
-                    rows="3"
-                    placeholder="e.g. Legal due diligence and property verification advisors..."
-                    className="w-full border border-slate-200 rounded-xl px-4 py-2.5 text-sm outline-none focus:border-slate-800 text-slate-700 placeholder-slate-400 resize-none"
-                    value={adContent.text}
-                    onChange={(e) => setAdContent({...adContent, text: e.target.value})}
-                  />
-                </div>
-              </CardContent>
-              <div className="bg-slate-50 border-t border-slate-100 p-4 px-6 flex justify-end gap-3 rounded-b-2xl">
-                <Button type="button" variant="outline" onClick={handleCloseBookingModal} className="rounded-xl">Cancel</Button>
-                <Button 
-                  type="submit" 
-                  disabled={isSubmittingBooking}
-                  className="bg-slate-800 hover:bg-slate-900 text-white rounded-xl shadow-md min-w-[120px]"
-                >
-                  {isSubmittingBooking ? <Loader2 className="w-4 h-4 animate-spin" /> : "Complete Booking"}
-                </Button>
-              </div>
-            </form>
+              </form>
             )}
           </Card>
         </div>
@@ -1135,7 +1148,7 @@ export default function ServiceProviderAdvertisements() {
             </CardHeader>
             <form onSubmit={handleRectifySubmit}>
               <CardContent className="p-6 space-y-4">
-                
+
                 {/* Admin Rejection Reason Display */}
                 <div className="bg-red-50 border border-red-100 text-red-700 rounded-xl p-4 text-xs font-semibold">
                   <p className="font-bold text-red-800 mb-1 flex items-center gap-1.5"><AlertCircle className="w-4 h-4" /> Admin Feedback:</p>
@@ -1192,7 +1205,7 @@ export default function ServiceProviderAdvertisements() {
                     placeholder="https://mywebsite.com/my-services"
                     className="w-full border border-slate-200 rounded-xl px-4 py-2.5 text-sm outline-none focus:border-amber-500 text-slate-700 placeholder-slate-400"
                     value={rectifyAdContent.targetUrl}
-                    onChange={(e) => setRectifyAdContent({...rectifyAdContent, targetUrl: e.target.value})}
+                    onChange={(e) => setRectifyAdContent({ ...rectifyAdContent, targetUrl: e.target.value })}
                   />
                 </div>
 
@@ -1204,14 +1217,14 @@ export default function ServiceProviderAdvertisements() {
                     placeholder="e.g. Legal due diligence and property verification advisors..."
                     className="w-full border border-slate-200 rounded-xl px-4 py-2.5 text-sm outline-none focus:border-amber-500 text-slate-700 placeholder-slate-400 resize-none"
                     value={rectifyAdContent.text}
-                    onChange={(e) => setRectifyAdContent({...rectifyAdContent, text: e.target.value})}
+                    onChange={(e) => setRectifyAdContent({ ...rectifyAdContent, text: e.target.value })}
                   />
                 </div>
               </CardContent>
               <div className="bg-slate-50 border-t border-slate-100 p-4 px-6 flex justify-end gap-3 rounded-b-2xl">
                 <Button type="button" variant="outline" onClick={handleCloseRectifyModal} className="rounded-xl">Cancel</Button>
-                <Button 
-                  type="submit" 
+                <Button
+                  type="submit"
                   disabled={isSubmittingRectify}
                   className="bg-amber-600 hover:bg-amber-700 text-white rounded-xl shadow-md min-w-[120px]"
                 >
