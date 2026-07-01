@@ -424,6 +424,18 @@ export default function AdminAdvertisements() {
             <X className="w-3 h-3" /> Cancelled
           </Badge>
         );
+      case "pending_payment":
+        return (
+          <Badge className="bg-blue-500 hover:bg-blue-600 text-white flex items-center gap-1 w-fit">
+            <DollarSign className="w-3 h-3" /> Pending Payment
+          </Badge>
+        );
+      case "completed":
+        return (
+          <Badge className="bg-purple-500 hover:bg-purple-600 text-white flex items-center gap-1 w-fit">
+            <Check className="w-3 h-3" /> Completed
+          </Badge>
+        );
       case "pending_review":
       default:
         return (
@@ -533,7 +545,9 @@ export default function AdminAdvertisements() {
                     >
                       <option value="All">All Statuses</option>
                       <option value="pending_review">Pending Review</option>
+                      <option value="pending_payment">Pending Payment</option>
                       <option value="approved">Approved</option>
+                      <option value="completed">Completed</option>
                       <option value="rejected">Rejected</option>
                       <option value="cancelled">Cancelled</option>
                     </select>

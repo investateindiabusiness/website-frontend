@@ -35,13 +35,14 @@ export default function InvestorProperties() {
     const loadProjects = async () => {
       try {
         setLoadingProjects(true);
-        const response = await apiRequest('/api/projects?role=investor', {
+        const data = await apiRequest('/api/projects?role=investor', {
           method: 'GET',
-          headers: user?.token ? { 'Authorization': `Bearer ${user.token}` } : undefined
+          headers: { 'Authorization': `Bearer ${user?.token}` }
         });
-        
-        const projectsList = response?.data || [];
-        const mappedData = projectsList
+
+        const projectsArray = data.data || [];
+
+        const mappedData = projectsArray
           .filter(p => p.status === 'approved')
           .map(p => ({
             id: p.id,
@@ -58,8 +59,7 @@ export default function InvestorProperties() {
 
         setProperties(mappedData);
       } catch (error) {
-        console.error("Error loading properties:", error);
-        toast({ title: "Error", description: "Failed to load properties.", variant: "destructive" });
+        console.warn('Failed to load properties:', error?.message);
       } finally {
         setLoadingProjects(false);
       }
