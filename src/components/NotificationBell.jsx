@@ -22,7 +22,7 @@ export default function NotificationBell({ iconColor = 'rgba(255,255,255,0.7)', 
       const res = await apiRequest('/api/notifications/unread-count', { method: 'GET' });
       setUnreadCount(res.count || 0);
     } catch (err) {
-      console.error('Failed to fetch unread count:', err);
+      console.warn('Failed to fetch unread count (graceful bypass):', err?.message || (typeof err === 'object' ? JSON.stringify(err) : err));
     }
   };
 
@@ -33,7 +33,7 @@ export default function NotificationBell({ iconColor = 'rgba(255,255,255,0.7)', 
       const res = await apiRequest('/api/notifications?limit=10', { method: 'GET' });
       setNotifications(res.data || []);
     } catch (err) {
-      console.error('Failed to fetch notifications:', err);
+      console.warn('Failed to fetch notifications (graceful bypass):', err?.message || (typeof err === 'object' ? JSON.stringify(err) : err));
     } finally {
       setLoading(false);
     }
@@ -42,8 +42,8 @@ export default function NotificationBell({ iconColor = 'rgba(255,255,255,0.7)', 
   useEffect(() => {
     if (user) {
       fetchUnreadCount();
-      // Poll every 30 seconds
-      const interval = setInterval(fetchUnreadCount, 30000);
+      // Poll every 120 seconds (reduced frequency to prevent database quota exhaustion)
+      const interval = setInterval(fetchUnreadCount, 120000);
       return () => clearInterval(interval);
     }
   }, [user]);

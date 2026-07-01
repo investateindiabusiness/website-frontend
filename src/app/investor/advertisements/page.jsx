@@ -43,11 +43,11 @@ import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/com
 
 // Zone display metadata — fallback names/icons if backend is missing a field
 const ZONE_META = {
-  zone1: { name: 'Builder Dashboard Leaderboard', costPerDay: 15 },
-  zone2: { name: 'Investor Dashboard Leaderboard', costPerDay: 22 },
-  zone3: { name: 'Project Search Results Inline Ad', costPerDay: 18 },
-  zone4: { name: 'Investor Project Details', costPerDay: 12 },
-  zone5: { name: 'Landing Page Hero Spotlight', costPerDay: 30 },
+  zone1: { name: 'Builder Dashboard Leaderboard', costPerDay: 9 },
+  zone2: { name: 'Investor Dashboard Leaderboard', costPerDay: 10 },
+  zone3: { name: 'Project Search Results Inline Ad', costPerDay: 10 },
+  zone4: { name: 'Investor Project Details', costPerDay: 10 },
+  zone5: { name: 'Landing Page Hero Spotlight', costPerDay: 10 },
 };
 
 // Initialize Stripe outside component render to avoid recreating Stripe object on every render

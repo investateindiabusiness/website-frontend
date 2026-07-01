@@ -74,7 +74,7 @@ export default function RootLayout({ children }) {
   return (
     <html lang="en">
       <head>
-        <link rel="icon" type="image/png" href="/images/INVESTATE_INDIA_LOGO_WITH_BG.png?v=2" />
+        <link rel="icon" type="image/png" href="/images/image copy.png?v=2" />
         <link rel="stylesheet" href="/theme.css?v=1.0.2" />
         <link rel="stylesheet" href="/index-page.css?v=1.0.2" />
         <script

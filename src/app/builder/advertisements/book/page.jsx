@@ -15,11 +15,11 @@ import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/com
 import { compressAdImage } from '@/utils/imageCompressor';
 
 const ZONE_META = {
-  zone1: { name: 'Builder Dashboard Top Banner', cost: 100, campaignDuration: 7, width: 728, height: 90 },
-  zone2: { name: 'Investor Dashboard Leaderboard', cost: 150, campaignDuration: 7, width: 728, height: 90 },
-  zone3: { name: 'Investor Project Details Sidebar', cost: 120, campaignDuration: 7, width: 300, height: 250 },
-  zone4: { name: 'Project Search Results Inline Ad', cost: 80, campaignDuration: 7, width: 728, height: 90 },
-  zone5: { name: 'Landing Page Hero Spotlight', cost: 200, campaignDuration: 7, width: 970, height: 250 },
+  zone1: { name: 'Builder Dashboard Leaderboard', cost: 63, campaignDuration: 7, width: 728, height: 90 },
+  zone2: { name: 'Investor Dashboard Leaderboard', cost: 70, campaignDuration: 7, width: 728, height: 90 },
+  zone3: { name: 'Project Search Results Inline Ad', cost: 70, campaignDuration: 7, width: 728, height: 90 },
+  zone4: { name: 'Investor Project Details', cost: 70, campaignDuration: 7, width: 728, height: 90 },
+  zone5: { name: 'Landing Page Hero Spotlight', cost: 70, campaignDuration: 7, width: 970, height: 250 },
 };
 
 const stripePromise = loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY || 'pk_test_placeholder');

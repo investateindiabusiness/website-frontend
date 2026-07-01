@@ -42,11 +42,11 @@ import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/com
 
 // Zone display metadata — names and pricing shown in the sidebar list
 const ZONE_META = {
-  zone1: { name: 'Builder Dashboard Leaderboard', cost: 100, campaignDuration: 7 },
-  zone2: { name: 'Investor Dashboard Leaderboard', cost: 150, campaignDuration: 7 },
-  zone3: { name: 'Project Search Results Inline Ad', cost: 120, campaignDuration: 7 },
-  zone4: { name: 'Investor Project Details', cost: 80, campaignDuration: 7 },
-  zone5: { name: 'Landing Page Hero Spotlight', cost: 200, campaignDuration: 7 },
+  zone1: { name: 'Builder Dashboard Leaderboard', cost: 63, campaignDuration: 7 },
+  zone2: { name: 'Investor Dashboard Leaderboard', cost: 70, campaignDuration: 7 },
+  zone3: { name: 'Project Search Results Inline Ad', cost: 70, campaignDuration: 7 },
+  zone4: { name: 'Investor Project Details', cost: 70, campaignDuration: 7 },
+  zone5: { name: 'Landing Page Hero Spotlight', cost: 70, campaignDuration: 7 },
 };
 
 // Initialize Stripe outside component render to avoid recreating Stripe object on every render
