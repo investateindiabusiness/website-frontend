@@ -1,4 +1,4 @@
-﻿"use client";
+"use client";
 
 import React, { useState, useEffect, Suspense } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
@@ -15,11 +15,11 @@ import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/com
 import { compressAdImage } from '@/utils/imageCompressor';
 
 const ZONE_META = {
-  zone1: { name: 'Builder Dashboard Top Banner',       costPerDay: 15, width: 728, height: 90 },
-  zone2: { name: 'Investor Dashboard Leaderboard',     costPerDay: 22, width: 728, height: 90 },
-  zone3: { name: 'Investor Project Details Sidebar',   costPerDay: 18, width: 300, height: 250 },
-  zone4: { name: 'Project Search Results Inline Ad',   costPerDay: 12, width: 728, height: 90 },
-  zone5: { name: 'Landing Page Hero Spotlight',        costPerDay: 30, width: 970, height: 250 },
+  zone1: { name: 'Builder Dashboard Leaderboard',     costPerDay: 15, width: 728, height: 90 },
+  zone2: { name: 'Investor Dashboard Leaderboard',    costPerDay: 22, width: 728, height: 90 },
+  zone3: { name: 'Project Search Results Inline Ad',  costPerDay: 18, width: 300, height: 250 },
+  zone4: { name: 'Investor Properties Details',       costPerDay: 12, width: 728, height: 90 },
+  zone5: { name: 'Landing Page Hero Spotlight',       costPerDay: 30, width: 970, height: 250 },
 };
 
 const stripePromise = loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY || 'pk_test_placeholder');
@@ -122,7 +122,7 @@ function BookingFormContent() {
         setSelectedZone({
           ...ZONE_META[zoneId],
           ...zoneObj,
-          name: zoneObj.name || ZONE_META[zoneId]?.name || zoneId,
+          name: ZONE_META[zoneId]?.name || zoneObj.name || zoneId,
           costPerDay: zoneObj.costPerDay ?? ZONE_META[zoneId]?.costPerDay ?? 0,
         });
       } else {

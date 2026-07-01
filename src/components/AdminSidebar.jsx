@@ -100,13 +100,12 @@ export default function AdminSidebar({ children }) {
         alignItems: 'center',
         justifyContent: collapsed ? 'center' : 'space-between',
         px: collapsed ? 1 : 2,
-        py: 1.5,
+        height: 64,
         borderBottom: '1px solid rgba(255,255,255,0.08)',
-        minHeight: 64,
       }}>
         {!collapsed && (
           <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-            <img src="/logo-small-white.png" alt="Logo" style={{ height: 40, objectFit: 'contain' }} />
+            <img src="/logo-small-white.png" alt="Logo" style={{ height: 48, objectFit: 'contain' }} />
           </Box>
         )}
         <IconButton
@@ -273,7 +272,8 @@ export default function AdminSidebar({ children }) {
         <Box sx={{
           display: { xs: 'flex', md: 'none' },
           alignItems: 'center',
-          px: 2, py: 1.5,
+          px: 2,
+          height: 56,
           bgcolor: '#0f172a',
           borderBottom: '1px solid rgba(255,255,255,0.08)',
           position: 'sticky', top: 0, zIndex: 100,
@@ -292,7 +292,8 @@ export default function AdminSidebar({ children }) {
           display: { xs: 'none', md: 'flex' },
           alignItems: 'center',
           justifyContent: 'flex-end',
-          px: 3, py: 1.5,
+          px: 3,
+          height: 50,
           bgcolor: 'white',
           borderBottom: '1px solid #e2e8f0',
           position: 'sticky', top: 0, zIndex: 100,
@@ -301,7 +302,22 @@ export default function AdminSidebar({ children }) {
         </Box>
 
         {/* Page Content */}
-        <Box sx={{ flex: 1, p: { xs: 2, md: 3 } }}>
+        <Box sx={{
+          flex: 1,
+          px: { xs: 2, md: 3 },
+          pb: { xs: 2, md: 3 },
+          pt: 0,
+          '& > div:not(.min-h-screen)': { marginTop: '0 !important', paddingTop: '16px !important' },
+          '& > div.min-h-screen': { marginTop: '0 !important' },
+          '& > main': { marginTop: '0 !important', paddingTop: '12px !important' },
+          '& > section': { marginTop: '0 !important', paddingTop: '12px !important' },
+          '& > div > div': { marginTop: '0 !important' },
+          '& > div > main': { marginTop: '0 !important', paddingTop: '12px !important' },
+          '& > div > section': { marginTop: '0 !important', paddingTop: '12px !important' },
+          '& > div > .flex-grow': { marginTop: '0 !important' },
+          '& > div > .container': { marginTop: '0 !important', paddingTop: '12px !important' },
+          '& > div > .bg-gradient-to-r': { marginTop: '0 !important' }
+        }}>
           {children}
         </Box>
       </Box>

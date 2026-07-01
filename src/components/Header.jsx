@@ -83,9 +83,13 @@ const HeaderContent = ({ transparent = false }) => {
   const handleAuthClick = (action, role) => {
     setMobileMenuOpen(false);
     if (action === 'login') {
-      router.push(role === 'builder' ? '/builder/login' : '/investor/login');
+      if (role === 'builder') router.push('/builder/login');
+      else if (role === 'serviceProvider') router.push('/service-provider/login');
+      else router.push('/investor/login');
     } else {
-      router.push(role === 'builder' ? '/builder/register' : '/investor/register');
+      if (role === 'builder') router.push('/builder/register');
+      else if (role === 'serviceProvider') router.push('/service-provider/register');
+      else router.push('/investor/register');
     }
   };
 
@@ -174,8 +178,8 @@ const HeaderContent = ({ transparent = false }) => {
                   onClick={() => setLogoMenuOpen(prev => !prev)}
                   className="flex items-center focus:outline-none cursor-pointer"
                 >
-                  <img src="/logo-big.png" alt="LOGO" className="hidden md:block h-10 w-auto object-contain" />
-                  <img src="/logo-small-white.png" alt="LOGO" className="block md:hidden h-8 w-auto object-contain" />
+                  <img src="/logo-big.png" alt="LOGO" className="hidden md:block h-12 w-auto object-contain" />
+                  <img src="/logo-small-white.png" alt="LOGO" className="block md:hidden h-10 w-auto object-contain" />
                   <ChevronDown className={`w-4 h-4 ml-1 text-gray-400 transition-transform duration-200 ${logoMenuOpen ? 'rotate-180' : ''}`} />
                 </button>
 
@@ -218,8 +222,8 @@ const HeaderContent = ({ transparent = false }) => {
               </>
             ) : (
               <Link href={logoHref} className="flex items-center">
-                <img src="/logo-big.png" alt="LOGO" className="hidden md:block h-10 w-auto object-contain" />
-                <img src="/logo-small-white.png" alt="LOGO" className="block md:hidden h-8 w-auto object-contain" />
+                <img src="/logo-big.png" alt="LOGO" className="hidden md:block h-12 w-auto object-contain" />
+                <img src="/logo-small-white.png" alt="LOGO" className="block md:hidden h-10 w-auto object-contain" />
               </Link>
             )}
           </div>

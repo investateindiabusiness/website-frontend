@@ -1,4 +1,4 @@
-﻿"use client";
+"use client";
 
 import React, { useState, useEffect, useCallback } from 'react';
 import { Plus, Search, Edit, Trash2, Eye, ArrowLeft, Save, Building2, MapPin, FileText, ShieldAlert, CheckCircle, FileWarning, Loader2, Clock, XCircle, RefreshCw, LayoutDashboard, Layers, Landmark, IndianRupee, ImagePlus, X } from 'lucide-react';
@@ -269,8 +269,7 @@ export default function ProjectManager() {
 
     return (
         <div className="min-h-screen bg-gray-50 flex flex-col font-sans">
-
-            <div className="flex-grow container mx-auto px-4 py-8 mt-16 md:mt-24">
+            <div className="flex-grow w-full max-w-7xl mx-auto px-4 pb-8 pt-6">
                 {view === 'list' && (
                     <div className="space-y-6">
                         <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 bg-white p-6 rounded-2xl shadow-sm border border-gray-100">

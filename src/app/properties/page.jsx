@@ -83,9 +83,9 @@ export default function InvestorProperties() {
   return (
     <div className="min-h-screen bg-[#F4F5F7] flex flex-col font-sans overflow-x-hidden">
 
-      <main className="flex-grow mt-[4rem] pb-16">
+      <main className="flex-grow mt-0 pb-16">
         <div className="container mx-auto px-4 py-8">
-            <div className="bg-white rounded-2xl shadow-sm border border-gray-200 p-4 mb-8 sticky top-[4rem] z-30">
+            <div className="bg-white rounded-2xl shadow-sm border border-gray-200 p-4 mb-8 sticky top-[50px] z-30">
                 <div className="flex flex-col lg:flex-row gap-4">
                     <div className="flex-grow relative flex items-center bg-gray-50 rounded-xl border border-gray-200 px-3">
                         <Search className="w-5 h-5 text-gray-400" />

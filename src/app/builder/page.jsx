@@ -1,4 +1,4 @@
-﻿"use client";
+"use client";
 
 import React, { useState, useEffect, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
@@ -14,6 +14,7 @@ import {
 } from "lucide-react";
 import { useRouter } from "next/navigation";
 import Header from "@/components/Header";
+import Footer from "@/components/Footer";
 const heroSlides = [
   {
     image:
@@ -835,6 +836,7 @@ export default function BuilderHome() {
           </div>
         </div>
       </section>
+      <Footer />
     </div>
   );
 }

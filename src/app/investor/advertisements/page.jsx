@@ -4,12 +4,12 @@ import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { useAuth } from '@/hooks/AuthContext';
 import { toast } from '@/hooks/use-toast';
-import { 
-  fetchAdZones, 
-  fetchSlots, 
-  bookSlot, 
-  fetchMyBookings, 
-  rectifyBooking, 
+import {
+  fetchAdZones,
+  fetchSlots,
+  bookSlot,
+  fetchMyBookings,
+  rectifyBooking,
   cancelBooking,
   uploadImage,
   uploadFile
@@ -18,19 +18,19 @@ import { compressAdImage } from '@/utils/imageCompressor';
 import { loadStripe } from '@stripe/stripe-js';
 import { Elements } from '@stripe/react-stripe-js';
 import CheckoutForm from '@/components/CheckoutForm';
-import { 
-  Calendar, 
-  Image as ImageIcon, 
-  DollarSign, 
-  Clock, 
-  Monitor, 
-  Plus, 
-  AlertCircle, 
-  CheckCircle, 
-  XCircle, 
-  Edit, 
-  Trash2, 
-  Loader2, 
+import {
+  Calendar,
+  Image as ImageIcon,
+  DollarSign,
+  Clock,
+  Monitor,
+  Plus,
+  AlertCircle,
+  CheckCircle,
+  XCircle,
+  Edit,
+  Trash2,
+  Loader2,
   Sparkles,
   ExternalLink,
   Settings,
@@ -43,11 +43,11 @@ import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/com
 
 // Zone display metadata — fallback names/icons if backend is missing a field
 const ZONE_META = {
-  zone1: { name: 'Builder Dashboard Top Banner',       costPerDay: 15 },
-  zone2: { name: 'Investor Dashboard Leaderboard',     costPerDay: 22 },
-  zone3: { name: 'Investor Project Details Sidebar',   costPerDay: 18 },
-  zone4: { name: 'Project Search Results Inline Ad',   costPerDay: 12 },
-  zone5: { name: 'Landing Page Hero Spotlight',        costPerDay: 30 },
+  zone1: { name: 'Builder Dashboard Leaderboard', costPerDay: 15 },
+  zone2: { name: 'Investor Dashboard Leaderboard', costPerDay: 22 },
+  zone3: { name: 'Project Search Results Inline Ad', costPerDay: 18 },
+  zone4: { name: 'Investor Project Details', costPerDay: 12 },
+  zone5: { name: 'Landing Page Hero Spotlight', costPerDay: 30 },
 };
 
 // Initialize Stripe outside component render to avoid recreating Stripe object on every render
@@ -71,7 +71,7 @@ const formatDate = (dateStr) => {
 export default function InvestorAdvertisements() {
   const { user } = useAuth();
   const router = useRouter();
-  
+
   const [zones, setZones] = useState([]);
   const [selectedZone, setSelectedZone] = useState(null);
   const [slots, setSlots] = useState([]);
@@ -134,12 +134,14 @@ export default function InvestorAdvertisements() {
     try {
       if (!silent) setLoadingZones(true);
       const data = await fetchAdZones();
-      const enriched = (data.data || []).map((z) => ({
-        ...ZONE_META[z.id],   // fallback defaults if backend is missing a field
-        ...z,                 // backend values win (name, costPerDay come from DB)
-        name: z.name || ZONE_META[z.id]?.name || z.id,
-        costPerDay: z.costPerDay ?? ZONE_META[z.id]?.costPerDay ?? 0,
-      }));
+      const enriched = (data.data || [])
+        .filter((z) => z.id !== 'zone5')
+        .map((z) => ({
+          ...ZONE_META[z.id],   // fallback defaults if backend is missing a field
+          ...z,                 // backend values win (costPerDay come from DB)
+          name: ZONE_META[z.id]?.name || z.name || z.id,
+          costPerDay: z.costPerDay ?? ZONE_META[z.id]?.costPerDay ?? 0,
+        }));
       setZones(enriched);
       if (selectedZone) {
         const updated = enriched.find(z => z.id === selectedZone.id);
@@ -150,10 +152,10 @@ export default function InvestorAdvertisements() {
       }
     } catch (error) {
       if (!silent) {
-        toast({ 
-          title: "Error loading zones", 
-          description: error.message || "Failed to load active advertisement zones.", 
-          variant: "destructive" 
+        toast({
+          title: "Error loading zones",
+          description: error.message || "Failed to load active advertisement zones.",
+          variant: "destructive"
         });
       }
     } finally {
@@ -168,10 +170,10 @@ export default function InvestorAdvertisements() {
       setMyBookings(data.data || []);
     } catch (error) {
       if (!silent) {
-        toast({ 
-          title: "Error loading bookings", 
-          description: error.message || "Failed to load your campaigns.", 
-          variant: "destructive" 
+        toast({
+          title: "Error loading bookings",
+          description: error.message || "Failed to load your campaigns.",
+          variant: "destructive"
         });
       }
     } finally {
@@ -186,10 +188,10 @@ export default function InvestorAdvertisements() {
       setSlots(data.data || []);
     } catch (error) {
       if (!silent) {
-        toast({ 
-          title: "Error loading slots", 
-          description: error.message || "Failed to load advertisement slots for this zone.", 
-          variant: "destructive" 
+        toast({
+          title: "Error loading slots",
+          description: error.message || "Failed to load advertisement slots for this zone.",
+          variant: "destructive"
         });
       }
     } finally {
@@ -423,17 +425,17 @@ export default function InvestorAdvertisements() {
       await rectifyBooking(rectifyBookingItem.id, {
         adContent: rectifyAdContent
       });
-      toast({ 
-        title: "Campaign Re-submitted!", 
-        description: "Your corrected campaign has been re-submitted for review." 
+      toast({
+        title: "Campaign Re-submitted!",
+        description: "Your corrected campaign has been re-submitted for review."
       });
       handleCloseRectifyModal();
       loadMyBookings();
     } catch (error) {
-      toast({ 
-        title: "Re-submission Failed", 
-        description: error.message || "Failed to update campaign details.", 
-        variant: "destructive" 
+      toast({
+        title: "Re-submission Failed",
+        description: error.message || "Failed to update campaign details.",
+        variant: "destructive"
       });
     } finally {
       setIsSubmittingRectify(false);
@@ -458,9 +460,9 @@ export default function InvestorAdvertisements() {
 
   return (
     <div className="min-h-screen bg-gray-50 flex flex-col font-sans overflow-x-hidden">
-      
-      <div className="flex-grow mt-[2rem] md:mt-[4rem] pb-16">
-        
+
+      <div className="flex-grow pb-16">
+
         {/* Banner Section */}
         <div className="bg-gradient-to-r from-[#0b264f] to-[#1a4b8c] text-white pt-8 pb-14 px-4 md:px-8 rounded-b-[2rem] shadow-xl relative overflow-hidden">
           <div className="absolute top-0 right-0 w-80 h-80 bg-white/5 rounded-full -mr-20 -mt-20 blur-3xl pointer-events-none"></div>
@@ -479,9 +481,9 @@ export default function InvestorAdvertisements() {
 
         {/* Main Content Area */}
         <div className="container mx-auto px-4 -mt-6 relative z-20 space-y-8">
-          
+
           <div className="grid grid-cols-1 lg:grid-cols-5 gap-6 items-start">
-            
+
             {/* Column 1: Zones list & selected details */}
             <div className="lg:col-span-2 space-y-6">
               <Card className="shadow-md border-none rounded-2xl overflow-hidden bg-white">
@@ -502,11 +504,10 @@ export default function InvestorAdvertisements() {
                       <button
                         key={zone.id}
                         onClick={() => handleSelectZone(zone)}
-                        className={`w-full text-left p-4 rounded-xl border transition-all duration-200 flex items-center justify-between gap-3 ${
-                          selectedZone?.id === zone.id
+                        className={`w-full text-left p-4 rounded-xl border transition-all duration-200 flex items-center justify-between gap-3 ${selectedZone?.id === zone.id
                             ? 'border-[#0b264f] bg-[#0b264f]/5 shadow-sm'
                             : 'border-slate-200 bg-white hover:bg-slate-50'
-                        }`}
+                          }`}
                       >
                         <div className="flex flex-col gap-0.5 min-w-0">
                           <span className={`text-sm font-bold truncate ${selectedZone?.id === zone.id ? 'text-[#0b264f]' : 'text-slate-800'}`}>
@@ -540,15 +541,15 @@ export default function InvestorAdvertisements() {
                         <p className="text-base font-bold text-slate-800">Flexible / Per Day</p>
                       </div>
                     </div>
-                    
+
                     <div className="bg-slate-50 border border-slate-100 rounded-xl p-3.5 space-y-2">
                       <h4 className="text-[11px] font-bold text-slate-500 uppercase tracking-wider">Default Ad Fallback</h4>
                       <p className="text-xs text-slate-600 italic">"{selectedZone.defaultAd?.text}"</p>
                       {selectedZone.defaultAd?.imageUrl && (
                         <div className="mt-2 rounded-xl overflow-hidden border border-slate-200 bg-white p-1 max-h-32 flex items-center justify-center">
-                          <img 
-                            src={selectedZone.defaultAd.imageUrl} 
-                            alt="Default fallback ad" 
+                          <img
+                            src={selectedZone.defaultAd.imageUrl}
+                            alt="Default fallback ad"
                             className="max-w-full max-h-28 object-contain rounded-lg"
                           />
                         </div>
@@ -609,7 +610,7 @@ export default function InvestorAdvertisements() {
                         <div>Fri</div>
                         <div>Sat</div>
                       </div>
-                      
+
                       <div className="grid grid-cols-7 gap-1">
                         {Array.from({ length: firstDayIndex }).map((_, idx) => (
                           <div key={`empty-${idx}`} className="h-10 md:h-12"></div>
@@ -664,9 +665,8 @@ export default function InvestorAdvertisements() {
 
               {/* Live Cost Preview Card — shown once start date is picked */}
               {rangeStart && (
-                <Card className={`border rounded-2xl p-4 shadow-sm animate-in fade-in slide-in-from-bottom-2 duration-200 ${
-                  rangeEnd ? 'border-[#0b264f] bg-[#0b264f]/5' : 'border-blue-200 bg-blue-50/50'
-                }`}>
+                <Card className={`border rounded-2xl p-4 shadow-sm animate-in fade-in slide-in-from-bottom-2 duration-200 ${rangeEnd ? 'border-[#0b264f] bg-[#0b264f]/5' : 'border-blue-200 bg-blue-50/50'
+                  }`}>
                   <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
                     <div>
                       <h4 className="text-xs font-bold text-[#0b264f] uppercase tracking-wide">
@@ -723,7 +723,7 @@ export default function InvestorAdvertisements() {
                 </Card>
               )}
             </div>
-            
+
           </div>
 
           {/* Section 2: User's Current Bookings / Campaigns */}
@@ -833,7 +833,7 @@ export default function InvestorAdvertisements() {
 
         </div>
       </div>
-      
+
       {/* Booking Form Dialog Modal */}
       {bookingSlot && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm transition-opacity">
@@ -850,90 +850,90 @@ export default function InvestorAdvertisements() {
             {paymentClientSecret ? (
               <CardContent className="p-6">
                 <Elements stripe={stripePromise} options={{ clientSecret: paymentClientSecret, appearance: { theme: 'stripe' } }}>
-                  <CheckoutForm 
+                  <CheckoutForm
                     amount={selectedZone?.cost}
                     paymentId={paymentId}
                     onSuccess={() => {
                       handleCloseBookingModal();
                       loadMyBookings();
                       if (selectedZone) handleSelectZone(selectedZone);
-                    }} 
-                    onCancel={handleCloseBookingModal} 
+                    }}
+                    onCancel={handleCloseBookingModal}
                   />
                 </Elements>
               </CardContent>
             ) : (
-            <form onSubmit={handleBookingSubmit}>
-              <CardContent className="p-6 space-y-4">
-                <div className="bg-slate-50 border border-slate-100 rounded-xl p-3.5 text-xs text-slate-600 flex justify-between items-center">
-                  <div>
-                    <span className="font-semibold text-slate-400 uppercase tracking-wide block text-[9px]">Slot Dates</span>
-                    <strong className="text-slate-800 text-sm">{formatDate(bookingSlot.startDate)} to {formatDate(bookingSlot.endDate)}</strong>
+              <form onSubmit={handleBookingSubmit}>
+                <CardContent className="p-6 space-y-4">
+                  <div className="bg-slate-50 border border-slate-100 rounded-xl p-3.5 text-xs text-slate-600 flex justify-between items-center">
+                    <div>
+                      <span className="font-semibold text-slate-400 uppercase tracking-wide block text-[9px]">Slot Dates</span>
+                      <strong className="text-slate-800 text-sm">{formatDate(bookingSlot.startDate)} to {formatDate(bookingSlot.endDate)}</strong>
+                    </div>
+                    <div className="text-right">
+                      <span className="font-semibold text-slate-400 uppercase tracking-wide block text-[9px]">Cost</span>
+                      <strong className="text-slate-800 text-sm">₹{selectedZone?.cost}</strong>
+                    </div>
                   </div>
-                  <div className="text-right">
-                    <span className="font-semibold text-slate-400 uppercase tracking-wide block text-[9px]">Cost</span>
-                    <strong className="text-slate-800 text-sm">₹{selectedZone?.cost}</strong>
+
+                  <div className="space-y-1.5">
+                    <label className="text-xs font-bold text-slate-600 block">Ad Image URL <span className="text-red-500">*</span></label>
+                    <input
+                      type="url"
+                      required
+                      placeholder="https://example.com/ad-image.jpg"
+                      className="w-full border border-slate-200 rounded-xl px-4 py-2.5 text-sm outline-none focus:border-[#0b264f] text-slate-700 placeholder-slate-400"
+                      value={adContent.imageUrl}
+                      onChange={(e) => setAdContent({ ...adContent, imageUrl: e.target.value })}
+                    />
                   </div>
-                </div>
 
-                <div className="space-y-1.5">
-                  <label className="text-xs font-bold text-slate-600 block">Ad Image URL <span className="text-red-500">*</span></label>
-                  <input 
-                    type="url"
-                    required
-                    placeholder="https://example.com/ad-image.jpg"
-                    className="w-full border border-slate-200 rounded-xl px-4 py-2.5 text-sm outline-none focus:border-[#0b264f] text-slate-700 placeholder-slate-400"
-                    value={adContent.imageUrl}
-                    onChange={(e) => setAdContent({...adContent, imageUrl: e.target.value})}
-                  />
-                </div>
+                  <div className="space-y-1.5">
+                    <label className="text-xs font-bold text-slate-600 block">Target Redirect URL <span className="text-red-500">*</span></label>
+                    <input
+                      type="url"
+                      required
+                      placeholder="https://mywebsite.com/project-listing"
+                      className="w-full border border-slate-200 rounded-xl px-4 py-2.5 text-sm outline-none focus:border-[#0b264f] text-slate-700 placeholder-slate-400"
+                      value={adContent.targetUrl}
+                      onChange={(e) => setAdContent({ ...adContent, targetUrl: e.target.value })}
+                    />
+                  </div>
 
-                <div className="space-y-1.5">
-                  <label className="text-xs font-bold text-slate-600 block">Target Redirect URL <span className="text-red-500">*</span></label>
-                  <input 
-                    type="url"
-                    required
-                    placeholder="https://mywebsite.com/project-listing"
-                    className="w-full border border-slate-200 rounded-xl px-4 py-2.5 text-sm outline-none focus:border-[#0b264f] text-slate-700 placeholder-slate-400"
-                    value={adContent.targetUrl}
-                    onChange={(e) => setAdContent({...adContent, targetUrl: e.target.value})}
-                  />
-                </div>
+                  <div className="space-y-1.5">
+                    <label className="text-xs font-bold text-slate-600 block">Ad Caption / Text <span className="text-red-500">*</span></label>
+                    <textarea
+                      required
+                      rows="3"
+                      placeholder="e.g. Invest in Premium Commercial Real Estate starting from..."
+                      className="w-full border border-slate-200 rounded-xl px-4 py-2.5 text-sm outline-none focus:border-[#0b264f] text-slate-700 placeholder-slate-400 resize-none"
+                      value={adContent.text}
+                      onChange={(e) => setAdContent({ ...adContent, text: e.target.value })}
+                    />
+                  </div>
 
-                <div className="space-y-1.5">
-                  <label className="text-xs font-bold text-slate-600 block">Ad Caption / Text <span className="text-red-500">*</span></label>
-                  <textarea 
-                    required
-                    rows="3"
-                    placeholder="e.g. Invest in Premium Commercial Real Estate starting from..."
-                    className="w-full border border-slate-200 rounded-xl px-4 py-2.5 text-sm outline-none focus:border-[#0b264f] text-slate-700 placeholder-slate-400 resize-none"
-                    value={adContent.text}
-                    onChange={(e) => setAdContent({...adContent, text: e.target.value})}
-                  />
+                  <div className="space-y-1.5">
+                    <label className="text-xs font-bold text-slate-600 block">Ad Video URL (Optional)</label>
+                    <input
+                      type="url"
+                      placeholder="https://example.com/ad-video.mp4"
+                      className="w-full border border-slate-200 rounded-xl px-4 py-2.5 text-sm outline-none focus:border-[#0b264f] text-slate-700 placeholder-slate-400"
+                      value={adContent.videoUrl}
+                      onChange={(e) => setAdContent({ ...adContent, videoUrl: e.target.value })}
+                    />
+                  </div>
+                </CardContent>
+                <div className="bg-slate-50 border-t border-slate-100 p-4 px-6 flex justify-end gap-3 rounded-b-2xl">
+                  <Button type="button" variant="outline" onClick={handleCloseBookingModal} className="rounded-xl">Cancel</Button>
+                  <Button
+                    type="submit"
+                    disabled={isSubmittingBooking}
+                    className="bg-[#0b264f] hover:bg-blue-900 text-white rounded-xl shadow-md min-w-[120px]"
+                  >
+                    {isSubmittingBooking ? <Loader2 className="w-4 h-4 animate-spin" /> : "Complete Booking"}
+                  </Button>
                 </div>
-
-                <div className="space-y-1.5">
-                  <label className="text-xs font-bold text-slate-600 block">Ad Video URL (Optional)</label>
-                  <input 
-                    type="url"
-                    placeholder="https://example.com/ad-video.mp4"
-                    className="w-full border border-slate-200 rounded-xl px-4 py-2.5 text-sm outline-none focus:border-[#0b264f] text-slate-700 placeholder-slate-400"
-                    value={adContent.videoUrl}
-                    onChange={(e) => setAdContent({...adContent, videoUrl: e.target.value})}
-                  />
-                </div>
-              </CardContent>
-              <div className="bg-slate-50 border-t border-slate-100 p-4 px-6 flex justify-end gap-3 rounded-b-2xl">
-                <Button type="button" variant="outline" onClick={handleCloseBookingModal} className="rounded-xl">Cancel</Button>
-                <Button 
-                  type="submit" 
-                  disabled={isSubmittingBooking}
-                  className="bg-[#0b264f] hover:bg-blue-900 text-white rounded-xl shadow-md min-w-[120px]"
-                >
-                  {isSubmittingBooking ? <Loader2 className="w-4 h-4 animate-spin" /> : "Complete Booking"}
-                </Button>
-              </div>
-            </form>
+              </form>
             )}
           </Card>
         </div>
@@ -954,7 +954,7 @@ export default function InvestorAdvertisements() {
             </CardHeader>
             <form onSubmit={handleRectifySubmit}>
               <CardContent className="p-6 space-y-4">
-                
+
                 {/* Admin Rejection Reason Display */}
                 <div className="bg-red-50 border border-red-100 text-red-700 rounded-xl p-4 text-xs font-semibold">
                   <p className="font-bold text-red-800 mb-1 flex items-center gap-1.5"><AlertCircle className="w-4 h-4" /> Admin Feedback:</p>
@@ -1010,7 +1010,7 @@ export default function InvestorAdvertisements() {
                     placeholder="https://mywebsite.com/project-listing"
                     className="w-full border border-slate-200 rounded-xl px-4 py-2.5 text-sm outline-none focus:border-amber-500 text-slate-700 placeholder-slate-400"
                     value={rectifyAdContent.targetUrl}
-                    onChange={(e) => setRectifyAdContent({...rectifyAdContent, targetUrl: e.target.value})}
+                    onChange={(e) => setRectifyAdContent({ ...rectifyAdContent, targetUrl: e.target.value })}
                   />
                 </div>
 
@@ -1022,14 +1022,14 @@ export default function InvestorAdvertisements() {
                     placeholder="e.g. Invest in Premium Commercial Real Estate starting from..."
                     className="w-full border border-slate-200 rounded-xl px-4 py-2.5 text-sm outline-none focus:border-amber-500 text-slate-700 placeholder-slate-400 resize-none"
                     value={rectifyAdContent.text}
-                    onChange={(e) => setRectifyAdContent({...rectifyAdContent, text: e.target.value})}
+                    onChange={(e) => setRectifyAdContent({ ...rectifyAdContent, text: e.target.value })}
                   />
                 </div>
               </CardContent>
               <div className="bg-slate-50 border-t border-slate-100 p-4 px-6 flex justify-end gap-3 rounded-b-2xl">
                 <Button type="button" variant="outline" onClick={handleCloseRectifyModal} className="rounded-xl">Cancel</Button>
-                <Button 
-                  type="submit" 
+                <Button
+                  type="submit"
                   disabled={isSubmittingRectify}
                   className="bg-amber-600 hover:bg-amber-700 text-white rounded-xl shadow-md min-w-[120px]"
                 >

@@ -1,4 +1,4 @@
-﻿"use client";
+"use client";
 
 import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
@@ -78,7 +78,7 @@ export default function InvestorProperties() {
 
   return (
     <div className="min-h-screen bg-[#F4F5F7] flex flex-col font-sans overflow-x-hidden">
-      <main className="flex-grow mt-[4rem] pb-16">
+      <main className="flex-grow mt-0 pb-16">
         <div className="container mx-auto px-4 py-8">
 
             {/* ── Ad Banner ── */}

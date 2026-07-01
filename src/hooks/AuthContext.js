@@ -37,9 +37,9 @@ export const AuthProvider = ({ children }) => {
         if (role === 'admin') {
           window.location.href = '/admin/login?session_expired=true';
         } else if (role === 'builder') {
-          window.location.href = '/builder?login=true&role=builder&session_expired=true';
+          window.location.href = '/builder/login?session_expired=true';
         } else if (role === 'serviceProvider') {
-          window.location.href = '/service-provider?login=true&role=serviceProvider&session_expired=true';
+          window.location.href = '/service-provider/login?session_expired=true';
         } else {
           window.location.href = '/investor/login?session_expired=true';
         }
@@ -65,9 +65,9 @@ export const AuthProvider = ({ children }) => {
           if (role === 'admin') {
             window.location.href = '/admin/login?session_expired=true';
           } else if (role === 'builder') {
-            window.location.href = '/builder?login=true&role=builder&session_expired=true';
+            window.location.href = '/builder/login?session_expired=true';
           } else if (role === 'serviceProvider') {
-            window.location.href = '/service-provider?login=true&role=serviceProvider&session_expired=true';
+            window.location.href = '/service-provider/login?session_expired=true';
           } else {
             window.location.href = '/investor/login?session_expired=true';
           }
@@ -93,7 +93,7 @@ export const AuthProvider = ({ children }) => {
     const isAdminRoute = pathname.startsWith('/admin') && pathname !== '/admin/login';
     const isBuilderRoute = (pathname.startsWith('/builder/') && pathname !== '/builder/login' && pathname !== '/builder/register') || pathname === '/builder/dashboard' || pathname === '/builder/projects' || pathname === '/builder/advertisements';
     const isInvestorRoute = pathname === '/dashboard' || pathname === '/properties' || (pathname.startsWith('/investor/') && pathname !== '/investor/login' && pathname !== '/investor/register') || pathname.startsWith('/project/');
-    const isServiceProviderRoute = (pathname.startsWith('/service-provider/') && pathname !== '/service-provider') || pathname === '/service-provider/dashboard' || pathname === '/service-provider/advertisements';
+    const isServiceProviderRoute = (pathname.startsWith('/service-provider/') && pathname !== '/service-provider' && pathname !== '/service-provider/login' && pathname !== '/service-provider/register') || pathname === '/service-provider/dashboard' || pathname === '/service-provider/advertisements';
 
     if (isAdminRoute) {
       if (!user) {
@@ -130,7 +130,7 @@ export const AuthProvider = ({ children }) => {
       }
     } else if (isServiceProviderRoute) {
       if (!user) {
-        router.push('/service-provider?login=true&role=serviceProvider');
+        router.push('/service-provider/login');
       } else if (user.role !== 'serviceProvider') {
         toast({
           title: "Access Denied",

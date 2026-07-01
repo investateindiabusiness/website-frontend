@@ -10,11 +10,11 @@ import { Label } from '@/components/ui/label';
 import { Mail, Phone, ShieldCheck, ShieldAlert, CheckCircle, XCircle, Settings, Clock, FileWarning, Plus, Eye, Download, Loader2, TrendingUp } from 'lucide-react';
 import { toast } from '@/hooks/use-toast';
 import { useAuth } from '@/hooks/AuthContext';
-import { 
-  fetchAllServiceProviders, 
-  approveServiceProviderForm1, 
-  requestServiceProviderChanges, 
-  verifyServiceProviderFinal 
+import {
+  fetchAllServiceProviders,
+  approveServiceProviderForm1,
+  requestServiceProviderChanges,
+  verifyServiceProviderFinal
 } from '@/api';
 
 const STANDARD_SP_KEYS = [
@@ -185,11 +185,10 @@ export default function AdminServiceProviders() {
               <button
                 key={tab.id}
                 onClick={() => setFilter(tab.id)}
-                className={`px-4 py-2 text-xs font-bold uppercase tracking-wider rounded-xl transition-all ${
-                  filter === tab.id
+                className={`px-4 py-2 text-xs font-bold uppercase tracking-wider rounded-xl transition-all ${filter === tab.id
                     ? 'bg-slate-900 text-white shadow'
                     : 'bg-white text-slate-600 hover:bg-slate-100 border border-slate-200'
-                }`}
+                  }`}
               >
                 {tab.label}
               </button>
@@ -221,13 +220,12 @@ export default function AdminServiceProviders() {
                   <tbody className="divide-y divide-gray-100">
                     {filteredProviders.slice((currentPage - 1) * ITEMS_PER_PAGE, currentPage * ITEMS_PER_PAGE).map((sp) => {
                       const renderStatusBadge = () => (
-                        <Badge className={`border-none text-xs font-semibold py-1 px-3 ${
-                          sp.isVerified 
-                            ? 'bg-green-100 text-green-700' 
+                        <Badge className={`border-none text-xs font-semibold py-1 px-3 ${sp.isVerified
+                            ? 'bg-green-100 text-green-700'
                             : sp.onboardingStatus === 'form1_changes_requested'
-                            ? 'bg-amber-100 text-amber-700'
-                            : 'bg-yellow-100 text-yellow-700'
-                        }`}>
+                              ? 'bg-amber-100 text-amber-700'
+                              : 'bg-yellow-100 text-yellow-700'
+                          }`}>
                           {sp.isVerified ? 'Verified' : sp.onboardingStatus.replace('_', ' ').toUpperCase()}
                         </Badge>
                       );
@@ -265,8 +263,8 @@ export default function AdminServiceProviders() {
                           </td>
                           <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
                             <div className="flex justify-end gap-2">
-                              <Button 
-                                onClick={() => setViewProviderData(sp)} 
+                              <Button
+                                onClick={() => setViewProviderData(sp)}
                                 className="bg-gray-900 hover:bg-gray-800 text-white rounded-xl text-xs px-4 py-2"
                               >
                                 <Eye className="w-3.5 h-3.5 mr-1.5" /> View Profile
@@ -304,15 +302,14 @@ export default function AdminServiceProviders() {
                     >
                       Previous
                     </Button>
-                    
+
                     {Array.from({ length: Math.ceil(filteredProviders.length / ITEMS_PER_PAGE) }, (_, i) => i + 1).map((page) => (
                       <Button
                         key={page}
                         onClick={() => setCurrentPage(page)}
                         variant={currentPage === page ? 'default' : 'outline'}
-                        className={`h-9 w-9 p-0 rounded-lg text-xs font-bold ${
-                          currentPage === page ? 'bg-slate-950 text-white hover:bg-slate-800' : 'hover:bg-slate-100 bg-white'
-                        }`}
+                        className={`h-9 w-9 p-0 rounded-lg text-xs font-bold ${currentPage === page ? 'bg-slate-950 text-white hover:bg-slate-800' : 'hover:bg-slate-100 bg-white'
+                          }`}
                       >
                         {page}
                       </Button>
@@ -346,7 +343,7 @@ export default function AdminServiceProviders() {
 
           {viewProviderData && (
             <div className="flex-grow overflow-y-auto space-y-6 py-4 custom-scrollbar pr-1">
-              
+
               {/* Profile Details Grid */}
               <div className="space-y-4">
                 <h4 className="text-xs font-black text-slate-400 uppercase tracking-widest">Registration Details</h4>
@@ -377,12 +374,12 @@ export default function AdminServiceProviders() {
                         ))}
                     </div>
                   </div>
-              )}
-              
+                )}
+
               {/* Actions Footer inside dialog */}
               <div className="border-t border-gray-100 pt-5 flex flex-wrap gap-3 justify-end">
                 {viewProviderData.onboardingStatus === 'form1_pending' && (
-                  <Button 
+                  <Button
                     onClick={() => handleApproveForm1(viewProviderData.id)}
                     className="bg-green-600 hover:bg-green-700 text-white rounded-xl font-bold flex items-center gap-1.5"
                   >
@@ -391,7 +388,7 @@ export default function AdminServiceProviders() {
                 )}
 
                 {viewProviderData.onboardingStatus === 'complete' && viewProviderData.isVerified === true && (
-                  <Button 
+                  <Button
                     onClick={() => handleFinalVerification(viewProviderData.id, false)}
                     variant="destructive"
                     className="rounded-xl font-bold flex items-center gap-1.5"
@@ -401,14 +398,14 @@ export default function AdminServiceProviders() {
                 )}
 
                 {viewProviderData.onboardingStatus === 'complete' && viewProviderData.isVerified === false && (
-                  <Button 
+                  <Button
                     onClick={() => handleFinalVerification(viewProviderData.id, true)}
                     className="bg-green-600 hover:bg-green-700 text-white rounded-xl font-bold flex items-center gap-1.5"
                   >
                     <ShieldCheck className="w-4 h-4" /> Re-enable Verification
                   </Button>
                 )}
-                
+
                 <Button variant="outline" onClick={() => setViewProviderData(null)} className="rounded-xl">Close</Button>
               </div>
 
@@ -436,11 +433,10 @@ export default function AdminServiceProviders() {
                     key={f.id}
                     type="button"
                     onClick={() => handleToggleField(f.id)}
-                    className={`text-left px-3 py-2 text-xs font-semibold rounded-lg border transition-all ${
-                      requestedFields.includes(f.id)
+                    className={`text-left px-3 py-2 text-xs font-semibold rounded-lg border transition-all ${requestedFields.includes(f.id)
                         ? 'bg-amber-100 border-amber-300 text-amber-800'
                         : 'bg-white border-slate-200 text-slate-600 hover:bg-slate-50'
-                    }`}
+                      }`}
                   >
                     {f.label}
                   </button>

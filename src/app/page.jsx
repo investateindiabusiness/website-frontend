@@ -7,7 +7,6 @@ import Header from '@/components/Header';
 import Footer from '@/components/Footer';
 import AwardsSection from '@/components/AwardsSection';
 import TestimonialsSection from '@/components/TestimonialsSection';
-import AdBanner from '@/components/AdBanner';
 import dynamic from 'next/dynamic';
 import Image from 'next/image';
 
@@ -871,10 +870,6 @@ export default function Index() {
             </section>
             */}
 
-            {/* Zone 5 — Landing Spotlight Ad (970x250) */}
-            <div className="container mx-auto px-4 py-8 flex justify-center">
-              <AdBanner zoneId="zone5" />
-            </div>
 
             <Footer />
 

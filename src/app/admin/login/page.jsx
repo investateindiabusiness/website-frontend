@@ -224,8 +224,8 @@ export default function AdminLogin() {
 
         {/* Logo */}
         <div className="relative z-10 flex items-center">
-          <Link href="/" className="flex items-center -ml-6 -my-4">
-            <img src="/logo-big.png" alt="INVESTATE INDIA" className="h-44 w-auto object-contain -mt-8 -mb-12" />
+          <Link href="/" className="flex items-center">
+            <img src="/logo-big.png" alt="INVESTATE INDIA" className="h-24 w-auto object-contain" />
           </Link>
         </div>
 

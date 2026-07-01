@@ -1,18 +1,12 @@
-﻿"use client";
+"use client";
 
 import React, { useState, useEffect, useRef } from "react";
+import { useRouter } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
 import AwardsSection from "@/components/AwardsSection";
 import TestimonialsSection from "@/components/TestimonialsSection";
-import dynamic from "next/dynamic";
 import Header from "@/components/Header";
-
-const LoginDialog = dynamic(() => import("@/components/LoginDialog"), {
-  ssr: false,
-});
-const RegisterDialog = dynamic(() => import("@/components/RegisterDialog"), {
-  ssr: false,
-});
+import Footer from "@/components/Footer";
 import {
   ShieldCheck,
   Scale,
@@ -118,7 +112,7 @@ const serviceProviderSteps = [
   {
     id: "4",
     title: "Receive Vetted Leads",
-    desc: "Admin reviews client inquiries generated from your banners and routes them directly to your liaison.",
+    text: "Admin reviews client inquiries generated from your banners and routes them directly to your liaison.",
   },
 ];
 
@@ -130,10 +124,8 @@ const stepImages = [
 ];
 
 export default function ServiceProviderHome() {
-  const [isLoginOpen, setIsLoginOpen] = useState(false);
-  const [isRegisterOpen, setIsRegisterOpen] = useState(false);
+  const router = useRouter();
   const [activeStepIndex, setActiveStepIndex] = useState(0);
-  const [dialogData, setDialogData] = useState({});
   const [heroIndex, setHeroIndex] = useState(0);
   const [benefitsPage, setBenefitsPage] = useState(0);
   const benefitsPerPage = 2;
@@ -153,24 +145,10 @@ export default function ServiceProviderHome() {
 
   const handleAuthClick = (action, role) => {
     if (action === "login") {
-      setIsRegisterOpen(false);
-      if (typeof role === "string") setDialogData({ userType: role });
-      setIsLoginOpen(true);
+      router.push("/service-provider/login");
     } else {
-      setIsLoginOpen(false);
-      if (typeof role === "string") setDialogData({ userType: role });
-      setIsRegisterOpen(true);
+      router.push("/service-provider/register");
     }
-  };
-
-  const handleSwitchToRegister = (dataPayload) => {
-    setIsLoginOpen(false);
-    if (typeof dataPayload === "string") {
-      setDialogData({ userType: dataPayload });
-    } else if (dataPayload) {
-      setDialogData(dataPayload);
-    }
-    setIsRegisterOpen(true);
   };
 
   useEffect(() => {
@@ -274,7 +252,7 @@ export default function ServiceProviderHome() {
                 Register Professional Profile
               </button> */}
               <button
-                onClick={() => handleAuthClick("login", "serviceProvider")}
+                onClick={() => handleAuthClick("register", "serviceProvider")}
                 className="btn bg-white/10 hover:bg-white/20 border border-white/30 text-white px-8 py-3 rounded-full font-bold shadow-lg transition-transform hover:scale-105 active:scale-95"
               >
                 Partner Sign In
@@ -441,59 +419,69 @@ export default function ServiceProviderHome() {
       <AwardsSection />
 
       {/* HOW IT WORKS SECTION */}
-      <section
-        className="fullscreen-section section-light py-20 bg-white"
-        id="how-it-works"
-      >
+      <section className="fullscreen-section section-light" id="how-it-works">
         <div className="container">
-          <div className="section-heading text-center mb-12">
-            <h2 className="section-title text-3xl font-bold">
-              Onboarding & Booking{" "}
-              <span className="text-[#D48035]">Workflow</span>
+          <div className="section-heading">
+            <h2 className="section-title">
+              Onboarding & Booking <span className="text-highlight">Workflow</span>
             </h2>
           </div>
           <div className="section-scrollable-body mt-4">
-            <div className="dashboard-wrapper flex flex-col lg:flex-row gap-8 bg-slate-50 p-6 rounded-3xl border border-slate-100">
-              <div className="dashboard-sidebar-container w-full lg:w-1/3 flex flex-col justify-center">
-                <div className="dashboard-sidebar flex flex-col gap-3">
+            <div className="dashboard-wrapper">
+              <div className="dashboard-sidebar-container mobile-scroll-hint">
+                <div className="dashboard-sidebar" id="service-provider-tabs-row">
                   {serviceProviderSteps.map((step, index) => (
                     <button
                       key={index}
-                      className={`w-full text-left p-4 rounded-2xl flex items-center gap-4 transition-all ${
-                        activeStepIndex === index
-                          ? "bg-slate-900 text-white shadow-lg"
-                          : "bg-white text-slate-600 hover:bg-slate-100 border border-slate-100"
-                      }`}
+                      className={`dashboard-step-btn ${activeStepIndex === index ? "active" : ""}`}
                       onClick={() => setActiveStepIndex(index)}
                     >
-                      <div
-                        className={`w-8 h-8 rounded-full flex items-center justify-center font-bold text-xs ${activeStepIndex === index ? "bg-[#D48035] text-white" : "bg-slate-100 text-slate-800"}`}
-                      >
-                        0{step.id}
-                      </div>
-                      <div className="font-bold text-sm">{step.title}</div>
+                      <div className="step-btn-number">0{step.id}</div>
+                      <div className="step-btn-title">{step.title}</div>
                     </button>
                   ))}
                 </div>
-              </div>
-              <div className="dashboard-display-window w-full lg:w-2/3 bg-white rounded-2xl p-6 border border-slate-100 shadow-sm flex flex-col md:flex-row gap-6">
-                <div className="display-image-box w-full md:w-1/2 h-56 rounded-xl overflow-hidden">
-                  <img
-                    src={stepImages[activeStepIndex]}
-                    alt={`Step ${activeStepData.id}`}
-                    className="w-full h-full object-cover"
-                  />
+                <div className="dashboard-tabs-nav md:hidden">
+                  <button
+                    className="tabs-nav-btn prev"
+                    aria-label="Scroll steps left"
+                    onClick={() =>
+                      document
+                        .getElementById("service-provider-tabs-row")
+                        .scrollBy({ left: -150, behavior: "smooth" })
+                    }
+                  >
+                    ❮
+                  </button>
+                  <button
+                    className="tabs-nav-btn next"
+                    aria-label="Scroll steps right"
+                    onClick={() =>
+                      document
+                        .getElementById("service-provider-tabs-row")
+                        .scrollBy({ left: 150, behavior: "smooth" })
+                    }
+                  >
+                    ❯
+                  </button>
                 </div>
-                <div className="display-text-box w-full md:w-1/2 flex flex-col justify-center">
-                  <div className="text-xs font-bold text-[#D48035] uppercase mb-2">
-                    Step {activeStepData.id}
+              </div>
+              <div className="dashboard-display-window">
+                <div className="display-content">
+                  <div className="display-image-box">
+                    <img
+                      src={stepImages[activeStepIndex]}
+                      alt={`Step ${activeStepData.id}`}
+                      loading="lazy"
+                    />
                   </div>
-                  <h3 className="text-xl font-bold text-slate-900 mb-3">
-                    {activeStepData.title}
-                  </h3>
-                  <p className="text-sm text-slate-600 leading-relaxed">
-                    {activeStepData.text}
-                  </p>
+                  <div className="display-text-box">
+                    <div className="display-step-badge">
+                      Step {activeStepData.id}
+                    </div>
+                    <h3 className="display-title">{activeStepData.title}</h3>
+                    <p className="display-desc">{activeStepData.text}</p>
+                  </div>
                 </div>
               </div>
             </div>
@@ -528,22 +516,7 @@ export default function ServiceProviderHome() {
           </div>
         </div>
       </section>
-
-      <LoginDialog
-        isOpen={isLoginOpen}
-        onOpenChange={setIsLoginOpen}
-        onSwitchToRegister={handleSwitchToRegister}
-        initialData={dialogData}
-      />
-      <RegisterDialog
-        isOpen={isRegisterOpen}
-        onOpenChange={setIsRegisterOpen}
-        onLoginClick={() => {
-          setIsRegisterOpen(false);
-          setIsLoginOpen(true);
-        }}
-        initialData={dialogData}
-      />
+      <Footer />
     </div>
   );
 }

@@ -51,9 +51,11 @@ export const apiRequest = async (endpoint, options = {}) => {
         if (role === 'admin') {
           window.location.href = '/admin/login?session_expired=true';
         } else if (role === 'builder') {
-          window.location.href = '/builder?login=true&role=builder&session_expired=true';
+          window.location.href = '/builder/login?session_expired=true';
+        } else if (role === 'serviceProvider') {
+          window.location.href = '/service-provider/login?session_expired=true';
         } else {
-          window.location.href = '/?login=true&role=investor&session_expired=true';
+          window.location.href = '/investor/login?session_expired=true';
         }
 
         return Promise.reject('Session expired');

@@ -524,7 +524,7 @@ export default function ServiceProviderAdvertisements() {
   return (
     <div className="min-h-screen bg-gray-50 flex flex-col font-sans overflow-x-hidden">
       
-      <div className="flex-grow mt-[2rem] md:mt-[4rem] pb-16">
+      <div className="flex-grow pb-16">
         
         {/* Banner Section */}
         <div className="bg-gradient-to-r from-slate-800 to-slate-950 text-white pt-8 pb-14 px-4 md:px-8 rounded-b-[2rem] shadow-xl relative overflow-hidden">

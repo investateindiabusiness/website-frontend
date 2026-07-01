@@ -154,7 +154,7 @@ export default function AdminCoupons() {
 
   return (
     <div className="min-h-screen bg-slate-50 flex flex-col font-sans">
-      <div className="flex-grow flex pt-[4rem]">
+      <div className="flex-grow flex pt-0">
         <main className="flex-1 p-6 md:p-10 overflow-x-hidden">
           
           <div className="flex justify-between items-center mb-8">

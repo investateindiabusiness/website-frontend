@@ -10,30 +10,30 @@ const Footer = () => {
           {/* Brand */}
           <div className="space-y-4">
             <div className="flex items-center space-x-2">
-              <img src="/logo-big.png" alt="INVESTATE INDIA" className="h-44 w-auto object-contain -mt-8 -mb-12" />
+              <img src="/logo-big.png" alt="INVESTATE INDIA" className="h-16 w-auto object-contain" />
             </div>
             <p className="text-sm text-gray-400">
               We don't just help NRIs invest in India. We help them protect, manage, and grow their wealth with confidence.
             </p>
             <ul className="flex space-x-4 pt-2">
-              {/* <li>
-                <a href="#" target="_blank" rel="noopener noreferrer" className="flex items-center group">
+              <li>
+                <a href="https://www.instagram.com/investateindia/" target="_blank" rel="noopener noreferrer" className="flex items-center group">
+                  <Instagram className="h-5 w-5 text-[#C88A58] group-hover:text-[var(--color-accent,#D48035)] transition-colors" />
+                </a>
+              </li>
+              <li>
+                <a href="https://www.facebook.com/investateindiaofficial" target="_blank" rel="noopener noreferrer" className="flex items-center group">
                   <Facebook className="h-5 w-5 text-[#C88A58] group-hover:text-[var(--color-accent,#D48035)] transition-colors" />
                 </a>
               </li>
               <li>
-                <a href="#" target="_blank" rel="noopener noreferrer" className="flex items-center group">
-                  <Twitter className="h-5 w-5 text-[#C88A58] group-hover:text-[var(--color-accent,#D48035)] transition-colors" />
+                <a href="https://www.linkedin.com/company/investateindiaofficial/" target="_blank" rel="noopener noreferrer" className="flex items-center group">
+                  <Linkedin className="h-5 w-5 text-[#C88A58] group-hover:text-[var(--color-accent,#D48035)] transition-colors" />
                 </a>
               </li>
               <li>
-                <a href="#" target="_blank" rel="noopener noreferrer" className="flex items-center group">
-                  <Linkedin className="h-5 w-5 text-[#C88A58] group-hover:text-[var(--color-accent,#D48035)] transition-colors" />
-                </a>
-              </li> */}
-              <li>
-                <a href="https://www.instagram.com/investateindia/" target="_blank" rel="noopener noreferrer" className="flex items-center group">
-                  <Instagram className="h-5 w-5 text-[#C88A58] group-hover:text-[var(--color-accent,#D48035)] transition-colors" />
+                <a href="https://x.com/investate_india" target="_blank" rel="noopener noreferrer" className="flex items-center group">
+                  <Twitter className="h-5 w-5 text-[#C88A58] group-hover:text-[var(--color-accent,#D48035)] transition-colors" />
                 </a>
               </li>
             </ul>

@@ -1,4 +1,4 @@
-﻿"use client";
+"use client";
 
 import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
@@ -61,7 +61,7 @@ export default function ServiceProviderDashboard() {
   return (
     <div className="min-h-screen bg-gray-50 flex flex-col font-sans overflow-x-hidden">
 
-      <div className="flex-grow mt-16 md:mt-[4rem] pb-12">
+      <div className="flex-grow pb-12">
         <div className="bg-gradient-to-r from-slate-800 to-slate-950 text-white pt-6 pb-12 md:pt-10 md:pb-20 px-4 md:px-8 rounded-b-[2rem] md:rounded-b-[2.5rem] shadow-xl relative overflow-hidden">
           <div className="container mx-auto relative z-10">
             <div className="flex flex-col md:flex-row justify-between items-start md:items-end gap-6">
