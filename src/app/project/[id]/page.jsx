@@ -15,7 +15,8 @@ import {
    Ruler, Layers, TrendingUp, Phone,
    AlertCircle, CheckCircle,
    Download, ShieldCheck, Loader2,
-   ChevronLeft, ChevronRight, X
+   ChevronLeft, ChevronRight, X,
+   Copy, Check, Link2
 } from 'lucide-react';
 import { apiRequest, submitProjectLead } from '@/api';
 import { useAuth } from '@/hooks/AuthContext';
@@ -34,6 +35,18 @@ export default function ProjectDetail() {
    const [isSubmittingLead, setIsSubmittingLead] = useState(false);
    const [isGalleryOpen, setIsGalleryOpen] = useState(false);
    const [currentImageIndex, setCurrentImageIndex] = useState(0);
+   const [urlCopied, setUrlCopied] = useState(false);
+
+   const handleCopyUrl = () => {
+      const url = window.location.href;
+      navigator.clipboard.writeText(url).then(() => {
+         setUrlCopied(true);
+         toast({ title: "Link Copied!", description: "Project URL has been copied to clipboard." });
+         setTimeout(() => setUrlCopied(false), 2000);
+      }).catch(() => {
+         toast({ title: "Error", description: "Failed to copy URL.", variant: "destructive" });
+      });
+   };
 
    useEffect(() => {
       const fetchProjectData = async () => {
@@ -99,9 +112,25 @@ export default function ProjectDetail() {
                         <Badge className="bg-green-100 text-green-800 mt-2"><ShieldCheck className="w-3 h-3 mr-1" /> Verified Project</Badge>
                         <p className="text-gray-500 flex items-center text-sm mt-2"><MapPin className="h-3.5 w-3.5 mr-1" /> {project.projectLocation}</p>
                      </div>
-                     <div className="text-left md:text-right mt-4 md:mt-0">
+                     <div className="text-left md:text-right mt-4 md:mt-0 flex flex-col items-start md:items-end gap-2">
                         <p className="text-2xl font-bold text-[#0b264f]">{project.sellingPrice}</p>
                         <p className="text-sm text-green-600 font-semibold">{project.currentConstructionStatus}</p>
+                        <Button
+                           size="sm"
+                           onClick={handleCopyUrl}
+                           title="Copy project URL"
+                           className={`gap-1.5 text-xs rounded-full transition-all duration-200 ${
+                              urlCopied
+                                 ? 'bg-green-600 hover:bg-green-700 text-white border-transparent'
+                                 : 'bg-[#0b264f] hover:bg-[#0d3166] text-white border-transparent'
+                           }`}
+                        >
+                           {urlCopied ? (
+                              <><Check className="w-3 h-3" /> Copied!</>
+                           ) : (
+                              <><Link2 className="w-3 h-3" /> Copy Link</>
+                           )}
+                        </Button>
                      </div>
                   </div>
                   <div className="relative h-[250px] md:h-[400px] rounded-xl overflow-hidden cursor-pointer" onClick={() => setIsGalleryOpen(true)}>

@@ -5,7 +5,7 @@ import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { Label } from '@/components/ui/label';
-import { Search, Building2, Calendar, Edit, Trash2, Mail, Phone, Save } from 'lucide-react';
+import { Search, Building2, Edit, Mail, Phone, Save } from 'lucide-react';
 import { toast } from '@/hooks/use-toast';
 import { fetchAllLeads, updateLead, deleteLead } from '@/api';
 
@@ -57,7 +57,9 @@ export default function AdminLeads() {
 
     const filteredLeads = leads.filter(lead =>
         (lead.investorName || '').toLowerCase().includes(searchQuery.toLowerCase()) ||
-        (lead.projectName || '').toLowerCase().includes(searchQuery.toLowerCase())
+        (lead.projectName || '').toLowerCase().includes(searchQuery.toLowerCase()) ||
+        (lead.source || '').toLowerCase().includes(searchQuery.toLowerCase()) ||
+        (lead.selectedQuestion || '').toLowerCase().includes(searchQuery.toLowerCase())
     );
 
     return (
@@ -78,6 +80,7 @@ export default function AdminLeads() {
                                 <th className="p-4 text-xs uppercase text-gray-600">Date</th>
                                 <th className="p-4 text-xs uppercase text-gray-600">Investor</th>
                                 <th className="p-4 text-xs uppercase text-gray-600">Project</th>
+                                <th className="p-4 text-xs uppercase text-gray-600">Source</th>
                                 <th className="p-4 text-xs uppercase text-gray-600">Status</th>
                                 <th className="p-4 text-xs uppercase text-gray-600 text-right">Actions</th>
                             </tr>
@@ -93,6 +96,7 @@ export default function AdminLeads() {
                                         <td className="p-4 text-sm text-gray-600">{new Date(lead.createdAt).toLocaleDateString()}</td>
                                         <td className="p-4 font-semibold">{lead.investorName}</td>
                                         <td className="p-4 text-sm"><Building2 className="w-4 h-4 inline mr-1" /> {lead.projectName}</td>
+                                        <td className="p-4 text-sm text-gray-600">{lead.source || 'Website'}</td>
                                         <td className="p-4"><Badge>{lead.status || 'New'}</Badge></td>
                                         <td className="p-4 text-right">
                                             <Button variant="ghost" size="sm" onClick={() => handleEditClick(lead)}><Edit className="w-4 h-4" /></Button>
@@ -133,7 +137,40 @@ export default function AdminLeads() {
                                         <p className="text-sm font-semibold text-gray-800 flex items-center gap-1.5"><Phone className="w-3.5 h-3.5 text-gray-400" /> {selectedLead.investorPhone}</p>
                                     </div>
                                 )}
+                                {selectedLead.source && (
+                                    <div>
+                                        <Label className="text-xs text-gray-400 font-semibold uppercase">Source</Label>
+                                        <p className="text-sm font-semibold text-gray-800">{selectedLead.source}</p>
+                                    </div>
+                                )}
+                                {selectedLead.requestType && (
+                                    <div>
+                                        <Label className="text-xs text-gray-400 font-semibold uppercase">Request Type</Label>
+                                        <p className="text-sm font-semibold text-gray-800 capitalize">{selectedLead.requestType}</p>
+                                    </div>
+                                )}
+                                {selectedLead.organization && (
+                                    <div>
+                                        <Label className="text-xs text-gray-400 font-semibold uppercase">Extra Context</Label>
+                                        <p className="text-sm font-semibold text-gray-800">{selectedLead.organization}</p>
+                                    </div>
+                                )}
+                                {selectedLead.preferredContact && (
+                                    <div>
+                                        <Label className="text-xs text-gray-400 font-semibold uppercase">Preferred Contact</Label>
+                                        <p className="text-sm font-semibold text-gray-800">{selectedLead.preferredContact}</p>
+                                    </div>
+                                )}
                             </div>
+
+                            {selectedLead.selectedQuestion && (
+                                <div>
+                                    <Label className="text-xs text-gray-400 font-semibold uppercase block mb-1">Selected FAQ</Label>
+                                    <div className="bg-blue-50 border border-blue-100 rounded-xl p-3.5 text-sm text-blue-900">
+                                        {selectedLead.selectedQuestion}
+                                    </div>
+                                </div>
+                            )}
 
                             {selectedLead.message && (
                                 <div>
