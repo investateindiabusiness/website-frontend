@@ -323,6 +323,13 @@ export const deleteLead = async (leadId) => {
   });
 };
 
+export const submitChatbotRequest = async (data) => {
+  return apiRequest('/api/chatbot/requests', {
+    method: 'POST',
+    body: JSON.stringify(data),
+  });
+};
+
 export const submitContactInquiry = async (data) => {
   return apiRequest('/api/inquiries', {
     method: 'POST',

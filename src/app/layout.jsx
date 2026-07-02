@@ -2,6 +2,7 @@ import './globals.css';
 import { AuthProvider } from '@/hooks/AuthContext';
 import { Toaster } from "@/components/ui/sonner";
 import { Toaster as Toast } from "@/components/ui/toaster";
+import ChatbotWidget from '@/components/ChatbotWidget';
 import Script from 'next/script';
 
 export const metadata = {
@@ -97,6 +98,7 @@ export default function RootLayout({ children }) {
         </Script>
         <AuthProvider>
           {children}
+          <ChatbotWidget />
           <Toaster />
           <Toast />
         </AuthProvider>
