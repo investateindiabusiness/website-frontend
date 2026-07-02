@@ -20,7 +20,7 @@ export default function BusinessOverview() {
         <div
           className="absolute inset-0 z-0 hero-split-image"
           style={{
-            backgroundImage: 'url(https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?ixlib=rb-4.0.3&auto=format&fit=crop&w=2070&q=80)',
+            backgroundImage: 'url(/global-investment-final.png)',
             backgroundSize: 'cover',
           }}
         />
