@@ -275,18 +275,17 @@ export default function Index() {
                         <motion.img
                             src={heroSlides[heroIndex].image}
                             alt="Hero background"
-                            className="absolute inset-0 w-full h-full object-cover z-0"
+                            className="absolute inset-0 w-full h-full object-cover z-0 hero-split-image"
                             initial={{ opacity: 0 }}
                             animate={{ opacity: 1 }}
                             exit={{ opacity: 0 }}
                             transition={{ duration: 1.2, ease: 'easeInOut' }}
-                            style={{ objectPosition: 'center' }}
                             loading="eager"
                             fetchPriority="high"
                         />
                     </picture>
                 </AnimatePresence>
-                <div className="absolute inset-0 z-[1]" style={{ background: 'rgba(0,0,0,0.22)' }} />
+                <div className="absolute inset-0 z-[1] hero-split-overlay" />
 
                 {/* Prev / Next buttons */}
                 <button

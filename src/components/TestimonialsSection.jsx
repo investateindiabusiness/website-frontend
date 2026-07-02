@@ -73,8 +73,24 @@ export default function TestimonialsSection() {
           onMouseEnter={() => setIsHovered(true)}
           onMouseLeave={() => setIsHovered(false)}
         >
+          {/* Left Arrow — beside cards */}
+          <button 
+            onClick={handlePrev}
+            className="absolute left-0 top-1/2 -translate-y-1/2 z-20 w-12 h-12 rounded-full border border-gray-200 bg-white flex items-center justify-center text-gray-500 hover:text-[var(--color-accent,#D48035)] hover:border-[var(--color-accent,#D48035)] hover:shadow-lg transition-all duration-300 transform hover:-translate-x-1 hidden md:flex"
+          >
+            <ChevronLeft className="w-6 h-6" />
+          </button>
+
+          {/* Right Arrow — beside cards */}
+          <button 
+            onClick={handleNext}
+            className="absolute right-0 top-1/2 -translate-y-1/2 z-20 w-12 h-12 rounded-full border border-gray-200 bg-white flex items-center justify-center text-gray-500 hover:text-[var(--color-accent,#D48035)] hover:border-[var(--color-accent,#D48035)] hover:shadow-lg transition-all duration-300 transform hover:translate-x-1 hidden md:flex"
+          >
+            <ChevronRight className="w-6 h-6" />
+          </button>
+
           {/* Sliding Track Carousel */}
-          <div className="relative w-full overflow-hidden py-4 px-2 -mx-3">
+          <div className="relative w-full overflow-hidden py-4 px-8 md:px-16">
             <motion.div
               className="flex"
               animate={{ x: `-${activeIndex * (100 / testimonials.length)}%` }}
@@ -106,13 +122,13 @@ export default function TestimonialsSection() {
             </motion.div>
           </div>
 
-          {/* Navigation Controls */}
-          <div className="flex justify-center items-center gap-6 mt-12 z-20">
+          {/* Mobile arrows + Dots — bottom center */}
+          <div className="flex justify-center items-center gap-4 mt-8 z-20">
             <button 
               onClick={handlePrev}
-              className="w-12 h-12 rounded-full border border-gray-200 bg-white flex items-center justify-center text-gray-500 hover:text-[var(--color-accent,#D48035)] hover:border-[var(--color-accent,#D48035)] hover:shadow-lg transition-all duration-300 transform hover:-translate-x-1"
+              className="w-10 h-10 rounded-full border border-gray-200 bg-white flex items-center justify-center text-gray-500 hover:text-[var(--color-accent,#D48035)] hover:border-[var(--color-accent,#D48035)] transition-all duration-300 md:hidden"
             >
-              <ChevronLeft className="w-6 h-6" />
+              <ChevronLeft className="w-5 h-5" />
             </button>
 
             <div className="flex gap-3">
@@ -128,9 +144,9 @@ export default function TestimonialsSection() {
 
             <button 
               onClick={handleNext}
-              className="w-12 h-12 rounded-full border border-gray-200 bg-white flex items-center justify-center text-gray-500 hover:text-[var(--color-accent,#D48035)] hover:border-[var(--color-accent,#D48035)] hover:shadow-lg transition-all duration-300 transform hover:translate-x-1"
+              className="w-10 h-10 rounded-full border border-gray-200 bg-white flex items-center justify-center text-gray-500 hover:text-[var(--color-accent,#D48035)] hover:border-[var(--color-accent,#D48035)] transition-all duration-300 md:hidden"
             >
-              <ChevronRight className="w-6 h-6" />
+              <ChevronRight className="w-5 h-5" />
             </button>
           </div>
         </div>

@@ -56,24 +56,23 @@ export default function AboutUs() {
     <div className="theme-investor w-full min-h-screen bg-[var(--color-light-bg)] overflow-x-hidden font-sans">
       <Header />
 
-      <section className="relative h-[60vh] md:h-[70vh] flex items-center justify-center overflow-hidden mt-[2rem] md:mt-[4rem]">
+      <section className="relative h-[60vh] md:h-[70vh] flex items-center justify-center md:justify-start overflow-hidden mt-[2rem] md:mt-[4rem]">
         <div
-          className="absolute inset-0 z-0"
+          className="absolute inset-0 z-0 hero-split-image"
           style={{
             backgroundImage: 'url(https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?ixlib=rb-4.0.3&auto=format&fit=crop&w=2070&q=80)',
             backgroundSize: 'cover',
-            backgroundPosition: 'center',
           }}
         >
-          <div className="absolute inset-0 bg-black/60"></div>
+          <div className="absolute inset-0 z-[1] hero-split-overlay"></div>
         </div>
 
-        <div className="container mx-auto px-4 relative z-10 text-center text-white">
+        <div className="container mx-auto px-4 md:px-12 relative z-10 text-center md:text-left text-white max-w-4xl">
           <h1 className="text-4xl md:text-6xl font-bold mb-6 leading-tight">
             The Global Conduit for <br />
             <span className="text-orange-400">Premium Indian Real Estate</span>
           </h1>
-          <p className="text-lg md:text-xl max-w-2xl mx-auto text-gray-200 leading-relaxed">
+          <p className="text-lg md:text-xl max-w-2xl mx-auto md:mx-0 text-gray-200 leading-relaxed">
             The definitive Prop-Tech ecosystem dedicated to empowering international investors with on-ground transparency and institutional-grade security across the Indian landscape.
           </p>
         </div>

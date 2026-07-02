@@ -71,6 +71,17 @@ export default function Disclaimer() {
             </div>
           </section>
 
+          <section className="mt-12">
+            <h2 className="text-xl md:text-2xl font-bold text-gray-900 mb-6 text-center flex items-center justify-center gap-2">
+              <Handshake className="w-6 h-6 text-orange-600" />4. Limitation of Liability & Investment Funds
+            </h2>
+            <div className="bg-white border border-gray-200 rounded-xl p-6 shadow-sm max-w-4xl mx-auto">
+              <p className="text-gray-600 leading-relaxed text-left">
+                <strong>Any funds or capital you invest are entirely at your own risk.</strong> Investate India is not responsible for the money you invest, and we assume no liability or responsibility for any loss of capital, investment depreciation, or financial damages resulting from your investment choices. All transactions, agreements, and payments are directly between you and the builder or developer.
+              </p>
+            </div>
+          </section>
+
           <section className="mt-12 bg-orange-50 p-6 rounded-xl border border-orange-100 max-w-4xl mx-auto">
             <h2 className="text-xl font-bold text-orange-800 mb-3 flex items-center justify-center gap-2">
               <TrendingUp className="w-6 h-6" />Risk Notice
