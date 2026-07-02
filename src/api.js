@@ -323,6 +323,10 @@ export const deleteLead = async (leadId) => {
   });
 };
 
+export const fetchChatbotFaqs = async (audience = 'public') => {
+  return apiRequest(`/api/chatbot/faqs?audience=${encodeURIComponent(audience)}`);
+};
+
 export const submitChatbotRequest = async (data) => {
   return apiRequest('/api/chatbot/requests', {
     method: 'POST',
