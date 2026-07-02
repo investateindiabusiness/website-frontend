@@ -27,69 +27,69 @@ export default function Disclaimer() {
 
       <div className="flex-grow w-full px-6 md:px-16 lg:px-24 py-12">
 
-          <div className="border-b border-gray-200 pb-8 mb-8 text-center">
-            <p className="text-sm text-gray-500 italic mb-4">Last Updated: 25 June 2026</p>
-            <p className="text-gray-800 font-bold text-lg leading-relaxed">
-              Investate India provides a digital platform to connect investors and builders. <br />
-              <span className="text-orange-600">We are not a real estate broker, agent, or developer.</span>
+        <div className="border-b border-gray-200 pb-8 mb-8 text-center">
+          <p className="text-sm text-gray-500 italic mb-4">Last Updated: 25 June 2026</p>
+          <p className="text-gray-800 font-bold text-lg leading-relaxed">
+            Investate India provides a digital platform to connect investors and builders. <br />
+            <span className="text-orange-600">We are not a real estate broker, agent, or developer.</span>
+          </p>
+        </div>
+
+        <section>
+          <h2 className="text-xl md:text-2xl font-bold text-gray-900 mt-10 mb-6 text-center flex items-center justify-center gap-2">
+            <FileWarning className="w-6 h-6 text-gray-700" />1. No Investment Advice
+          </h2>
+          <div className="bg-white border border-gray-200 rounded-xl p-6 shadow-sm max-w-4xl mx-auto">
+            <p className="text-gray-600 leading-relaxed text-left">
+              Information provided is for general informational purposes only and does not constitute financial or legal advice.
             </p>
           </div>
+        </section>
 
-          <section>
-            <h2 className="text-xl md:text-2xl font-bold text-gray-900 mt-10 mb-6 text-center flex items-center justify-center gap-2">
-              <FileWarning className="w-6 h-6 text-gray-700" />1. No Investment Advice
-            </h2>
-            <div className="bg-white border border-gray-200 rounded-xl p-6 shadow-sm max-w-4xl mx-auto">
-              <p className="text-gray-600 leading-relaxed text-left">
-                Information provided is for general informational purposes only and does not constitute financial or legal advice.
-              </p>
-            </div>
-          </section>
+        <section className="mt-12">
+          <h2 className="text-xl md:text-2xl font-bold text-gray-900 mb-6 text-center flex items-center justify-center gap-2">
+            <ShieldAlert className="w-6 h-6 text-red-600" />2. No Guarantees
+          </h2>
+          <div className="bg-white border border-gray-200 rounded-xl p-6 shadow-sm max-w-4xl mx-auto">
+            <p className="text-gray-600 mb-3 text-left">We provide no guarantees regarding:</p>
+            <ul className="list-disc pl-5 space-y-2 text-gray-600 marker:text-orange-500 text-left">
+              <li>Financial returns (ROI) or profit.</li>
+              <li>Builder reliability or solvency.</li>
+              <li>Timely project completion.</li>
+            </ul>
+          </div>
+        </section>
 
-          <section className="mt-12">
-            <h2 className="text-xl md:text-2xl font-bold text-gray-900 mb-6 text-center flex items-center justify-center gap-2">
-              <ShieldAlert className="w-6 h-6 text-red-600" />2. No Guarantees
-            </h2>
-            <div className="bg-white border border-gray-200 rounded-xl p-6 shadow-sm max-w-4xl mx-auto">
-              <p className="text-gray-600 mb-3 text-left">We provide no guarantees regarding:</p>
-              <ul className="list-disc pl-5 space-y-2 text-gray-600 marker:text-orange-500 text-left">
-                <li>Financial returns (ROI) or profit.</li>
-                <li>Builder reliability or solvency.</li>
-                <li>Timely project completion.</li>
-              </ul>
-            </div>
-          </section>
-
-          <section className="mt-12">
-            <h2 className="text-xl md:text-2xl font-bold text-gray-900 mb-6 text-center flex items-center justify-center gap-2">
-              <SearchCheck className="w-6 h-6 text-blue-600" />3. Independent Verification Required
-            </h2>
-            <div className="bg-white border border-gray-200 rounded-xl p-6 shadow-sm max-w-4xl mx-auto">
-              <p className="text-gray-600 leading-relaxed text-left">
-                It is the sole responsibility of the user to independently verify all details before committing.
-              </p>
-            </div>
-          </section>
-
-          <section className="mt-12">
-            <h2 className="text-xl md:text-2xl font-bold text-gray-900 mb-6 text-center flex items-center justify-center gap-2">
-              <Handshake className="w-6 h-6 text-orange-600" />4. Limitation of Liability & Investment Funds
-            </h2>
-            <div className="bg-white border border-gray-200 rounded-xl p-6 shadow-sm max-w-4xl mx-auto">
-              <p className="text-gray-600 leading-relaxed text-left">
-                <strong>Any funds or capital you invest are entirely at your own risk.</strong> Investate India is not responsible for the money you invest, and we assume no liability or responsibility for any loss of capital, investment depreciation, or financial damages resulting from your investment choices. All transactions, agreements, and payments are directly between you and the builder or developer.
-              </p>
-            </div>
-          </section>
-
-          <section className="mt-12 bg-orange-50 p-6 rounded-xl border border-orange-100 max-w-4xl mx-auto">
-            <h2 className="text-xl font-bold text-orange-800 mb-3 flex items-center justify-center gap-2">
-              <TrendingUp className="w-6 h-6" />Risk Notice
-            </h2>
-            <p className="text-orange-900/80 leading-relaxed text-center">
-              Real estate investments involve inherent risks. Please invest at your own discretion.
+        <section className="mt-12">
+          <h2 className="text-xl md:text-2xl font-bold text-gray-900 mb-6 text-center flex items-center justify-center gap-2">
+            <SearchCheck className="w-6 h-6 text-blue-600" />3. Independent Verification Required
+          </h2>
+          <div className="bg-white border border-gray-200 rounded-xl p-6 shadow-sm max-w-4xl mx-auto">
+            <p className="text-gray-600 leading-relaxed text-left">
+              It is the sole responsibility of the user to independently verify all details before committing.
             </p>
-          </section>
+          </div>
+        </section>
+
+        <section className="mt-12">
+          <h2 className="text-xl md:text-2xl font-bold text-gray-900 mb-6 text-center flex items-center justify-center gap-2">
+            <Handshake className="w-6 h-6 text-orange-600" />4. Limitation of Liability & Investment Funds
+          </h2>
+          <div className="bg-white border border-gray-200 rounded-xl p-6 shadow-sm max-w-4xl mx-auto">
+            <p className="text-gray-600 leading-relaxed text-left">
+              <strong>Any funds or capital you invest are entirely at your own risk.</strong> Investate India is not responsible for the money you invest, and we assume no liability or responsibility for any loss of capital, investment depreciation, or financial damages resulting from your investment choices. All transactions, agreements, and payments are directly between you and the builder.
+            </p>
+          </div>
+        </section>
+
+        <section className="mt-12 bg-orange-50 p-6 rounded-xl border border-orange-100 max-w-4xl mx-auto">
+          <h2 className="text-xl font-bold text-orange-800 mb-3 flex items-center justify-center gap-2">
+            <TrendingUp className="w-6 h-6" />Risk Notice
+          </h2>
+          <p className="text-orange-900/80 leading-relaxed text-center">
+            Real estate investments involve inherent risks. Please invest at your own discretion.
+          </p>
+        </section>
       </div>
       <Footer />
     </div>

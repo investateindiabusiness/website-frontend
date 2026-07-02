@@ -27,7 +27,7 @@ const heroSlides = [
   },
   {
     image:
-      "https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?q=80&w=2070&auto=format&fit=crop",
+      "/images/skyscraper-construction-hd.png",
     tag: "Global Reach & Trust",
     title: "Elevate Your Brand with",
     highlight: "Verified Institutional Credibility",
