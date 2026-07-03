@@ -72,9 +72,11 @@ export default function NotificationBell({ iconColor = 'rgba(255,255,255,0.7)', 
 
   const handleMarkAllRead = async () => {
     try {
-      await apiRequest('/api/notifications/read-all', { method: 'PATCH' });
+      const response = await apiRequest('/api/notifications/read-all', { method: 'PATCH' });
       setNotifications(prev => prev.map(n => ({ ...n, isRead: true })));
       setUnreadCount(0);
+      // Refetch notifications to ensure persistence after refresh
+      fetchNotifications();
     } catch (err) {
       console.error('Failed to mark all as read:', err);
     }
