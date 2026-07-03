@@ -5,6 +5,7 @@ import { useRouter, usePathname } from 'next/navigation';
 import { useAuth } from '@/hooks/AuthContext';
 import { toast } from '@/hooks/use-toast';
 import AdminSidebar from '@/components/AdminSidebar';
+import MembershipGuard from '@/components/MembershipGuard';
 
 const BUILDER_PUBLIC_PATHS = ['/builder', '/builder/login', '/builder/register'];
 
@@ -39,5 +40,9 @@ export default function BuilderLayout({ children }) {
     return <>{children}</>;
   }
 
-  return <AdminSidebar>{children}</AdminSidebar>;
+  return (
+    <MembershipGuard>
+      <AdminSidebar>{children}</AdminSidebar>
+    </MembershipGuard>
+  );
 }
