@@ -68,15 +68,6 @@ export default function AdBanner({ zoneId, variant = 'default' }) {
 
   const zone = ZONE_CONFIG[zoneId] || { width: 728, height: 90 };
 
-  const getDefaultRedirectUrl = () => {
-    if (typeof window !== 'undefined' && window.location?.origin) {
-      return `${window.location.origin}/builder/dashboard`;
-    }
-    return '/builder/dashboard';
-  };
-
-  const DEFAULT_REDIRECT_URL = getDefaultRedirectUrl();
-
   // Determine booking url based on role
   const getBookingUrl = () => {
     if (!user) return '/builder/advertisements';
@@ -87,12 +78,31 @@ export default function AdBanner({ zoneId, variant = 'default' }) {
   };
 
   const handleAdClick = (targetUrl) => {
-    const nextUrl = targetUrl || DEFAULT_REDIRECT_URL;
-    if (/^https?:\/\//i.test(nextUrl)) {
-      window.open(nextUrl, '_blank', 'noopener,noreferrer');
-    } else {
-      window.location.assign(nextUrl);
+    if (!targetUrl) return;
+    const trimmedUrl = targetUrl.trim();
+    if (!trimmedUrl) return;
+
+    if (/^https?:\/\//i.test(trimmedUrl)) {
+      window.open(trimmedUrl, '_blank', 'noopener,noreferrer');
+      return;
     }
+
+    if (trimmedUrl.startsWith('//')) {
+      window.open(`${window.location.protocol}${trimmedUrl}`, '_blank', 'noopener,noreferrer');
+      return;
+    }
+
+    if (trimmedUrl.startsWith('/')) {
+      window.location.assign(trimmedUrl);
+      return;
+    }
+
+    if (/^[a-z0-9.-]+\.[a-z]{2,}(\/.*)?$/i.test(trimmedUrl)) {
+      window.open(`https://${trimmedUrl}`, '_blank', 'noopener,noreferrer');
+      return;
+    }
+
+    window.location.assign(`/${trimmedUrl}`);
   };
 
   /* ─────────────────────────────────────────
