@@ -170,6 +170,7 @@ export default function BuilderAdvertisements() {
       const data = await fetchAdZones();
       const enriched = (data.data || [])
         .filter((z) => !z.allowedBookers || z.allowedBookers.includes('builder'))
+        .filter((z) => ['zone2', 'zone3', 'zone4'].includes(z.id))
         .map((z) => ({
           ...ZONE_META[z.id],
           ...z,

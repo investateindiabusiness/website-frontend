@@ -67,7 +67,16 @@ export default function AdBanner({ zoneId, variant = 'default' }) {
   }, [zoneId]);
 
   const zone = ZONE_CONFIG[zoneId] || { width: 728, height: 90 };
-  
+
+  const getDefaultRedirectUrl = () => {
+    if (typeof window !== 'undefined' && window.location?.origin) {
+      return `${window.location.origin}/builder/dashboard`;
+    }
+    return '/builder/dashboard';
+  };
+
+  const DEFAULT_REDIRECT_URL = getDefaultRedirectUrl();
+
   // Determine booking url based on role
   const getBookingUrl = () => {
     if (!user) return '/builder/advertisements';
@@ -75,6 +84,15 @@ export default function AdBanner({ zoneId, variant = 'default' }) {
     if (user.role === 'investor') return '/investor/advertisements';
     if (user.role === 'serviceProvider') return '/service-provider/advertisements';
     return '/builder/advertisements';
+  };
+
+  const handleAdClick = (targetUrl) => {
+    const nextUrl = targetUrl || DEFAULT_REDIRECT_URL;
+    if (/^https?:\/\//i.test(nextUrl)) {
+      window.open(nextUrl, '_blank', 'noopener,noreferrer');
+    } else {
+      window.location.assign(nextUrl);
+    }
   };
 
   /* ─────────────────────────────────────────
@@ -93,7 +111,7 @@ export default function AdBanner({ zoneId, variant = 'default' }) {
     return (
       <div
         className="group bg-white rounded-[2rem] overflow-hidden shadow-sm hover:shadow-xl transition-all duration-300 border border-gray-200 flex flex-col h-full cursor-pointer"
-        onClick={() => targetUrl && window.open(targetUrl, '_blank', 'noopener,noreferrer')}
+        onClick={() => handleAdClick(targetUrl)}
         role={targetUrl ? 'link' : undefined}
         aria-label={text || 'Sponsored advertisement'}
       >
@@ -201,9 +219,9 @@ export default function AdBanner({ zoneId, variant = 'default' }) {
     const { imageUrl, targetUrl, text } = ad.adContent;
     return (
       <div
-        className="relative w-full max-w-5xl mx-auto rounded-2xl overflow-hidden cursor-pointer group shadow-lg hover:shadow-xl transition-shadow duration-300"
-        style={{ height: 340 }}
-        onClick={() => targetUrl && window.open(targetUrl, '_blank', 'noopener,noreferrer')}
+        className="relative w-full max-w-6xl mx-auto rounded-3xl overflow-hidden cursor-pointer group shadow-lg hover:shadow-xl transition-shadow duration-300"
+        style={{ height: 380 }}
+        onClick={() => handleAdClick(targetUrl)}
         role={targetUrl ? 'link' : undefined}
         aria-label={text || 'Sponsored advertisement'}
       >
@@ -373,19 +391,33 @@ export default function AdBanner({ zoneId, variant = 'default' }) {
         </div>
       ) : (
         <div
-          className="w-full rounded-2xl flex flex-col items-center justify-center text-center gap-3 bg-gradient-to-r from-gray-100 to-gray-200 border-2 border-dashed border-gray-300 px-6 cursor-pointer hover:border-orange-400 hover:bg-orange-50 transition-colors"
+          className={`w-full rounded-2xl flex flex-col items-center justify-center text-center gap-3 px-6 transition-colors ${
+            ad.type === 'default'
+              ? 'bg-gradient-to-r from-gray-100 to-gray-200 border-2 border-dashed border-gray-300 hover:border-orange-400 hover:bg-orange-50'
+              : 'bg-gradient-to-r from-[#0b264f] to-[#1a4b8c]'
+          }`}
           style={{ height: zone.height, minHeight: 90 }}
           onClick={(e) => {
-            e.stopPropagation();
-            window.location.href = getBookingUrl();
+            if (ad.type === 'default') {
+              e.stopPropagation();
+              window.location.href = getBookingUrl();
+            }
           }}
         >
-          <p className="text-sm md:text-base font-bold text-gray-700 leading-snug max-w-[85%] flex items-center gap-2">
-            <PlusCircle className="w-5 h-5 text-gray-400" /> Book this Ad Space
-          </p>
-          <span className="text-[10px] uppercase font-bold text-orange-600 tracking-wider flex items-center gap-1">
-            Boost your visibility today
-          </span>
+          {ad.type === 'default' ? (
+            <>
+              <p className="text-sm md:text-base font-bold text-gray-700 leading-snug max-w-[85%] flex items-center gap-2">
+                <PlusCircle className="w-5 h-5 text-gray-400" /> Book this Ad Space
+              </p>
+              <span className="text-[10px] uppercase font-bold text-orange-600 tracking-wider flex items-center gap-1">
+                Boost your visibility today
+              </span>
+            </>
+          ) : (
+            <p className="text-sm md:text-base font-bold text-white leading-snug max-w-[85%] text-center line-clamp-2">
+              {text}
+            </p>
+          )}
         </div>
       )}
     </div>

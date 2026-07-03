@@ -24,6 +24,15 @@ const ZONE_META = {
 
 const stripePromise = loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY || 'pk_test_placeholder');
 
+const getDefaultRedirectUrl = () => {
+  if (typeof window !== 'undefined' && window.location?.origin) {
+    return `${window.location.origin}/builder/dashboard`;
+  }
+  return '/builder/dashboard';
+};
+
+const DEFAULT_REDIRECT_URL = getDefaultRedirectUrl();
+
 const formatDate = (dateStr) => {
   if (!dateStr) return '';
   if (/^\d{2}-\d{2}-\d{4}$/.test(dateStr)) return dateStr;
@@ -57,7 +66,7 @@ function BookingFormContent() {
     imageUrl: '',
     videoUrl: '',
     text: '',
-    targetUrl: ''
+    targetUrl: DEFAULT_REDIRECT_URL
   });
   
   const [imageFile, setImageFile] = useState(null);
@@ -305,6 +314,7 @@ function BookingFormContent() {
         couponCode: appliedCoupon?.code,
         adContent: {
           ...adContent,
+          targetUrl: DEFAULT_REDIRECT_URL,
           imageUrl: campaignFormat === 'image' ? adContent.imageUrl : '',
           videoUrl: campaignFormat === 'video' ? adContent.videoUrl : ''
         }
@@ -620,16 +630,8 @@ function BookingFormContent() {
               </div>
             )}
 
-            <div className="space-y-2">
-              <label className="text-xs font-bold text-slate-600 block">Target Redirect URL <span className="text-red-500">*</span></label>
-              <input 
-                type="url"
-                required
-                placeholder="https://mywebsite.com/project-listing"
-                className="w-full border border-slate-200 rounded-xl px-4 py-3 text-sm outline-none focus:border-[#0b264f] text-slate-700 placeholder-slate-400 shadow-sm transition-all focus:ring-1 focus:ring-[#0b264f]"
-                value={adContent.targetUrl}
-                onChange={(e) => setAdContent({...adContent, targetUrl: e.target.value})}
-              />
+            <div className="rounded-2xl border border-emerald-100 bg-emerald-50 px-4 py-3 text-sm text-emerald-700">
+              All ad clicks from this booking will redirect to the builder dashboard.
             </div>
 
             <div className="space-y-2">

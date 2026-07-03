@@ -86,7 +86,7 @@ export default function InvestorProperties() {
             {/* ── Ad Banner ── */}
             <div className="mb-8 flex justify-center">
               <div className="w-full max-w-md">
-                <AdBanner zoneId="zone2" variant="card" />
+                <AdBanner zoneId="zone4" variant="card" />
               </div>
             </div>
             {/* ── End Ad Banner ── */}

@@ -9,6 +9,7 @@ import AwardsSection from '@/components/AwardsSection';
 import TestimonialsSection from '@/components/TestimonialsSection';
 import dynamic from 'next/dynamic';
 import Image from 'next/image';
+import AdBanner from '@/components/AdBanner';
 
 
 import { toast } from '@/hooks/use-toast';
@@ -361,6 +362,13 @@ export default function Index() {
                     </div>
                 </div>
             </section>
+
+            {/* Zone 5 — Landing Page Hero Spotlight Ad */}
+            <div className="w-full flex justify-center bg-[var(--color-light-bg)] pt-8 pb-4">
+               <div className="container mx-auto px-4 max-w-5xl">
+                 <AdBanner zoneId="zone5" variant="spotlight" />
+               </div>
+            </div>
 
 
 

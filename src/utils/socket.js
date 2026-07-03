@@ -21,7 +21,11 @@ export const getSocket = () => {
       withCredentials: true,
       autoConnect: true,
       transports: ['polling', 'websocket'], // start with polling, upgrade to ws
-      upgrade: true
+      upgrade: true,
+      reconnectionAttempts: 5,       // stop after 5 failed attempts
+      reconnectionDelay: 3000,       // wait 3s between retries
+      reconnectionDelayMax: 10000,   // cap at 10s
+      timeout: 10000,
     });
 
     socket.on('connect', () => {
@@ -41,8 +45,17 @@ export const getSocket = () => {
       console.log('[Socket.io] Disconnected from server');
     });
 
+    let lastErrorMsg = null;
     socket.on('connect_error', (error) => {
-      console.error('[Socket.io] Connection error:', error);
+      // Deduplicate — only log when the error message changes
+      if (error.message !== lastErrorMsg) {
+        console.warn('[Socket.io] Connection error:', error.message);
+        lastErrorMsg = error.message;
+      }
+    });
+
+    socket.on('reconnect_failed', () => {
+      console.warn('[Socket.io] Max reconnection attempts reached. Real-time updates disabled.');
     });
   }
   return socket;
