@@ -24,6 +24,7 @@ import {
   adminFetchSPOutreachMessages,
   adminReviewSPOutreachMessage,
   adminFetchOutreachThread,
+  adminBlockOutreachConversation,
 } from "@/api";
 import { toast } from "@/hooks/use-toast";
 import { Badge } from "@/components/ui/badge";
@@ -68,22 +69,24 @@ function ThreadModal({ message, onClose, onAction }) {
   const [loading, setLoading] = useState(true);
   const [reviewing, setReviewing] = useState(false);
   const [adminNote, setAdminNote] = useState("");
-  const [action, setAction] = useState(null); // 'accept' | 'reject'
+  const [blockReason, setBlockReason] = useState("");
+  const [blocking, setBlocking] = useState(false);
+
+  const loadThread = useCallback(async () => {
+    try {
+      setLoading(true);
+      const res = await adminFetchOutreachThread(message.id);
+      setThread(res);
+    } catch {
+      toast({ title: "Error", description: "Failed to load thread.", variant: "destructive" });
+    } finally {
+      setLoading(false);
+    }
+  }, [message.id]);
 
   useEffect(() => {
-    const load = async () => {
-      try {
-        setLoading(true);
-        const res = await adminFetchOutreachThread(message.id);
-        setThread(res);
-      } catch {
-        toast({ title: "Error", description: "Failed to load thread.", variant: "destructive" });
-      } finally {
-        setLoading(false);
-      }
-    };
-    load();
-  }, [message.id]);
+    loadThread();
+  }, [loadThread]);
 
   const handleReview = async (act) => {
     if (act === "reject" && !adminNote.trim()) {
@@ -109,9 +112,32 @@ function ThreadModal({ message, onClose, onAction }) {
     }
   };
 
+  const handleBlockToggle = async (shouldBlock) => {
+    if (shouldBlock && !blockReason.trim()) {
+      toast({ title: "Reason Required", description: "Please enter a reason to block this conversation.", variant: "destructive" });
+      return;
+    }
+    try {
+      setBlocking(true);
+      await adminBlockOutreachConversation(message.id, shouldBlock, blockReason);
+      toast({
+        title: shouldBlock ? "Conversation Blocked 🚫" : "Conversation Reactivated ✓",
+        description: shouldBlock ? "Both parties have been notified." : "Communication is restored.",
+      });
+      onAction?.();
+      onClose();
+    } catch (err) {
+      toast({ title: "Error", description: err?.message || "Block action failed.", variant: "destructive" });
+    } finally {
+      setBlocking(false);
+    }
+  };
+
   const msg = thread?.message || message;
   const replies = thread?.replies || [];
   const isPending = msg.status === "pending_review";
+  const isBlocked = msg.status === "blocked";
+  const isDelivered = msg.status === "delivered";
 
   return (
     <AnimatePresence>
@@ -141,7 +167,7 @@ function ThreadModal({ message, onClose, onAction }) {
                 <h2 className="font-bold text-lg leading-tight truncate">{msg.subject}</h2>
                 <p className="text-slate-400 text-xs mt-1">
                   From: <span className="text-white">{msg.spName}</span>
-                  {msg.spCompany && <span className="text-slate-400"> · {msg.spCompany}</span>}
+                  {msg.spCompany && <span className="text-slate-400"> ({msg.spCompany})</span>}
                   {" → "}
                   <span className="text-white">{msg.recipientName}</span>{" "}
                   <span className="text-slate-400 capitalize">({msg.recipientRole})</span>
@@ -157,7 +183,7 @@ function ThreadModal({ message, onClose, onAction }) {
             </div>
             <div className="mt-3">
               <span className={`text-[10px] font-bold px-2.5 py-1 rounded-full border ${STATUS_CONFIG[msg.status]?.color}`}>
-                {STATUS_CONFIG[msg.status]?.label}
+                {msg.status === "blocked" ? "Stopped by Admin" : STATUS_CONFIG[msg.status]?.label}
               </span>
             </div>
           </div>
@@ -174,7 +200,7 @@ function ThreadModal({ message, onClose, onAction }) {
                 <div>
                   <div className="flex items-center gap-2 mb-3">
                     <Send className="w-4 h-4 text-slate-400" />
-                    <p className="text-xs font-semibold text-slate-500 uppercase tracking-wider">Message from SP</p>
+                    <p className="text-xs font-semibold text-slate-500 uppercase tracking-wider">Original Outreach (from SP)</p>
                   </div>
                   <div className="bg-slate-50 rounded-2xl p-5 border border-slate-100">
                     <p className="text-sm text-slate-700 whitespace-pre-wrap leading-relaxed">{msg.body}</p>
@@ -188,29 +214,43 @@ function ThreadModal({ message, onClose, onAction }) {
                     <div className="flex items-center gap-2 mb-3">
                       <Reply className="w-4 h-4 text-slate-400" />
                       <p className="text-xs font-semibold text-slate-500 uppercase tracking-wider">
-                        Replies ({replies.length})
+                        Conversation Thread ({replies.length})
                       </p>
                     </div>
-                    <div className="space-y-3">
-                      {replies.map((reply, i) => (
-                        <div key={reply.id} className="bg-green-50 border border-green-100 rounded-2xl p-4">
-                          <div className="flex items-center gap-2 mb-2">
-                            <div className="w-7 h-7 rounded-full bg-green-200 flex items-center justify-center text-green-800 text-xs font-bold">
-                              {(reply.senderName || "?")[0].toUpperCase()}
+                    <div className="space-y-4">
+                      {replies.map((reply, i) => {
+                        const isSP = reply.senderRole === "serviceProvider";
+                        return (
+                          <div
+                            key={reply.id}
+                            className={`rounded-2xl p-4 border max-w-[85%] ${
+                              isSP
+                                ? "bg-blue-50 border-blue-100 ml-auto"
+                                : "bg-green-50 border-green-100"
+                            }`}
+                          >
+                            <div className="flex items-center gap-2 mb-2">
+                              <div className={`w-6 h-6 rounded-full flex items-center justify-center text-[10px] font-bold ${
+                                isSP ? "bg-blue-200 text-blue-800" : "bg-green-200 text-green-800"
+                              }`}>
+                                {isSP ? "SP" : "R"}
+                              </div>
+                              <div>
+                                <p className="text-xs font-semibold text-slate-800">
+                                  {reply.senderName} <span className="text-[10px] text-slate-400 font-normal">({isSP ? "Service Provider" : "Recipient"})</span>
+                                </p>
+                                <p className="text-[9px] text-slate-400">{timeAgo(reply.createdAt)}</p>
+                              </div>
                             </div>
-                            <div>
-                              <p className="text-sm font-semibold text-slate-800">{reply.senderName}</p>
-                              <p className="text-[10px] text-slate-400">{timeAgo(reply.createdAt)}</p>
-                            </div>
+                            <p className="text-sm text-slate-700 whitespace-pre-wrap leading-relaxed">{reply.body}</p>
                           </div>
-                          <p className="text-sm text-slate-700 whitespace-pre-wrap leading-relaxed">{reply.body}</p>
-                        </div>
-                      ))}
+                        );
+                      })}
                     </div>
                   </div>
                 )}
 
-                {/* Review Actions */}
+                {/* Review Actions (Pending status) */}
                 {isPending && (
                   <div className="bg-amber-50 border border-amber-100 rounded-2xl p-5">
                     <div className="flex items-center gap-2 mb-3">
@@ -252,13 +292,51 @@ function ThreadModal({ message, onClose, onAction }) {
                   </div>
                 )}
 
-                {/* Already reviewed info */}
-                {!isPending && msg.adminNote && (
-                  <div className="bg-slate-50 border border-slate-100 rounded-2xl p-4 text-sm text-slate-600">
-                    <strong>Admin Note:</strong> {msg.adminNote}
-                    <p className="text-xs text-slate-400 mt-1">
-                      Reviewed by {msg.adminReviewedBy} · {timeAgo(msg.adminReviewedAt)}
-                    </p>
+                {/* Block/Unblock Controls (Active or Blocked statuses) */}
+                {!isPending && (isDelivered || isBlocked) && (
+                  <div className={`border rounded-2xl p-5 ${isBlocked ? "bg-red-50 border-red-100" : "bg-slate-50 border-slate-100"}`}>
+                    <div className="flex items-center gap-2 mb-3">
+                      <Shield className={`w-4 h-4 ${isBlocked ? "text-red-600" : "text-slate-600"}`} />
+                      <p className={`text-sm font-semibold ${isBlocked ? "text-red-800" : "text-slate-800"}`}>
+                        {isBlocked ? "Reactivate Communication" : "Stop / Block Conversation"}
+                      </p>
+                    </div>
+                    {isBlocked ? (
+                      <div>
+                        <p className="text-xs text-red-700 mb-4 leading-relaxed">
+                          This conversation is blocked. Reason: <strong>{msg.adminNote}</strong>. Reactivating it will let the SP and recipient resume replying back and forth.
+                        </p>
+                        <Button
+                          onClick={() => handleBlockToggle(false)}
+                          disabled={blocking}
+                          className="w-full bg-green-600 hover:bg-green-700 text-white py-4 rounded-xl font-bold"
+                        >
+                          {blocking ? <Loader2 className="w-4 h-4 animate-spin" /> : <CheckCircle className="w-4 h-4 mr-1.5" />}
+                          Reactivate Conversation
+                        </Button>
+                      </div>
+                    ) : (
+                      <div>
+                        <p className="text-xs text-slate-600 mb-4 leading-relaxed">
+                          If this connection becomes unhealthy, contains spam, or violates rules, you can block it. Both parties will be notified and replies will be blocked.
+                        </p>
+                        <textarea
+                          value={blockReason}
+                          onChange={(e) => setBlockReason(e.target.value)}
+                          placeholder="Provide a reason for stopping this conversation (sent to users)…"
+                          rows={2}
+                          className="w-full border border-slate-200 bg-white rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-red-400/50 transition-all placeholder-slate-400 resize-none mb-3"
+                        />
+                        <Button
+                          onClick={() => handleBlockToggle(true)}
+                          disabled={blocking || !blockReason.trim()}
+                          className="w-full bg-red-600 hover:bg-red-700 text-white py-4 rounded-xl font-bold"
+                        >
+                          {blocking ? <Loader2 className="w-4 h-4 animate-spin" /> : <XCircle className="w-4 h-4 mr-1.5" />}
+                          Block Conversation
+                        </Button>
+                      </div>
+                    )}
                   </div>
                 )}
               </>

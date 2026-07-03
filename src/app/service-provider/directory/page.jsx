@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState, useEffect, useCallback } from "react";
+import { useRouter } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
 import {
   Search,
@@ -18,6 +19,8 @@ import {
   Info,
   CheckCircle,
   Filter,
+  MessageSquare,
+  AlertTriangle,
 } from "lucide-react";
 import { fetchSPDirectory, sendSPOutreachMessage } from "@/api";
 import { toast } from "@/hooks/use-toast";
@@ -190,6 +193,7 @@ function ComposeMessageModal({ recipient, onClose, onSent }) {
 }
 
 function DirectoryCard({ person, onMessage, index }) {
+  const router = useRouter();
   const typeInfo =
     INVESTOR_TYPE_LABELS[person.investorType] ||
     INVESTOR_TYPE_LABELS[person.role] ||
@@ -211,6 +215,59 @@ function DirectoryCard({ person, onMessage, index }) {
     "from-cyan-500 to-blue-600",
   ];
   const colorClass = avatarColors[index % avatarColors.length];
+
+  // Helper to determine CTA button state and action
+  const getCtaDetails = () => {
+    switch (person.outreachStatus) {
+      case "pending_review":
+        return {
+          label: "Awaiting Review",
+          disabled: true,
+          icon: Clock,
+          className: "bg-amber-100 text-amber-700 border border-amber-200 cursor-not-allowed",
+          onClick: () => {}
+        };
+      case "blocked":
+        return {
+          label: "Blocked by Admin",
+          disabled: true,
+          icon: AlertTriangle,
+          className: "bg-red-100 text-red-700 border border-red-200 cursor-not-allowed",
+          onClick: () => {}
+        };
+      case "delivered":
+        if (!person.hasRecipientReplied) {
+          return {
+            label: "Awaiting Response",
+            disabled: true,
+            icon: Clock,
+            className: "bg-blue-50 text-blue-600 border border-blue-100 cursor-not-allowed",
+            onClick: () => {}
+          };
+        } else {
+          return {
+            label: "Continue Chat",
+            disabled: false,
+            icon: MessageSquare,
+            className: "bg-green-600 hover:bg-green-700 text-white shadow-md hover:-translate-y-0.5",
+            onClick: () => {
+              router.push("/service-provider/outreach");
+            }
+          };
+        }
+      default:
+        return {
+          label: "Send Message",
+          disabled: false,
+          icon: Send,
+          className: "bg-slate-900 hover:bg-[#D48035] text-white hover:shadow-md hover:-translate-y-0.5",
+          onClick: () => onMessage(person)
+        };
+    }
+  };
+
+  const cta = getCtaDetails();
+  const Icon = cta.icon;
 
   return (
     <motion.div
@@ -301,11 +358,12 @@ function DirectoryCard({ person, onMessage, index }) {
 
         {/* CTA */}
         <button
-          onClick={() => onMessage(person)}
-          className="w-full bg-slate-900 hover:bg-[#D48035] text-white text-sm font-bold py-3 rounded-xl flex items-center justify-center gap-2 transition-all duration-200 group-hover:bg-[#D48035]"
+          onClick={cta.onClick}
+          disabled={cta.disabled}
+          className={`w-full text-sm font-bold py-3 rounded-xl flex items-center justify-center gap-2 transition-all duration-200 ${cta.className}`}
         >
-          <Send className="w-4 h-4" />
-          Send Message
+          <Icon className="w-4 h-4" />
+          {cta.label}
         </button>
       </div>
     </motion.div>

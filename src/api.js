@@ -698,3 +698,17 @@ export const replyToSPOutreachMessage = (messageId, body) =>
     method: 'POST',
     body: JSON.stringify({ body }),
   });
+
+// Service Provider: reply inside thread
+export const spReplyToOutreachMessage = (messageId, body) =>
+  apiRequest(`/api/sp-outreach/messages/${messageId}/sp-reply`, {
+    method: 'POST',
+    body: JSON.stringify({ body }),
+  });
+
+// Admin: block or unblock conversation
+export const adminBlockOutreachConversation = (messageId, block, reason) =>
+  apiRequest(`/api/sp-outreach/admin/messages/${messageId}/block`, {
+    method: 'PATCH',
+    body: JSON.stringify({ block, reason }),
+  });

@@ -19,9 +19,11 @@ import {
 import {
   fetchMySentOutreachMessages,
   fetchOutreachMessageReplies,
+  spReplyToOutreachMessage,
 } from "@/api";
 import { toast } from "@/hooks/use-toast";
 import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
 import { useAuth } from "@/hooks/AuthContext";
 
 const STATUS_CONFIG = {
@@ -58,23 +60,58 @@ const timeAgo = (iso) => {
 function ThreadModal({ message, onClose }) {
   const [replies, setReplies] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [replyText, setReplyText] = useState("");
+  const [sending, setSending] = useState(false);
+  const [msgState, setMsgState] = useState(message);
+
+  const loadReplies = useCallback(async () => {
+    try {
+      setLoading(true);
+      const res = await fetchOutreachMessageReplies(msgState.id);
+      setReplies(res.replies || []);
+      if (res.message) {
+        setMsgState(res.message);
+      }
+    } catch (err) {
+      toast({ title: "Error", description: "Failed to load replies.", variant: "destructive" });
+    } finally {
+      setLoading(false);
+    }
+  }, [msgState.id]);
 
   useEffect(() => {
-    const loadReplies = async () => {
-      try {
-        setLoading(true);
-        const res = await fetchOutreachMessageReplies(message.id);
-        setReplies(res.replies || []);
-      } catch (err) {
-        toast({ title: "Error", description: "Failed to load replies.", variant: "destructive" });
-      } finally {
-        setLoading(false);
-      }
-    };
     loadReplies();
-  }, [message.id]);
+  }, [loadReplies]);
 
-  const statusCfg = STATUS_CONFIG[message.status] || STATUS_CONFIG.pending_review;
+  const handleReplySubmit = async (e) => {
+    e.preventDefault();
+    if (!replyText.trim() || replyText.trim().length < 5) {
+      toast({ title: "Short message", description: "Reply must be at least 5 characters.", variant: "destructive" });
+      return;
+    }
+
+    try {
+      setSending(true);
+      await spReplyToOutreachMessage(msgState.id, replyText.trim());
+      setReplyText("");
+      toast({ title: "Reply Sent", description: "Your message has been delivered." });
+      // Reload replies
+      await loadReplies();
+    } catch (err) {
+      toast({
+        title: "Reply Failed",
+        description: err?.message || "Failed to deliver reply.",
+        variant: "destructive"
+      });
+    } finally {
+      setSending(false);
+    }
+  };
+
+  const statusCfg = STATUS_CONFIG[msgState.status] || STATUS_CONFIG.pending_review;
+  const isDelivered = msgState.status === "delivered";
+  const isBlocked = msgState.status === "blocked";
+  const hasReplied = msgState.hasRecipientReplied || false;
 
   return (
     <AnimatePresence>
@@ -99,14 +136,14 @@ function ThreadModal({ message, onClose }) {
           <div className="bg-gradient-to-r from-slate-800 to-slate-900 text-white px-7 py-5 flex-shrink-0">
             <div className="flex items-start justify-between gap-4">
               <div className="flex-1 min-w-0">
-                <p className="text-[11px] uppercase tracking-widest text-slate-400 mb-1">Message Thread</p>
-                <h2 className="font-bold text-lg leading-tight truncate">{message.subject}</h2>
+                <p className="text-[11px] uppercase tracking-widest text-slate-400 mb-1">Outreach Conversation</p>
+                <h2 className="font-bold text-lg leading-tight truncate">{msgState.subject}</h2>
                 <p className="text-slate-400 text-xs mt-1">
-                  To: <span className="text-white">{message.recipientName}</span>
+                  To: <span className="text-white">{msgState.recipientName}</span>
                   {" · "}
-                  <span className="capitalize">{message.recipientRole}</span>
+                  <span className="capitalize">{msgState.recipientRole}</span>
                   {" · "}
-                  {timeAgo(message.createdAt)}
+                  {timeAgo(msgState.createdAt)}
                 </p>
               </div>
               <button
@@ -120,53 +157,66 @@ function ThreadModal({ message, onClose }) {
             {/* Status */}
             <div className="mt-3 flex items-center gap-2">
               <span className={`text-[10px] font-bold px-2.5 py-1 rounded-full border ${statusCfg.color}`}>
-                {statusCfg.label}
+                {isBlocked ? "Blocked by Admin" : statusCfg.label}
               </span>
-              {message.status === "rejected" && message.adminNote && (
-                <span className="text-xs text-red-300">Reason: {message.adminNote}</span>
+              {msgState.status === "rejected" && msgState.adminNote && (
+                <span className="text-xs text-red-300">Reason: {msgState.adminNote}</span>
               )}
             </div>
           </div>
 
           {/* Body */}
           <div className="flex-1 overflow-y-auto px-7 py-5 space-y-5">
+            {/* Blocked message notice */}
+            {isBlocked && (
+              <div className="bg-red-50 border border-red-100 rounded-2xl p-4 flex gap-3">
+                <AlertTriangle className="w-5 h-5 text-red-500 flex-shrink-0 mt-0.5" />
+                <div>
+                  <p className="text-sm font-semibold text-red-800 mb-1">Conversation Blocked</p>
+                  <p className="text-xs text-red-600">
+                    This communication loop was stopped by the admin. Reason: {msgState.adminNote || "Unhealthy content detected."}
+                  </p>
+                </div>
+              </div>
+            )}
+
             {/* Original Message */}
             <div>
               <div className="flex items-center gap-2 mb-3">
                 <Send className="w-4 h-4 text-slate-400" />
-                <p className="text-xs font-semibold text-slate-500 uppercase tracking-wider">Your Message</p>
+                <p className="text-xs font-semibold text-slate-500 uppercase tracking-wider">Your Outreach Message</p>
               </div>
               <div className="bg-slate-50 rounded-2xl p-5 border border-slate-100">
-                <p className="text-sm text-slate-700 whitespace-pre-wrap leading-relaxed">{message.body}</p>
+                <p className="text-sm text-slate-700 whitespace-pre-wrap leading-relaxed">{msgState.body}</p>
               </div>
-              <p className="text-[11px] text-slate-400 mt-2 text-right">{timeAgo(message.createdAt)}</p>
+              <p className="text-[11px] text-slate-400 mt-2 text-right">{timeAgo(msgState.createdAt)}</p>
             </div>
 
             {/* Admin note if rejected */}
-            {message.status === "rejected" && (
+            {msgState.status === "rejected" && (
               <div className="bg-red-50 border border-red-100 rounded-2xl p-4 flex gap-3">
                 <XCircle className="w-5 h-5 text-red-400 flex-shrink-0 mt-0.5" />
                 <div>
                   <p className="text-sm font-semibold text-red-800 mb-1">Message Not Approved</p>
                   <p className="text-xs text-red-600">
-                    {message.adminNote || "Admin did not provide a specific reason."}
+                    {msgState.adminNote || "Admin did not approve this outreach."}
                   </p>
                 </div>
               </div>
             )}
 
             {/* Replies */}
-            {message.status === "delivered" && (
-              <div>
+            {isDelivered && (
+              <div className="space-y-4">
                 <div className="flex items-center gap-2 mb-3">
                   <Reply className="w-4 h-4 text-slate-400" />
                   <p className="text-xs font-semibold text-slate-500 uppercase tracking-wider">
-                    Replies ({replies.length})
+                    Conversation Loop ({replies.length})
                   </p>
                 </div>
 
                 {loading ? (
-                  <div className="flex items-center justify-center py-10">
+                  <div className="flex items-center justify-center py-6">
                     <Loader2 className="w-6 h-6 animate-spin text-orange-500" />
                   </div>
                 ) : replies.length === 0 ? (
@@ -174,38 +224,79 @@ function ThreadModal({ message, onClose }) {
                     <MessageSquare className="w-8 h-8 text-slate-300 mx-auto mb-2" />
                     <p className="text-sm text-slate-400">No replies yet</p>
                     <p className="text-xs text-slate-400 mt-1">
-                      The recipient may reply after reviewing your message.
+                      The recipient must respond first to activate the back-and-forth loop.
                     </p>
                   </div>
                 ) : (
-                  <div className="space-y-3">
-                    {replies.map((reply, i) => (
-                      <motion.div
-                        key={reply.id}
-                        initial={{ opacity: 0, x: 10 }}
-                        animate={{ opacity: 1, x: 0 }}
-                        transition={{ delay: i * 0.05 }}
-                        className="bg-green-50 border border-green-100 rounded-2xl p-4"
-                      >
-                        <div className="flex items-center gap-2 mb-2">
-                          <div className="w-7 h-7 rounded-full bg-green-200 flex items-center justify-center text-green-800 text-xs font-bold">
-                            {(reply.senderName || "?")[0].toUpperCase()}
+                  <div className="space-y-4">
+                    {replies.map((reply, i) => {
+                      const isMe = reply.senderRole === "serviceProvider";
+                      return (
+                        <motion.div
+                          key={reply.id}
+                          initial={{ opacity: 0, y: 10 }}
+                          animate={{ opacity: 1, y: 0 }}
+                          transition={{ delay: i * 0.05 }}
+                          className={`rounded-2xl p-4 border max-w-[85%] ${
+                            isMe
+                              ? "bg-blue-50 border-blue-100 ml-auto"
+                              : "bg-green-50 border-green-100"
+                          }`}
+                        >
+                          <div className="flex items-center gap-2 mb-2">
+                            <div className={`w-6 h-6 rounded-full flex items-center justify-center text-[10px] font-bold ${
+                              isMe ? "bg-blue-200 text-blue-800" : "bg-green-200 text-green-800"
+                            }`}>
+                              {isMe ? "U" : (reply.senderName || "?")[0].toUpperCase()}
+                            </div>
+                            <div>
+                              <p className="text-xs font-semibold text-slate-800">{isMe ? "You" : reply.senderName}</p>
+                              <p className="text-[9px] text-slate-400">{timeAgo(reply.createdAt)}</p>
+                            </div>
                           </div>
-                          <div>
-                            <p className="text-sm font-semibold text-slate-800">{reply.senderName}</p>
-                            <p className="text-[10px] text-slate-400">{timeAgo(reply.createdAt)}</p>
-                          </div>
-                        </div>
-                        <p className="text-sm text-slate-700 whitespace-pre-wrap leading-relaxed">
-                          {reply.body}
-                        </p>
-                      </motion.div>
-                    ))}
+                          <p className="text-sm text-slate-700 whitespace-pre-wrap leading-relaxed">
+                            {reply.body}
+                          </p>
+                        </motion.div>
+                      );
+                    })}
                   </div>
                 )}
               </div>
             )}
           </div>
+
+          {/* Bottom Composer / Actions */}
+          {isDelivered && (
+            <div className="border-t border-slate-100 p-5 bg-slate-50 flex-shrink-0">
+              {hasReplied ? (
+                <form onSubmit={handleReplySubmit} className="flex gap-2">
+                  <input
+                    type="text"
+                    value={replyText}
+                    onChange={(e) => setReplyText(e.target.value)}
+                    placeholder="Type your reply here…"
+                    className="flex-grow border border-slate-200 rounded-xl px-4 py-3 text-sm bg-white focus:outline-none focus:ring-2 focus:ring-orange-400/50"
+                  />
+                  <Button
+                    type="submit"
+                    disabled={sending || !replyText.trim()}
+                    className="bg-[#D48035] hover:bg-[#b06725] text-white px-5 rounded-xl font-bold flex items-center gap-1.5"
+                  >
+                    {sending ? <Loader2 className="w-4 h-4 animate-spin" /> : <Send className="w-4 h-4" />}
+                    Send
+                  </Button>
+                </form>
+              ) : (
+                <div className="flex items-start gap-2.5 p-3.5 bg-blue-100 border border-blue-200 rounded-xl text-blue-800">
+                  <Info className="w-4 h-4 text-blue-600 flex-shrink-0 mt-0.5" />
+                  <p className="text-xs font-medium leading-relaxed">
+                    You cannot send further messages until <strong>{msgState.recipientName}</strong> replies to your initial outreach.
+                  </p>
+                </div>
+              )}
+            </div>
+          )}
         </motion.div>
       </motion.div>
     </AnimatePresence>
