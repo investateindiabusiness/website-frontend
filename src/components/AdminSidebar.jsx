@@ -26,6 +26,7 @@ import {
   Logout as LogoutIcon,
   Menu as MenuIcon,
   ChevronLeft as ChevronLeftIcon,
+  VerifiedUser as KYCIcon,
 } from '@mui/icons-material';
 
 const DRAWER_WIDTH = 240;
@@ -36,6 +37,7 @@ const NAV_ITEMS_BY_ROLE = {
     { label: 'Dashboard',        path: '/admin/dashboard',        icon: <DashboardIcon /> },
     { label: 'Builders',         path: '/admin/builders',          icon: <BuilderIcon /> },
     { label: 'Investors',        path: '/admin/investors',         icon: <InvestorIcon /> },
+    { label: 'KYC Verifications Investor', path: '/admin/kyc-verifications', icon: <KYCIcon /> },
     { label: 'Service Providers',path: '/admin/service-providers', icon: <ServiceProviderIcon /> },
     { label: 'Users',            path: '/admin/users',             icon: <UsersIcon /> },
     { label: 'Projects',         path: '/admin/projects',          icon: <ProjectsIcon /> },
@@ -56,6 +58,7 @@ const NAV_ITEMS_BY_ROLE = {
   investor: [
     { label: 'Dashboard',     path: '/dashboard',              icon: <DashboardIcon /> },
     { label: 'Properties',    path: '/properties',             icon: <ProjectsIcon /> },
+    { label: 'KYC Verification', path: '/investor/kyc',         icon: <KYCIcon /> },
     { label: 'Advertise',     path: '/investor/advertisements',icon: <AdsIcon /> },
     { label: 'Payments',      path: '/investor/payments',      icon: <LeadsIcon /> },
     { label: 'Coupons',       path: '/investor/coupons',       icon: <CouponsIcon /> },

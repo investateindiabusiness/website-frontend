@@ -4,7 +4,7 @@ import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { 
   Building2, MapPin, Search, TrendingUp, CheckCircle, 
-  Filter, Loader2, ArrowRight
+  Filter, Loader2, ArrowRight, ShieldCheck
 } from 'lucide-react';
 import AdBanner from '@/components/AdBanner';
 import { Button } from '@/components/ui/button';
@@ -134,6 +134,29 @@ export default function InvestorProperties() {
                 </div>
             </div>
 
+            {/* ── KYC Verification Prompt Alert ── */}
+            {!user?.isKycVerified && (
+              <div className="bg-gradient-to-r from-orange-50 to-orange-100 border border-orange-200 rounded-2xl p-6 mb-8 flex flex-col md:flex-row items-center justify-between gap-4 shadow-sm animate-in fade-in slide-in-from-top-4 duration-300">
+                <div className="flex items-center gap-4">
+                  <div className="w-12 h-12 bg-orange-600 rounded-xl flex items-center justify-center text-white flex-shrink-0 shadow-lg shadow-orange-600/20">
+                    <ShieldCheck className="w-6 h-6 animate-pulse" />
+                  </div>
+                  <div>
+                    <h4 className="text-sm font-bold text-gray-900 uppercase tracking-tight">🔒 Complete KYC Verification</h4>
+                    <p className="text-xs text-gray-600 mt-1 max-w-xl font-medium leading-relaxed">
+                      You are currently viewing a restricted property catalog. Verify your identity by uploading your passport to unlock full details, documents, and submit investment inquiries.
+                    </p>
+                  </div>
+                </div>
+                <Button 
+                  onClick={() => router.push('/investor/kyc')} 
+                  className="bg-orange-600 hover:bg-orange-700 text-white font-bold text-xs uppercase tracking-wider px-6 py-3 rounded-xl transition-all shadow-md shadow-orange-600/10 hover:scale-[1.02] shrink-0"
+                >
+                  Verify KYC Now
+                </Button>
+              </div>
+            )}
+
             {loadingProjects ? (
                <div className="flex flex-col items-center justify-center py-20 text-center">
                   <Loader2 className="w-10 h-10 text-[#0b264f] animate-spin mb-4" />
@@ -165,54 +188,82 @@ export default function InvestorProperties() {
                       </tr>
                     </thead>
                     <tbody className="divide-y divide-gray-100">
-                      {filteredProperties.slice((currentPage - 1) * ITEMS_PER_PAGE, currentPage * ITEMS_PER_PAGE).map((property) => {
+                      {filteredProperties.slice((currentPage - 1) * ITEMS_PER_PAGE, currentPage * ITEMS_PER_PAGE).map((property, index) => {
+                        const isCensored = !user?.isKycVerified && index >= 2;
+                        const displayTitle = isCensored ? "••••••••••••••••" : property.title;
+                        const displayBuilder = isCensored ? "••••••••••••••••" : property.builder;
+                        const displayLocation = isCensored ? "••••••••, India" : property.location;
+                        const displayYield = isCensored ? "••• ROI" : property.yield;
+                        const displayPrice = isCensored ? "₹ ••.•• Cr" : property.price;
+                        const displayImage = isCensored ? "https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?w=10&q=10" : property.image;
+
                         return (
-                          <tr key={property.id} className="hover:bg-gray-50/50 transition-colors">
+                          <tr 
+                            key={property.id} 
+                            className={`transition-colors ${
+                              isCensored 
+                                ? 'bg-gray-50/20 select-none pointer-events-none' 
+                                : 'hover:bg-gray-50/50'
+                            }`}
+                          >
                             <td className="px-6 py-4 whitespace-nowrap">
-                              <div className="flex items-center space-x-3">
+                              <div className={`flex items-center space-x-3 ${isCensored ? 'blur-[3px]' : ''}`}>
                                 <div className="w-16 h-12 rounded-lg overflow-hidden bg-gray-100 flex-shrink-0 border border-gray-200">
                                   <img
-                                    src={property.image}
-                                    alt={property.title}
+                                    src={displayImage}
+                                    alt={displayTitle}
                                     className="w-full h-full object-cover"
                                     onError={(e) => { e.target.src = 'https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?w=800&q=80'; }}
                                   />
                                 </div>
                                 <div>
                                   <div className="text-sm font-bold text-gray-900 capitalize">
-                                    {property.title}
+                                    {displayTitle}
                                   </div>
                                   <div className="text-xs text-[#4F46E5] font-semibold">
-                                    {property.type}
+                                    {isCensored ? "••••" : property.type}
                                   </div>
                                 </div>
                               </div>
                             </td>
                             <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-600">
-                              {property.builder}
+                              <span className={isCensored ? 'blur-[3px]' : ''}>
+                                {displayBuilder}
+                              </span>
                             </td>
                             <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-600">
-                              <div className="flex items-center gap-1.5">
+                              <div className={`flex items-center gap-1.5 ${isCensored ? 'blur-[3px]' : ''}`}>
                                 <MapPin className="w-3.5 h-3.5 text-orange-500" />
-                                {property.location}
+                                {displayLocation}
                               </div>
                             </td>
                             <td className="px-6 py-4 whitespace-nowrap">
-                              <span className="text-xs font-bold bg-[#ECFDF5] text-[#059669] border border-[#D1FAE5] inline-flex items-center px-2.5 py-1 rounded-md shadow-sm">
+                              <span className={`text-xs font-bold bg-[#ECFDF5] text-[#059669] border border-[#D1FAE5] inline-flex items-center px-2.5 py-1 rounded-md shadow-sm ${isCensored ? 'blur-[3px]' : ''}`}>
                                 <TrendingUp className="w-3.5 h-3.5 mr-1" />
-                                {property.yield}
+                                {displayYield}
                               </span>
                             </td>
                             <td className="px-6 py-4 whitespace-nowrap text-sm font-bold text-gray-900">
-                              {property.price}
+                              <span className={isCensored ? 'blur-[3px]' : ''}>
+                                {displayPrice}
+                              </span>
                             </td>
                             <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
-                              <Button 
-                                onClick={() => router.push(`/project/${property.id}`)} 
-                                className="bg-[#0b264f] hover:bg-blue-900 text-white rounded-xl text-xs px-4 py-2"
-                              >
-                                View Details
-                              </Button>
+                              {isCensored ? (
+                                <Button 
+                                  disabled
+                                  className="bg-gray-300 text-gray-500 rounded-xl text-xs px-4 py-2 flex items-center gap-1"
+                                >
+                                  🔒 Locked
+                                </Button>
+                              ) : (
+                                <Button 
+                                  onClick={() => router.push(`/project/${property.id}`)} 
+                                  className="bg-[#0b264f] hover:bg-blue-900 text-white rounded-xl text-xs px-4 py-2"
+                                >
+                                  View Details
+                                </Button>
+                              )}
                             </td>
                           </tr>
                         );
@@ -222,7 +273,7 @@ export default function InvestorProperties() {
                 </div>
 
                 {/* Pagination Controls */}
-                {Math.ceil(filteredProperties.length / ITEMS_PER_PAGE) > 1 && (
+                {Math.ceil(filteredProperties.length / ITEMS_PER_PAGE) > 1 && user?.isKycVerified && (
                   <div className="bg-gray-50 border-t border-gray-200 px-6 py-4 flex flex-col sm:flex-row items-center justify-between gap-4">
                     <div className="text-xs font-bold text-gray-500 uppercase tracking-wider">
                       Showing {((currentPage - 1) * ITEMS_PER_PAGE) + 1} to {Math.min(currentPage * ITEMS_PER_PAGE, filteredProperties.length)} of {filteredProperties.length} records

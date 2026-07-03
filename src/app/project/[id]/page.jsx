@@ -30,6 +30,7 @@ export default function ProjectDetail() {
 
    const [project, setProject] = useState(null);
    const [loading, setLoading] = useState(true);
+   const [isLocked, setIsLocked] = useState(false);
    const [hasSubmittedLead, setHasSubmittedLead] = useState(false);
    const [inquiryMessage, setInquiryMessage] = useState('');
    const [isSubmittingLead, setIsSubmittingLead] = useState(false);
@@ -52,6 +53,18 @@ export default function ProjectDetail() {
       const fetchProjectData = async () => {
          try {
             setLoading(true);
+
+            if (user?.role === 'investor' && !user?.isKycVerified) {
+               const projectsRes = await apiRequest('/api/projects?role=investor');
+               const approvedProjects = projectsRes.data || [];
+               const firstTwoIds = approvedProjects.slice(0, 2).map(p => p.id);
+               if (!firstTwoIds.includes(id)) {
+                  setIsLocked(true);
+                  setLoading(false);
+                  return;
+               }
+            }
+
             const data = await apiRequest(`/api/projects/${id}`);
 
             if (user && user.uid) {
@@ -98,6 +111,42 @@ export default function ProjectDetail() {
    };
 
    if (loading) return <div className="h-screen flex items-center justify-center"><Loader2 className="animate-spin text-[#0b264f] h-10 w-10" /></div>;
+
+   if (isLocked) {
+      return (
+         <div className="min-h-screen bg-[#F4F5F7] flex flex-col font-sans">
+            <Header />
+            <main className="flex-grow flex items-center justify-center py-16 px-4">
+               <div className="max-w-md w-full bg-white rounded-3xl border border-gray-200 p-8 text-center shadow-xl shadow-gray-200/50 flex flex-col items-center animate-in fade-in zoom-in-95 duration-300">
+                  <div className="w-16 h-16 bg-orange-50 rounded-2xl flex items-center justify-center text-orange-600 mb-6 shadow-inner">
+                     <ShieldCheck className="w-8 h-8 animate-pulse" />
+                  </div>
+                  <h2 className="text-2xl font-black text-gray-900 uppercase tracking-tight mb-2">Project Locked</h2>
+                  <p className="text-gray-500 text-xs font-semibold leading-relaxed mb-8 px-2">
+                     Access to detailed property blueprints, financial projections, yields, and builder contracts is restricted to verified investors. Please complete your KYC verification to proceed.
+                  </p>
+                  <div className="flex flex-col gap-3 w-full">
+                     <Button
+                        onClick={() => router.push('/investor/kyc')}
+                        className="w-full h-12 bg-orange-600 hover:bg-orange-700 text-white font-black text-sm uppercase tracking-wider rounded-xl shadow-lg shadow-orange-600/15 transition-all hover:scale-[1.02] active:scale-[0.98]"
+                     >
+                        Verify KYC Now
+                     </Button>
+                     <Button
+                        variant="outline"
+                        onClick={() => router.push('/properties')}
+                        className="w-full h-12 border-gray-200 text-gray-600 font-bold text-sm uppercase tracking-wider rounded-xl hover:bg-gray-50 transition-all"
+                     >
+                        Back to Listings
+                     </Button>
+                  </div>
+               </div>
+            </main>
+            <Footer />
+         </div>
+      );
+   }
+
    if (!project) return null;
 
    return (
