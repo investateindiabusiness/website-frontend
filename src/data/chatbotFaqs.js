@@ -1,105 +1,105 @@
 export const chatbotFaqGroups = {
   public: {
     label: 'Company',
-    intro: 'Company and operations information for visitors before login.',
+    intro: 'Before login, I can explain what this platform is, who it is for, and what information you need to sign in.',
     faqs: [
       {
-        question: 'What is Investate India?',
+        question: 'What is this platform about?',
         answer:
-          'Investate India is a specialized NRI real estate investment and wealth protection platform that helps global Indians securely invest, manage, and safeguard real estate assets in India.',
+          'This platform helps NRIs and builders explore real estate opportunities, get support, and manage property-related inquiries in India.',
       },
       {
-        question: 'What does the platform do?',
+        question: 'Who can use this platform?',
         answer:
-          'The platform connects NRIs with verified real estate opportunities, expert guidance, legal and tax support, property documentation assistance, and asset protection services.',
+          'Investors, builders, and new visitors can use it to learn about services, browse opportunities, and request support.',
       },
       {
-        question: 'Who can use Investate India?',
+        question: 'What information do I need to log in?',
         answer:
-          'Investate India serves NRI investors who want to invest in or manage property in India, and builders who want to showcase verified projects to a qualified global NRI audience.',
-      },
-      {
-        question: 'What services does Investate India offer?',
-        answer:
-          'Investate India supports real estate investment opportunities, asset protection, legal and tax advisory, investment guidance, rental management, wealth preservation, and succession planning.',
+          'You usually need your registered email or phone number and password to access your account. If you are new, you may need to register first.',
       },
     ],
   },
   investor: {
-    label: 'Investor',
-    intro: 'Questions NRIs usually ask before investing, protecting, or managing property in India.',
+    label: 'Investor Support',
+    intro: 'After login, I can help with technical issues, account support, and investment-related questions.',
     faqs: [
       {
-        question: 'What does Investate India help NRI investors do?',
+        question: 'I need help with my account or profile',
         answer:
-          'Investate India helps NRIs discover verified real estate opportunities, get expert guidance, and access legal, tax, documentation, asset protection, rental management, and wealth preservation support.',
+          'We can help with login access, password reset, profile updates, and verification issues.',
       },
       {
-        question: 'How are projects verified before they are shown?',
+        question: 'I need help finding or comparing properties',
         answer:
-          'Projects are screened for trust, compliance, builder credibility, documentation readiness, and suitability for NRI investment so investors can evaluate opportunities with more confidence.',
+          'We can guide you on residential, commercial, plot, villa, and ready-to-move or under-construction options and compare projects.',
       },
       {
-        question: 'Can Investate help with legal and tax documentation?',
+        question: 'I need help with booking or investment details',
         answer:
-          'Yes. The platform connects investors with professional support for property-related legal matters, taxation, compliance requirements, ownership structures, and documentation.',
+          'We can assist with booking confirmation, property IDs, investment questions, and project comparison.',
       },
       {
-        question: 'Can I protect or monitor property I already own in India?',
+        question: 'I need help with payments or refunds',
         answer:
-          'Yes. Investate India supports asset protection through monitoring, documentation, risk management, rental management, periodic checks, and property preservation services.',
+          'We can review payment failures, deducted amounts, and payment-method issues and escalate them if needed.',
       },
       {
-        question: 'Does Investate provide investment guidance?',
+        question: 'I need help with legal, ownership, or property management issues',
         answer:
-          'Yes. Investors can receive consultation to compare opportunities, understand risks, review project information, and make more informed real estate decisions in India.',
+          'We can guide you on documentation, ownership concerns, compliance, rental management, maintenance, or sale-related support.',
+      },
+      {
+        question: 'I am facing a technical issue',
+        answer:
+          'Share the issue area, error message, and screenshot or video so the technical team can troubleshoot or escalate quickly.',
       },
     ],
   },
   builder: {
-    label: 'Builder',
-    intro: 'Questions builders ask when they want to reach verified global NRI investors.',
+    label: 'Builder Support',
+    intro: 'After login, I can help with technical issues, listings, leads, and builder support requests.',
     faqs: [
       {
-        question: 'How does Investate India help builders?',
+        question: 'I need help with registration or onboarding',
         answer:
-          'Investate India helps builders present verified projects to a global NRI audience, increase international visibility, generate qualified investment leads, and build credibility through a trusted platform.',
+          'We can assist with registration, onboarding steps, verification status, or duplicate account issues.',
       },
       {
-        question: 'What kind of projects can builders showcase?',
+        question: 'I need help with project listing or uploads',
         answer:
-          'Builders can showcase residential or commercial real estate opportunities that are suitable for NRI investors and can pass the platform verification and documentation review process.',
+          'We can help with new listings, updates, rejected or hidden listings, and upload failures.',
       },
       {
-        question: 'Why should builders join the platform?',
+        question: 'I need help with leads, CRM, or sales',
         answer:
-          'The platform gives builders access to qualified NRI investors who are looking for transparent, compliant, professionally reviewed Indian real estate opportunities.',
+          'We can assist with lead access, duplicate leads, missing follow-ups, visit scheduling, and CRM issues.',
       },
       {
-        question: 'Does Investate verify builders and projects?',
+        question: 'I need help with payments, commissions, or compliance',
         answer:
-          'Yes. Builder credibility and project readiness are reviewed so investors can engage with more trust and builders can stand out in a regulated, transparent environment.',
+          'We can review payment delays, commission mismatches, invoice issues, and approval or compliance concerns.',
       },
       {
-        question: 'How are investor leads handled?',
+        question: 'I am facing a technical issue',
         answer:
-          'Interested NRI investors can submit inquiries through the platform. These leads can then be tracked and managed by the Investate team for the next step of engagement.',
+          'Share the affected area, error message, and screenshot or video so the support team can troubleshoot or escalate.',
       },
     ],
   },
   customer: {
     label: 'Support',
-    intro: 'Support guidance for logged-in users and existing customers.',
+    intro: 'Urgent support guidance for logged-in users and existing customers.',
     faqs: [
       {
         question: 'Which issues need immediate escalation?',
         answer:
-          'Fraud complaint, account hacked, unauthorized transfer, multiple payment deduction, legal notice, and data breach complaints should be escalated immediately with issue description, supporting documents, and contact number.',
+          'Fraud complaints, unauthorized account access, multiple payment deductions, legal notices, and data breach reports should be escalated immediately.',
       },
       {
-        question: 'What should I share for a technical issue?',
+        question: 'What should I share for a technical or urgent issue?',
         answer:
-          'Share the platform area, problem type, error message, and whether a screenshot is available. This helps the technical team troubleshoot or escalate quickly.',
+          'Please share your issue description, supporting documents, contact number, and any screenshot or error message.',
       },
     ],
   },
