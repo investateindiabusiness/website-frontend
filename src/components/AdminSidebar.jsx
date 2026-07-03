@@ -5,6 +5,8 @@ import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
 import { useAuth } from '@/hooks/AuthContext';
 import NotificationBell from './NotificationBell';
+import { apiRequest } from '@/api';
+import { User, Pencil, Crown, X, Loader2 } from 'lucide-react';
 import {
   Drawer, List, ListItem, ListItemButton, ListItemIcon, ListItemText,
   Box, Avatar, Typography, Divider, IconButton, Tooltip, Collapse,
@@ -26,6 +28,8 @@ import {
   Logout as LogoutIcon,
   Menu as MenuIcon,
   ChevronLeft as ChevronLeftIcon,
+  VerifiedUser as KYCIcon,
+  CardMembership as MembershipIcon,
 } from '@mui/icons-material';
 
 const DRAWER_WIDTH = 240;
@@ -36,6 +40,7 @@ const NAV_ITEMS_BY_ROLE = {
     { label: 'Dashboard',        path: '/admin/dashboard',        icon: <DashboardIcon /> },
     { label: 'Builders',         path: '/admin/builders',          icon: <BuilderIcon /> },
     { label: 'Investors',        path: '/admin/investors',         icon: <InvestorIcon /> },
+    { label: 'KYC Verifications Investor', path: '/admin/kyc-verifications', icon: <KYCIcon /> },
     { label: 'Service Providers',path: '/admin/service-providers', icon: <ServiceProviderIcon /> },
     { label: 'Users',            path: '/admin/users',             icon: <UsersIcon /> },
     { label: 'Projects',         path: '/admin/projects',          icon: <ProjectsIcon /> },
@@ -45,6 +50,7 @@ const NAV_ITEMS_BY_ROLE = {
     { label: 'Advertisements',   path: '/admin/advertisements',    icon: <AdsIcon /> },
     { label: 'Newsletter',       path: '/admin/newsletter',        icon: <NewsletterIcon /> },
     { label: 'Coupons',          path: '/admin/coupons',           icon: <CouponsIcon /> },
+    { label: 'Membership Pricing', path: '/admin/membership-pricing', icon: <MembershipIcon /> },
   ],
   builder: [
     { label: 'Dashboard',     path: '/builder/dashboard',       icon: <DashboardIcon /> },
@@ -56,6 +62,7 @@ const NAV_ITEMS_BY_ROLE = {
   investor: [
     { label: 'Dashboard',     path: '/dashboard',              icon: <DashboardIcon /> },
     { label: 'Properties',    path: '/properties',             icon: <ProjectsIcon /> },
+    { label: 'KYC Verification', path: '/investor/kyc',         icon: <KYCIcon /> },
     { label: 'Advertise',     path: '/investor/advertisements',icon: <AdsIcon /> },
     { label: 'Payments',      path: '/investor/payments',      icon: <LeadsIcon /> },
     { label: 'Coupons',       path: '/investor/coupons',       icon: <CouponsIcon /> },
@@ -74,6 +81,21 @@ export default function AdminSidebar({ children }) {
   const router = useRouter();
   const [collapsed, setCollapsed] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
+  const [profileDropdownOpen, setProfileDropdownOpen] = useState(false);
+  const profileDropdownRef = React.useRef(null);
+
+  // Close dropdown on outside click
+  React.useEffect(() => {
+    const handleClick = (e) => {
+      if (profileDropdownRef.current && !profileDropdownRef.current.contains(e.target)) {
+        setProfileDropdownOpen(false);
+      }
+    };
+    document.addEventListener('mousedown', handleClick);
+    return () => document.removeEventListener('mousedown', handleClick);
+  }, []);
+
+
 
   const drawerWidth = collapsed ? DRAWER_COLLAPSED : DRAWER_WIDTH;
   const NAV_ITEMS = NAV_ITEMS_BY_ROLE[user?.role] || NAV_ITEMS_BY_ROLE.admin;
@@ -117,24 +139,6 @@ export default function AdminSidebar({ children }) {
         </IconButton>
       </Box>
 
-    {/* User Info */}
-      {!collapsed && (
-        <Box sx={{ px: 2, py: 2, borderBottom: '1px solid rgba(255,255,255,0.08)' }}>
-          <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.5 }}>
-            <Avatar sx={{ width: 36, height: 36, bgcolor: '#D48035', fontSize: '0.85rem', fontWeight: 700 }}>
-              {(user?.name || user?.email || 'U')[0].toUpperCase()}
-            </Avatar>
-            <Box>
-              <Typography variant="caption" sx={{ fontWeight: 700, color: 'white', display: 'block', lineHeight: 1.3 }}>
-                {user?.name || user?.email?.split('@')[0] || 'User'}
-              </Typography>
-              <Typography variant="caption" sx={{ color: 'rgba(255,255,255,0.45)', fontSize: '0.65rem' }}>
-                {roleLabel}
-              </Typography>
-            </Box>
-          </Box>
-        </Box>
-      )}
 
       {/* Nav Items */}
       <Box sx={{ flex: 1, overflowY: 'auto', overflowX: 'hidden', py: 1 }}>
@@ -192,32 +196,7 @@ export default function AdminSidebar({ children }) {
         </List>
       </Box>
 
-      {/* Logout */}
-      <Box sx={{ borderTop: '1px solid rgba(255,255,255,0.08)', p: 1 }}>
-        <Tooltip title={collapsed ? 'Logout' : ''} placement="right" arrow>
-          <ListItemButton
-            onClick={handleLogout}
-            sx={{
-              borderRadius: 2,
-              justifyContent: collapsed ? 'center' : 'flex-start',
-              px: collapsed ? 1 : 1.5,
-              '&:hover': { bgcolor: 'rgba(239,68,68,0.1)' },
-            }}
-          >
-            <ListItemIcon sx={{ minWidth: collapsed ? 0 : 36, color: 'rgba(239,68,68,0.7)' }}>
-              <LogoutIcon sx={{ fontSize: 20 }} />
-            </ListItemIcon>
-            {!collapsed && (
-              <ListItemText
-                primary="Logout"
-                slotProps={{
-                  primary: { fontSize: '0.82rem', fontWeight: 600, color: 'rgba(239,68,68,0.85)' }
-                }}
-              />
-            )}
-          </ListItemButton>
-        </Tooltip>
-      </Box>
+
     </Box>
   );
 
@@ -282,7 +261,52 @@ export default function AdminSidebar({ children }) {
             <MenuIcon />
           </IconButton>
           <img src="/logo-small-white.png" alt="Logo" style={{ height: 36, objectFit: 'contain' }} />
-          <Box sx={{ ml: 'auto' }}>
+          <Box sx={{ ml: 'auto', display: 'flex', alignItems: 'center', gap: 1 }}>
+            {/* Profile Dropdown — mobile */}
+            <div ref={profileDropdownRef} style={{ position: 'relative' }}>
+              <button
+                onClick={() => setProfileDropdownOpen(p => !p)}
+                style={{
+                  display: 'flex', alignItems: 'center', gap: 6,
+                  background: 'rgba(255,255,255,0.08)', border: '1px solid rgba(255,255,255,0.12)',
+                  borderRadius: 24, padding: '4px 10px 4px 6px', cursor: 'pointer', color: 'white',
+                  fontSize: 12, fontWeight: 700, transition: 'all 0.2s',
+                }}
+              >
+                <span style={{ width: 28, height: 28, borderRadius: '50%', background: '#D48035', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 13, fontWeight: 800, color: 'white', flexShrink: 0 }}>
+                  {(user?.name || user?.email || 'U')[0].toUpperCase()}
+                </span>
+                <ChevronLeftIcon style={{ width: 14, height: 14, transform: profileDropdownOpen ? 'rotate(-90deg)' : 'rotate(-180deg)', transition: 'transform 0.2s' }} />
+              </button>
+              {profileDropdownOpen && (
+                <div style={{
+                  position: 'absolute', top: 'calc(100% + 8px)', right: 0, width: 220,
+                  background: '#1a1a1c', border: '1px solid rgba(255,255,255,0.1)',
+                  borderRadius: 16, boxShadow: '0 20px 60px rgba(0,0,0,0.6)', zIndex: 9999,
+                  overflow: 'hidden', animation: 'fadeIn 0.15s ease',
+                }}>
+                  <div style={{ padding: '12px 16px', borderBottom: '1px solid rgba(255,255,255,0.08)' }}>
+                    <div style={{ fontSize: 11, color: 'rgba(255,255,255,0.4)', textTransform: 'uppercase', letterSpacing: 1, marginBottom: 2 }}>Account</div>
+                    <div style={{ fontSize: 13, fontWeight: 700, color: 'white', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{user?.name || user?.email?.split('@')[0]}</div>
+                    <div style={{ fontSize: 11, color: '#D48035', fontWeight: 600 }}>{roleLabel}</div>
+                  </div>
+                  {[{icon: <User style={{width:15,height:15}}/>, label:'My Profile', action:()=>{router.push('/profile');setProfileDropdownOpen(false);}},
+                    {icon: <Crown style={{width:15,height:15,color:'#f97316'}}/>, label:'My Membership', action:()=>{router.push('/membership');setProfileDropdownOpen(false);}}
+                  ].map(item => (
+                    <button key={item.label} onClick={item.action} style={{ display:'flex', alignItems:'center', gap:10, width:'100%', padding:'10px 16px', background:'none', border:'none', cursor:'pointer', color:'rgba(255,255,255,0.75)', fontSize:13, fontWeight:500, textAlign:'left', transition:'all 0.15s' }}
+                      onMouseEnter={e=>{e.currentTarget.style.background='rgba(255,255,255,0.06)';e.currentTarget.style.color='#D48035';}}
+                      onMouseLeave={e=>{e.currentTarget.style.background='none';e.currentTarget.style.color='rgba(255,255,255,0.75)';}}
+                    >{item.icon}{item.label}</button>
+                  ))}
+                  <div style={{ borderTop: '1px solid rgba(255,255,255,0.08)' }}>
+                    <button onClick={()=>{handleLogout();setProfileDropdownOpen(false);}} style={{ display:'flex', alignItems:'center', gap:10, width:'100%', padding:'10px 16px', background:'none', border:'none', cursor:'pointer', color:'rgba(239,68,68,0.85)', fontSize:13, fontWeight:600, textAlign:'left', transition:'all 0.15s' }}
+                      onMouseEnter={e=>{e.currentTarget.style.background='rgba(239,68,68,0.08)';}}
+                      onMouseLeave={e=>{e.currentTarget.style.background='none';}}
+                    ><LogoutIcon style={{width:15,height:15}}/> Logout</button>
+                  </div>
+                </div>
+              )}
+            </div>
             <NotificationBell iconColor="rgba(255,255,255,0.7)" hoverColor="white" />
           </Box>
         </Box>
@@ -298,6 +322,60 @@ export default function AdminSidebar({ children }) {
           borderBottom: '1px solid #e2e8f0',
           position: 'sticky', top: 0, zIndex: 100,
         }}>
+          {/* Profile Dropdown — desktop */}
+          <div ref={profileDropdownRef} style={{ position: 'relative' }}>
+            <button
+              onClick={() => setProfileDropdownOpen(p => !p)}
+              style={{
+                display: 'flex', alignItems: 'center', gap: 7,
+                background: profileDropdownOpen ? 'rgba(212,128,53,0.08)' : 'transparent',
+                border: '1px solid', borderColor: profileDropdownOpen ? 'rgba(212,128,53,0.3)' : 'transparent',
+                borderRadius: 24, padding: '5px 12px 5px 6px', cursor: 'pointer',
+                transition: 'all 0.2s',
+              }}
+              onMouseEnter={e=>{if(!profileDropdownOpen){e.currentTarget.style.background='rgba(212,128,53,0.06)';e.currentTarget.style.borderColor='rgba(212,128,53,0.2)';}}} 
+              onMouseLeave={e=>{if(!profileDropdownOpen){e.currentTarget.style.background='transparent';e.currentTarget.style.borderColor='transparent';}}}
+            >
+              <span style={{ width: 30, height: 30, borderRadius: '50%', background: 'linear-gradient(135deg, #D48035, #f97316)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 13, fontWeight: 800, color: 'white', flexShrink: 0, boxShadow: '0 2px 8px rgba(212,128,53,0.4)' }}>
+                {(user?.name || user?.email || 'U')[0].toUpperCase()}
+              </span>
+              <div style={{ textAlign: 'left', lineHeight: 1.2 }}>
+                <div style={{ fontSize: 12, fontWeight: 700, color: '#1e293b', maxWidth: 110, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{user?.name || user?.email?.split('@')[0]}</div>
+                <div style={{ fontSize: 10, color: '#D48035', fontWeight: 600, textTransform: 'capitalize' }}>{roleLabel}</div>
+              </div>
+              <ChevronLeftIcon style={{ width: 14, height: 14, color: '#94a3b8', transform: profileDropdownOpen ? 'rotate(-90deg)' : 'rotate(-270deg)', transition: 'transform 0.2s', marginLeft: 2 }} />
+            </button>
+
+            {profileDropdownOpen && (
+              <div style={{
+                position: 'absolute', top: 'calc(100% + 10px)', right: 0, width: 230,
+                background: '#1a1a1c', border: '1px solid rgba(255,255,255,0.1)',
+                borderRadius: 18, boxShadow: '0 24px 64px rgba(0,0,0,0.5)', zIndex: 9999,
+                overflow: 'hidden',
+              }}>
+                <div style={{ padding: '14px 16px', borderBottom: '1px solid rgba(255,255,255,0.08)' }}>
+                  <div style={{ fontSize: 10, color: 'rgba(255,255,255,0.35)', textTransform: 'uppercase', letterSpacing: 1, marginBottom: 3 }}>Signed in as</div>
+                  <div style={{ fontSize: 13, fontWeight: 700, color: 'white', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{user?.name || user?.email?.split('@')[0]}</div>
+                  <div style={{ fontSize: 11, color: '#94a3b8', marginTop: 1, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{user?.email}</div>
+                  <span style={{ display:'inline-block', marginTop:4, fontSize:10, fontWeight:700, padding:'2px 8px', background:'rgba(212,128,53,0.15)', color:'#D48035', borderRadius:20, border:'1px solid rgba(212,128,53,0.25)', textTransform:'capitalize' }}>{roleLabel}</span>
+                </div>
+                {[{icon:<User style={{width:15,height:15}}/>, label:'My Profile', action:()=>{router.push('/profile');setProfileDropdownOpen(false);}},
+                  {icon:<Crown style={{width:15,height:15,color:'#f97316'}}/>, label:'My Membership', action:()=>{router.push('/membership');setProfileDropdownOpen(false);}}
+                ].map(item => (
+                  <button key={item.label} onClick={item.action} style={{ display:'flex', alignItems:'center', gap:10, width:'100%', padding:'11px 16px', background:'none', border:'none', cursor:'pointer', color:'rgba(255,255,255,0.75)', fontSize:13, fontWeight:500, textAlign:'left', transition:'all 0.15s' }}
+                    onMouseEnter={e=>{e.currentTarget.style.background='rgba(255,255,255,0.06)';e.currentTarget.style.color='#D48035';}}
+                    onMouseLeave={e=>{e.currentTarget.style.background='none';e.currentTarget.style.color='rgba(255,255,255,0.75)';}}
+                  >{item.icon}{item.label}</button>
+                ))}
+                <div style={{ borderTop: '1px solid rgba(255,255,255,0.08)' }}>
+                  <button onClick={()=>{handleLogout();setProfileDropdownOpen(false);}} style={{ display:'flex', alignItems:'center', gap:10, width:'100%', padding:'11px 16px', background:'none', border:'none', cursor:'pointer', color:'rgba(239,68,68,0.85)', fontSize:13, fontWeight:600, textAlign:'left', transition:'all 0.15s' }}
+                    onMouseEnter={e=>{e.currentTarget.style.background='rgba(239,68,68,0.08)';}}
+                    onMouseLeave={e=>{e.currentTarget.style.background='none';}}
+                  ><LogoutIcon style={{width:15,height:15}}/> Logout</button>
+                </div>
+              </div>
+            )}
+          </div>
           <NotificationBell iconColor="#64748b" hoverColor="#0f172a" />
         </Box>
 
@@ -321,6 +399,5 @@ export default function AdminSidebar({ children }) {
           {children}
         </Box>
       </Box>
-    </Box>
-  );
+    </Box>  );
 }

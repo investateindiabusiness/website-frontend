@@ -513,6 +513,21 @@ export const confirmPayment = (payload) =>
     body: JSON.stringify(payload)
   });
 
+export const createPayment = (payload) =>
+  apiRequest('/api/payments', {
+    method: 'POST',
+    body: JSON.stringify(payload)
+  });
+
+export const getMembershipPricing = () =>
+  apiRequest('/api/auth/membership-pricing');
+
+export const updateMembershipPricing = (payload) =>
+  apiRequest('/api/admin/membership-pricing', {
+    method: 'PATCH',
+    body: JSON.stringify(payload)
+  });
+
 // --- UPLOAD ---
 export const uploadImage = (file, folder = 'misc') => {
   const formData = new FormData();

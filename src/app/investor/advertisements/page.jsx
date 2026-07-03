@@ -41,14 +41,7 @@ import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 
-// Zone display metadata — fallback names/icons if backend is missing a field
-const ZONE_META = {
-  zone1: { name: 'Builder Dashboard Leaderboard', costPerDay: 9 },
-  zone2: { name: 'Investor Dashboard Leaderboard', costPerDay: 10 },
-  zone3: { name: 'Project Search Results Inline Ad', costPerDay: 10 },
-  zone4: { name: 'Investor Project Details', costPerDay: 10 },
-  zone5: { name: 'Landing Page Hero Spotlight', costPerDay: 10 },
-};
+// Zone display metadata is now loaded entirely from the backend.
 
 // Initialize Stripe outside component render to avoid recreating Stripe object on every render
 const stripePromise = loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY || 'pk_test_placeholder');
@@ -146,10 +139,9 @@ export default function InvestorAdvertisements() {
       const enriched = (data.data || [])
         .filter((z) => !z.allowedBookers || z.allowedBookers.includes('investor'))
         .map((z) => ({
-          ...ZONE_META[z.id],   // fallback defaults if backend is missing a field
-          ...z,                 // backend values win (costPerDay come from DB)
-          name: ZONE_META[z.id]?.name || z.name || z.id,
-          costPerDay: z.costPerDay ?? ZONE_META[z.id]?.costPerDay ?? 0,
+          ...z,
+          name: z.name || z.id,
+          costPerDay: z.costPerDay ?? 0,
         }));
       setZones(enriched);
       if (selectedZone) {

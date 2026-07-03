@@ -5,6 +5,7 @@ import { useRouter, usePathname } from 'next/navigation';
 import { useAuth } from '@/hooks/AuthContext';
 import { toast } from '@/hooks/use-toast';
 import AdminSidebar from '@/components/AdminSidebar';
+import MembershipGuard from '@/components/MembershipGuard';
 
 const SP_PUBLIC_PATHS = ['/service-provider', '/service-provider/login', '/service-provider/register'];
 
@@ -38,5 +39,9 @@ export default function ServiceProviderLayout({ children }) {
     return <>{children}</>;
   }
 
-  return <AdminSidebar>{children}</AdminSidebar>;
+  return (
+    <MembershipGuard>
+      <AdminSidebar>{children}</AdminSidebar>
+    </MembershipGuard>
+  );
 }

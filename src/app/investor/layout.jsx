@@ -5,6 +5,7 @@ import { useRouter, usePathname } from 'next/navigation';
 import { useAuth } from '@/hooks/AuthContext';
 import { toast } from '@/hooks/use-toast';
 import AdminSidebar from '@/components/AdminSidebar';
+import MembershipGuard from '@/components/MembershipGuard';
 
 const INVESTOR_PUBLIC_PATHS = ['/investor', '/investor/login', '/investor/register'];
 
@@ -47,5 +48,9 @@ export default function InvestorLayout({ children }) {
     return <>{children}</>;
   }
 
-  return <AdminSidebar>{children}</AdminSidebar>;
+  return (
+    <MembershipGuard>
+      <AdminSidebar>{children}</AdminSidebar>
+    </MembershipGuard>
+  );
 }

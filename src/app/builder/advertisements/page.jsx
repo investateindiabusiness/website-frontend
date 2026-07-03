@@ -40,14 +40,7 @@ import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 
-// Zone display metadata — names and pricing shown in the sidebar list
-const ZONE_META = {
-  zone1: { name: 'Builder Dashboard Leaderboard', cost: 63, campaignDuration: 7 },
-  zone2: { name: 'Investor Dashboard Leaderboard', cost: 70, campaignDuration: 7 },
-  zone3: { name: 'Project Search Results Inline Ad', cost: 70, campaignDuration: 7 },
-  zone4: { name: 'Investor Project Details', cost: 70, campaignDuration: 7 },
-  zone5: { name: 'Landing Page Hero Spotlight', cost: 70, campaignDuration: 7 },
-};
+// Zone display metadata is now loaded entirely from the backend.
 
 // Initialize Stripe outside component render to avoid recreating Stripe object on every render
 const stripePromise = loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY || 'pk_test_placeholder');
@@ -104,10 +97,11 @@ export default function BuilderAdvertisements() {
   });
   const [isSubmittingRectify, setIsSubmittingRectify] = useState(false);
 
-  // Calendar Navigation & Interaction States
+  // Calendar - free range selection (same as investor)
   const [calendarDate, setCalendarDate] = useState(new Date());
-  const [selectedSlot, setSelectedSlot] = useState(null);
-  const [hoveredSlot, setHoveredSlot] = useState(null);
+  const [rangeStart, setRangeStart] = useState(null);
+  const [rangeEnd, setRangeEnd] = useState(null);
+  const [hoverDate, setHoverDate] = useState(null);
 
   useEffect(() => {
     if (!user) return;
@@ -172,11 +166,10 @@ export default function BuilderAdvertisements() {
         .filter((z) => !z.allowedBookers || z.allowedBookers.includes('builder'))
         .filter((z) => ['zone2', 'zone3', 'zone4'].includes(z.id))
         .map((z) => ({
-          ...ZONE_META[z.id],
           ...z,
-          name: ZONE_META[z.id]?.name || z.name || z.id,
-          cost: z.cost ?? ZONE_META[z.id]?.cost ?? '—',
-          campaignDuration: z.campaignDuration ?? ZONE_META[z.id]?.campaignDuration ?? '—',
+          name: z.name || z.id,
+          costPerDay: z.costPerDay ?? 0,
+          campaignDuration: z.campaignDuration ?? 7,
         }));
       setZones(enriched);
       if (selectedZone) {
@@ -237,26 +230,60 @@ export default function BuilderAdvertisements() {
 
   const handleSelectZone = async (zone) => {
     setSelectedZone(zone);
-    setSelectedSlot(null);
-    setHoveredSlot(null);
+    setRangeStart(null);
+    setRangeEnd(null);
+    setHoverDate(null);
     if (zone) {
       loadSlots(zone.id, false);
     }
   };
 
-  const handleOpenBookingModal = (slot) => {
-    router.push(`/builder/advertisements/book?zoneId=${selectedZone.id}&slotId=${slot.id}&startDate=${slot.startDate}&endDate=${slot.endDate}&timeSlot=${encodeURIComponent(slot.timeSlot || 'All Day')}`);
-    setBookingSlot(slot);
-    setAdContent({
-      imageUrl: '',
-      videoUrl: '',
-      text: '',
-      targetUrl: ''
-    });
-    setCouponCodeInput('');
-    setAppliedCoupon(null);
-    setCouponError('');
+  // Navigate to booking page with selected range
+  const handleOpenBookingModal = () => {
+    if (!rangeStart || !rangeEnd || !selectedZone) return;
+    const msPerDay = 1000 * 60 * 60 * 24;
+    const days = Math.round((new Date(rangeEnd) - new Date(rangeStart)) / msPerDay) + 1;
+    const totalCost = (selectedZone?.costPerDay || 0) * days;
+    router.push(
+      `/builder/advertisements/book?zoneId=${selectedZone.id}&startDate=${rangeStart}&endDate=${rangeEnd}&days=${days}&costPerDay=${selectedZone.costPerDay}&totalCost=${totalCost}`
+    );
   };
+
+  // Handle calendar date clicks for free range selection
+  const handleCalendarClick = (dateStr, isBooked) => {
+    if (isBooked) return;
+    const today = new Date().toISOString().split('T')[0];
+    if (dateStr < today) return;
+
+    if (!rangeStart || (rangeStart && rangeEnd)) {
+      setRangeStart(dateStr);
+      setRangeEnd(null);
+    } else {
+      if (dateStr < rangeStart) {
+        setRangeEnd(rangeStart);
+        setRangeStart(dateStr);
+      } else if (dateStr === rangeStart) {
+        setRangeStart(null);
+      } else {
+        const overlaps = slots.some(s => s.isBooked && rangeStart <= s.endDate && dateStr >= s.startDate);
+        if (overlaps) {
+          toast({ title: 'Overlap Detected', description: 'Your selected range overlaps a booked period. Please choose different dates.', variant: 'destructive' });
+          return;
+        }
+        setRangeEnd(dateStr);
+      }
+    }
+  };
+
+  // Compute selection cost
+  const getSelectionDays = () => {
+    if (!rangeStart || !rangeEnd) return 0;
+    const msPerDay = 1000 * 60 * 60 * 24;
+    return Math.round((new Date(rangeEnd) - new Date(rangeStart)) / msPerDay) + 1;
+  };
+  const selectionDays = getSelectionDays();
+  const totalCost = selectionDays > 0 ? (selectedZone?.costPerDay || 0) * selectionDays : 0;
+
 
   const handleCloseBookingModal = () => {
     setBookingSlot(null);
@@ -423,6 +450,34 @@ export default function BuilderAdvertisements() {
   const calendarMonth = calendarDate.getMonth();
   const daysInMonth = new Date(calendarYear, calendarMonth + 1, 0).getDate();
   const firstDayIndex = new Date(calendarYear, calendarMonth, 1).getDay();
+  const today = new Date().toISOString().split('T')[0];
+
+  // Helper: is a given date booked?
+  const isDateBooked = (dateStr) =>
+    slots.some(s => s.isBooked && s.startDate <= dateStr && s.endDate >= dateStr);
+
+  // Helper: get style class for each calendar day
+  const getDateRangeClass = (dateStr) => {
+    const isPast = dateStr < today;
+    const booked = isDateBooked(dateStr);
+    if (isPast) return { bg: 'bg-slate-100 text-slate-300 cursor-not-allowed', label: null };
+    if (booked) return { bg: 'bg-red-500 text-white font-bold cursor-not-allowed shadow-sm', label: 'Booked' };
+
+    const effectiveEnd = rangeEnd || hoverDate;
+    const lo = rangeStart && effectiveEnd ? (rangeStart <= effectiveEnd ? rangeStart : effectiveEnd) : null;
+    const hi = rangeStart && effectiveEnd ? (rangeStart <= effectiveEnd ? effectiveEnd : rangeStart) : null;
+
+    const inRange = lo && hi && dateStr >= lo && dateStr <= hi;
+    const isStart = rangeStart && dateStr === rangeStart;
+    const isEnd = rangeEnd && dateStr === rangeEnd;
+
+    if (isStart && rangeEnd) return { bg: 'bg-[#0b264f] text-white font-bold rounded-l-xl cursor-pointer shadow-md', label: 'Start' };
+    if (isEnd) return { bg: 'bg-[#0b264f] text-white font-bold rounded-r-xl cursor-pointer shadow-md', label: 'End' };
+    if (isStart && !rangeEnd) return { bg: 'bg-[#0b264f] text-white font-bold cursor-pointer shadow-md ring-2 ring-blue-300', label: 'Start' };
+    if (inRange) return { bg: 'bg-blue-100 text-blue-800 font-semibold cursor-pointer', label: null };
+
+    return { bg: 'bg-white hover:bg-green-50 border border-slate-100 text-slate-700 cursor-pointer', label: 'Open' };
+  };
 
   const monthNames = [
     "January", "February", "March", "April", "May", "June",
@@ -557,7 +612,7 @@ export default function BuilderAdvertisements() {
                             {zone.name}
                           </span>
                           <span className="text-xs font-semibold text-orange-500">
-                            ₹{zone.cost} / {zone.campaignDuration} days
+                            ₹{zone.costPerDay}/day
                           </span>
                         </div>
 
@@ -576,11 +631,11 @@ export default function BuilderAdvertisements() {
                   <CardContent className="p-5 space-y-4">
                     <div className="grid grid-cols-2 gap-4">
                       <div className="space-y-1">
-                        <span className="text-[10px] text-slate-400 uppercase font-semibold flex items-center"><DollarSign className="w-3.5 h-3.5 mr-0.5 text-green-600" /> Cost / Slot</span>
-                        <p className="text-lg font-bold text-slate-800">₹{selectedZone.cost}</p>
+                        <span className="text-[10px] text-slate-400 uppercase font-semibold flex items-center"><DollarSign className="w-3.5 h-3.5 mr-0.5 text-green-600" /> Cost / Day</span>
+                        <p className="text-lg font-bold text-slate-800">₹{selectedZone.costPerDay}</p>
                       </div>
                       <div className="space-y-1">
-                        <span className="text-[10px] text-slate-400 uppercase font-semibold flex items-center"><Clock className="w-3.5 h-3.5 mr-0.5 text-blue-600" /> Duration</span>
+                        <span className="text-[10px] text-slate-400 uppercase font-semibold flex items-center"><Clock className="w-3.5 h-3.5 mr-0.5 text-blue-600" /> Campaign Duration</span>
                         <p className="text-base font-bold text-slate-800">{selectedZone.campaignDuration} Days</p>
                       </div>
                     </div>
@@ -609,7 +664,7 @@ export default function BuilderAdvertisements() {
                 <CardHeader className="bg-slate-50 border-b border-slate-100 py-4 px-6 flex items-center justify-between">
                   <div>
                     <CardTitle className="text-lg font-bold text-slate-800">Available Booking Calendar</CardTitle>
-                    <CardDescription className="text-xs">Select a green date slot to schedule your advertisement campaign in {selectedZone?.name}</CardDescription>
+                    <CardDescription className="text-xs">Click a start date, then click an end date to select your campaign window in {selectedZone?.name}</CardDescription>
                   </div>
                 </CardHeader>
                 <CardContent className="p-6">
@@ -654,60 +709,26 @@ export default function BuilderAdvertisements() {
                         <div>Sat</div>
                       </div>
 
-                      <div className="grid grid-cols-7 gap-2">
+                      <div className="grid grid-cols-7 gap-1">
                         {Array.from({ length: firstDayIndex }).map((_, idx) => (
                           <div key={`empty-${idx}`} className="h-10 md:h-12"></div>
                         ))}
                         {Array.from({ length: daysInMonth }).map((_, idx) => {
                           const day = idx + 1;
                           const dateStr = `${calendarYear}-${String(calendarMonth + 1).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
-                          const slot = getSlotForDate(dateStr);
-
-                          let dayBg = "bg-white hover:bg-slate-50 border border-slate-100 text-slate-700";
-                          let isClickable = false;
-                          let title = "";
-
-                          if (slot) {
-                            if (slot.isBooked) {
-                              dayBg = "bg-red-500 text-white font-bold cursor-not-allowed shadow-sm";
-                              title = `Booked slot: ${formatDate(slot.startDate)} to ${formatDate(slot.endDate)}`;
-                            } else {
-                              const isSelected = selectedSlot?.startDate && slot.startDate === selectedSlot.startDate;
-                              const isHovered = hoveredSlot && !hoveredSlot.isBooked && dateStr >= hoveredSlot.startDate && dateStr <= hoveredSlot.endDate;
-                              dayBg = isSelected
-                                ? "bg-green-700 text-white font-bold ring-2 ring-green-500 shadow-md cursor-pointer"
-                                : isHovered
-                                  ? "bg-green-400 text-white font-semibold cursor-pointer shadow-sm"
-                                  : "bg-green-500 text-white font-semibold hover:bg-green-600 cursor-pointer shadow-sm";
-                              isClickable = true;
-                              title = `Available slot: ${formatDate(slot.startDate)} to ${formatDate(slot.endDate)}`;
-                            }
-                          }
+                          const { bg, label } = getDateRangeClass(dateStr);
 
                           return (
                             <div
                               key={`day-${day}`}
-                              className={`h-10 md:h-12 flex flex-col items-center justify-center rounded-lg text-xs md:text-sm transition-all duration-150 relative select-none ${dayBg}`}
-                              onClick={() => {
-                                if (isClickable && slot) {
-                                  setSelectedSlot(slot);
-                                }
-                              }}
-                              onMouseEnter={() => {
-                                if (slot && !slot.isBooked) {
-                                  setHoveredSlot(slot);
-                                }
-                              }}
-                              onMouseLeave={() => {
-                                setHoveredSlot(null);
-                              }}
-                              title={title}
+                              className={`h-10 md:h-12 flex flex-col items-center justify-center rounded-lg text-xs md:text-sm transition-all duration-100 relative select-none ${bg}`}
+                              onClick={() => handleCalendarClick(dateStr, isDateBooked(dateStr))}
+                              onMouseEnter={() => { if (rangeStart && !rangeEnd) setHoverDate(dateStr); }}
+                              onMouseLeave={() => setHoverDate(null)}
                             >
                               <span>{day}</span>
-                              {slot && (
-                                <span className="absolute bottom-0.5 text-[8px] opacity-75 font-mono">
-                                  {slot.isBooked ? "Booked" : "Open"}
-                                </span>
+                              {label && (
+                                <span className="absolute bottom-0.5 text-[8px] opacity-75 font-mono">{label}</span>
                               )}
                             </div>
                           );
@@ -717,8 +738,12 @@ export default function BuilderAdvertisements() {
                       {/* Legend */}
                       <div className="flex items-center gap-4 text-xs font-semibold text-slate-500 pt-2 border-t border-slate-100">
                         <div className="flex items-center gap-1.5">
-                          <div className="w-3.5 h-3.5 bg-green-500 rounded"></div>
-                          <span>Available</span>
+                          <div className="w-3.5 h-3.5 bg-[#0b264f] rounded"></div>
+                          <span>Selected</span>
+                        </div>
+                        <div className="flex items-center gap-1.5">
+                          <div className="w-3.5 h-3.5 bg-blue-100 border border-blue-200 rounded"></div>
+                          <span>In Range</span>
                         </div>
                         <div className="flex items-center gap-1.5">
                           <div className="w-3.5 h-3.5 bg-red-500 rounded"></div>
@@ -726,7 +751,7 @@ export default function BuilderAdvertisements() {
                         </div>
                         <div className="flex items-center gap-1.5">
                           <div className="w-3.5 h-3.5 bg-white border border-slate-200 rounded"></div>
-                          <span>No Slot</span>
+                          <span>Available</span>
                         </div>
                       </div>
                     </div>
@@ -734,28 +759,60 @@ export default function BuilderAdvertisements() {
                 </CardContent>
               </Card>
 
-              {/* Selected Slot Information Card */}
-              {selectedSlot && (
-                <Card className="border border-green-200 bg-green-50/50 rounded-2xl p-4 shadow-sm animate-in fade-in slide-in-from-bottom-2 duration-200">
+              {/* Live Cost Preview Card — investor-style free range */}
+              {rangeStart && (
+                <Card className={`border rounded-2xl p-4 shadow-sm animate-in fade-in slide-in-from-bottom-2 duration-200 ${rangeEnd ? 'border-[#0b264f] bg-[#0b264f]/5' : 'border-blue-200 bg-blue-50/50'}`}>
                   <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
                     <div>
-                      <h4 className="text-xs font-bold text-green-800 uppercase tracking-wide">Selected Available Slot</h4>
+                      <h4 className="text-xs font-bold text-[#0b264f] uppercase tracking-wide">
+                        {rangeEnd ? 'Selected Campaign Window' : 'Select an End Date…'}
+                      </h4>
                       <p className="text-sm font-bold text-slate-800 mt-1">
-                        {formatDate(selectedSlot.startDate)} to {formatDate(selectedSlot.endDate)}
+                        {formatDate(rangeStart)}
+                        {(rangeEnd || hoverDate) && (
+                          <> → {formatDate(rangeEnd || hoverDate)}</>
+                        )}
                       </p>
-                      <p className="text-xs text-slate-500 mt-0.5 font-medium">Time Slot: {selectedSlot.timeSlot || 'All Day'}</p>
+                      {selectionDays > 0 && (
+                        <p className="text-xs text-slate-500 mt-0.5 font-medium">{selectionDays} day{selectionDays !== 1 ? 's' : ''} selected</p>
+                      )}
                     </div>
-                    <div className="flex items-center gap-4 w-full md:w-auto justify-between md:justify-end border-t md:border-none border-slate-100 pt-3 md:pt-0">
-                      <div>
-                        <span className="text-[10px] text-slate-400 uppercase font-semibold block">Total Price</span>
-                        <p className="text-base font-bold text-[#0b264f]">₹{selectedZone?.cost}</p>
+                    <div className="flex items-center gap-6 w-full md:w-auto justify-between md:justify-end border-t md:border-none border-slate-100 pt-3 md:pt-0">
+                      <div className="text-right">
+                        <span className="text-[10px] text-slate-400 uppercase font-semibold block">
+                          ₹{selectedZone?.costPerDay}/day × {selectionDays || (hoverDate ? Math.round((new Date(hoverDate) - new Date(rangeStart)) / 86400000) + 1 : '?')} days
+                        </span>
+                        <p className="text-xl font-bold text-[#0b264f]">
+                          {totalCost > 0 ? `₹${totalCost}` : '...'}
+                        </p>
                       </div>
-                      <Button
-                        onClick={() => handleOpenBookingModal(selectedSlot)}
-                        className="bg-green-600 hover:bg-green-700 text-white rounded-xl shadow-md font-semibold px-5"
-                      >
-                        Book Ad Slot
-                      </Button>
+                      {rangeEnd ? (
+                        <div className="flex gap-2">
+                          <Button
+                            onClick={() => { setRangeStart(null); setRangeEnd(null); }}
+                            variant="outline"
+                            size="sm"
+                            className="rounded-xl border-slate-300 text-slate-600"
+                          >
+                            Reset
+                          </Button>
+                          <Button
+                            onClick={handleOpenBookingModal}
+                            className="bg-[#0b264f] hover:bg-[#0a1f3f] text-white rounded-xl shadow-md font-semibold px-5"
+                          >
+                            Book Now →
+                          </Button>
+                        </div>
+                      ) : (
+                        <Button
+                          onClick={() => { setRangeStart(null); }}
+                          variant="ghost"
+                          size="sm"
+                          className="text-slate-400 hover:text-red-500 rounded-xl"
+                        >
+                          Cancel
+                        </Button>
+                      )}
                     </div>
                   </div>
                 </Card>
@@ -909,8 +966,8 @@ export default function BuilderAdvertisements() {
                       <strong className="text-slate-800 text-sm">{formatDate(bookingSlot.startDate)} to {formatDate(bookingSlot.endDate)}</strong>
                     </div>
                     <div className="text-right">
-                      <span className="font-semibold text-slate-400 uppercase tracking-wide block text-[9px]">Base Cost</span>
-                      <strong className="text-slate-800 text-sm">₹{selectedZone?.cost}</strong>
+                      <span className="font-semibold text-slate-400 uppercase tracking-wide block text-[9px]">₹{selectedZone?.costPerDay}/day × {selectedZone?.campaignDuration} days</span>
+                      <strong className="text-slate-800 text-sm">₹{(selectedZone?.costPerDay || 0) * (selectedZone?.campaignDuration || 7)}</strong>
                     </div>
                   </div>
 
@@ -1009,7 +1066,7 @@ export default function BuilderAdvertisements() {
                     {appliedCoupon && selectedZone && (
                       <div className="flex justify-between items-center mt-2 font-bold text-sm pt-2 border-t border-slate-100">
                         <span className="text-slate-700">Final Total:</span>
-                        <span className="text-[#0b264f] text-lg">₹{Math.max(0, selectedZone.cost - appliedCoupon.discountAmount)}</span>
+                        <span className="text-[#0b264f] text-lg">₹{Math.max(0, (selectedZone?.costPerDay || 0) * (selectedZone?.campaignDuration || 7) - appliedCoupon.discountAmount)}</span>
                       </div>
                     )}
                   </div>

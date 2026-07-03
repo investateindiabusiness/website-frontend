@@ -1,8 +1,9 @@
 "use client";
 
-import React, { createContext, useContext, useState, useEffect } from 'react';
+import React, { createContext, useContext, useState, useEffect, useCallback } from 'react';
 import { usePathname, useRouter } from 'next/navigation';
 import { toast } from '@/hooks/use-toast';
+import { apiRequest } from '@/api';
 
 const AuthContext = createContext(null);
 
@@ -153,8 +154,30 @@ export const AuthProvider = ({ children }) => {
     setUser(null);
   };
 
+  const refreshUser = useCallback(async () => {
+    try {
+      const data = await apiRequest('/api/auth/me', {
+        method: 'GET'
+      });
+      if (data.success && data.user) {
+        const savedUser = sessionStorage.getItem('user_session');
+        if (savedUser) {
+          const parsedUser = JSON.parse(savedUser);
+          const updated = {
+            ...parsedUser,
+            ...data.user,
+          };
+          sessionStorage.setItem('user_session', JSON.stringify(updated));
+          setUser(updated);
+        }
+      }
+    } catch (err) {
+      console.warn('Failed to refresh user profile:', err);
+    }
+  }, []);
+
   return (
-    <AuthContext.Provider value={{ user, login, logout, loading }}>
+    <AuthContext.Provider value={{ user, login, logout, loading, refreshUser }}>
       {children}
     </AuthContext.Provider>
   );
