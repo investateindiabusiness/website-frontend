@@ -22,6 +22,16 @@ const isSessionExpired = (userData) => {
   return false;
 };
 
+const isProtectedRoute = (path) => {
+  if (!path) return false;
+  const isAdminRoute = path.startsWith('/admin') && path !== '/admin/login';
+  const isBuilderRoute = (path.startsWith('/builder/') && path !== '/builder/login' && path !== '/builder/register') || path === '/builder/dashboard' || path === '/builder/projects' || path === '/builder/advertisements';
+  const isInvestorRoute = path === '/dashboard' || path === '/properties' || (path.startsWith('/investor/') && path !== '/investor/login' && path !== '/investor/register') || path.startsWith('/project/');
+  const isServiceProviderRoute = (path.startsWith('/service-provider/') && path !== '/service-provider' && path !== '/service-provider/login' && path !== '/service-provider/register') || path === '/service-provider/dashboard' || path === '/service-provider/advertisements';
+
+  return isAdminRoute || isBuilderRoute || isInvestorRoute || isServiceProviderRoute;
+};
+
 export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -35,14 +45,17 @@ export const AuthProvider = ({ children }) => {
       if (isSessionExpired(parsedUser)) {
         const role = parsedUser.role;
         sessionStorage.removeItem('user_session');
-        if (role === 'admin') {
-          window.location.href = '/admin/login?session_expired=true';
-        } else if (role === 'builder') {
-          window.location.href = '/builder/login?session_expired=true';
-        } else if (role === 'serviceProvider') {
-          window.location.href = '/service-provider/login?session_expired=true';
-        } else {
-          window.location.href = '/investor/login?session_expired=true';
+        const currentPath = typeof window !== 'undefined' ? window.location.pathname : '';
+        if (isProtectedRoute(currentPath)) {
+          if (role === 'admin') {
+            window.location.href = '/admin/login?session_expired=true';
+          } else if (role === 'builder') {
+            window.location.href = '/builder/login?session_expired=true';
+          } else if (role === 'serviceProvider') {
+            window.location.href = '/service-provider/login?session_expired=true';
+          } else {
+            window.location.href = '/investor/login?session_expired=true';
+          }
         }
       } else {
         setUser(parsedUser);
@@ -63,14 +76,16 @@ export const AuthProvider = ({ children }) => {
           sessionStorage.removeItem('user_session');
           setUser(null);
 
-          if (role === 'admin') {
-            window.location.href = '/admin/login?session_expired=true';
-          } else if (role === 'builder') {
-            window.location.href = '/builder/login?session_expired=true';
-          } else if (role === 'serviceProvider') {
-            window.location.href = '/service-provider/login?session_expired=true';
-          } else {
-            window.location.href = '/investor/login?session_expired=true';
+          if (isProtectedRoute(pathname)) {
+            if (role === 'admin') {
+              window.location.href = '/admin/login?session_expired=true';
+            } else if (role === 'builder') {
+              window.location.href = '/builder/login?session_expired=true';
+            } else if (role === 'serviceProvider') {
+              window.location.href = '/service-provider/login?session_expired=true';
+            } else {
+              window.location.href = '/investor/login?session_expired=true';
+            }
           }
           return true;
         }

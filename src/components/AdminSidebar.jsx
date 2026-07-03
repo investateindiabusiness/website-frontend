@@ -310,19 +310,36 @@ export default function AdminSidebar({ children }) {
             <NotificationBell iconColor="rgba(255,255,255,0.7)" hoverColor="white" />
           </Box>
         </Box>
-
         {/* Desktop top bar */}
         <Box sx={{
           display: { xs: 'none', md: 'flex' },
           alignItems: 'center',
-          justifyContent: 'flex-end',
+          justifyContent: 'space-between',
           px: 3,
           height: 50,
           bgcolor: 'white',
           borderBottom: '1px solid #e2e8f0',
           position: 'sticky', top: 0, zIndex: 100,
         }}>
-          {/* Profile Dropdown — desktop */}
+          {/* Logo visible when sidebar is collapsed */}
+          <Box sx={{ 
+            opacity: collapsed ? 1 : 0, 
+            visibility: collapsed ? 'visible' : 'hidden', 
+            transition: 'opacity 0.25s ease, visibility 0.25s ease', 
+            display: 'flex', 
+            alignItems: 'center',
+            bgcolor: '#0f172a',
+            px: 1.5,
+            py: 0.2,
+            borderRadius: '6px',
+          }}>
+            <Link href="/" style={{ display: 'flex', alignItems: 'center' }}>
+              <img src="/logo-small-white.png" alt="Logo" style={{ height: 38, objectFit: 'contain' }} />
+            </Link>
+          </Box>
+
+          <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
+            {/* Profile Dropdown — desktop */}
           <div ref={profileDropdownRef} style={{ position: 'relative' }}>
             <button
               onClick={() => setProfileDropdownOpen(p => !p)}
@@ -378,6 +395,7 @@ export default function AdminSidebar({ children }) {
           </div>
           <NotificationBell iconColor="#64748b" hoverColor="#0f172a" />
         </Box>
+      </Box>
 
         {/* Page Content */}
         <Box sx={{

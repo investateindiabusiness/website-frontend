@@ -559,6 +559,8 @@ h4,
     margin: 0 auto 1.5rem;
     padding: 0 2rem;
     display: flex;
+    flex-direction: column;
+    align-items: center;
     justify-content: center;
     text-align: center;
 }
@@ -4788,4 +4790,12 @@ h4,
     width: 24px;
     border-radius: 6px;
     background: #D48035;
+}
+
+/* Hide default browser password reveal/eye icons */
+input::-ms-reveal,
+input::-ms-clear,
+input::-webkit-contacts-auto-fill-button,
+input::-webkit-credentials-auto-fill-button {
+    display: none !important;
 }

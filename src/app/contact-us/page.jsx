@@ -28,7 +28,7 @@ export default function ContactUs() {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
-  const isFormValid = 
+  const isFormValid =
     formData.name.trim() !== '' &&
     formData.phone.trim() !== '' &&
     formData.email.trim() !== '' &&
@@ -85,7 +85,7 @@ export default function ContactUs() {
         ></div>
 
         <div className="container mx-auto px-4 relative z-10 text-center text-white">
-          <motion.h1 
+          <motion.h1
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6 }}
@@ -93,7 +93,7 @@ export default function ContactUs() {
           >
             Get in Touch
           </motion.h1>
-          <motion.p 
+          <motion.p
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, delay: 0.2 }}
@@ -107,9 +107,9 @@ export default function ContactUs() {
       <section className="py-20 bg-white relative z-20">
         <div className="container mx-auto px-4 max-w-6xl">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 lg:gap-24">
-            
+
             {/* Left Column: Contact Info */}
-            <motion.div 
+            <motion.div
               initial={{ opacity: 0, x: -50 }}
               whileInView={{ opacity: 1, x: 0 }}
               viewport={{ once: true }}
@@ -143,7 +143,8 @@ export default function ContactUs() {
                     <h3 className="text-xl font-bold text-[#0b264f] mb-2">Location</h3>
                     <p className="text-gray-500 leading-relaxed">
                       Corporate Office: Hyderabad, India <br />
-                      New York, USA
+                      Valentine Mark Corporation
+                      55 West 47 Street Suite 425 New York, NY 10036 USA
                     </p>
                   </div>
                 </div>
@@ -154,8 +155,8 @@ export default function ContactUs() {
                   </div>
                   <div className="border-l-2 border-orange-400/30 pl-6">
                     <h3 className="text-xl font-bold text-[#0b264f] mb-2">Email Us</h3>
-                    <a 
-                      href="mailto:investateindia.business@gmail.com" 
+                    <a
+                      href="mailto:investateindia.business@gmail.com"
                       className="text-gray-500 hover:text-orange-500 transition-colors duration-200"
                     >
                       investateindia.business@gmail.com
@@ -166,7 +167,7 @@ export default function ContactUs() {
             </motion.div>
 
             {/* Right Column: Form */}
-            <motion.div 
+            <motion.div
               initial={{ opacity: 0, x: 50 }}
               whileInView={{ opacity: 1, x: 0 }}
               viewport={{ once: true }}
@@ -253,7 +254,7 @@ export default function ContactUs() {
                       </select>
                       <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-4 text-gray-500">
                         <svg className="fill-current h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
-                          <path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z"/>
+                          <path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z" />
                         </svg>
                       </div>
                     </div>
@@ -269,7 +270,7 @@ export default function ContactUs() {
                     placeholder="Your message here"
                   ></textarea>
 
-                  <button 
+                  <button
                     type="submit"
                     disabled={isLoading || !isFormValid}
                     className="bg-[#0b264f] hover:bg-orange-500 text-white font-bold py-4 px-10 transition-all duration-300 flex items-center justify-center gap-2 rounded-lg disabled:opacity-50 disabled:cursor-not-allowed uppercase tracking-wider text-sm shadow-md"

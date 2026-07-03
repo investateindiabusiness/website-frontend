@@ -164,3 +164,11 @@ h1, h2, h3, h4, h5, h6,
     word-spacing: -0.04em !important;
 }
 
+
+/* Hide default browser password reveal/eye icons */
+input::-ms-reveal,
+input::-ms-clear,
+input::-webkit-contacts-auto-fill-button,
+input::-webkit-credentials-auto-fill-button {
+    display: none !important;
+}
