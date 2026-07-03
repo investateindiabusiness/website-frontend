@@ -4,7 +4,7 @@ import React, { useState, useEffect, useRef, Suspense } from 'react';
 import Link from 'next/link';
 import { useRouter, usePathname, useSearchParams } from 'next/navigation';
 import { Button } from './ui/button';
-import { Menu, X, LogOut, UserCircle, LayoutDashboard, ChevronDown, User, Pencil } from 'lucide-react';
+import { Menu, X, LogOut, UserCircle, LayoutDashboard, ChevronDown, User, Pencil, ChevronLeft, ChevronRight, Briefcase, Award, Compass, HelpCircle, Network, ArrowRight } from 'lucide-react';
 import { useAuth } from '@/hooks/AuthContext';
 import { toast } from '@/hooks/use-toast';
 import { apiRequest } from '@/api';
@@ -116,12 +116,11 @@ const HeaderContent = ({ transparent = false }) => {
   const getNavLinks = () => {
     if (!displayUser) {
       return [
-        { label: 'Home', path: '/' },
+        { label: 'Investor', path: '/' },
         { label: 'Builder', path: '/builder' },
         { label: 'Service Provider', path: '/service-provider' },
-        { label: 'About Us', path: '/about-us' },
+        // { label: 'About Us', path: '/about-us' },
         { label: 'Gallery', path: '/gallery' },
-        { label: 'Contact Us', path: '/contact-us' },
       ];
     }
     switch (displayUser.role) {
@@ -152,7 +151,7 @@ const HeaderContent = ({ transparent = false }) => {
         { label: 'Payments', path: '/investor/payments' },
         { label: 'Coupons', path: '/investor/coupons' },
       ];
-      default: return [{ label: 'Home', path: '/' }];
+      default: return [{ label: 'Investor', path: '/' }];
     }
   };
 
@@ -175,7 +174,14 @@ const HeaderContent = ({ transparent = false }) => {
             {user?.role === 'admin' ? (
               <>
                 <button
-                  onClick={() => setLogoMenuOpen(prev => !prev)}
+                  onClick={(e) => {
+                    if (pathname === '/') {
+                      e.preventDefault();
+                      router.push('/business-overview');
+                    } else {
+                      setLogoMenuOpen(prev => !prev);
+                    }
+                  }}
                   className="flex items-center focus:outline-none cursor-pointer"
                 >
                   <img src="/logo-big.png" alt="LOGO" className="hidden md:block h-12 w-auto object-contain" />
@@ -221,7 +227,16 @@ const HeaderContent = ({ transparent = false }) => {
                 )}
               </>
             ) : (
-              <Link href={logoHref} className="flex items-center">
+              <Link
+                href={logoHref}
+                onClick={(e) => {
+                  if (pathname === '/') {
+                    e.preventDefault();
+                    router.push('/business-overview');
+                  }
+                }}
+                className="flex items-center cursor-pointer"
+              >
                 <img src="/logo-big.png" alt="LOGO" className="hidden md:block h-12 w-auto object-contain" />
                 <img src="/logo-small-white.png" alt="LOGO" className="block md:hidden h-10 w-auto object-contain" />
               </Link>
@@ -284,10 +299,17 @@ const HeaderContent = ({ transparent = false }) => {
             </ul>
           </nav>
 
-          {/* Desktop Auth Actions */}
-          {displayUser ? (
-            <div className="hidden md:flex items-center gap-3 mr-4 shrink-0" ref={profileDropdownRef}>
-              <div className="relative">
+          {/* Desktop Right Corner Actions */}
+          <div className="hidden md:flex items-center gap-4 mr-4 shrink-0">
+            <Link
+              href="/contact-us"
+              className="bg-[#D48035] hover:bg-[#B45309] text-white text-xs md:text-sm font-semibold px-5 py-2 rounded-full shadow-lg hover:shadow-orange-500/20 transition-all duration-300 hover:scale-105 active:scale-95"
+            >
+              Contact Us
+            </Link>
+
+            {displayUser && (
+              <div className="relative" ref={profileDropdownRef}>
                 <button
                   onClick={() => setProfileDropdownOpen(prev => !prev)}
                   className="flex items-center gap-2 text-xs font-bold bg-gray-800/60 px-4 py-2 rounded-full border border-gray-700/50 text-gray-200 shadow-inner hover:bg-gray-700 transition-all"
@@ -325,11 +347,17 @@ const HeaderContent = ({ transparent = false }) => {
                   </div>
                 )}
               </div>
-            </div>
-          ) : null}
+            )}
+          </div>
 
           {/* Mobile menu toggle */}
           <div className="md:hidden flex items-center gap-4">
+            <Link
+              href="/contact-us"
+              className="bg-[#D48035] hover:bg-[#B45309] text-white text-xs font-semibold px-3 py-1.5 rounded-full shadow transition-all duration-300 hover:scale-105 active:scale-95"
+            >
+              Contact Us
+            </Link>
             <button onClick={() => setMobileMenuOpen(!mobileMenuOpen)} className="text-gray-300 hover:text-white">
               {mobileMenuOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
             </button>

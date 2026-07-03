@@ -29,8 +29,7 @@ const heroSlides = [
       "The ultimate ecosystem for verified Indian real estate lawyers, chartered accountants, architects, and advisors to expand their reach to top-tier builders and global NRI buyers.",
   },
   {
-    image:
-      "https://images.unsplash.com/photo-1521791136368-1a8b27503ad7?q=80&w=2070&auto=format&fit=crop",
+    image: "/images/hero_service_provider_office.png",
     tag: "Trust & Governance",
     title: "Accelerate Client Acquisition with",
     highlight: "Verified Professional Credibility",
@@ -184,20 +183,18 @@ export default function ServiceProviderHome() {
                 "w=1200&q=75",
               )}
               alt="Hero background"
-              className="absolute inset-0 w-full h-full object-cover z-0"
+              className="absolute inset-0 w-full h-full object-cover z-0 hero-split-image"
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
               transition={{ duration: 1.2, ease: "easeInOut" }}
-              style={{ objectPosition: "center" }}
               loading="eager"
               fetchPriority="high"
             />
           </picture>
         </AnimatePresence>
         <div
-          className="absolute inset-0 z-[1]"
-          style={{ background: "rgba(0,0,0,0.3)" }}
+          className="absolute inset-0 z-[1] hero-split-overlay"
         />
 
         {/* Prev / Next buttons */}
@@ -235,7 +232,7 @@ export default function ServiceProviderHome() {
                 </span>
                 <h1 className="hero-headline">
                   {heroSlides[heroIndex]?.title} <br />
-                  <span className="text-[#D48035]">
+                  <span className="text-white">
                     {heroSlides[heroIndex]?.highlight}
                   </span>
                 </h1>
@@ -253,7 +250,7 @@ export default function ServiceProviderHome() {
               </button> */}
               <button
                 onClick={() => handleAuthClick("register", "serviceProvider")}
-                className="btn bg-white/10 hover:bg-white/20 border border-white/30 text-white px-8 py-3 rounded-full font-bold shadow-lg transition-transform hover:scale-105 active:scale-95"
+                className="btn bg-[#D48035] hover:bg-[#B45309] border-none text-white px-8 py-3 rounded-full font-bold shadow-lg transition-transform hover:scale-105 active:scale-95"
               >
                 Partner Sign In
               </button>

@@ -27,7 +27,7 @@ const heroSlides = [
   },
   {
     image:
-      "https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?q=80&w=2070&auto=format&fit=crop",
+      "/images/skyscraper-construction-hd.png",
     tag: "Global Reach & Trust",
     title: "Elevate Your Brand with",
     highlight: "Verified Institutional Credibility",
@@ -294,20 +294,18 @@ export default function BuilderHome() {
                 "w=1200&q=75",
               )}
               alt="Hero background"
-              className="absolute inset-0 w-full h-full object-cover z-0"
+              className="absolute inset-0 w-full h-full object-cover z-0 hero-split-image"
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
               transition={{ duration: 1.2, ease: "easeInOut" }}
-              style={{ objectPosition: "center" }}
               loading="eager"
               fetchPriority="high"
             />
           </picture>
         </AnimatePresence>
         <div
-          className="absolute inset-0 z-[1]"
-          style={{ background: "rgba(0,0,0,0.22)" }}
+          className="absolute inset-0 z-[1] hero-split-overlay"
         />
 
         {/* Prev / Next buttons */}
