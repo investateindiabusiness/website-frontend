@@ -14,15 +14,18 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { compressAdImage } from '@/utils/imageCompressor';
 
-const ZONE_META = {
-  zone1: { name: 'Builder Dashboard Leaderboard', cost: 63, campaignDuration: 7, width: 728, height: 90 },
-  zone2: { name: 'Investor Dashboard Leaderboard', cost: 70, campaignDuration: 7, width: 728, height: 90 },
-  zone3: { name: 'Project Search Results Inline Ad', cost: 70, campaignDuration: 7, width: 728, height: 90 },
-  zone4: { name: 'Investor Project Details', cost: 70, campaignDuration: 7, width: 728, height: 90 },
-  zone5: { name: 'Landing Page Hero Spotlight', cost: 70, campaignDuration: 7, width: 970, height: 250 },
-};
+// Zone display metadata is now loaded entirely from the backend.
 
 const stripePromise = loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY || 'pk_test_placeholder');
+
+const getDefaultRedirectUrl = () => {
+  if (typeof window !== 'undefined' && window.location?.origin) {
+    return `${window.location.origin}/builder/dashboard`;
+  }
+  return '/builder/dashboard';
+};
+
+const DEFAULT_REDIRECT_URL = getDefaultRedirectUrl();
 
 const formatDate = (dateStr) => {
   if (!dateStr) return '';
@@ -45,7 +48,6 @@ function BookingFormContent() {
   const { user } = useAuth();
 
   const zoneId = searchParams.get('zoneId');
-  const slotId = searchParams.get('slotId');
   const startDate = searchParams.get('startDate');
   const endDate = searchParams.get('endDate');
   const timeSlot = searchParams.get('timeSlot') || 'All Day';
@@ -58,7 +60,7 @@ function BookingFormContent() {
     imageUrl: '',
     videoUrl: '',
     text: '',
-    targetUrl: ''
+    targetUrl: DEFAULT_REDIRECT_URL
   });
 
   const [imageFile, setImageFile] = useState(null);
@@ -121,22 +123,27 @@ function BookingFormContent() {
       const zoneObj = zonesList.find(z => z.id === zoneId);
       if (zoneObj) {
         setSelectedZone({
-          ...ZONE_META[zoneId],
           ...zoneObj,
-          name: ZONE_META[zoneId]?.name || zoneObj.name || zoneId,
-          cost: zoneObj.cost ?? ZONE_META[zoneId]?.cost ?? 0,
+          name: zoneObj.name || zoneId,
+          costPerDay: zoneObj.costPerDay ?? 0,
         });
       } else {
         setSelectedZone({
           id: zoneId,
-          ...ZONE_META[zoneId],
+          name: zoneId,
+          costPerDay: 0,
+          width: 728,
+          height: 90
         });
       }
     } catch (error) {
       console.error("Error loading zone details:", error);
       setSelectedZone({
         id: zoneId,
-        ...ZONE_META[zoneId],
+        name: zoneId,
+        costPerDay: 0,
+        width: 728,
+        height: 90
       });
     } finally {
       setLoadingZone(false);
@@ -272,7 +279,16 @@ function BookingFormContent() {
     setCouponCodeInput('');
   };
 
-  const discountedCost = Math.max(0, (selectedZone?.cost || 0) - (appliedCoupon?.discountAmount || 0));
+  // Calculate selectionDays and totalCost dynamically from actual selected dates
+  const getSelectionDays = () => {
+    if (!startDate || !endDate) return 0;
+    const msPerDay = 1000 * 60 * 60 * 24;
+    return Math.round((new Date(endDate) - new Date(startDate)) / msPerDay) + 1;
+  };
+  const selectionDays = getSelectionDays();
+  const calculatedBaseCost = (selectedZone?.costPerDay || 0) * selectionDays;
+
+  const discountedCost = Math.max(0, calculatedBaseCost - (appliedCoupon?.discountAmount || 0));
 
   const handleBookingSubmit = async (e) => {
     e.preventDefault();
@@ -297,6 +313,7 @@ function BookingFormContent() {
         couponCode: appliedCoupon?.code,
         adContent: {
           ...adContent,
+          targetUrl: DEFAULT_REDIRECT_URL,
           imageUrl: campaignFormat === 'image' ? adContent.imageUrl : '',
           videoUrl: campaignFormat === 'video' ? adContent.videoUrl : ''
         }
@@ -374,7 +391,7 @@ function BookingFormContent() {
       ) : (
         <form onSubmit={handleBookingSubmit}>
           <CardContent className="p-8 space-y-6">
-            {/* Dates + Time Display */}
+            {/* Dates + Cost Summary */}
             <div className="bg-slate-50 border border-slate-100 rounded-2xl p-5 space-y-4">
               <div className="grid grid-cols-2 gap-4">
                 {/* Start Date */}
@@ -396,20 +413,22 @@ function BookingFormContent() {
                 </div>
               </div>
 
-              {/* Selected Time Slot Display */}
+              {/* Duration + Timing */}
               <div className="border-t border-slate-100 pt-3 flex justify-between items-center text-xs">
-                <span className="font-semibold text-slate-400 uppercase tracking-wide block text-[9px]">Ad Display Timing</span>
+                <span className="font-semibold text-slate-400 uppercase tracking-wide block text-[9px]">Duration</span>
                 <span className="text-slate-700 font-bold flex items-center gap-1.5">
                   <Clock className="w-3.5 h-3.5 text-slate-400" />
-                  {timeSlot}
+                  {selectionDays} day{selectionDays !== 1 ? 's' : ''} · {timeSlot}
                 </span>
               </div>
 
+              {/* Cost Breakdown */}
               <div className="border-t border-slate-100 pt-3 flex justify-between items-center">
                 <span className="text-[9px] font-semibold text-slate-400 uppercase tracking-wide">Total Cost</span>
                 <div className="text-right">
+                  <span className="text-[10px] text-slate-400 block">₹{selectedZone?.costPerDay}/day × {selectionDays} days</span>
                   {appliedCoupon && (
-                    <span className="text-xs text-slate-400 line-through mr-2">₹{selectedZone?.cost}</span>
+                    <span className="text-xs text-slate-400 line-through mr-2">₹{calculatedBaseCost}</span>
                   )}
                   <strong className="text-[#0b264f] text-base font-bold">₹{discountedCost}</strong>
                 </div>
@@ -470,7 +489,7 @@ function BookingFormContent() {
               )}
             </div>
 
-            {/* Resolution specifications & Campaign Format Selector */}
+            {/* Resolution specs & Campaign Format Selector */}
             <div className="bg-indigo-50/50 border border-indigo-100 rounded-2xl p-5 space-y-4">
               <div>
                 <span className="font-semibold text-indigo-400 uppercase tracking-wide block text-[9px] mb-1">Required Zone Specification</span>
@@ -500,10 +519,11 @@ function BookingFormContent() {
                         setVideoFile(null);
                         setVideoPreview('');
                       }}
-                      className={`flex items-center justify-center gap-1.5 py-2.5 px-3 rounded-xl border text-xs font-semibold transition-all ${campaignFormat === fmt.id
-                        ? 'border-[#0b264f] bg-[#0b264f]/5 text-[#0b264f] shadow-sm'
-                        : 'border-slate-200 bg-white text-slate-600 hover:bg-slate-50'
-                        }`}
+                      className={`flex items-center justify-center gap-1.5 py-2.5 px-3 rounded-xl border text-xs font-semibold transition-all ${
+                        campaignFormat === fmt.id
+                          ? 'border-[#0b264f] bg-[#0b264f]/5 text-[#0b264f] shadow-sm'
+                          : 'border-slate-200 bg-white text-slate-600 hover:bg-slate-50'
+                      }`}
                     >
                       {fmt.icon}
                       {fmt.label}
@@ -513,7 +533,7 @@ function BookingFormContent() {
               </div>
             </div>
 
-            {/* Render Image upload if 'image' selected */}
+            {/* Image upload */}
             {campaignFormat === 'image' && (
               <div className="space-y-2.5">
                 <label className="text-xs font-bold text-slate-600 block">Ad Image <span className="text-red-500">*</span></label>
@@ -562,7 +582,7 @@ function BookingFormContent() {
               </div>
             )}
 
-            {/* Render Video upload if 'video' selected */}
+            {/* Video upload */}
             {campaignFormat === 'video' && (
               <div className="space-y-2.5">
                 <label className="text-xs font-bold text-slate-600 block">Ad Video File <span className="text-red-500">*</span></label>
@@ -611,16 +631,8 @@ function BookingFormContent() {
               </div>
             )}
 
-            <div className="space-y-2">
-              <label className="text-xs font-bold text-slate-600 block">Target Redirect URL <span className="text-red-500">*</span></label>
-              <input
-                type="url"
-                required
-                placeholder="https://mywebsite.com/project-listing"
-                className="w-full border border-slate-200 rounded-xl px-4 py-3 text-sm outline-none focus:border-[#0b264f] text-slate-700 placeholder-slate-400 shadow-sm transition-all focus:ring-1 focus:ring-[#0b264f]"
-                value={adContent.targetUrl}
-                onChange={(e) => setAdContent({ ...adContent, targetUrl: e.target.value })}
-              />
+            <div className="rounded-2xl border border-emerald-100 bg-emerald-50 px-4 py-3 text-sm text-emerald-700">
+              All ad clicks from this booking will redirect to the builder dashboard.
             </div>
 
             <div className="space-y-2">
