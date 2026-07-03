@@ -14,13 +14,7 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { compressAdImage } from '@/utils/imageCompressor';
 
-const ZONE_META = {
-  zone1: { name: 'Builder Dashboard Leaderboard',     costPerDay: 9,  width: 728, height: 90 },
-  zone2: { name: 'Investor Dashboard Leaderboard',    costPerDay: 10, width: 728, height: 90 },
-  zone3: { name: 'Project Search Results Inline Ad',  costPerDay: 10, width: 728, height: 90 },
-  zone4: { name: 'Investor Project Details',          costPerDay: 10, width: 728, height: 90 },
-  zone5: { name: 'Landing Page Hero Spotlight',       costPerDay: 10, width: 970, height: 250 },
-};
+// Zone display metadata is now loaded entirely from the backend.
 
 const stripePromise = loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY || 'pk_test_placeholder');
 
@@ -129,22 +123,27 @@ function BookingFormContent() {
       const zoneObj = zonesList.find(z => z.id === zoneId);
       if (zoneObj) {
         setSelectedZone({
-          ...ZONE_META[zoneId],
           ...zoneObj,
-          name: ZONE_META[zoneId]?.name || zoneObj.name || zoneId,
-          costPerDay: zoneObj.costPerDay ?? ZONE_META[zoneId]?.costPerDay ?? 0,
+          name: zoneObj.name || zoneId,
+          costPerDay: zoneObj.costPerDay ?? 0,
         });
       } else {
         setSelectedZone({
           id: zoneId,
-          ...ZONE_META[zoneId],
+          name: zoneId,
+          costPerDay: 0,
+          width: 728,
+          height: 90
         });
       }
     } catch (error) {
       console.error("Error loading zone details:", error);
       setSelectedZone({
         id: zoneId,
-        ...ZONE_META[zoneId],
+        name: zoneId,
+        costPerDay: 0,
+        width: 728,
+        height: 90
       });
     } finally {
       setLoadingZone(false);
