@@ -5,6 +5,11 @@ const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL || 'http://localhost:5
 const SOCKET_URL = (() => {
   try {
     const url = new URL(API_BASE_URL.replace(/\/api\/?$/, ''));
+    // If running in browser and the socket URL hostname is local, dynamically map it to the current webpage hostname
+    if (typeof window !== 'undefined' && 
+        (url.hostname === 'localhost' || url.hostname === '127.0.0.1')) {
+      url.hostname = window.location.hostname;
+    }
     return url.origin; // e.g. "http://localhost:5001"
   } catch {
     return 'http://localhost:5001';

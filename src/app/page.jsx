@@ -406,14 +406,14 @@ export default function Index() {
             </section>
 
             {/* ── NRI Challenges Marquee Section ── */}
-            <section id="challenges" className="infra-section">
+            <section id="challenges" className="infra-section py-20 bg-[#f8f8f8]">
                 <div className="infra-section-header">
-                    <h2 className="infra-title">
-                        Real Challenges <span className="infra-title-accent">Faced by NRIs</span>
+                    <h2 className="infra-title text-[#1a1a1a]">
+                        Real Challenges <span className="infra-title-accent text-[#D48035]">Faced by NRIs</span>
                     </h2>
                 </div>
 
-                <p className="infra-subtitle">
+                <p className="infra-subtitle text-slate-600">
                     Distance creates far more than an investment gap. NRIs face complex legal, financial, operational and safety challenges in protecting their Indian assets. We address every one of them.
                 </p>
 
@@ -806,20 +806,20 @@ export default function Index() {
                 </div>
             </section>
 
-            <section className="fullscreen-section section-light py-16" id="contact">
+            <section className="fullscreen-section py-20 text-white text-center" id="contact" style={{ backgroundColor: '#1a1a1a' }}>
                 <div className="container text-center">
-                    <div className="cta-minimal-badge mb-6">
-                        <span className="cta-badge-text">GET STARTED TODAY</span>
-                        <div className="cta-badge-star">★</div>
+                    <div className="cta-minimal-badge mb-6" style={{ borderColor: 'rgba(255,255,255,0.2)' }}>
+                        <span className="cta-badge-text text-white">GET STARTED TODAY</span>
+                        <div className="cta-badge-star text-[#D48035]">★</div>
                     </div>
-                    <h2 className="cta-minimal-title mb-6">
-                        Initialize Your <span className="text-highlight">Strategic Journey</span>
+                    <h2 className="cta-minimal-title mb-6 text-white">
+                        Initialize Your <span className="text-[#D48035]">Strategic Journey</span>
                     </h2>
-                    <p className="cta-minimal-subtitle text-gray-600 text-lg mb-10 max-w-2xl mx-auto">
+                    <p className="cta-minimal-subtitle text-slate-300 text-lg mb-10 max-w-2xl mx-auto">
                         Align with a platform engineered for absolute transparency and institutional excellence in Indian real estate discovery.
                     </p>
                     <div className="flex justify-center">
-                        <button onClick={() => handleAuthClick('register', 'investor')} className="cta-minimal-btn">
+                        <button onClick={() => handleAuthClick('register', 'investor')} className="cta-minimal-btn bg-[#D48035] hover:bg-[#b06725] text-white border-none shadow-xl">
                             Register Your Interest <span className="ml-2">→</span>
                         </button>
                     </div>

@@ -262,16 +262,16 @@ export default function ServiceProviderHome() {
       {/* Market Challenges Section */}
       <section
         id="challenges"
-        className="infra-section py-20 bg-slate-900 text-white"
+        className="infra-section py-20 bg-[#f8f8f8]"
       >
         <div className="infra-section-header text-center mb-12">
-          <h2 className="infra-title text-3xl md:text-4xl font-bold">
+          <h2 className="infra-title text-3xl md:text-4xl font-bold text-[#1a1a1a]">
             Friction in{" "}
             <span className="infra-title-accent text-[#D48035]">
               Corporate Lead Generation
             </span>
           </h2>
-          <p className="infra-subtitle max-w-2xl mx-auto mt-4 text-slate-400">
+          <p className="infra-subtitle max-w-2xl mx-auto mt-4 text-slate-600">
             Acquiring premium builder and NRI clients is often unstructured and
             lacks transparency. We provide professional integration to verify
             and highlight your capabilities.
@@ -284,15 +284,15 @@ export default function ServiceProviderHome() {
               (challenge, i) => (
                 <div
                   key={i}
-                  className="infra-marquee-card bg-slate-800 border-slate-700 p-6 rounded-2xl w-80 shrink-0 mx-4"
+                  className="infra-marquee-card bg-white border border-slate-200/80 p-6 rounded-2xl w-80 shrink-0 mx-4 shadow-sm"
                 >
-                  <div className="infra-card-icon-wrapper bg-[#D48035] p-3 rounded-xl w-14 h-14 flex items-center justify-center mb-4">
+                  <div className="infra-card-icon-wrapper bg-[#D48035] p-3 rounded-xl w-14 h-14 flex items-center justify-center mb-4 text-white">
                     {challenge.icon}
                   </div>
-                  <h3 className="infra-card-title text-lg font-bold text-white mb-2">
+                  <h3 className="infra-card-title text-lg font-bold text-[#1a1a1a] mb-2">
                     {challenge.text}
                   </h3>
-                  <p className="infra-card-desc text-xs text-slate-400 leading-relaxed">
+                  <p className="infra-card-desc text-xs text-slate-600 leading-relaxed">
                     {challenge.desc}
                   </p>
                 </div>
@@ -304,7 +304,8 @@ export default function ServiceProviderHome() {
 
       {/* Strategic Advantages (Benefits) */}
       <section
-        className="fullscreen-section section-theme py-20 bg-slate-50"
+        className="fullscreen-section section-theme py-20"
+        style={{ backgroundColor: '#ffffff' }}
         id="benefits"
       >
         <div className="container">
@@ -490,7 +491,8 @@ export default function ServiceProviderHome() {
 
       {/* CONTACT SECTION */}
       <section
-        className="fullscreen-section py-20 bg-slate-950 text-white text-center"
+        className="fullscreen-section py-20 text-white text-center"
+        style={{ backgroundColor: '#1a1a1a' }}
         id="contact"
       >
         <div className="container max-w-3xl mx-auto px-4">

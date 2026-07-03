@@ -95,7 +95,7 @@ export default function AboutUs() {
               >
                 WHO WE ARE
               </motion.div>
-              <h2 className="text-3xl md:text-4xl font-bold text-[#0b264f] mb-6">
+              <h2 className="text-3xl md:text-4xl font-bold text-[#1a1a1a] mb-6">
                 Pioneering Strategic Investment <br /> for the Global Diaspora
               </h2>
               <p className="text-gray-600 mb-6 leading-relaxed">
@@ -148,7 +148,7 @@ export default function AboutUs() {
 
       <section className="py-16 md:py-24 bg-[rgba(0,0,0,0.02)]">
         <div className="container mx-auto px-4 text-center">
-          <h2 className="text-3xl md:text-4xl font-bold text-[#0b264f] mb-4">Our Core Values</h2>
+          <h2 className="text-3xl md:text-4xl font-bold text-[#1a1a1a] mb-4">Our Core Values</h2>
           <p className="text-gray-600 max-w-2xl mx-auto mb-16">
             Principles that guide every decision we make and every partnership we build.
           </p>
@@ -203,7 +203,7 @@ export default function AboutUs() {
         <div className="container mx-auto px-4">
           <div className="grid md:grid-cols-2 gap-12 items-center">
             <div className="order-2 md:order-1">
-              <h2 className="text-3xl md:text-4xl font-bold text-[#0b264f] mb-6">
+              <h2 className="text-3xl md:text-4xl font-bold text-[#1a1a1a] mb-6">
                 Why Visionary Investors <br /> Choose Investate India
               </h2>
               <div className="space-y-4">
@@ -232,7 +232,7 @@ export default function AboutUs() {
 
           <div className="mt-20">
             <div className="text-center mb-12">
-              <h2 className="text-3xl md:text-4xl font-bold text-[#0b264f] mb-4">
+              <h2 className="text-3xl md:text-4xl font-bold text-[#1a1a1a] mb-4">
                 Why NRIs <span className="text-orange-500">Choose Us</span>
               </h2>
               <p className="text-gray-500 max-w-2xl mx-auto leading-relaxed">
@@ -268,7 +268,7 @@ export default function AboutUs() {
                       style={{ background: 'linear-gradient(135deg, #F97316, #D48035)' }}>
                       {item.icon}
                     </div>
-                    <h4 className="text-base font-bold text-[#0b264f] leading-snug">{item.title}</h4>
+                    <h4 className="text-base font-bold text-[#1a1a1a] leading-snug">{item.title}</h4>
                     <p className="text-sm text-gray-500 leading-relaxed">{item.desc}</p>
                   </motion.div>
                 ))}
@@ -294,7 +294,7 @@ export default function AboutUs() {
             transition={{ duration: 0.6, ease: "easeOut" }}
             className="text-center mb-8"
           >
-            <h2 className="text-3xl md:text-4xl font-bold text-[#0b264f] mb-4">Meet The Leadership</h2>
+            <h2 className="text-3xl md:text-4xl font-bold text-[#1a1a1a] mb-4">Meet The Leadership</h2>
             <p className="text-gray-600 max-w-2xl mx-auto">
               Driven by passion, guided by experience, and united by a shared commitment to global real estate excellence.
             </p>
@@ -308,7 +308,7 @@ export default function AboutUs() {
               transition={{ duration: 0.7, ease: "easeOut" }}
               className="flex flex-col lg:flex-row-reverse bg-white rounded-3xl shadow-sm hover:shadow-md transition-shadow duration-300 border border-gray-100 overflow-hidden"
             >
-              <div className="lg:w-2/5 bg-[#0b264f] p-4 md:p-6 flex items-center justify-center relative overflow-hidden">
+              <div className="lg:w-2/5 bg-[#1a1a1a] p-4 md:p-6 flex items-center justify-center relative overflow-hidden">
                 <div className="absolute top-0 right-0 w-32 h-32 bg-blue-800 rounded-full opacity-30 -mr-16 -mt-16"></div>
                 <div className="text-center group relative z-10">
                   <div className="w-32 h-32 md:w-40 md:h-40 mx-auto rounded-2xl mb-6 overflow-hidden border-4 border-blue-800/50 shadow-xl transition-transform duration-300 group-hover:scale-105">
@@ -320,7 +320,7 @@ export default function AboutUs() {
                 </div>
               </div>
               <div className="lg:w-3/5 p-4 md:p-6 flex flex-col justify-center bg-white">
-                <div className="w-12 h-1 bg-[#0b264f] mb-6 rounded-full"></div>
+                <div className="w-12 h-1 bg-[#D48035] mb-6 rounded-full"></div>
                 <p className="text-gray-600 leading-relaxed text-[1.05rem]">
                   <strong>Deepak,</strong> based in New York, is an entrepreneur, real estate investor, and internationally respected gemstone authority. <br /> <br />
                   He is the Founder and Chairman of the <strong>NRI Federation</strong>, a global diaspora platform dedicated to strengthening connections between Non-Resident Indians and opportunities in India. <br /> <br />
@@ -367,7 +367,7 @@ export default function AboutUs() {
         </div>
       </section>
 
-      <section className="py-20 bg-[#0b264f] relative overflow-hidden">
+      <section className="py-20 bg-[#1a1a1a] relative overflow-hidden">
         <div className="absolute top-0 right-0 w-64 h-64 bg-blue-800 rounded-full opacity-20 -mr-32 -mt-32"></div>
         <div className="absolute bottom-0 left-0 w-64 h-64 bg-orange-600 rounded-full opacity-10 -ml-32 -mb-32"></div>
 
@@ -383,7 +383,7 @@ export default function AboutUs() {
               <Briefcase className="w-5 h-5" />
               Explore Projects
             </button> */}
-            <button onClick={() => router.push('/contact-us')} className="bg-transparent border-2 border-white text-white px-8 py-4 rounded-lg font-bold text-lg hover:bg-white hover:text-[#0b264f] transition-all flex items-center justify-center gap-2">
+            <button onClick={() => router.push('/contact-us')} className="bg-transparent border-2 border-white text-white px-8 py-4 rounded-lg font-bold text-lg hover:bg-white hover:text-[#1a1a1a] transition-all flex items-center justify-center gap-2">
               Contact Support <ArrowRight className="w-5 h-5" />
             </button>
           </div>

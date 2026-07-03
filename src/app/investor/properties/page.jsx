@@ -36,7 +36,6 @@ export default function InvestorProperties() {
         setLoadingProjects(true);
         const data = await apiRequest('/api/projects?role=investor', {
           method: 'GET',
-          headers: { 'Authorization': `Bearer ${user?.token}` }
         });
         
         const projectsArray = data.data || [];

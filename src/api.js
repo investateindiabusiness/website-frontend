@@ -1,6 +1,6 @@
 // Use NEXT_PUBLIC_API_BASE_URL directly. In local dev with rewrites, it can be empty.
 // In production (Netlify), it must point to the actual backend URL.
-const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL || '';
+const API_BASE_URL = typeof window !== 'undefined' ? '' : (process.env.NEXT_PUBLIC_API_BASE_URL || '');
 
 export const apiRequest = async (endpoint, options = {}) => {
   let session = null;
@@ -19,6 +19,16 @@ export const apiRequest = async (endpoint, options = {}) => {
     ...(session?.token && { 'Authorization': `Bearer ${session.token}` }),
     ...options.headers,
   };
+
+  // Defensive guard: if caller passed an invalid Authorization header (e.g. Bearer undefined),
+  // fall back to the session token to prevent spurious 401s.
+  if (headers['Authorization'] && (headers['Authorization'].includes('undefined') || headers['Authorization'].includes('null'))) {
+    if (session?.token) {
+      headers['Authorization'] = `Bearer ${session.token}`;
+    } else {
+      delete headers['Authorization'];
+    }
+  }
 
   try {
     const response = await fetch(`${API_BASE_URL}${endpoint}`, {
