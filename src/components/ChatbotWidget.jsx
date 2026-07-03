@@ -3,7 +3,7 @@
 import React, { useEffect, useMemo, useState } from 'react';
 import { Bot, CheckCircle2, ChevronLeft, Loader2, MessageCircle, Send, ShieldCheck, X } from 'lucide-react';
 import { usePathname } from 'next/navigation';
-import { fetchChatbotFaqs, submitChatbotRequest } from '@/api';
+import { fetchChatbotFaqs, submitContactInquiry } from '@/api';
 import { chatbotFaqGroups, fallbackQuestion } from '@/data/chatbotFaqs';
 import { useAuth } from '@/hooks/AuthContext';
 
@@ -118,15 +118,27 @@ export default function ChatbotWidget() {
     setStatus({ type: 'loading', message: 'Submitting your request...' });
 
     try {
-      await submitChatbotRequest({
-        ...form,
-        userType: audience,
-        selectedQuestion: activeQuestion?.question || fallbackQuestion,
+      const inquiryMessage = [
+        form.message,
+        form.organization ? `Context: ${form.organization}` : '',
+        `Preferred contact: ${form.preferredContact}`,
+        `User type: ${audience}`,
+        `Selected question: ${activeQuestion?.question || fallbackQuestion}`,
+      ]
+        .filter(Boolean)
+        .join('\n\n');
+
+      await submitContactInquiry({
+        name: form.name,
+        email: form.email,
+        phone: form.phone,
+        subject: activeQuestion?.question || 'Chatbot Support Request',
+        message: inquiryMessage,
       });
 
       setStatus({
         type: 'success',
-        message: 'Thanks. Your request has been shared with the Investate team.',
+        message: 'Thanks. Your request has been sent to the inquiries panel for the Investate team.',
       });
       setForm(initialForm);
       setActiveQuestion(null);
