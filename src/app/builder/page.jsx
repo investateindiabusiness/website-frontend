@@ -18,7 +18,7 @@ import Footer from "@/components/Footer";
 const heroSlides = [
   {
     image:
-      "https://images.unsplash.com/photo-1541888946425-d81bb19240f5?q=80&w=2070&auto=format&fit=crop" /* Ultra-HD 4K+ stunning steel skyscraper construction with crane at golden sunset */,
+      "https://images.unsplash.com/photo-1504307651254-35680f356dfd?q=80&w=2066&auto=format&fit=crop",
     tag: "Institutional Capital Access",
     title: "Direct Connectivity to",
     highlight: "High-Net-Worth NRI Capital",
@@ -34,13 +34,6 @@ const heroSlides = [
     subtitle:
       "Position your developments within a transparency-first ecosystem that reinforces your reputation for corporate governance and delivery excellence to a global audience.",
   },
-  /* {
-        image: 'https://images.unsplash.com/photo-1512917774080-9991f1c4c750?q=80&w=2070&auto=format&fit=crop',
-        tag: 'Sales Acceleration',
-        title: 'Transform Your Reach with',
-        highlight: 'Precision-Vetted Buyer Intent',
-        subtitle: 'Eliminate administrative friction and connect with high-intent investors who meet strict acquisition criteria. Your global sales expansion, simplified.'
-    } */
 ];
 
 const builderBenefits = [

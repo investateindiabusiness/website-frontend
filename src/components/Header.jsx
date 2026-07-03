@@ -112,7 +112,7 @@ const HeaderContent = ({ transparent = false }) => {
   const getNavLinks = () => {
     if (!displayUser) {
       return [
-        { label: 'Home', path: '/home' },
+        { label: 'Home', path: '/' },
         { label: 'Investor', path: '/investor' },
         { label: 'Builder', path: '/builder' },
         { label: 'Service Provider', path: '/service-provider' },
@@ -160,7 +160,7 @@ const HeaderContent = ({ transparent = false }) => {
   // Check if any "More" item is the active page (to highlight the More button)
   const isMoreActive = adminMoreLinks.some(l => pathname === l.path);
 
-  const logoHref = user ? getDashboardPath(user.role) : '/home';
+  const logoHref = user ? getDashboardPath(user.role) : '/';
 
   return (
     <>

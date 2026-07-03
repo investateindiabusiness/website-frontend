@@ -2,6 +2,16 @@
 // In production (Netlify), it must point to the actual backend URL.
 const API_BASE_URL = typeof window !== 'undefined' ? '' : (process.env.NEXT_PUBLIC_API_BASE_URL || '');
 
+const isProtectedRoute = (path) => {
+  if (!path) return false;
+  const isAdminRoute = path.startsWith('/admin') && path !== '/admin/login';
+  const isBuilderRoute = (path.startsWith('/builder/') && path !== '/builder/login' && path !== '/builder/register') || path === '/builder/dashboard' || path === '/builder/projects' || path === '/builder/advertisements';
+  const isInvestorRoute = path === '/dashboard' || path === '/properties' || (path.startsWith('/investor/') && path !== '/investor/login' && path !== '/investor/register') || path.startsWith('/project/');
+  const isServiceProviderRoute = (path.startsWith('/service-provider/') && path !== '/service-provider' && path !== '/service-provider/login' && path !== '/service-provider/register') || path === '/service-provider/dashboard' || path === '/service-provider/advertisements';
+
+  return isAdminRoute || isBuilderRoute || isInvestorRoute || isServiceProviderRoute;
+};
+
 export const apiRequest = async (endpoint, options = {}) => {
   let session = null;
   if (typeof window !== 'undefined') {
@@ -58,14 +68,17 @@ export const apiRequest = async (endpoint, options = {}) => {
           sessionStorage.removeItem('user_session');
         }
 
-        if (role === 'admin') {
-          window.location.href = '/admin/login?session_expired=true';
-        } else if (role === 'builder') {
-          window.location.href = '/builder/login?session_expired=true';
-        } else if (role === 'serviceProvider') {
-          window.location.href = '/service-provider/login?session_expired=true';
-        } else {
-          window.location.href = '/investor/login?session_expired=true';
+        const currentPath = typeof window !== 'undefined' ? window.location.pathname : '';
+        if (isProtectedRoute(currentPath)) {
+          if (role === 'admin') {
+            window.location.href = '/admin/login?session_expired=true';
+          } else if (role === 'builder') {
+            window.location.href = '/builder/login?session_expired=true';
+          } else if (role === 'serviceProvider') {
+            window.location.href = '/service-provider/login?session_expired=true';
+          } else {
+            window.location.href = '/investor/login?session_expired=true';
+          }
         }
 
         return Promise.reject('Session expired');

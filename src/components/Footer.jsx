@@ -44,12 +44,12 @@ const Footer = () => {
             <h3 className="text-white font-bold mb-4">Quick Links</h3>
             <ul className="space-y-2">
               <li>
-                <Link href="/home" className="text-gray-400 hover:text-[var(--color-accent,#D48035)] transition-colors text-sm">
+                <Link href="/" className="text-gray-400 hover:text-[var(--color-accent,#D48035)] transition-colors text-sm">
                   Home
                 </Link>
               </li>
               <li>
-                <Link href="/" className="text-gray-400 hover:text-[var(--color-accent,#D48035)] transition-colors text-sm">
+                <Link href="/investor" className="text-gray-400 hover:text-[var(--color-accent,#D48035)] transition-colors text-sm">
                   Investor
                 </Link>
               </li>
