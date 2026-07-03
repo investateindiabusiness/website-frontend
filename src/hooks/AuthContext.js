@@ -1,6 +1,6 @@
 "use client";
 
-import React, { createContext, useContext, useState, useEffect } from 'react';
+import React, { createContext, useContext, useState, useEffect, useCallback } from 'react';
 import { usePathname, useRouter } from 'next/navigation';
 import { toast } from '@/hooks/use-toast';
 import { apiRequest } from '@/api';
@@ -154,7 +154,7 @@ export const AuthProvider = ({ children }) => {
     setUser(null);
   };
 
-  const refreshUser = async () => {
+  const refreshUser = useCallback(async () => {
     try {
       const data = await apiRequest('/api/auth/me', {
         method: 'GET'
@@ -165,9 +165,7 @@ export const AuthProvider = ({ children }) => {
           const parsedUser = JSON.parse(savedUser);
           const updated = {
             ...parsedUser,
-            isKycVerified: data.user.isKycVerified || false,
-            kycStatus: data.user.kycStatus || 'not_started',
-            kycPassportUrl: data.user.kycPassportUrl || null,
+            ...data.user,
           };
           sessionStorage.setItem('user_session', JSON.stringify(updated));
           setUser(updated);
@@ -176,7 +174,7 @@ export const AuthProvider = ({ children }) => {
     } catch (err) {
       console.warn('Failed to refresh user profile:', err);
     }
-  };
+  }, []);
 
   return (
     <AuthContext.Provider value={{ user, login, logout, loading, refreshUser }}>
