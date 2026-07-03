@@ -30,6 +30,8 @@ import {
   ChevronLeft as ChevronLeftIcon,
   VerifiedUser as KYCIcon,
   CardMembership as MembershipIcon,
+  Forum as OutreachIcon,
+  ContactMail as DirectoryIcon,
 } from '@mui/icons-material';
 
 const DRAWER_WIDTH = 240;
@@ -42,6 +44,7 @@ const NAV_ITEMS_BY_ROLE = {
     { label: 'Investors',        path: '/admin/investors',         icon: <InvestorIcon /> },
     { label: 'KYC Verifications Investor', path: '/admin/kyc-verifications', icon: <KYCIcon /> },
     { label: 'Service Providers',path: '/admin/service-providers', icon: <ServiceProviderIcon /> },
+    { label: 'SP Outreach',      path: '/admin/sp-outreach',       icon: <OutreachIcon /> },
     { label: 'Users',            path: '/admin/users',             icon: <UsersIcon /> },
     { label: 'Projects',         path: '/admin/projects',          icon: <ProjectsIcon /> },
     { label: 'Leads',            path: '/admin/leads',             icon: <LeadsIcon /> },
@@ -58,6 +61,7 @@ const NAV_ITEMS_BY_ROLE = {
     { label: 'Advertise',     path: '/builder/advertisements',  icon: <AdsIcon /> },
     { label: 'Payments',      path: '/builder/payments',        icon: <LeadsIcon /> },
     { label: 'Coupons',       path: '/builder/coupons',         icon: <CouponsIcon /> },
+    { label: 'SP Inbox',      path: '/builder/outreach-inbox',  icon: <OutreachIcon /> },
   ],
   investor: [
     { label: 'Dashboard',     path: '/dashboard',              icon: <DashboardIcon /> },
@@ -66,9 +70,12 @@ const NAV_ITEMS_BY_ROLE = {
     { label: 'Advertise',     path: '/investor/advertisements',icon: <AdsIcon /> },
     { label: 'Payments',      path: '/investor/payments',      icon: <LeadsIcon /> },
     { label: 'Coupons',       path: '/investor/coupons',       icon: <CouponsIcon /> },
+    { label: 'SP Inbox',      path: '/investor/outreach-inbox',icon: <OutreachIcon /> },
   ],
   serviceProvider: [
     { label: 'Dashboard',     path: '/service-provider/dashboard',       icon: <DashboardIcon /> },
+    { label: 'Directory',     path: '/service-provider/directory',       icon: <DirectoryIcon /> },
+    { label: 'My Outreach',   path: '/service-provider/outreach',        icon: <OutreachIcon /> },
     { label: 'Advertise',     path: '/service-provider/advertisements',  icon: <AdsIcon /> },
     { label: 'Payments',      path: '/service-provider/payments',        icon: <LeadsIcon /> },
     { label: 'Coupons',       path: '/service-provider/coupons',         icon: <CouponsIcon /> },

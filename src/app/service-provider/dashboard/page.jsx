@@ -2,7 +2,8 @@
 
 import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
-import { Building2, Users, TrendingUp, Wallet, BadgePercent, AlertCircle, Loader2, Plus, Calendar, Settings } from 'lucide-react';
+import { Building2, Users, TrendingUp, Wallet, BadgePercent, AlertCircle, Loader2, Plus, Calendar, Settings, Users2, Mail, ContactRound } from 'lucide-react';
+
 import { AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
@@ -156,6 +157,55 @@ export default function ServiceProviderDashboard() {
                 >
                   <Plus className="w-5 h-5" /> Book Advertisement Campaign
                 </Button>
+              </div>
+            </div>
+          </div>
+
+          {/* ── Outreach Module Quick Actions ── */}
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+            {/* Browse Directory */}
+            <div
+              onClick={() => router.push('/service-provider/directory')}
+              className="bg-gradient-to-br from-slate-800 to-slate-900 rounded-3xl p-6 shadow-md cursor-pointer hover:shadow-lg hover:-translate-y-0.5 transition-all duration-200 group relative overflow-hidden"
+            >
+              <div className="absolute inset-0 opacity-10">
+                <div className="absolute -top-8 -right-8 w-40 h-40 bg-blue-400 rounded-full blur-2xl" />
+              </div>
+              <div className="relative z-10">
+                <div className="w-12 h-12 rounded-2xl bg-blue-500/20 border border-blue-400/30 flex items-center justify-center mb-4">
+                  <Users2 className="w-6 h-6 text-blue-300" />
+                </div>
+                <h3 className="text-white font-bold text-lg mb-1">Investor & Builder Directory</h3>
+                <p className="text-slate-400 text-sm leading-relaxed mb-4">
+                  Browse verified investors and builders. Send professional messages reviewed by admin.
+                </p>
+                <div className="flex items-center gap-2 text-blue-300 text-sm font-semibold group-hover:gap-3 transition-all">
+                  <span>Browse Directory</span>
+                  <span>→</span>
+                </div>
+              </div>
+            </div>
+
+            {/* My Outreach */}
+            <div
+              onClick={() => router.push('/service-provider/outreach')}
+              className="bg-gradient-to-br from-orange-600 to-orange-700 rounded-3xl p-6 shadow-md cursor-pointer hover:shadow-lg hover:-translate-y-0.5 transition-all duration-200 group relative overflow-hidden"
+            >
+              <div className="absolute inset-0 opacity-10">
+                <div className="absolute -top-8 -right-8 w-40 h-40 bg-white rounded-full blur-2xl" />
+              </div>
+              <div className="relative z-10">
+                <div className="w-12 h-12 rounded-2xl bg-white/20 border border-white/30 flex items-center justify-center mb-4">
+                  <Mail className="w-6 h-6 text-white" />
+                </div>
+                <h3 className="text-white font-bold text-lg mb-1">My Outreach Messages</h3>
+                <p className="text-orange-100 text-sm leading-relaxed mb-4">
+                  Track messages you've sent — view delivery status, admin decisions, and recipient replies.
+                </p>
+                <div className="flex items-center gap-2 text-white text-sm font-semibold group-hover:gap-3 transition-all">
+                  <span>View Messages</span>
+                  <span>→</span>
+                </div>
               </div>
             </div>
           </div>

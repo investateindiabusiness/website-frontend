@@ -645,3 +645,56 @@ export const fetchAdminUsers = (params = {}) => {
   const query = new URLSearchParams(params).toString();
   return apiRequest(`/api/admin/users${query ? `?${query}` : ''}`);
 };
+
+// ─────────────────────────────────────────────────────────────
+// SP Outreach Module
+// ─────────────────────────────────────────────────────────────
+
+// Service Provider: browse privacy-safe directory
+export const fetchSPDirectory = (params = {}) => {
+  const qs = new URLSearchParams(params).toString();
+  return apiRequest(`/api/sp-outreach/directory${qs ? `?${qs}` : ''}`);
+};
+
+// Service Provider: send a message to investor/builder
+export const sendSPOutreachMessage = (payload) =>
+  apiRequest('/api/sp-outreach/messages', {
+    method: 'POST',
+    body: JSON.stringify(payload),
+  });
+
+// Service Provider: get own sent messages + statuses
+export const fetchMySentOutreachMessages = () =>
+  apiRequest('/api/sp-outreach/messages/my-sent');
+
+// Service Provider: get replies on a specific message
+export const fetchOutreachMessageReplies = (messageId) =>
+  apiRequest(`/api/sp-outreach/messages/${messageId}/replies`);
+
+// Admin: list all SP outreach messages
+export const adminFetchSPOutreachMessages = (params = {}) => {
+  const qs = new URLSearchParams(params).toString();
+  return apiRequest(`/api/sp-outreach/admin/messages${qs ? `?${qs}` : ''}`);
+};
+
+// Admin: accept or reject a message
+export const adminReviewSPOutreachMessage = (messageId, action, adminNote = '') =>
+  apiRequest(`/api/sp-outreach/admin/messages/${messageId}/review`, {
+    method: 'PATCH',
+    body: JSON.stringify({ action, adminNote }),
+  });
+
+// Admin: full thread detail
+export const adminFetchOutreachThread = (messageId) =>
+  apiRequest(`/api/sp-outreach/admin/messages/${messageId}`);
+
+// Investor / Builder: get their SP message inbox
+export const fetchOutreachInbox = () =>
+  apiRequest('/api/sp-outreach/inbox');
+
+// Investor / Builder: reply to a message
+export const replyToSPOutreachMessage = (messageId, body) =>
+  apiRequest(`/api/sp-outreach/messages/${messageId}/reply`, {
+    method: 'POST',
+    body: JSON.stringify({ body }),
+  });
