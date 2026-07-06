@@ -4,7 +4,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import { fetchAdminCoupons, createAdminCoupon, deleteAdminCoupon, resetAdminCoupon, fetchAdminUsers } from '@/api';
 import { toast } from '@/hooks/use-toast';
 import { Button } from '@/components/ui/button';
-import { Plus, Trash2, Tag, Loader2, RotateCcw, Search, Users, Globe, User, Calendar } from 'lucide-react';
+import { Plus, Trash2, Tag, Loader2, RotateCcw, Search, Users, Globe, User, Calendar, Sparkles } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { useAuth } from '@/hooks/AuthContext';
@@ -86,6 +86,11 @@ export default function AdminCoupons() {
     setSelectedUser(u);
     setUserSearchQuery(u.name || u.email || u.uid);
     setUserSearchResults([]);
+  };
+
+  const generateCouponCode = () => {
+    const num = Math.floor(100 + Math.random() * 900); // 3-digit number: 100–999
+    setFormData(prev => ({ ...prev, code: `INVESTATE${num}` }));
   };
 
   const handleCreateCoupon = async (e) => {
@@ -288,17 +293,40 @@ export default function AdminCoupons() {
             <form onSubmit={handleCreateCoupon}>
               <CardContent className="p-6 space-y-5">
 
-                {/* Code & Discount */}
-                <div className="grid grid-cols-2 gap-4">
-                  <div className="space-y-1.5">
-                    <label className="text-xs font-bold text-slate-600">Coupon Code <span className="text-red-500">*</span></label>
-                    <input required value={formData.code} onChange={e => setFormData({...formData, code: e.target.value.toUpperCase()})} placeholder="e.g. SUMMER20" className="w-full border border-slate-200 rounded-xl px-4 py-2.5 text-sm uppercase font-bold tracking-wider outline-none focus:border-[#0b264f]" />
+                {/* Coupon Code — full width so Generate button is always visible */}
+                <div className="space-y-1.5">
+                  <label className="text-xs font-bold text-slate-600">Coupon Code <span className="text-red-500">*</span></label>
+                  <div className="flex gap-2">
+                    <input
+                      required
+                      value={formData.code}
+                      onChange={e => setFormData({...formData, code: e.target.value.toUpperCase()})}
+                      placeholder="e.g. INVESTATE200"
+                      className="flex-1 border border-slate-200 rounded-xl px-4 py-2.5 text-sm uppercase font-bold tracking-wider outline-none focus:border-[#0b264f]"
+                    />
+                    <button
+                      type="button"
+                      onClick={generateCouponCode}
+                      title="Auto-generate INVESTATE code"
+                      className="flex items-center gap-1.5 px-4 py-2.5 bg-[#0b264f] hover:bg-[#1a4b8c] text-white text-xs font-bold rounded-xl transition-all whitespace-nowrap shadow-sm"
+                    >
+                      <Sparkles className="w-3.5 h-3.5" />
+                      Generate
+                    </button>
                   </div>
-                  <div className="space-y-1.5">
-                    <label className="text-xs font-bold text-slate-600">Discount Amount (₹) <span className="text-red-500">*</span></label>
-                    <input type="number" required min="1" value={formData.discountAmount} onChange={e => setFormData({...formData, discountAmount: e.target.value})} placeholder="e.g. 500" className="w-full border border-slate-200 rounded-xl px-4 py-2.5 text-sm outline-none focus:border-[#0b264f]" />
-                  </div>
+                  {formData.code && (
+                    <p className="text-[10px] text-slate-400 font-mono pl-1">
+                      Preview: <span className="text-[#0b264f] font-bold">{formData.code}</span>
+                    </p>
+                  )}
                 </div>
+
+                {/* Discount Amount */}
+                <div className="space-y-1.5">
+                  <label className="text-xs font-bold text-slate-600">Discount Amount (₹) <span className="text-red-500">*</span></label>
+                  <input type="number" required min="1" value={formData.discountAmount} onChange={e => setFormData({...formData, discountAmount: e.target.value})} placeholder="e.g. 500" className="w-full border border-slate-200 rounded-xl px-4 py-2.5 text-sm outline-none focus:border-[#0b264f]" />
+                </div>
+
 
                 {/* Max Uses */}
                 <div className="space-y-1.5">
