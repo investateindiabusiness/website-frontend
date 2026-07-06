@@ -13,7 +13,7 @@ import { Textarea } from '@/components/ui/textarea';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from '@/components/ui/dialog';
 import { toast } from '@/hooks/use-toast';
 import { useAuth } from '@/hooks/AuthContext';
-import { fetchBuilderProjects, createProject, updateProject, deleteProject, submitProjectChanges, appealProjectRejection, uploadFile } from '@/api';
+import { fetchBuilderProjects, createProject, updateProject, deleteProject, submitProjectChanges, appealProjectRejection, uploadFile, uploadImage } from '@/api';
 import { compressImage } from '@/utils/imageCompressor';
 
 const initialFormState = {
@@ -110,13 +110,16 @@ export default function ProjectManager() {
             // Generate a project ID for folder naming
             const projectId = isEditing ? currentProject.id : `proj_${Date.now()}`;
 
-            // Upload new image files via backend API
+            // Upload new image files via backend API (use uploadImage for proper image handling)
             const uploadedImages = [];
             for (const img of (currentProject.projectImages || [])) {
                 if (img instanceof File) {
-                    const response = await uploadFile(img, `${tempId}/ProjectDisplayImages`);
+                    const response = await uploadImage(img, `${tempId}/ProjectDisplayImages`);
+                    if (!response?.url) throw new Error(`Image upload failed for ${img.name}`);
                     uploadedImages.push(response.url);
-                } else uploadedImages.push(img);
+                } else if (typeof img === 'string' && img.startsWith('http')) {
+                    uploadedImages.push(img);
+                }
             }
 
             // Upload new document files via backend API
