@@ -42,6 +42,11 @@ export default function ServiceProviderDashboard() {
     totalSpent: 0
   });
   const [isLoading, setIsLoading] = useState(true);
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
   useEffect(() => {
     const loadStats = async () => {
@@ -67,53 +72,55 @@ export default function ServiceProviderDashboard() {
     { label: 'Registered Investors', value: stats.totalInvestors, icon: Users, gradient: 'from-emerald-500 to-emerald-600' },
     { label: 'Total Campaigns', value: stats.totalCampaigns, icon: BadgePercent, gradient: 'from-amber-500 to-amber-600' },
     { label: 'Active Ads', value: stats.activeCampaigns, icon: TrendingUp, gradient: 'from-indigo-500 to-indigo-600' },
-    { label: 'Total Ad Spent', value: `₹${stats.totalSpent}`, icon: Wallet, gradient: 'from-rose-500 to-rose-600' },
+    { label: 'Total Ad Spent', value: `$${stats.totalSpent}`, icon: Wallet, gradient: 'from-rose-500 to-rose-600' },
   ];
 
   return (
     <div className="min-h-screen bg-[#f5f6fa] font-sans pb-16 overflow-x-hidden">
       {/* Hero */}
-      <div className="relative bg-gradient-to-br from-slate-800 via-slate-900 to-slate-800 text-white px-6 pt-10 pb-28 overflow-hidden">
+      <div className="relative bg-gradient-to-br from-slate-800 via-slate-900 to-slate-800 text-white px-4 sm:px-6 pt-8 pb-24 sm:pb-28 overflow-hidden">
         <div className="absolute inset-0 pointer-events-none overflow-hidden">
           <div className="absolute -top-20 -right-20 w-96 h-96 bg-indigo-500/10 rounded-full blur-3xl" />
           <div className="absolute bottom-0 left-1/4 w-80 h-80 bg-orange-500/5 rounded-full blur-3xl" />
           <div className="absolute top-0 left-0 w-full h-full bg-[radial-gradient(ellipse_at_bottom_right,rgba(79,70,229,0.08),transparent_60%)]" />
         </div>
         <div className="container mx-auto relative z-10">
-          <div className="flex flex-col md:flex-row md:items-end md:justify-between gap-6">
-            <div>
-              <Badge className="bg-orange-500/20 text-orange-300 border-none mb-3 px-3 py-1">
-                <Settings className="w-3.5 h-3.5 mr-1.5" /> Service Provider
-              </Badge>
-              <h1 className="text-3xl md:text-4xl font-extrabold leading-tight">
-                Welcome back,<br />
-                <span className="text-orange-400">{user.name}</span>
-              </h1>
-              <p className="text-slate-400 text-sm mt-2 opacity-90">Monitor metrics, manage campaigns, and connect with clients.</p>
-              <div className="flex flex-wrap gap-3 mt-5">
-                <Button
-                  onClick={() => router.push('/service-provider/advertisements')}
-                  className="bg-orange-500 hover:bg-orange-600 text-white rounded-xl gap-2"
-                >
-                  <Plus className="w-4 h-4" /> New Campaign
-                </Button>
-                <Button
-                  onClick={() => router.push('/service-provider/directory')}
-                  variant="outline"
-                  className="bg-white/10 border-white/20 text-white hover:bg-white/20 rounded-xl gap-2"
-                >
-                  <Users2 className="w-4 h-4" /> Directory
-                </Button>
+          <div className="flex flex-col gap-5">
+            <div className="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-4">
+              <div>
+                <Badge className="bg-orange-500/20 text-orange-300 border-none mb-3 px-3 py-1">
+                  <Settings className="w-3.5 h-3.5 mr-1.5" /> Service Provider
+                </Badge>
+                <h1 className="text-2xl sm:text-3xl md:text-4xl font-extrabold leading-tight">
+                  Welcome back,<br />
+                  <span className="text-orange-400">{user.name}</span>
+                </h1>
+                <p className="text-slate-400 text-sm mt-2 opacity-90">Monitor metrics, manage campaigns, and connect with clients.</p>
+                <div className="flex flex-wrap gap-2 sm:gap-3 mt-4 sm:mt-5">
+                  <Button
+                    onClick={() => router.push('/service-provider/advertisements')}
+                    className="bg-orange-500 hover:bg-orange-600 text-white rounded-xl gap-2 text-sm h-9 sm:h-10"
+                  >
+                    <Plus className="w-4 h-4" /> New Campaign
+                  </Button>
+                  <Button
+                    onClick={() => router.push('/service-provider/directory')}
+                    variant="outline"
+                    className="bg-white/10 border-white/20 text-white hover:bg-white/20 rounded-xl gap-2 text-sm h-9 sm:h-10"
+                  >
+                    <Users2 className="w-4 h-4" /> Directory
+                  </Button>
+                </div>
               </div>
-            </div>
 
-            {/* Ecosystem Guidelines pill */}
-            <div className="bg-white/5 backdrop-blur border border-white/10 rounded-3xl p-5 max-w-xs">
-              <div className="flex items-start gap-3">
-                <AlertCircle className="w-5 h-5 text-blue-400 flex-shrink-0 mt-0.5" />
-                <div>
-                  <p className="text-xs font-bold text-white mb-1">Privacy Enforcement</p>
-                  <p className="text-xs text-slate-400 leading-relaxed">Direct contact details are hidden. All client messages are reviewed and dispatched by the Admin team.</p>
+              {/* Ecosystem Guidelines pill */}
+              <div className="bg-white/5 backdrop-blur border border-white/10 rounded-2xl sm:rounded-3xl p-4 sm:p-5 w-full sm:max-w-xs">
+                <div className="flex items-start gap-3">
+                  <AlertCircle className="w-5 h-5 text-blue-400 flex-shrink-0 mt-0.5" />
+                  <div>
+                    <p className="text-xs font-bold text-white mb-1">Privacy Enforcement</p>
+                    <p className="text-xs text-slate-400 leading-relaxed">Direct contact details are hidden. All client messages are reviewed and dispatched by the Admin team.</p>
+                  </div>
                 </div>
               </div>
             </div>
@@ -121,25 +128,25 @@ export default function ServiceProviderDashboard() {
         </div>
       </div>
 
-      <div className="container mx-auto px-4 md:px-6 -mt-14 relative z-10 space-y-8">
+      <div className="container mx-auto px-3 sm:px-4 md:px-6 -mt-12 relative z-10 space-y-6 sm:space-y-8">
         {/* Stat Cards */}
-        <div className="grid grid-cols-2 lg:grid-cols-5 gap-4">
+        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-3 sm:gap-4">
           {statCards.map((s, i) => (
             <motion.div
               key={i}
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: i * 0.07 }}
-              className="bg-white rounded-3xl p-5 shadow-md border border-white/60 flex flex-col gap-3"
+              className="bg-white rounded-2xl sm:rounded-3xl p-3 sm:p-5 shadow-md border border-white/60 flex flex-col gap-2 sm:gap-3"
             >
-              <div className={`w-11 h-11 rounded-2xl bg-gradient-to-br ${s.gradient} flex items-center justify-center shadow-sm`}>
-                <s.icon className="w-5 h-5 text-white" />
+              <div className={`w-9 h-9 sm:w-11 sm:h-11 rounded-xl sm:rounded-2xl bg-gradient-to-br ${s.gradient} flex items-center justify-center shadow-sm`}>
+                <s.icon className="w-4 h-4 sm:w-5 sm:h-5 text-white" />
               </div>
               {isLoading
-                ? <div className="h-7 w-12 bg-gray-100 rounded animate-pulse" />
+                ? <div className="h-6 w-10 bg-gray-100 rounded animate-pulse" />
                 : <div>
-                    <p className="text-2xl font-extrabold text-gray-900">{s.value}</p>
-                    <p className="text-[10px] font-semibold text-gray-400 uppercase tracking-wider mt-0.5">{s.label}</p>
+                    <p className="text-lg sm:text-2xl font-extrabold text-gray-900">{s.value}</p>
+                    <p className="text-[9px] sm:text-[10px] font-semibold text-gray-400 uppercase tracking-wider mt-0.5 leading-tight">{s.label}</p>
                   </div>
               }
             </motion.div>
@@ -147,44 +154,46 @@ export default function ServiceProviderDashboard() {
         </div>
 
         {/* Chart */}
-        <div className="bg-white rounded-3xl p-6 shadow-sm border border-gray-100">
-          <div className="flex items-center justify-between mb-6">
-            <h3 className="font-bold text-gray-900 text-lg flex items-center gap-2">
+        <div className="bg-white rounded-2xl sm:rounded-3xl p-4 sm:p-6 shadow-sm border border-gray-100">
+          <div className="flex items-center justify-between flex-wrap gap-2 mb-4 sm:mb-6">
+            <h3 className="font-bold text-gray-900 text-base sm:text-lg flex items-center gap-2">
               <BarChart2 className="w-5 h-5 text-slate-800" /> Ad Performance Analytics
             </h3>
-            <Badge className="bg-indigo-50 text-indigo-600 border-none text-xs font-bold px-3 py-1">
+            <Badge className="bg-indigo-50 text-indigo-600 border-none text-xs font-bold px-2 sm:px-3 py-1">
               <Zap className="w-3 h-3 mr-1" /> Live Data
             </Badge>
           </div>
-          <div className="h-56">
+          <div className="h-44 sm:h-56 w-full overflow-hidden">
             {isLoading ? (
               <div className="flex items-center justify-center h-full">
                 <Loader2 className="w-8 h-8 text-orange-500 animate-spin" />
               </div>
             ) : (
-              <ResponsiveContainer width="100%" height="100%">
-                <AreaChart data={ANALYTICS_DATA.map(d => ({ ...d, spent: d.name === 'Jun' ? stats.totalSpent : 0 }))}>
-                  <defs>
-                    <linearGradient id="colorSpent" x1="0" y1="0" x2="0" y2="1">
-                      <stop offset="5%" stopColor="#4f46e5" stopOpacity={0.3} />
-                      <stop offset="95%" stopColor="#4f46e5" stopOpacity={0} />
-                    </linearGradient>
-                  </defs>
-                  <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#f0f0f0" />
-                  <XAxis dataKey="name" axisLine={false} tickLine={false} tick={{ fill: '#9ca3af', fontSize: 12 }} />
-                  <YAxis axisLine={false} tickLine={false} tick={{ fill: '#9ca3af', fontSize: 12 }} width={30} />
-                  <Tooltip contentStyle={{ borderRadius: '12px', border: 'none', boxShadow: '0 4px 12px rgba(0,0,0,0.1)' }} />
-                  <Area type="monotone" dataKey="spent" stroke="#4f46e5" strokeWidth={3} fillOpacity={1} fill="url(#colorSpent)" name="Ad Spend (₹)" />
-                </AreaChart>
-              </ResponsiveContainer>
+              mounted && (
+                <ResponsiveContainer width="100%" height="100%" minWidth={0}>
+                  <AreaChart data={ANALYTICS_DATA.map(d => ({ ...d, spent: d.name === 'Jun' ? stats.totalSpent : 0 }))}>
+                    <defs>
+                      <linearGradient id="colorSpent" x1="0" y1="0" x2="0" y2="1">
+                        <stop offset="5%" stopColor="#4f46e5" stopOpacity={0.3} />
+                        <stop offset="95%" stopColor="#4f46e5" stopOpacity={0} />
+                      </linearGradient>
+                    </defs>
+                    <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#f0f0f0" />
+                    <XAxis dataKey="name" axisLine={false} tickLine={false} tick={{ fill: '#9ca3af', fontSize: 12 }} />
+                    <YAxis axisLine={false} tickLine={false} tick={{ fill: '#9ca3af', fontSize: 12 }} width={30} />
+                    <Tooltip contentStyle={{ borderRadius: '12px', border: 'none', boxShadow: '0 4px 12px rgba(0,0,0,0.1)' }} />
+                    <Area type="monotone" dataKey="spent" stroke="#4f46e5" strokeWidth={3} fillOpacity={1} fill="url(#colorSpent)" name="Ad Spend ($)" />
+                  </AreaChart>
+                </ResponsiveContainer>
+              )
             )}
           </div>
         </div>
 
         {/* Quick Action Cards */}
         <div>
-          <h2 className="text-sm font-bold uppercase tracking-widest text-gray-400 mb-4">Quick Actions</h2>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
+          <h2 className="text-xs sm:text-sm font-bold uppercase tracking-widest text-gray-400 mb-3 sm:mb-4">Quick Actions</h2>
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3 sm:gap-5">
             {QUICK_ACTIONS.map((action, i) => (
               <motion.div
                 key={i}
@@ -212,14 +221,14 @@ export default function ServiceProviderDashboard() {
         </div>
 
         {/* Ad Spend Button */}
-        <div className="bg-gradient-to-r from-[#D48035] to-orange-700 rounded-3xl p-6 flex flex-col sm:flex-row sm:items-center justify-between gap-4 shadow-md">
+        <div className="bg-gradient-to-r from-[#D48035] to-orange-700 rounded-2xl sm:rounded-3xl p-4 sm:p-6 flex flex-col sm:flex-row sm:items-center justify-between gap-3 sm:gap-4 shadow-md">
           <div>
-            <p className="text-white font-bold text-lg">Ready to boost your reach?</p>
+            <p className="text-white font-bold text-base sm:text-lg">Ready to boost your reach?</p>
             <p className="text-orange-100 text-sm mt-1 opacity-80">Launch a new advertisement campaign to reach builders & investors.</p>
           </div>
           <Button
             onClick={() => router.push('/service-provider/advertisements')}
-            className="bg-white text-orange-700 hover:bg-orange-50 font-bold rounded-2xl px-6 py-3 shadow gap-2 shrink-0"
+            className="bg-white text-orange-700 hover:bg-orange-50 font-bold rounded-xl sm:rounded-2xl px-5 sm:px-6 py-2.5 sm:py-3 shadow gap-2 shrink-0 text-sm"
           >
             <Plus className="w-4 h-4" /> Book Campaign
           </Button>

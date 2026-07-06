@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+﻿import React, { useState } from 'react';
 import { useStripe, useElements, PaymentElement } from '@stripe/react-stripe-js';
 import { Button } from '@/components/ui/button';
 import { Loader2 } from 'lucide-react';
@@ -82,7 +82,7 @@ export default function CheckoutForm({ onSuccess, onCancel, amount, currency = '
           className="bg-[#0b264f] hover:bg-blue-900 text-white rounded-xl shadow-md min-w-[120px]"
         >
           {isProcessing ? <Loader2 className="w-4 h-4 animate-spin mr-1.5" /> : null}
-          {isProcessing ? 'Processing...' : `Pay ₹${amount}`}
+          {isProcessing ? 'Processing...' : `Pay $${amount}`}
         </Button>
       </div>
     </form>

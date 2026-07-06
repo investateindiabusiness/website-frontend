@@ -63,9 +63,9 @@ export default function AdminInquiries() {
 
     return (
         <div className="font-sans">
-            <div className="flex-grow container mx-auto px-4 py-24 max-w-7xl">
-                <div className="flex flex-col md:flex-row justify-between items-end gap-6 mb-8">
-                    <div><h1 className="text-3xl font-bold text-gray-900 mb-2">General Inquiries</h1><p className="text-gray-600">Submissions from Contact Us page.</p></div>
+            <div className="flex-grow container mx-auto px-4 py-6 sm:py-8 max-w-7xl">
+                <div className="flex flex-col md:flex-row justify-between items-start gap-4 mb-6">
+                    <div><h1 className="text-2xl sm:text-3xl font-bold text-gray-900 mb-1">General Inquiries</h1><p className="text-gray-600 text-sm">Submissions from Contact Us page.</p></div>
                     <div className="relative w-full md:w-64">
                         <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 w-4 h-4" />
                         <Input placeholder="Search..." value={searchQuery} onChange={(e) => setSearchQuery(e.target.value)} className="pl-9" />
@@ -73,36 +73,38 @@ export default function AdminInquiries() {
                 </div>
 
                 <div className="bg-white rounded-2xl shadow-sm border border-gray-200 overflow-hidden">
-                    <table className="w-full text-left">
-                        <thead className="bg-gray-50 border-b">
-                            <tr>
-                                <th className="p-4 text-xs uppercase text-gray-600">Date</th>
-                                <th className="p-4 text-xs uppercase text-gray-600">Name</th>
-                                <th className="p-4 text-xs uppercase text-gray-600">Email</th>
-                                <th className="p-4 text-xs uppercase text-gray-600">Status</th>
-                                <th className="p-4 text-xs uppercase text-gray-600 text-right">Actions</th>
-                            </tr>
-                        </thead>
-                        <tbody className="divide-y">
-                            {loading ? (
-                                <tr><td colSpan="5" className="p-8 text-center">Loading...</td></tr>
-                            ) : filteredInquiries.length === 0 ? (
-                                <tr><td colSpan="5" className="p-8 text-center">No inquiries.</td></tr>
-                            ) : (
-                                filteredInquiries.map((inq) => (
-                                    <tr key={inq.id} className="hover:bg-gray-50">
-                                        <td className="p-4 text-sm text-gray-600">{new Date(inq.createdAt).toLocaleDateString()}</td>
-                                        <td className="p-4 font-semibold">{inq.name}</td>
-                                        <td className="p-4">{inq.email}</td>
-                                        <td className="p-4"><Badge>{inq.status || 'New'}</Badge></td>
-                                        <td className="p-4 text-right">
-                                            <Button variant="ghost" size="sm" onClick={() => handleEditClick(inq)}><Edit className="w-4 h-4" /></Button>
-                                        </td>
-                                    </tr>
-                                ))
-                            )}
-                        </tbody>
-                    </table>
+                    <div className="overflow-x-auto">
+                        <table className="w-full text-left">
+                            <thead className="bg-gray-50 border-b">
+                                <tr>
+                                    <th className="p-4 text-xs uppercase text-gray-600">Date</th>
+                                    <th className="p-4 text-xs uppercase text-gray-600">Name</th>
+                                    <th className="p-4 text-xs uppercase text-gray-600">Email</th>
+                                    <th className="p-4 text-xs uppercase text-gray-600">Status</th>
+                                    <th className="p-4 text-xs uppercase text-gray-600 text-right">Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody className="divide-y">
+                                {loading ? (
+                                    <tr><td colSpan="5" className="p-8 text-center">Loading...</td></tr>
+                                ) : filteredInquiries.length === 0 ? (
+                                    <tr><td colSpan="5" className="p-8 text-center">No inquiries.</td></tr>
+                                ) : (
+                                    filteredInquiries.map((inq) => (
+                                        <tr key={inq.id} className="hover:bg-gray-50">
+                                            <td className="p-4 text-sm text-gray-600">{new Date(inq.createdAt).toLocaleDateString()}</td>
+                                            <td className="p-4 font-semibold">{inq.name}</td>
+                                            <td className="p-4">{inq.email}</td>
+                                            <td className="p-4"><Badge>{inq.status || 'New'}</Badge></td>
+                                            <td className="p-4 text-right">
+                                                <Button variant="ghost" size="sm" onClick={() => handleEditClick(inq)}><Edit className="w-4 h-4" /></Button>
+                                            </td>
+                                        </tr>
+                                    ))
+                                )}
+                            </tbody>
+                        </table>
+                    </div>
                 </div>
             </div>
 

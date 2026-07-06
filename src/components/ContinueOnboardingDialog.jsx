@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import React, { useState, useEffect } from 'react';
 import { Dialog, DialogContent, DialogTitle, DialogDescription } from '@/components/ui/dialog';
@@ -209,14 +209,14 @@ const ContinueOnboardingDialog = ({ isOpen, onOpenChange, data = {} }) => {
 
                                                 {isFieldRequested('investmentRangeMin') && (
                                                     <div className="space-y-1">
-                                                        <Label htmlFor="investmentRangeMin" className={labelStyle}>Min Investment Range (₹) *</Label>
+                                                        <Label htmlFor="investmentRangeMin" className={labelStyle}>Min Investment Range ($) *</Label>
                                                         <Input id="investmentRangeMin" required type="number" min="0" value={dynamicFormData.investmentRangeMin || ''} onChange={(e) => setDynamicFormData({ ...dynamicFormData, investmentRangeMin: e.target.value })} className={inputStyle} placeholder="e.g. 500000" />
                                                     </div>
                                                 )}
 
                                                 {isFieldRequested('investmentRangeMax') && (
                                                     <div className="space-y-1">
-                                                        <Label htmlFor="investmentRangeMax" className={labelStyle}>Max Investment Range (₹) *</Label>
+                                                        <Label htmlFor="investmentRangeMax" className={labelStyle}>Max Investment Range ($) *</Label>
                                                         <Input id="investmentRangeMax" required type="number" min="0" value={dynamicFormData.investmentRangeMax || ''} onChange={(e) => setDynamicFormData({ ...dynamicFormData, investmentRangeMax: e.target.value })} className={inputStyle} placeholder="e.g. 2000000" />
                                                     </div>
                                                 )}

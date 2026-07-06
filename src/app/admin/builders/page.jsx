@@ -247,11 +247,11 @@ export default function AdminBuilders() {
   return (
     <div className="">
 
-      <div className="flex-1 container mx-auto px-4 py-24 max-w-7xl">
-        <div className="flex flex-col md:flex-row md:items-end justify-between mb-8 gap-4">
+      <div className="flex-1 container mx-auto px-4 py-6 sm:py-8 max-w-7xl">
+        <div className="flex flex-col md:flex-row md:items-start justify-between mb-6 gap-3">
           <div>
-            <h1 className="text-3xl font-bold text-gray-900 mb-2">Manage Builders</h1>
-            <p className="text-gray-600">{total.toLocaleString()} builder{total !== 1 ? 's' : ''} registered</p>
+            <h1 className="text-2xl sm:text-3xl font-bold text-gray-900 mb-1">Manage Builders</h1>
+            <p className="text-gray-600 text-sm">{total.toLocaleString()} builder{total !== 1 ? 's' : ''} registered</p>
           </div>
         </div>
 

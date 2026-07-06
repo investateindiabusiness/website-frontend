@@ -1,7 +1,7 @@
-"use client";
+﻿"use client";
 
 import React, { useState, useEffect, useCallback } from 'react';
-import { Plus, Search, Edit, Trash2, Eye, ArrowLeft, Save, Building2, MapPin, FileText, ShieldAlert, CheckCircle, FileWarning, Loader2, Clock, XCircle, RefreshCw, LayoutDashboard, Layers, Landmark, IndianRupee, ImagePlus, X } from 'lucide-react';
+import { Plus, Search, Edit, Trash2, Eye, ArrowLeft, Save, Building2, MapPin, FileText, ShieldAlert, CheckCircle, FileWarning, Loader2, Clock, XCircle, RefreshCw, LayoutDashboard, Layers, Landmark, DollarSign, ImagePlus, X } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Input } from '@/components/ui/input';
@@ -476,7 +476,7 @@ export default function ProjectManager() {
                                     <>
                                         <div className="animate-in fade-in slide-in-from-top-2">
                                             <Label className={labelStyle}>Borrowing Amount *</Label>
-                                            <Input required name="existingBorrowingsAmount" value={currentProject.existingBorrowingsAmount} onChange={handleInputChange} className={inputStyle} placeholder="e.g. ₹50 Crores" />
+                                            <Input required name="existingBorrowingsAmount" value={currentProject.existingBorrowingsAmount} onChange={handleInputChange} className={inputStyle} placeholder="e.g. $50 Crores" />
                                         </div>
                                         <div className="animate-in fade-in slide-in-from-top-2">
                                             <Label className={labelStyle}>Purpose of Borrowing *</Label>
@@ -489,7 +489,7 @@ export default function ProjectManager() {
 
                         <div className={cardStyle}>
                             <div className={cardHeaderStyle}>
-                                <IndianRupee className="w-5 h-5 mr-2 text-[#0b264f]" />
+                                <DollarSign className="w-3 h-3" />
                                 <h3 className="text-lg font-bold text-gray-900">Pricing & Offerings</h3>
                             </div>
                             <div className="p-6 grid grid-cols-1 md:grid-cols-2 gap-6 bg-white">

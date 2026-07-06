@@ -9,23 +9,22 @@ import { bookSlot, fetchAdZones, fetchMyCoupons, validateCoupon, uploadImage, up
 import { loadStripe } from '@stripe/stripe-js';
 import { Elements } from '@stripe/react-stripe-js';
 import CheckoutForm from '@/components/CheckoutForm';
-import { Calendar, Loader2, ArrowLeft, Image as ImageIcon, Video as VideoIcon, FileText as TextIcon, CheckCircle, Clock, Tag } from 'lucide-react';
+import {
+  Calendar,
+  Loader2,
+  ArrowLeft,
+  Image as ImageIcon,
+  Video as VideoIcon,
+  FileText as TextIcon,
+  CheckCircle,
+  Clock,
+  Tag
+} from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { compressAdImage } from '@/utils/imageCompressor';
 
-// Zone display metadata is now loaded entirely from the backend.
-
 const stripePromise = loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY || 'pk_test_placeholder');
-
-const getDefaultRedirectUrl = () => {
-  if (typeof window !== 'undefined' && window.location?.origin) {
-    return `${window.location.origin}/builder/dashboard`;
-  }
-  return '/builder/dashboard';
-};
-
-const DEFAULT_REDIRECT_URL = getDefaultRedirectUrl();
 
 const formatDate = (dateStr) => {
   if (!dateStr) return '';
@@ -54,20 +53,20 @@ function BookingFormContent() {
 
   const [selectedZone, setSelectedZone] = useState(null);
   const [loadingZone, setLoadingZone] = useState(true);
-  
+
   const [campaignFormat, setCampaignFormat] = useState('image'); // 'image' | 'video' | 'text'
   const [adContent, setAdContent] = useState({
     imageUrl: '',
     videoUrl: '',
     text: '',
-    targetUrl: DEFAULT_REDIRECT_URL
+    targetUrl: ''
   });
-  
+
   const [imageFile, setImageFile] = useState(null);
   const [imagePreview, setImagePreview] = useState('');
   const [videoFile, setVideoFile] = useState(null);
   const [videoPreview, setVideoPreview] = useState('');
-  
+
   const [isUploadingFile, setIsUploadingFile] = useState(false);
   const [uploadProgress, setUploadProgress] = useState(0);
 
@@ -75,10 +74,9 @@ function BookingFormContent() {
   const [spinnerMsg, setSpinnerMsg] = useState('Complete Booking');
   const [paymentClientSecret, setPaymentClientSecret] = useState(null);
   const [paymentId, setPaymentId] = useState(null);
-  
+
   // Coupon States
   const [coupons, setCoupons] = useState([]);
-  const [loadingCoupons, setLoadingCoupons] = useState(false);
   const [couponCodeInput, setCouponCodeInput] = useState('');
   const [appliedCoupon, setAppliedCoupon] = useState(null);
   const [validatingCoupon, setValidatingCoupon] = useState(false);
@@ -105,13 +103,10 @@ function BookingFormContent() {
 
   const loadAvailableCoupons = async () => {
     try {
-      setLoadingCoupons(true);
       const res = await fetchMyCoupons();
       setCoupons(res.data || []);
     } catch (error) {
       console.error("Failed to load user coupons:", error);
-    } finally {
-      setLoadingCoupons(false);
     }
   };
 
@@ -193,13 +188,13 @@ function BookingFormContent() {
     try {
       setIsUploadingFile(true);
       setUploadProgress(30);
-      
+
       const compressed = await compressAdImage(file);
       setUploadProgress(60);
-      
+
       const res = await uploadImage(compressed, 'campaigns');
       setUploadProgress(100);
-      
+
       setImageFile(file);
       setImagePreview(res.url);
       setAdContent(prev => ({ ...prev, imageUrl: res.url }));
@@ -226,10 +221,10 @@ function BookingFormContent() {
     try {
       setIsUploadingFile(true);
       setUploadProgress(40);
-      
+
       const res = await uploadFile(file, 'campaigns');
       setUploadProgress(100);
-      
+
       setVideoFile(file);
       setVideoPreview(res.url);
       setAdContent(prev => ({ ...prev, videoUrl: res.url }));
@@ -279,7 +274,6 @@ function BookingFormContent() {
     setCouponCodeInput('');
   };
 
-  // Calculate selectionDays and totalCost dynamically
   const getSelectionDays = () => {
     if (!startDate || !endDate) return 0;
     const msPerDay = 1000 * 60 * 60 * 24;
@@ -287,7 +281,6 @@ function BookingFormContent() {
   };
   const selectionDays = getSelectionDays();
   const calculatedBaseCost = (selectedZone?.costPerDay || 0) * selectionDays;
-
   const discountedCost = Math.max(0, calculatedBaseCost - (appliedCoupon?.discountAmount || 0));
 
   const handleBookingSubmit = async (e) => {
@@ -313,27 +306,26 @@ function BookingFormContent() {
         couponCode: appliedCoupon?.code,
         adContent: {
           ...adContent,
-          targetUrl: DEFAULT_REDIRECT_URL,
           imageUrl: campaignFormat === 'image' ? adContent.imageUrl : '',
           videoUrl: campaignFormat === 'video' ? adContent.videoUrl : ''
         }
       });
-      
+
       if (response?.data?.payment?.clientSecret) {
         setPaymentClientSecret(response.data.payment.clientSecret);
         setPaymentId(response.data.payment.paymentId || null);
       } else {
-        toast({ 
-          title: "Campaign Booked!", 
-          description: "Your campaign has been submitted successfully." 
+        toast({
+          title: "Campaign Booked!",
+          description: "Your campaign has been submitted successfully."
         });
-        router.push('/investor/advertisements');
+        router.push('/service-provider/advertisements');
       }
     } catch (error) {
-      toast({ 
-        title: "Booking Failed", 
-        description: error.message || "Failed to submit campaign details.", 
-        variant: "destructive" 
+      toast({
+        title: "Booking Failed",
+        description: error.message || "Failed to submit campaign details.",
+        variant: "destructive"
       });
     } finally {
       setIsSubmittingBooking(false);
@@ -354,10 +346,10 @@ function BookingFormContent() {
     <Card className="w-full max-w-xl bg-white rounded-3xl shadow-xl border border-slate-100 overflow-hidden mx-auto my-8">
       <CardHeader className="bg-[#0b264f] text-white p-6 relative">
         <div className="flex items-center gap-3">
-          <Button 
-            variant="ghost" 
-            size="icon" 
-            onClick={() => router.push('/investor/advertisements')}
+          <Button
+            variant="ghost"
+            size="icon"
+            onClick={() => router.push('/service-provider/advertisements')}
             className="text-white hover:text-white/80 hover:bg-white/10 rounded-full"
             type="button"
           >
@@ -373,18 +365,18 @@ function BookingFormContent() {
           </div>
         </div>
       </CardHeader>
-      
+
       {paymentClientSecret ? (
         <CardContent className="p-8">
           <Elements stripe={stripePromise} options={{ clientSecret: paymentClientSecret, appearance: { theme: 'stripe' } }}>
-            <CheckoutForm 
+            <CheckoutForm
               amount={discountedCost}
               paymentId={paymentId}
               onSuccess={() => {
                 toast({ title: "Payment Complete!", description: "Your campaign booking is fully paid and active." });
-                router.push('/investor/advertisements');
-              }} 
-              onCancel={() => setPaymentClientSecret(null)} 
+                router.push('/service-provider/advertisements');
+              }}
+              onCancel={() => setPaymentClientSecret(null)}
             />
           </Elements>
         </CardContent>
@@ -394,7 +386,6 @@ function BookingFormContent() {
             {/* Dates + Time Display */}
             <div className="bg-slate-50 border border-slate-100 rounded-2xl p-5 space-y-4">
               <div className="grid grid-cols-2 gap-4">
-                {/* Start Date */}
                 <div className="space-y-1">
                   <span className="font-semibold text-slate-400 uppercase tracking-wide block text-[9px]">Start Date</span>
                   <p className="text-slate-800 text-sm font-bold flex items-center gap-1.5">
@@ -402,8 +393,6 @@ function BookingFormContent() {
                     {formatDate(startDate)}
                   </p>
                 </div>
-
-                {/* End Date */}
                 <div className="space-y-1">
                   <span className="font-semibold text-slate-400 uppercase tracking-wide block text-[9px]">End Date</span>
                   <p className="text-slate-800 text-sm font-bold flex items-center gap-1.5">
@@ -413,20 +402,20 @@ function BookingFormContent() {
                 </div>
               </div>
 
-              {/* Selected Time Slot Display */}
               <div className="border-t border-slate-100 pt-3 flex justify-between items-center text-xs">
-                <span className="font-semibold text-slate-400 uppercase tracking-wide block text-[9px]">Ad Display Timing</span>
+                <span className="font-semibold text-slate-400 uppercase tracking-wide block text-[9px]">Duration</span>
                 <span className="text-slate-700 font-bold flex items-center gap-1.5">
                   <Clock className="w-3.5 h-3.5 text-slate-400" />
-                  {timeSlot}
+                  {selectionDays} day{selectionDays !== 1 ? 's' : ''} · {timeSlot}
                 </span>
               </div>
 
               <div className="border-t border-slate-100 pt-3 flex justify-between items-center">
                 <span className="text-[9px] font-semibold text-slate-400 uppercase tracking-wide">Total Cost</span>
                 <div className="text-right">
+                  <span className="text-[10px] text-slate-400 block">${selectedZone?.costPerDay}/day × {selectionDays} days</span>
                   {appliedCoupon && (
-                    <span className="text-xs text-slate-400 line-through mr-2">${selectedZone?.cost}</span>
+                    <span className="text-xs text-slate-400 line-through mr-2">${calculatedBaseCost}</span>
                   )}
                   <strong className="text-[#0b264f] text-base font-bold">${discountedCost}</strong>
                 </div>
@@ -437,7 +426,7 @@ function BookingFormContent() {
             <div className="space-y-3">
               <label className="text-xs font-bold text-slate-600 block">Apply Coupon</label>
               <div className="flex gap-2">
-                <input 
+                <input
                   type="text"
                   placeholder="ENTER CODE"
                   disabled={!!appliedCoupon}
@@ -466,7 +455,6 @@ function BookingFormContent() {
                 )}
               </div>
 
-              {/* Available Coupons List */}
               {coupons.length > 0 && !appliedCoupon && (
                 <div className="space-y-2 mt-2">
                   <span className="text-[10px] font-semibold text-slate-400 uppercase tracking-wide block">Your Available Coupons:</span>
@@ -487,7 +475,7 @@ function BookingFormContent() {
               )}
             </div>
 
-            {/* Resolution specifications & Campaign Format Selector */}
+            {/* Resolution specs & Campaign Format Selector */}
             <div className="bg-indigo-50/50 border border-indigo-100 rounded-2xl p-5 space-y-4">
               <div>
                 <span className="font-semibold text-indigo-400 uppercase tracking-wide block text-[9px] mb-1">Required Zone Specification</span>
@@ -531,19 +519,19 @@ function BookingFormContent() {
               </div>
             </div>
 
-            {/* Render Image upload if 'image' selected */}
+            {/* Image upload */}
             {campaignFormat === 'image' && (
               <div className="space-y-2.5">
                 <label className="text-xs font-bold text-slate-600 block">Ad Image <span className="text-red-500">*</span></label>
-                
+
                 {!imageFile ? (
                   <div className="relative border-2 border-dashed border-slate-200 hover:border-[#0b264f] rounded-2xl p-6 transition-all cursor-pointer group bg-slate-50/50 flex flex-col items-center justify-center min-h-[140px]">
-                    <input 
-                      type="file" 
-                      accept="image/*" 
+                    <input
+                      type="file"
+                      accept="image/*"
                       required
-                      onChange={handleImageChange} 
-                      className="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-10" 
+                      onChange={handleImageChange}
+                      className="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-10"
                     />
                     {isUploadingFile ? (
                       <>
@@ -569,9 +557,9 @@ function BookingFormContent() {
                       <button type="button" onClick={handleRemoveImage} className="text-slate-400 hover:text-red-500 font-bold ml-2 text-sm transition-colors">✕</button>
                     </div>
                     <div className="relative rounded-2xl overflow-hidden bg-slate-50 border border-slate-200/80 aspect-[16/9] max-h-56 flex items-center justify-center p-2">
-                      <img 
-                        src={imagePreview} 
-                        alt="Ad Image Preview" 
+                      <img
+                        src={imagePreview}
+                        alt="Ad Image Preview"
                         className="w-full h-full object-contain rounded-lg"
                       />
                     </div>
@@ -580,19 +568,19 @@ function BookingFormContent() {
               </div>
             )}
 
-            {/* Render Video upload if 'video' selected */}
+            {/* Video upload */}
             {campaignFormat === 'video' && (
               <div className="space-y-2.5">
                 <label className="text-xs font-bold text-slate-600 block">Ad Video File <span className="text-red-500">*</span></label>
-                
+
                 {!videoFile ? (
                   <div className="relative border-2 border-dashed border-slate-200 hover:border-[#0b264f] rounded-2xl p-6 transition-all cursor-pointer group bg-slate-50/50 flex flex-col items-center justify-center min-h-[140px]">
-                    <input 
-                      type="file" 
-                      accept="video/*" 
+                    <input
+                      type="file"
+                      accept="video/*"
                       required
-                      onChange={handleVideoChange} 
-                      className="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-10" 
+                      onChange={handleVideoChange}
+                      className="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-10"
                     />
                     {isUploadingFile ? (
                       <>
@@ -618,8 +606,8 @@ function BookingFormContent() {
                       <button type="button" onClick={handleRemoveVideo} className="text-slate-400 hover:text-red-500 font-bold ml-2 text-sm transition-colors">✕</button>
                     </div>
                     <div className="relative rounded-2xl overflow-hidden bg-slate-50 border border-slate-200/80 aspect-[16/9] max-h-56 flex items-center justify-center p-2">
-                      <video 
-                        src={videoPreview} 
+                      <video
+                        src={videoPreview}
                         controls
                         className="w-full h-full object-contain rounded-lg"
                       />
@@ -629,44 +617,44 @@ function BookingFormContent() {
               </div>
             )}
 
-            <div className="rounded-2xl border border-emerald-100 bg-emerald-50 px-4 py-3 text-sm text-emerald-700">
-              All ad clicks from this booking will redirect to the builder dashboard.
-            </div>
-
+            {/* Target URL */}
             <div className="space-y-2">
-              <label className="text-xs font-bold text-slate-600 block">Ad Caption / Text <span className="text-red-500">*</span></label>
-              <textarea 
+              <label className="text-xs font-bold text-slate-600 block">Target Redirect URL <span className="text-red-500">*</span></label>
+              <input
+                type="url"
                 required
-                rows="4"
-                placeholder="e.g. Invest in Premium Commercial Real Estate starting from..."
-                className="w-full border border-slate-200 rounded-xl px-4 py-3 text-sm outline-none focus:border-[#0b264f] text-slate-700 placeholder-slate-400 resize-none shadow-sm transition-all focus:ring-1 focus:ring-[#0b264f]"
-                value={adContent.text}
-                onChange={(e) => setAdContent({...adContent, text: e.target.value})}
+                placeholder="https://mywebsite.com/my-services"
+                className="w-full border border-slate-200 rounded-xl px-4 py-3 text-sm outline-none focus:border-[#0b264f] text-slate-700 placeholder-slate-400 shadow-sm transition-all focus:ring-1 focus:ring-[#0b264f]"
+                value={adContent.targetUrl}
+                onChange={(e) => setAdContent({ ...adContent, targetUrl: e.target.value })}
               />
             </div>
 
+            {/* Caption */}
             <div className="space-y-2">
-              <label className="text-xs font-bold text-slate-600 block">Ad Video URL (Optional)</label>
-              <input 
-                type="url"
-                placeholder="https://example.com/ad-video.mp4"
-                className="w-full border border-slate-200 rounded-xl px-4 py-3 text-sm outline-none focus:border-[#0b264f] text-slate-700 placeholder-slate-400 shadow-sm transition-all focus:ring-1 focus:ring-[#0b264f]"
-                value={adContent.videoUrl}
-                onChange={(e) => setAdContent({...adContent, videoUrl: e.target.value})}
+              <label className="text-xs font-bold text-slate-600 block">Ad Caption / Text <span className="text-red-500">*</span></label>
+              <textarea
+                required
+                rows="4"
+                placeholder="e.g. Legal due diligence and property verification advisors..."
+                className="w-full border border-slate-200 rounded-xl px-4 py-3 text-sm outline-none focus:border-[#0b264f] text-slate-700 placeholder-slate-400 resize-none shadow-sm transition-all focus:ring-1 focus:ring-[#0b264f]"
+                value={adContent.text}
+                onChange={(e) => setAdContent({ ...adContent, text: e.target.value })}
               />
             </div>
           </CardContent>
+
           <div className="bg-slate-50 border-t border-slate-100 p-5 px-8 flex justify-end gap-3 rounded-b-3xl">
-            <Button 
-              type="button" 
-              variant="outline" 
-              onClick={() => router.push('/investor/advertisements')} 
+            <Button
+              type="button"
+              variant="outline"
+              onClick={() => router.push('/service-provider/advertisements')}
               className="rounded-xl border-slate-200 text-slate-600 hover:bg-slate-100"
             >
               Cancel
             </Button>
-            <Button 
-              type="submit" 
+            <Button
+              type="submit"
               disabled={isSubmittingBooking}
               className="bg-[#0b264f] hover:bg-blue-900 text-white rounded-xl shadow-md min-w-[140px] flex items-center justify-center gap-2"
             >
@@ -684,7 +672,7 @@ function BookingFormContent() {
   );
 }
 
-export default function BookAdCampaign() {
+export default function BookAdCampaignSP() {
   return (
     <div className="min-h-screen bg-[#F8FAFC] flex flex-col justify-between">
       <main className="flex-grow container mx-auto px-4 py-8 mt-[1.5rem] md:mt-[3rem] flex items-center justify-center">

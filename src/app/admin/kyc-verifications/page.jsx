@@ -188,9 +188,11 @@ export default function AdminKycVerificationsPage() {
           </Typography>
         </Box>
         <Tooltip title="Refresh">
-          <IconButton onClick={fetchSubmissions} disabled={loading} sx={{ border: '1px solid #e5e7eb' }}>
-            <RefreshIcon fontSize="small" />
-          </IconButton>
+          <span>
+            <IconButton onClick={fetchSubmissions} disabled={loading} sx={{ border: '1px solid #e5e7eb' }}>
+              <RefreshIcon fontSize="small" />
+            </IconButton>
+          </span>
         </Tooltip>
       </Box>
 

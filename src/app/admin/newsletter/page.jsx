@@ -58,11 +58,11 @@ export default function AdminNewsletter() {
 
     return (
         <div className="font-sans">
-            <div className="flex-grow container mx-auto px-4 py-24 max-w-7xl">
-                <div className="flex flex-col md:flex-row justify-between items-end gap-6 mb-8">
+            <div className="flex-grow container mx-auto px-4 py-6 sm:py-8 max-w-7xl">
+                <div className="flex flex-col md:flex-row justify-between items-start gap-4 mb-6">
                     <div>
-                        <h1 className="text-3xl font-bold text-gray-900 mb-2">Newsletter</h1>
-                        <p className="text-gray-600">Manage investor emails collected from the landing page.</p>
+                        <h1 className="text-2xl sm:text-3xl font-bold text-gray-900 mb-1">Newsletter</h1>
+                        <p className="text-gray-600 text-sm">Manage investor emails collected from the landing page.</p>
                     </div>
                     <div className="flex flex-col sm:flex-row gap-3">
                         <div className="relative">
@@ -78,49 +78,51 @@ export default function AdminNewsletter() {
                 </div>
 
                 <div className="bg-white rounded-2xl shadow-sm border border-gray-200 overflow-hidden">
-                    <table className="w-full text-left">
-                        <thead className="bg-gray-50 border-b">
-                            <tr>
-                                <th className="p-4 text-xs uppercase text-gray-600">Date Subscribed</th>
-                                <th className="p-4 text-xs uppercase text-gray-600">Email Address</th>
-                                <th className="p-4 text-xs uppercase text-gray-600">Status</th>
-                                <th className="p-4 text-xs uppercase text-gray-600 text-right">Actions</th>
-                            </tr>
-                        </thead>
-                        <tbody className="divide-y">
-                            {loading ? (
-                                <tr><td colSpan="4" className="p-8 text-center"><Loader2 className="w-6 h-6 animate-spin mx-auto mb-2 text-[#0b264f]" /> Loading...</td></tr>
-                            ) : filteredSubscribers.length === 0 ? (
-                                <tr><td colSpan="4" className="p-8 text-center text-gray-500">No emails found.</td></tr>
-                            ) : (
-                                filteredSubscribers.map((sub) => (
-                                    <tr key={sub.id} className="hover:bg-gray-50">
-                                        <td className="p-4 text-sm text-gray-600">
-                                            <Calendar className="w-4 h-4 inline mr-1 text-gray-400" />
-                                            {new Date(sub.subscribedAt || sub.createdAt).toLocaleDateString()}
-                                        </td>
-                                        <td className="p-4 text-sm font-semibold">
-                                            <Mail className="w-4 h-4 inline mr-1 text-gray-400" />{sub.email}
-                                        </td>
-                                        <td className="p-4">
-                                            <Badge className={`${sub.status === 'Active' ? 'bg-green-100 text-green-800' : 'bg-gray-100 text-gray-600'} border-none`}>
-                                                {sub.status === 'Active' ? <CheckCircle className="w-3 h-3 inline mr-1" /> : <XCircle className="w-3 h-3 inline mr-1" />}
-                                                {sub.status || 'Active'}
-                                            </Badge>
-                                        </td>
-                                        <td className="p-4 text-right">
-                                            <Button variant="ghost" size="sm" onClick={() => handleToggleStatus(sub)} className={`${sub.status === 'Active' ? 'text-orange-600 hover:bg-orange-50' : 'text-green-600 hover:bg-green-50'} mr-2`}>
-                                                <Power className="w-4 h-4" />
-                                            </Button>
-                                            <Button variant="ghost" size="sm" onClick={() => handleDelete(sub.id)} className="text-red-600 hover:bg-red-50">
-                                                <Trash2 className="w-4 h-4" />
-                                            </Button>
-                                        </td>
-                                    </tr>
-                                ))
-                            )}
-                        </tbody>
-                    </table>
+                    <div className="overflow-x-auto">
+                        <table className="w-full text-left">
+                            <thead className="bg-gray-50 border-b">
+                                <tr>
+                                    <th className="p-4 text-xs uppercase text-gray-600">Date Subscribed</th>
+                                    <th className="p-4 text-xs uppercase text-gray-600">Email Address</th>
+                                    <th className="p-4 text-xs uppercase text-gray-600">Status</th>
+                                    <th className="p-4 text-xs uppercase text-gray-600 text-right">Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody className="divide-y">
+                                {loading ? (
+                                    <tr><td colSpan="4" className="p-8 text-center"><Loader2 className="w-6 h-6 animate-spin mx-auto mb-2 text-[#0b264f]" /> Loading...</td></tr>
+                                ) : filteredSubscribers.length === 0 ? (
+                                    <tr><td colSpan="4" className="p-8 text-center text-gray-500">No emails found.</td></tr>
+                                ) : (
+                                    filteredSubscribers.map((sub) => (
+                                        <tr key={sub.id} className="hover:bg-gray-50">
+                                            <td className="p-4 text-sm text-gray-600">
+                                                <Calendar className="w-4 h-4 inline mr-1 text-gray-400" />
+                                                {new Date(sub.subscribedAt || sub.createdAt).toLocaleDateString()}
+                                            </td>
+                                            <td className="p-4 text-sm font-semibold">
+                                                <Mail className="w-4 h-4 inline mr-1 text-gray-400" />{sub.email}
+                                            </td>
+                                            <td className="p-4">
+                                                <Badge className={`${sub.status === 'Active' ? 'bg-green-100 text-green-800' : 'bg-gray-100 text-gray-600'} border-none`}>
+                                                    {sub.status === 'Active' ? <CheckCircle className="w-3 h-3 inline mr-1" /> : <XCircle className="w-3 h-3 inline mr-1" />}
+                                                    {sub.status || 'Active'}
+                                                </Badge>
+                                            </td>
+                                            <td className="p-4 text-right">
+                                                <Button variant="ghost" size="sm" onClick={() => handleToggleStatus(sub)} className={`${sub.status === 'Active' ? 'text-orange-600 hover:bg-orange-50' : 'text-green-600 hover:bg-green-50'} mr-2`}>
+                                                    <Power className="w-4 h-4" />
+                                                </Button>
+                                                <Button variant="ghost" size="sm" onClick={() => handleDelete(sub.id)} className="text-red-600 hover:bg-red-50">
+                                                    <Trash2 className="w-4 h-4" />
+                                                </Button>
+                                            </td>
+                                        </tr>
+                                    ))
+                                )}
+                            </tbody>
+                        </table>
+                    </div>
                 </div>
             </div>
         </div>

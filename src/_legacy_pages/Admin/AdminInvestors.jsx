@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from 'react';
+﻿import React, { useState, useEffect, useCallback } from 'react';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
 import { Card, CardContent } from '@/components/ui/card';
@@ -25,8 +25,8 @@ const FORM1_EDITABLE_FIELDS = [
   { id: 'fullName', label: 'Full Name' },
   { id: 'contactNumber', label: 'Contact Number' },
   { id: 'investorType', label: 'Investor Type' },
-  { id: 'investmentRangeMin', label: 'Min Investment Range (₹)' },
-  { id: 'investmentRangeMax', label: 'Max Investment Range (₹)' },
+  { id: 'investmentRangeMin', label: 'Min Investment Range ($)' },
+  { id: 'investmentRangeMax', label: 'Max Investment Range ($)' },
   { id: 'address', label: 'Street Address' },
   { id: 'city', label: 'City' },
   { id: 'state', label: 'State' },
@@ -320,7 +320,7 @@ const AdminInvestors = () => {
                       <div><span className="text-gray-500 block mb-1">Full Name</span><span className="font-medium">{viewInvestorData.fullName || '-'}</span></div>
                       <div><span className="text-gray-500 block mb-1">Contact Number</span><span className="font-medium">{viewInvestorData.contactNumber || '-'}</span></div>
                       <div><span className="text-gray-500 block mb-1">Investor Type</span><span className="font-medium">{viewInvestorData.investorType || '-'}</span></div>
-                      <div><span className="text-gray-500 block mb-1">Intended Range</span><span className="font-medium text-green-700">₹{viewInvestorData.investmentRangeMin || '0'} - ₹{viewInvestorData.investmentRangeMax || '0'}</span></div>
+                      <div><span className="text-gray-500 block mb-1">Intended Range</span><span className="font-medium text-green-700">${viewInvestorData.investmentRangeMin || '0'} - ${viewInvestorData.investmentRangeMax || '0'}</span></div>
                     </>
                   ) : (
                     <>

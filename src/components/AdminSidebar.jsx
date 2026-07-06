@@ -89,12 +89,15 @@ export default function AdminSidebar({ children }) {
   const [collapsed, setCollapsed] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
   const [profileDropdownOpen, setProfileDropdownOpen] = useState(false);
-  const profileDropdownRef = React.useRef(null);
+  const profileDropdownRefMobile = React.useRef(null);
+  const profileDropdownRefDesktop = React.useRef(null);
 
   // Close dropdown on outside click
   React.useEffect(() => {
     const handleClick = (e) => {
-      if (profileDropdownRef.current && !profileDropdownRef.current.contains(e.target)) {
+      const clickedMobile = profileDropdownRefMobile.current && profileDropdownRefMobile.current.contains(e.target);
+      const clickedDesktop = profileDropdownRefDesktop.current && profileDropdownRefDesktop.current.contains(e.target);
+      if (!clickedMobile && !clickedDesktop) {
         setProfileDropdownOpen(false);
       }
     };
@@ -208,7 +211,7 @@ export default function AdminSidebar({ children }) {
   );
 
   return (
-    <Box sx={{ display: 'flex', minHeight: '100vh', bgcolor: '#f8fafc' }}>
+    <Box sx={{ display: 'flex', minHeight: '100vh', bgcolor: '#f8fafc', overflowX: 'hidden', maxWidth: '100vw' }}>
       {/* Mobile Drawer */}
       <Drawer
         variant="temporary"
@@ -252,6 +255,9 @@ export default function AdminSidebar({ children }) {
           flexDirection: 'column',
           minHeight: '100vh',
           transition: 'margin-left 0.25s ease',
+          overflowX: 'hidden',
+          width: '100%',
+          minWidth: 0,
         }}
       >
         {/* Mobile top bar */}
@@ -270,7 +276,7 @@ export default function AdminSidebar({ children }) {
           <img src="/logo-small-white.png" alt="Logo" style={{ height: 36, objectFit: 'contain' }} />
           <Box sx={{ ml: 'auto', display: 'flex', alignItems: 'center', gap: 1 }}>
             {/* Profile Dropdown — mobile */}
-            <div ref={profileDropdownRef} style={{ position: 'relative' }}>
+            <div ref={profileDropdownRefMobile} style={{ position: 'relative' }}>
               <button
                 onClick={() => setProfileDropdownOpen(p => !p)}
                 style={{
@@ -347,7 +353,7 @@ export default function AdminSidebar({ children }) {
 
           <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
             {/* Profile Dropdown — desktop */}
-          <div ref={profileDropdownRef} style={{ position: 'relative' }}>
+          <div ref={profileDropdownRefDesktop} style={{ position: 'relative' }}>
             <button
               onClick={() => setProfileDropdownOpen(p => !p)}
               style={{
@@ -407,9 +413,11 @@ export default function AdminSidebar({ children }) {
         {/* Page Content */}
         <Box sx={{
           flex: 1,
-          px: { xs: 2, md: 3 },
+          px: { xs: 0, md: 3 },
           pb: { xs: 2, md: 3 },
           pt: 0,
+          overflowX: 'hidden',
+          maxWidth: '100%',
           '& > div:not(.min-h-screen)': { marginTop: '0 !important', paddingTop: '16px !important' },
           '& > div.min-h-screen': { marginTop: '0 !important' },
           '& > main': { marginTop: '0 !important', paddingTop: '12px !important' },

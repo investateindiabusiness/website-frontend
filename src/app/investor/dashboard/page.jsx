@@ -5,7 +5,7 @@ import { useRouter } from 'next/navigation';
 import { motion } from 'framer-motion';
 import {
   Building2, MapPin, Search, TrendingUp, Shield, CheckCircle,
-  Loader2, MessageSquare, Star, ArrowRight, Filter, Inbox
+  Loader2, MessageSquare, ArrowRight, Filter, Inbox
 } from 'lucide-react';
 import AdBanner from '@/components/AdBanner';
 import { Button } from '@/components/ui/button';
@@ -73,45 +73,46 @@ export default function InvestorDashboard() {
   return (
     <div className="min-h-screen bg-[#f5f6fa] font-sans pb-16 overflow-x-hidden">
       {/* Hero */}
-      <div className="relative bg-gradient-to-br from-[#0b264f] via-[#1a3e7a] to-[#0b264f] text-white px-6 pt-10 pb-28 overflow-hidden">
+      <div className="relative bg-gradient-to-br from-[#0b264f] via-[#1a3e7a] to-[#0b264f] text-white px-4 sm:px-6 pt-8 pb-24 sm:pb-28 overflow-hidden">
         <div className="absolute inset-0 pointer-events-none overflow-hidden">
           <div className="absolute -top-20 -right-20 w-96 h-96 bg-blue-400/10 rounded-full blur-3xl" />
           <div className="absolute -bottom-10 -left-10 w-64 h-64 bg-indigo-400/10 rounded-full blur-2xl" />
         </div>
         <div className="container mx-auto relative z-10">
-          <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-6">
+          <div className="flex flex-col gap-5">
             <div>
               <Badge className="bg-orange-500/20 text-orange-200 border-none mb-3 px-3 py-1">
                 <Shield className="w-3.5 h-3.5 mr-1.5" /> Verified Investor
               </Badge>
-              <h1 className="text-3xl md:text-4xl font-extrabold leading-tight">
+              <h1 className="text-2xl sm:text-3xl md:text-4xl font-extrabold leading-tight">
                 Welcome back,<br />
                 <span className="text-orange-300">{user?.name || 'Investor'}</span>
               </h1>
               <p className="text-blue-200 text-sm mt-2 opacity-80">Explore India's finest real estate opportunities.</p>
-              <div className="flex flex-wrap gap-3 mt-5">
+              <div className="flex flex-wrap gap-2 sm:gap-3 mt-4 sm:mt-5">
                 <Button
                   onClick={() => router.push('/investor/outreach-inbox')}
-                  className="bg-orange-500 hover:bg-orange-600 text-white rounded-xl gap-2"
+                  className="bg-orange-500 hover:bg-orange-600 text-white rounded-xl gap-2 text-sm h-9 sm:h-10"
                 >
                   <Inbox className="w-4 h-4" /> SP Inbox
                 </Button>
                 <Button
                   onClick={() => router.push('/support')}
                   variant="outline"
-                  className="bg-white/10 border-white/20 text-white hover:bg-white/20 rounded-xl gap-2"
+                  className="bg-white/10 border-white/20 text-white hover:bg-white/20 rounded-xl gap-2 text-sm h-9 sm:h-10"
                 >
                   <MessageSquare className="w-4 h-4" /> Helpdesk
                 </Button>
               </div>
             </div>
-            <div className="flex gap-4">
-              <div className="bg-white/10 backdrop-blur border border-white/10 rounded-3xl px-6 py-4 text-center min-w-[100px]">
-                <p className="text-3xl font-extrabold">{properties.length}</p>
+            {/* Stats row */}
+            <div className="flex gap-3">
+              <div className="bg-white/10 backdrop-blur border border-white/10 rounded-2xl px-5 py-3 text-center flex-1">
+                <p className="text-2xl sm:text-3xl font-extrabold">{properties.length}</p>
                 <p className="text-xs text-blue-200 uppercase tracking-wider mt-1">Live Projects</p>
               </div>
-              <div className="bg-white/10 backdrop-blur border border-white/10 rounded-3xl px-6 py-4 text-center min-w-[100px]">
-                <p className="text-3xl font-extrabold">{new Set(properties.map(p => p.location.split(',')[0].trim())).size}</p>
+              <div className="bg-white/10 backdrop-blur border border-white/10 rounded-2xl px-5 py-3 text-center flex-1">
+                <p className="text-2xl sm:text-3xl font-extrabold">{new Set(properties.map(p => p.location.split(',')[0].trim())).size}</p>
                 <p className="text-xs text-blue-200 uppercase tracking-wider mt-1">Cities</p>
               </div>
             </div>
@@ -119,20 +120,20 @@ export default function InvestorDashboard() {
         </div>
       </div>
 
-      <div className="container mx-auto px-4 md:px-6 -mt-14 relative z-10 space-y-8">
+      <div className="container mx-auto px-3 sm:px-4 md:px-6 -mt-14 relative z-10 space-y-6 sm:space-y-8">
         {/* Search + Filter Bar */}
-        <div className="bg-white rounded-3xl shadow-lg border border-gray-100 p-3 flex flex-col sm:flex-row gap-3">
+        <div className="bg-white rounded-2xl sm:rounded-3xl shadow-lg border border-gray-100 p-2.5 sm:p-3 flex flex-col sm:flex-row gap-2 sm:gap-3">
           <div className="relative flex-grow">
-            <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
+            <Search className="absolute left-3 sm:left-4 top-1/2 -translate-y-1/2 w-4 h-4 sm:w-5 sm:h-5 text-gray-400" />
             <input
               type="text"
               placeholder="Search projects, builders, locations…"
-              className="w-full pl-12 pr-4 py-3.5 outline-none text-gray-700 placeholder-gray-400 font-medium bg-gray-50 rounded-2xl text-sm"
+              className="w-full pl-10 sm:pl-12 pr-4 py-3 outline-none text-gray-700 placeholder-gray-400 font-medium bg-gray-50 rounded-xl sm:rounded-2xl text-sm"
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
             />
           </div>
-          <Button className="rounded-2xl h-12 px-8 bg-[#0b264f] hover:bg-blue-900 text-white shadow gap-2 shrink-0">
+          <Button className="rounded-xl sm:rounded-2xl h-11 px-6 sm:px-8 bg-[#0b264f] hover:bg-blue-900 text-white shadow gap-2 shrink-0 text-sm">
             <Filter className="w-4 h-4" /> Filter
           </Button>
         </div>
@@ -146,16 +147,16 @@ export default function InvestorDashboard() {
 
         {/* Location Pills */}
         <div>
-          <div className="flex items-center justify-between mb-4">
-            <h2 className="text-xl font-bold text-gray-900">Explore Opportunities</h2>
-            <span className="text-sm text-gray-400">{filteredProperties.length} projects found</span>
+          <div className="flex items-center justify-between mb-3 sm:mb-4">
+            <h2 className="text-lg sm:text-xl font-bold text-gray-900">Explore Opportunities</h2>
+            <span className="text-xs sm:text-sm text-gray-400">{filteredProperties.length} found</span>
           </div>
-          <div className="flex overflow-x-auto gap-2 pb-2 scrollbar-hide -mx-4 px-4 md:mx-0 md:px-0">
+          <div className="flex overflow-x-auto gap-2 pb-2 scrollbar-hide -mx-3 px-3 sm:mx-0 sm:px-0">
             {locations.map((loc) => (
               <button
                 key={loc}
                 onClick={() => setLocationFilter(loc)}
-                className={`px-4 py-2 rounded-full text-sm font-semibold whitespace-nowrap transition-all border ${
+                className={`px-3 sm:px-4 py-1.5 sm:py-2 rounded-full text-xs sm:text-sm font-semibold whitespace-nowrap transition-all border ${
                   locationFilter === loc
                     ? 'bg-[#0b264f] text-white border-[#0b264f] shadow-md'
                     : 'bg-white text-gray-600 border-gray-200 hover:border-gray-300'
@@ -169,26 +170,26 @@ export default function InvestorDashboard() {
 
         {/* Property Cards */}
         {loadingProjects ? (
-          <div className="flex flex-col items-center justify-center py-24">
+          <div className="flex flex-col items-center justify-center py-20">
             <Loader2 className="w-10 h-10 text-orange-500 animate-spin mb-4" />
             <p className="text-gray-500 font-medium">Loading verified projects…</p>
           </div>
         ) : filteredProperties.length === 0 ? (
-          <div className="flex flex-col items-center justify-center py-24 bg-white rounded-3xl border border-gray-100 shadow-sm">
+          <div className="flex flex-col items-center justify-center py-20 bg-white rounded-3xl border border-gray-100 shadow-sm">
             <Building2 className="w-12 h-12 text-gray-200 mb-4" />
             <h3 className="text-lg font-bold text-gray-900">No Properties Found</h3>
             <p className="text-gray-400 text-sm mt-1">Try adjusting your search or filters.</p>
           </div>
         ) : (
           <>
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
               {paginated.map((property, i) => (
                 <motion.div
                   key={property.id}
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ delay: i * 0.05 }}
-                  className="group bg-white rounded-[2rem] overflow-hidden shadow-sm hover:shadow-xl transition-all duration-300 border border-gray-100 flex flex-col"
+                  className="group bg-white rounded-[1.5rem] sm:rounded-[2rem] overflow-hidden shadow-sm hover:shadow-xl transition-all duration-300 border border-gray-100 flex flex-col"
                 >
                   <div className="relative aspect-[4/3] overflow-hidden bg-gray-100">
                     <img
@@ -198,38 +199,38 @@ export default function InvestorDashboard() {
                       onError={(e) => { e.target.src = 'https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?w=800&q=80'; }}
                     />
                     <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent" />
-                    <div className="absolute top-4 left-4">
-                      <span className="bg-white/90 backdrop-blur text-[#0b264f] text-xs font-bold px-3 py-1.5 rounded-full shadow-sm">
+                    <div className="absolute top-3 left-3">
+                      <span className="bg-white/90 backdrop-blur text-[#0b264f] text-xs font-bold px-2.5 py-1 rounded-full shadow-sm">
                         {property.status}
                       </span>
                     </div>
-                    <div className="absolute bottom-4 left-4 right-4 text-white">
-                      <span className="text-xs font-bold bg-emerald-500 text-white inline-flex items-center px-2.5 py-1 rounded-md mb-2 shadow-sm gap-1">
-                        <TrendingUp className="w-3.5 h-3.5" />
+                    <div className="absolute bottom-3 left-3 right-3 text-white">
+                      <span className="text-xs font-bold bg-emerald-500 text-white inline-flex items-center px-2 py-1 rounded-md mb-1.5 shadow-sm gap-1">
+                        <TrendingUp className="w-3 h-3" />
                         {property.roi}
                       </span>
-                      <p className="text-xl font-extrabold drop-shadow leading-tight">{property.price}</p>
+                      <p className="text-lg sm:text-xl font-extrabold drop-shadow leading-tight">{property.price}</p>
                     </div>
                   </div>
-                  <div className="p-5 flex flex-col flex-grow">
-                    <h3 className="font-extrabold text-gray-900 text-lg mb-1 capitalize leading-tight line-clamp-1">{property.title}</h3>
+                  <div className="p-4 sm:p-5 flex flex-col flex-grow">
+                    <h3 className="font-extrabold text-gray-900 text-base sm:text-lg mb-1 capitalize leading-tight line-clamp-1">{property.title}</h3>
                     <p className="text-sm text-gray-400 mb-3 flex items-center gap-1.5">
                       <Building2 className="w-4 h-4 text-gray-300 shrink-0" />
                       {property.builder}
                     </p>
-                    <div className="flex items-center text-sm text-gray-600 bg-gray-50 px-4 py-2.5 rounded-2xl mb-4 border border-gray-100">
+                    <div className="flex items-center text-sm text-gray-600 bg-gray-50 px-3 py-2 rounded-xl mb-3 border border-gray-100">
                       <MapPin className="w-4 h-4 mr-2 text-orange-500 shrink-0" />
                       <span className="truncate">{property.location}</span>
                     </div>
-                    <div className="flex gap-2 mb-5">
-                      <span className="text-xs font-bold px-3 py-1.5 bg-indigo-50 text-indigo-700 rounded-lg border border-indigo-100">{property.type}</span>
-                      <span className="text-xs font-bold px-3 py-1.5 bg-emerald-50 text-emerald-700 rounded-lg border border-emerald-100 flex items-center gap-1">
+                    <div className="flex gap-2 mb-4">
+                      <span className="text-xs font-bold px-2.5 py-1.5 bg-indigo-50 text-indigo-700 rounded-lg border border-indigo-100">{property.type}</span>
+                      <span className="text-xs font-bold px-2.5 py-1.5 bg-emerald-50 text-emerald-700 rounded-lg border border-emerald-100 flex items-center gap-1">
                         <CheckCircle className="w-3.5 h-3.5" /> Verified
                       </span>
                     </div>
                     <Button
                       onClick={() => router.push(`/project/${property.id}`)}
-                      className="w-full bg-[#0b264f] hover:bg-blue-900 text-white font-bold py-5 rounded-[1.25rem] mt-auto gap-2"
+                      className="w-full bg-[#0b264f] hover:bg-blue-900 text-white font-bold py-4 rounded-xl mt-auto gap-2 text-sm"
                     >
                       View Details <ArrowRight className="w-4 h-4" />
                     </Button>
@@ -240,12 +241,12 @@ export default function InvestorDashboard() {
 
             {/* Pagination */}
             {totalPages > 1 && (
-              <div className="flex items-center justify-center gap-2 pt-4">
+              <div className="flex items-center justify-center gap-1.5 sm:gap-2 pt-4 flex-wrap">
                 <Button
                   variant="outline"
                   onClick={() => setCurrentPage(p => Math.max(1, p - 1))}
                   disabled={currentPage === 1}
-                  className="rounded-xl h-10 px-4 text-xs font-bold"
+                  className="rounded-xl h-9 px-3 text-xs font-bold"
                 >
                   Previous
                 </Button>
@@ -254,7 +255,7 @@ export default function InvestorDashboard() {
                     key={page}
                     onClick={() => setCurrentPage(page)}
                     variant={currentPage === page ? 'default' : 'outline'}
-                    className={`h-10 w-10 rounded-xl text-xs font-bold ${currentPage === page ? 'bg-[#0b264f] text-white' : ''}`}
+                    className={`h-9 w-9 rounded-xl text-xs font-bold ${currentPage === page ? 'bg-[#0b264f] text-white' : ''}`}
                   >
                     {page}
                   </Button>
@@ -263,7 +264,7 @@ export default function InvestorDashboard() {
                   variant="outline"
                   onClick={() => setCurrentPage(p => Math.min(totalPages, p + 1))}
                   disabled={currentPage === totalPages}
-                  className="rounded-xl h-10 px-4 text-xs font-bold"
+                  className="rounded-xl h-9 px-3 text-xs font-bold"
                 >
                   Next
                 </Button>

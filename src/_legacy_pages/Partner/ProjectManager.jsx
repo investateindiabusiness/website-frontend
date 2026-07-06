@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from 'react';
+﻿import React, { useState, useEffect, useCallback } from 'react';
 import { Plus, Search, Edit, Trash2, Eye, ArrowLeft, Save, Building2, MapPin, FileText, ShieldAlert, CheckCircle, FileWarning, Loader2, Clock, XCircle, RefreshCw, LayoutDashboard, Layers, Landmark, IndianRupee, ImagePlus, X } from 'lucide-react';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
@@ -456,7 +456,7 @@ const ProjectManager = () => {
                                     <>
                                         <div className="animate-in fade-in slide-in-from-top-2">
                                             <Label className={labelStyle}>Borrowing Amount *</Label>
-                                            <Input required name="existingBorrowingsAmount" value={currentProject.existingBorrowingsAmount} onChange={handleInputChange} className={inputStyle} placeholder="e.g. ₹50 Crores" />
+                                            <Input required name="existingBorrowingsAmount" value={currentProject.existingBorrowingsAmount} onChange={handleInputChange} className={inputStyle} placeholder="e.g. $50 Crores" />
                                         </div>
                                         <div className="animate-in fade-in slide-in-from-top-2">
                                             <Label className={labelStyle}>Purpose of Borrowing *</Label>
@@ -470,7 +470,7 @@ const ProjectManager = () => {
                         {/* Section 4: Pricing & Investment */}
                         <div className={cardStyle}>
                             <div className={cardHeaderStyle}>
-                                <IndianRupee className="w-5 h-5 mr-2 text-[#0b264f]" />
+                                <DollarSign className="w-3 h-3" />
                                 <h3 className="text-lg font-bold text-gray-900">Pricing & Offerings</h3>
                             </div>
                             <div className="p-6 grid grid-cols-1 md:grid-cols-2 gap-6 bg-white">

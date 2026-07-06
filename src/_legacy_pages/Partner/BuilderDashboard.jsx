@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+﻿import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Building2, MapPin, Search, Users, TrendingUp, MoreVertical, Wallet, HardHat, PieChart as PieChartIcon, Loader2, Plus } from 'lucide-react';
 import { AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
@@ -48,7 +48,7 @@ const BuilderDashboard = () => {
 
   // --- DYNAMIC STATS CALCULATION ---
   // Revenue & Sold Units are mocked/defaulted to 0 since they aren't in the DB schema yet.
-  const totalRevenue = "₹0 Cr";
+  const totalRevenue = "$0 Cr";
   const totalUnitsSold = 0;
   const totalLeads = projects.reduce((acc, curr) => acc + (curr.inquiries || 0), 0);
 
