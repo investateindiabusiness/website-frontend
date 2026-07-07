@@ -80,12 +80,6 @@ const serviceProviderChallenges = [
   },
   {
     id: "03",
-    text: "Marketing Efficiencies",
-    desc: "Sifting out casual inquiries to focus on serious business entities with specific legal/financial needs.",
-    icon: <Target className="w-8 h-8 text-white" />,
-  },
-  {
-    id: "04",
     text: "Regulatory Compliance",
     desc: "Ensuring cross-border transactions, RERA rules, and tax compliances are professionally certified.",
     icon: <Scale className="w-8 h-8 text-white" />,
@@ -119,13 +113,14 @@ const stepImages = [
   "https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?q=80&w=1000&auto=format&fit=crop",
   "https://images.unsplash.com/photo-1507537297725-24a1c029d3ca?q=80&w=1000&auto=format&fit=crop",
   "https://images.unsplash.com/photo-1551836022-d5d88e9218df?q=80&w=1000&auto=format&fit=crop",
-  "https://images.unsplash.com/photo-1557200134-90327ee9fafa?q=80&w=1000&auto=format&fit=crop",
+  "https://images.unsplash.com/photo-1556761175-5973dc0f32e7?q=80&w=1000&auto=format&fit=crop",
 ];
 
 export default function ServiceProviderHome() {
   const router = useRouter();
   const [activeStepIndex, setActiveStepIndex] = useState(0);
   const [heroIndex, setHeroIndex] = useState(0);
+  const [isHeroPaused, setIsHeroPaused] = useState(false);
   const [benefitsPage, setBenefitsPage] = useState(0);
   const benefitsPerPage = 2;
   const totalBenefitsPages = Math.ceil(
@@ -151,11 +146,12 @@ export default function ServiceProviderHome() {
   };
 
   useEffect(() => {
+    if (isHeroPaused) return;
     const timer = setInterval(() => {
       setHeroIndex((prev) => (prev + 1) % heroSlides.length);
-    }, 6000);
+    }, 8000);
     return () => clearInterval(timer);
-  }, []);
+  }, [isHeroPaused]);
 
   const activeStepData = serviceProviderSteps[activeStepIndex];
 
@@ -163,8 +159,11 @@ export default function ServiceProviderHome() {
     <div className="theme-builder w-full bg-[var(--color-light-bg)] overflow-x-hidden">
       <Header transparent={true} />
 
-      {/* HERO SECTION */}
-      <section className="fullscreen-section hero-section">
+      <section
+        className="fullscreen-section hero-section"
+        onMouseEnter={() => setIsHeroPaused(true)}
+        onMouseLeave={() => setIsHeroPaused(false)}
+      >
         <AnimatePresence mode="sync">
           <picture
             key={heroIndex}
@@ -486,8 +485,6 @@ export default function ServiceProviderHome() {
           </div>
         </div>
       </section>
-
-      <TestimonialsSection />
 
       {/* CONTACT SECTION */}
       <section

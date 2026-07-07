@@ -1,6 +1,7 @@
-"use client";
+﻿"use client";
 
 import React, { useState, useEffect } from 'react';
+import { useRouter } from 'next/navigation';
 import { useAuth } from '@/hooks/AuthContext';
 import { toast } from '@/hooks/use-toast';
 import {
@@ -67,6 +68,7 @@ const formatDate = (dateStr) => {
 
 export default function ServiceProviderAdvertisements() {
   const { user } = useAuth();
+  const router = useRouter();
 
   const [zones, setZones] = useState([]);
   const [selectedZone, setSelectedZone] = useState(null);
@@ -190,13 +192,10 @@ export default function ServiceProviderAdvertisements() {
   };
 
   const handleOpenBookingModal = (slot) => {
-    setBookingSlot(slot);
-    setAdContent({
-      imageUrl: '',
-      videoUrl: '',
-      text: '',
-      targetUrl: ''
-    });
+    if (!slot || !selectedZone) return;
+    router.push(
+      `/service-provider/advertisements/book?zoneId=${selectedZone.id}&startDate=${slot.startDate}&endDate=${slot.endDate}&timeSlot=${encodeURIComponent(slot.timeSlot || 'All Day')}`
+    );
   };
 
   const getSlotForDate = (dateString) => {
@@ -595,7 +594,7 @@ export default function ServiceProviderAdvertisements() {
                             {zone.name}
                           </span>
                           <span className="text-xs font-semibold text-orange-500">
-                            ₹{zone.cost} / {zone.campaignDuration} days
+                            ${zone.cost} / {zone.campaignDuration} days
                           </span>
                         </div>
                       </button>
@@ -614,7 +613,7 @@ export default function ServiceProviderAdvertisements() {
                     <div className="grid grid-cols-2 gap-4">
                       <div className="space-y-1">
                         <span className="text-[10px] text-slate-400 uppercase font-semibold flex items-center"><DollarSign className="w-3.5 h-3.5 mr-0.5 text-green-600" /> Cost / Slot</span>
-                        <p className="text-lg font-bold text-slate-800">₹{selectedZone.cost}</p>
+                        <p className="text-lg font-bold text-slate-800">${selectedZone.cost}</p>
                       </div>
                       <div className="space-y-1">
                         <span className="text-[10px] text-slate-400 uppercase font-semibold flex items-center"><Clock className="w-3.5 h-3.5 mr-0.5 text-blue-600" /> Duration</span>
@@ -788,7 +787,7 @@ export default function ServiceProviderAdvertisements() {
                     <div className="flex items-center gap-4 w-full md:w-auto justify-between md:justify-end border-t md:border-none border-slate-100 pt-3 md:pt-0">
                       <div>
                         <span className="text-[10px] text-slate-400 uppercase font-semibold block">Total Price</span>
-                        <p className="text-base font-bold text-slate-800">₹{selectedZone?.cost}</p>
+                        <p className="text-base font-bold text-slate-800">${selectedZone?.cost}</p>
                       </div>
                       <Button
                         onClick={() => handleOpenBookingModal(selectedSlot)}
@@ -864,7 +863,7 @@ export default function ServiceProviderAdvertisements() {
                                 </div>
                               </div>
                             </td>
-                            <td className="py-4 px-4 font-bold text-slate-800">₹{booking.cost}</td>
+                            <td className="py-4 px-4 font-bold text-slate-800">${booking.cost}</td>
                             <td className="py-4 px-4">
                               <div className="space-y-1">
                                 {getStatusBadge(booking.approvalStatus)}
@@ -950,7 +949,7 @@ export default function ServiceProviderAdvertisements() {
                     </div>
                     <div className="text-right">
                       <span className="font-semibold text-slate-400 uppercase tracking-wide block text-[9px]">Cost</span>
-                      <strong className="text-slate-800 text-sm">₹{selectedZone?.cost}</strong>
+                      <strong className="text-slate-800 text-sm">${selectedZone?.cost}</strong>
                     </div>
                   </div>
 

@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import React, { useState, useEffect } from 'react';
 import { getSocket, joinUser, leaveUser } from '@/utils/socket';
@@ -93,7 +93,7 @@ export default function MyCoupons() {
                   </Badge>
                 </div>
                 <CardTitle className="text-3xl font-bold text-green-600 mt-2">
-                  ₹{coupon.discountAmount} <span className="text-sm font-medium text-slate-500 line-through">Off</span>
+                  ${coupon.discountAmount} <span className="text-sm font-medium text-slate-500 line-through">Off</span>
                 </CardTitle>
                 <CardDescription className="text-slate-600 font-medium">
                   {coupon.type === 'launch' ? 'Welcome to Investate India!' : 'Exclusive discount for you.'}

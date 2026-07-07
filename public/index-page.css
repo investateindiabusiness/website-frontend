@@ -205,8 +205,8 @@ h4,
 .hero-section {
     position: relative;
     width: 100vw;
-    height: 85vh;
-    min-height: 600px;
+    height: 75vh;
+    min-height: 450px;
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -214,22 +214,6 @@ h4,
     overflow: hidden;
     color: var(--color-white);
     padding: 0 5vw;
-    margin-top: 4rem;
-}
-
-/* --- LAYER 1: The Image (Mirrored) --- */
-/* 1. The Container */
-.hero-section {
-    position: relative;
-    width: 100vw;
-    height: 85vh;
-    min-height: 600px;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: flex-start;
-    overflow: hidden;
-    color: var(--color-white);
     margin-top: 4rem;
 }
 

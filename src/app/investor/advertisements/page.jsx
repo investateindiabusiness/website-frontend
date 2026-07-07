@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
@@ -515,7 +515,7 @@ export default function InvestorAdvertisements() {
                             {zone.name}
                           </span>
                           <span className="text-xs font-semibold text-orange-500">
-                            ₹{zone.costPerDay}/day
+                            ${zone.costPerDay}/day
                           </span>
                         </div>
 
@@ -535,7 +535,7 @@ export default function InvestorAdvertisements() {
                     <div className="grid grid-cols-2 gap-4">
                       <div className="space-y-1">
                         <span className="text-[10px] text-slate-400 uppercase font-semibold flex items-center"><DollarSign className="w-3.5 h-3.5 mr-0.5 text-green-600" /> Cost / Day</span>
-                        <p className="text-lg font-bold text-slate-800">₹{selectedZone.costPerDay}</p>
+                        <p className="text-lg font-bold text-slate-800">${selectedZone.costPerDay}</p>
                       </div>
                       <div className="space-y-1">
                         <span className="text-[10px] text-slate-400 uppercase font-semibold flex items-center"><Clock className="w-3.5 h-3.5 mr-0.5 text-blue-600" /> Billing</span>
@@ -686,10 +686,10 @@ export default function InvestorAdvertisements() {
                     <div className="flex items-center gap-6 w-full md:w-auto justify-between md:justify-end border-t md:border-none border-slate-100 pt-3 md:pt-0">
                       <div className="text-right">
                         <span className="text-[10px] text-slate-400 uppercase font-semibold block">
-                          ₹{selectedZone?.costPerDay}/day × {selectionDays || (hoverDate ? Math.round((new Date(hoverDate) - new Date(rangeStart)) / 86400000) + 1 : '?')} days
+                          ${selectedZone?.costPerDay}/day × {selectionDays || (hoverDate ? Math.round((new Date(hoverDate) - new Date(rangeStart)) / 86400000) + 1 : '?')} days
                         </span>
                         <p className="text-xl font-bold text-[#0b264f]">
-                          {totalCost > 0 ? `₹${totalCost}` : '...'}
+                          {totalCost > 0 ? `$${totalCost}` : '...'}
                         </p>
                       </div>
                       {rangeEnd ? (
@@ -787,7 +787,7 @@ export default function InvestorAdvertisements() {
                                 </div>
                               </div>
                             </td>
-                            <td className="py-4 px-4 font-bold text-slate-800">₹{booking.cost}</td>
+                            <td className="py-4 px-4 font-bold text-slate-800">${booking.cost}</td>
                             <td className="py-4 px-4">
                               <div className="space-y-1">
                                 {getStatusBadge(booking.approvalStatus)}
@@ -873,7 +873,7 @@ export default function InvestorAdvertisements() {
                     </div>
                     <div className="text-right">
                       <span className="font-semibold text-slate-400 uppercase tracking-wide block text-[9px]">Cost</span>
-                      <strong className="text-slate-800 text-sm">₹{selectedZone?.cost}</strong>
+                      <strong className="text-slate-800 text-sm">${selectedZone?.cost}</strong>
                     </div>
                   </div>
 

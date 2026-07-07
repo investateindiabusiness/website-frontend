@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+﻿import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import Header from '../components/Header';
 import Footer from '../components/Footer';
@@ -20,9 +20,9 @@ import { submitProjectLead } from '@/api';
 
 // Mock data kept for bottom similar properties section
 const SIMILAR_PROPERTIES = [
-   { id: 101, title: 'Skyline Towers', location: 'Worli, Mumbai', price: '₹3.2 Cr', type: '3 BHK Luxury', image: 'https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?w=800&q=80', status: 'Under Construction' },
-   { id: 102, title: 'Oceanic View', location: 'Bandra West, Mumbai', price: '₹4.5 Cr', type: '4 BHK Sea View', image: 'https://images.unsplash.com/photo-1512917774080-9991f1c4c750?w=800&q=80', status: 'Ready to Move' },
-   { id: 103, title: 'Green Valley', location: 'Thane, Mumbai', price: '₹1.8 Cr', type: '2 BHK Eco-Friendly', image: 'https://images.unsplash.com/photo-1493663284031-b7e3aefcae8e?w=800&q=80', status: 'New Launch' }
+   { id: 101, title: 'Skyline Towers', location: 'Worli, Mumbai', price: '$3.2 Cr', type: '3 BHK Luxury', image: 'https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?w=800&q=80', status: 'Under Construction' },
+   { id: 102, title: 'Oceanic View', location: 'Bandra West, Mumbai', price: '$4.5 Cr', type: '4 BHK Sea View', image: 'https://images.unsplash.com/photo-1512917774080-9991f1c4c750?w=800&q=80', status: 'Ready to Move' },
+   { id: 103, title: 'Green Valley', location: 'Thane, Mumbai', price: '$1.8 Cr', type: '2 BHK Eco-Friendly', image: 'https://images.unsplash.com/photo-1493663284031-b7e3aefcae8e?w=800&q=80', status: 'New Launch' }
 ];
 
 const ProjectDetail = () => {

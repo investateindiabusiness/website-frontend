@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import React, { useState, useEffect, useRef } from 'react';
 import { useRouter } from 'next/navigation';
@@ -10,8 +10,8 @@ import { Badge } from '@/components/ui/badge';
 import { Building2, Shield, TrendingUp, Globe, CheckCircle, Star, ArrowRight, MapPin, Home as HomeIcon, Search, ChevronDown, X, Phone } from 'lucide-react';
 
 const AVAILABLE_PROPERTIES = [
-  { id: 1, title: 'Imperial Heights', builder: 'Apex Constructors', location: 'Mumbai, Maharashtra', type: '3 BHK Luxury', price: '₹2.5 Cr', yield: '+12% proj. ROI', image: 'https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?w=800&q=80', status: 'Ready to Move' },
-  { id: 3, title: 'Cyber City Lofts', builder: 'City Developers', location: 'Hyderabad, Telangana', type: '2 BHK Smart Home', price: '₹1.1 Cr', yield: 'Rental: ₹45k/mo', image: 'https://images.unsplash.com/photo-1493663284031-b7e3aefcae8e?w=800&q=80', status: 'Under Construction' },
+  { id: 1, title: 'Imperial Heights', builder: 'Apex Constructors', location: 'Mumbai, Maharashtra', type: '3 BHK Luxury', price: '$2.5 Cr', yield: '+12% proj. ROI', image: 'https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?w=800&q=80', status: 'Ready to Move' },
+  { id: 3, title: 'Cyber City Lofts', builder: 'City Developers', location: 'Hyderabad, Telangana', type: '2 BHK Smart Home', price: '$1.1 Cr', yield: 'Rental: $45k/mo', image: 'https://images.unsplash.com/photo-1493663284031-b7e3aefcae8e?w=800&q=80', status: 'Under Construction' },
 ];
 
 export default function Home2() {

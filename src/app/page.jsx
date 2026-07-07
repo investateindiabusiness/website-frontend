@@ -40,20 +40,20 @@ const heroSlides = [
 
 const serviceProviderBenefits = [
     {
-        title: "Global Reach & Access",
-        desc: "Empowering investors across North America, Europe, Middle East, and Asia-Pacific with direct access to top-tier, handpicked Indian asset classes.",
+        title: "Challenges Faced by NRIs",
+        desc: "Navigating unverified property listings, remote monitoring friction, complex taxation, and FEMA compliance bottlenecks from overseas.",
         image:
             "https://images.unsplash.com/photo-1557804506-669a67965ba0?q=80&w=2070&auto=format&fit=crop",
     },
     {
-        title: "Cross-Border Compliance",
-        desc: "Simplifying regulatory, taxation, and legal requirements for global transactions including FEMA compliance and repatriation support.",
+        title: "Platform Solution",
+        desc: "Providing safety through institutional-grade due diligence, verified builder coordinates, and secure digital compliance tracking.",
         image:
             "https://images.unsplash.com/photo-1460925895917-afdab827c52f?q=80&w=2070&auto=format&fit=crop",
     },
     {
-        title: "Vetted Opportunities",
-        desc: "Every listed investment undergoes rigorous multi-tier institutional due diligence to safeguard overseas capital.",
+        title: "Potential Opportunities",
+        desc: "Unlocking access to high-yield real estate developments, alternative investments, and India's high-growth economic assets.",
         image:
             "https://images.unsplash.com/photo-1522071820081-009f0129c71c?q=80&w=2070&auto=format&fit=crop",
     },
@@ -72,16 +72,16 @@ const serviceProviderChallenges = [
         desc: "Designed for the needs of global investors, with cross-border compliance, FEMA guidance, and repatriation support.",
         icon: <Layers className="w-8 h-8 text-white" />,
     },
-    {
-        id: "02",
-        text: "Verified Opportunities",
-        desc: "Every opportunity is curated and due-diligenced through a multi-tier review process to protect investor capital.",
-        icon: <ShieldCheck className="w-8 h-8 text-white" />,
-    },
+    // {
+    //     id: "02",
+    //     text: "Verified Opportunities",
+    //     desc: "Every opportunity is curated and due-diligenced through a multi-tier review process to protect investor capital.",
+    //     icon: <ShieldCheck className="w-8 h-8 text-white" />,
+    // },
     {
         id: "03",
         text: "End-to-End Support",
-        desc: "Complete support across legal, financial, advisory and operational needs — from discovery to investment completion.",
+        desc: "Complete support across legal, financial, advisory and operational needs — from discovery to investment completion. We connect investors to real estate & equity, builders to global capital, and service providers to compliance & advisory needs.",
         icon: <Target className="w-8 h-8 text-white" />,
     },
     {
@@ -120,21 +120,8 @@ export default function ServiceProviderHome() {
     const router = useRouter();
     const [activeStepIndex, setActiveStepIndex] = useState(0);
     const [heroIndex, setHeroIndex] = useState(0);
-    const [benefitsPage, setBenefitsPage] = useState(0);
-    const benefitsPerPage = 2;
-    const totalBenefitsPages = Math.ceil(
-        serviceProviderBenefits.length / benefitsPerPage,
-    );
+    const [isHeroPaused, setIsHeroPaused] = useState(false);
 
-    const nextBenefits = () => {
-        setBenefitsPage((prev) => (prev + 1) % totalBenefitsPages);
-    };
-
-    const prevBenefits = () => {
-        setBenefitsPage(
-            (prev) => (prev - 1 + totalBenefitsPages) % totalBenefitsPages,
-        );
-    };
 
     const handleAuthClick = (action, role) => {
         if (action === "login") {
@@ -145,12 +132,12 @@ export default function ServiceProviderHome() {
     };
 
     useEffect(() => {
-        const totalSlides = heroSlides.length + 1;
+        if (isHeroPaused) return;
         const timer = setInterval(() => {
-            setHeroIndex((prev) => (prev + 1) % totalSlides);
-        }, 6000);
+            setHeroIndex((prev) => (prev + 1) % heroSlides.length);
+        }, 8000);
         return () => clearInterval(timer);
-    }, []);
+    }, [isHeroPaused]);
 
     const activeStepData = serviceProviderSteps[activeStepIndex];
     const totalSlides = heroSlides.length + 1;   // last slot = ad slide
@@ -161,7 +148,11 @@ export default function ServiceProviderHome() {
             <Header transparent={true} />
 
             {/* HERO SECTION */}
-            <section className="fullscreen-section hero-section">
+            <section
+                className="fullscreen-section hero-section"
+                onMouseEnter={() => setIsHeroPaused(true)}
+                onMouseLeave={() => setIsHeroPaused(false)}
+            >
                 <AnimatePresence mode="sync">
                     {isAdSlide ? (
                         <motion.img
@@ -304,13 +295,30 @@ export default function ServiceProviderHome() {
                             </div>
 
                             {/* Why Now */}
-                            <div style={{ borderLeft: '4px solid #D48035', paddingLeft: '1.5rem', margin: '0.5rem 0' }}>
+                            <div style={{ borderLeft: '4px solid #D48035', paddingLeft: '1.5rem', margin: '1.5rem 0' }}>
                                 <h4 className="text-xs font-bold uppercase tracking-[0.25em] text-[#D48035] mb-2">
                                     Why Now
                                 </h4>
-                                <p className="text-slate-600 text-sm md:text-base leading-relaxed italic m-0">
+                                <p className="text-slate-600 text-sm md:text-base leading-relaxed italic mb-4">
                                     "Digital adoption, regulatory transparency and rising NRI wealth are creating significant demand for trusted investment platforms."
                                 </p>
+                                <h5 className="text-xs font-bold uppercase tracking-wider text-slate-800 mb-3">
+                                    Key NRI Challenges:
+                                </h5>
+                                <ul className="text-slate-600 text-xs md:text-sm leading-relaxed space-y-2 list-none p-0 m-0">
+                                    <li className="flex items-start gap-2">
+                                        <span className="text-[#D48035] font-bold">•</span>
+                                        <span><strong>Lack of Trust & Transparency:</strong> Remote property selection is plagued by unverified details and lacks institutional due diligence.</span>
+                                    </li>
+                                    <li className="flex items-start gap-2">
+                                        <span className="text-[#D48035] font-bold">•</span>
+                                        <span><strong>Compliance & Taxation Hurdles:</strong> Navigating FEMA regulations, PAN/TAN setups, and complex TDS or repatriation compliance.</span>
+                                    </li>
+                                    <li className="flex items-start gap-2">
+                                        <span className="text-[#D48035] font-bold">•</span>
+                                        <span><strong>Distance Management:</strong> Managing properties, renting out, or resolving legal disputes from overseas without a trusted local interface.</span>
+                                    </li>
+                                </ul>
                             </div>
 
                             {/* Market Stats */}
@@ -373,7 +381,8 @@ export default function ServiceProviderHome() {
                                     {[
                                         "Investment Discovery", "Real Estate Opportunities", "Equity Investment Opportunities",
                                         "Alternative Investments", "Professional Services Integration", "Investor Enablement",
-                                        "Legal & Financial Enablement", "End-to-End Investment Support"
+                                        "Legal & Financial Enablement", "End-to-End Investment Support",
+                                        "Import & Export Services", "NRI Services"
                                     ].map((cap, i) => (
                                         <div key={i} className="flex items-center gap-2.5">
                                             <span className="w-1.5 h-1.5 bg-[#D48035] rounded-full shrink-0" />
@@ -403,7 +412,7 @@ export default function ServiceProviderHome() {
                         </span>
                     </h2>
                     <p className="infra-subtitle max-w-2xl mx-auto mt-4 text-slate-600">
-                        Investate India is a technology-enabled investment platform that connects global investors with verified investment opportunities in India.
+                        Our collaborative model integrates developers, investors, and legal or financial service providers to streamline secure, cross-border capital deployment and compliance.
                     </p>
                 </div>
 
@@ -460,55 +469,20 @@ export default function ServiceProviderHome() {
                                     Investate India is structurally designed to connect international investors, Non-Resident Indians (NRIs), and global wealth managers with the high-yield growth potential of Indian markets.
                                 </p>
 
-                                <div className="relative min-h-[220px]">
-                                    <AnimatePresence mode="wait">
-                                        <motion.div
-                                            key={benefitsPage}
-                                            initial={{ opacity: 0, x: 20 }}
-                                            animate={{ opacity: 1, x: 0 }}
-                                            exit={{ opacity: 0, x: -20 }}
-                                            transition={{ duration: 0.3 }}
-                                            className="grid grid-cols-1 md:grid-cols-2 gap-x-12 gap-y-10"
+                                <div className="flex flex-col gap-8">
+                                    {serviceProviderBenefits.map((benefit, index) => (
+                                        <div
+                                            key={index}
+                                            className="border-l-4 border-[#D48035] pl-5"
                                         >
-                                            {serviceProviderBenefits
-                                                .slice(
-                                                    benefitsPage * benefitsPerPage,
-                                                    (benefitsPage + 1) * benefitsPerPage,
-                                                )
-                                                .map((benefit, index) => (
-                                                    <div
-                                                        key={index}
-                                                        className="border-l-4 border-[#D48035] pl-5"
-                                                    >
-                                                        <h4 className="text-lg font-bold text-slate-900 mb-2">
-                                                            {benefit.title}
-                                                        </h4>
-                                                        <p className="text-sm text-slate-600 leading-relaxed">
-                                                            {benefit.desc}
-                                                        </p>
-                                                    </div>
-                                                ))}
-                                        </motion.div>
-                                    </AnimatePresence>
-                                </div>
-
-                                {/* Pagination Controls */}
-                                <div className="benefits-pagination flex gap-4 mt-8 items-center">
-                                    <button
-                                        onClick={prevBenefits}
-                                        className="w-10 h-10 rounded-full border border-slate-200 bg-white hover:bg-slate-100 flex items-center justify-center cursor-pointer transition-colors"
-                                    >
-                                        ❮
-                                    </button>
-                                    <div className="text-xs text-slate-500 font-bold">
-                                        {benefitsPage + 1} / {totalBenefitsPages}
-                                    </div>
-                                    <button
-                                        onClick={nextBenefits}
-                                        className="w-10 h-10 rounded-full border border-slate-200 bg-white hover:bg-slate-100 flex items-center justify-center cursor-pointer transition-colors"
-                                    >
-                                        ❯
-                                    </button>
+                                            <h4 className="text-lg font-bold text-slate-900 mb-2">
+                                                {benefit.title}
+                                            </h4>
+                                            <p className="text-sm text-slate-600 leading-relaxed">
+                                                {benefit.desc}
+                                            </p>
+                                        </div>
+                                    ))}
                                 </div>
                             </div>
                         </motion.div>
@@ -544,18 +518,18 @@ export default function ServiceProviderHome() {
             <AwardsSection />
 
             {/* ORGANIZATION / TEAM SECTION */}
-            <section className="team-section-integrated section-theme" id="how-it-works">
-                <div className="team-integrated-wrapper">
-                    <div className="team-text-banner">
-                        <div className="team-text-content-inner">
-                            <h2 className="team-main-title">Meet the Team Behind <span className="text-highlight">Your Trust</span></h2>
-                            <p className="team-main-desc">
-                                <strong>Built on transparency. Driven by experience.</strong><br />
-                                Investate India is led by Deepak Kavadia, Pankaj Gupta, and Atish Agarwal.
-                            </p>
-                        </div>
+            <section className="team-section-integrated section-theme py-16" id="how-it-works">
+                <div className="container mx-auto px-4 max-w-6xl">
+                    <div className="text-center mb-12">
+                        <h2 className="text-3xl md:text-4xl font-bold mb-4">
+                            Meet the Team Behind <span className="text-highlight">Your Trust</span>
+                        </h2>
+                        <p className="text-slate-600 dark:text-slate-300 max-w-2xl mx-auto text-sm md:text-base leading-relaxed">
+                            <strong>Built on transparency. Driven by experience.</strong><br />
+                            Investate India is led by Deepak Kavadia, Pankaj Gupta, and Atish Agarwal.
+                        </p>
                     </div>
-                    <div className="team-cards-scroll-area" id="team-cards-row-home">
+                    <div className="flex flex-wrap justify-center gap-8">
                         {[
                             { name: "Deepak Kavadia", role: "CEO & Founder", image: "/deepak.png" },
                             { name: "Pankaj Gupta", role: "Co-Founder", image: "/pankaj.png" },
@@ -572,48 +546,86 @@ export default function ServiceProviderHome() {
                             </div>
                         ))}
                     </div>
-
-                    {/* Mobile scroll arrows */}
-                    <div className="flex justify-center gap-4 mt-6 md:hidden">
-                        <button
-                            onClick={() => document.getElementById('team-cards-row-home').scrollBy({ left: -320, behavior: 'smooth' })}
-                            style={{ width: '3rem', height: '3rem', borderRadius: '50%', border: '1.5px solid rgba(0,0,0,0.1)', background: '#fff', color: '#333', fontSize: '1.1rem', display: 'flex', alignItems: 'center', justifyContent: 'center', boxShadow: '0 4px 12px rgba(0,0,0,0.06)' }}
-                        >❮</button>
-                        <button
-                            onClick={() => document.getElementById('team-cards-row-home').scrollBy({ left: 320, behavior: 'smooth' })}
-                            style={{ width: '3rem', height: '3rem', borderRadius: '50%', border: '1.5px solid rgba(0,0,0,0.1)', background: '#fff', color: '#333', fontSize: '1.1rem', display: 'flex', alignItems: 'center', justifyContent: 'center', boxShadow: '0 4px 12px rgba(0,0,0,0.06)' }}
-                        >❯</button>
-                    </div>
                 </div>
             </section>
 
-            {/* Connecting Global Capital Cards */}
-            <section className="py-20 bg-white" id="connecting-global">
+            {/* Connecting Global Capital Section (Redesigned as NRI Challenges) */}
+            <section className="py-24 bg-[#F8F8F8] dark:bg-[#111]" id="connecting-global">
                 <div className="container mx-auto px-4 max-w-6xl">
-                    <div className="text-center mb-14">
-                        <h2 className="text-3xl md:text-4xl font-bold text-[#1a1a1a] mb-4">
-                            Connecting Global Capital
+
+                    {/* Centered Heading at the Top */}
+                    <div className="text-center mb-16">
+                        {/* <span className="text-[#D48035] text-xs font-bold uppercase tracking-[0.25em] block mb-3">
+                            Investor Hurdles
+                        </span> */}
+                        <h2 className="text-3xl md:text-4xl font-bold text-slate-800 dark:text-white leading-tight mb-4">
+                            Key Challenges Faced by NRI Real Estate Investors
                         </h2>
-                        <p className="text-slate-600 max-w-2xl mx-auto text-sm md:text-base leading-relaxed">
-                            Investate India is structurally designed to connect international investors, Non-Resident Indians (NRIs), and global wealth managers with the high-yield growth potential of Indian markets.
+                        <p className="text-slate-600 dark:text-slate-300 max-w-2xl mx-auto text-sm md:text-base leading-relaxed">
+                            Key hurdles Non-Resident Indians (NRIs) face when investing and managing property assets in India from abroad.
                         </p>
                     </div>
-                    <div className="flex flex-wrap justify-center gap-6">
-                        {serviceProviderBenefits.map((benefit, index) => (
-                            <div key={index} className="infra-marquee-card bg-white" style={{ position: 'static', margin: '0' }}>
-                                <div className="infra-card-icon-wrapper">
-                                    {index === 0 && <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3.055 11H5a2 2 0 012 2v1a2 2 0 002 2 2 2 0 012 2v2.945M8 3.935V5.5A2.5 2.5 0 0010.5 8h.5a2 2 0 012 2 2 2 0 104 0 2 2 0 012-2h1.064M15 20.488V18a2 2 0 012-2h3.064" /></svg>}
-                                    {index === 1 && <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" /></svg>}
-                                    {index === 2 && <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 13.255A23.931 23.931 0 0112 15c-3.183 0-6.22-.62-9-1.745M16 6V4a2 2 0 00-2-2h-4a2 2 0 00-2 2v2m4 6h.01M5 20h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" /></svg>}
-                                    {index === 3 && <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" /></svg>}
+
+                    {/* Two-Column Grid of Challenges */}
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-x-16 lg:gap-x-24 gap-y-12 max-w-6xl mx-auto text-left mt-12">
+                        {[
+                            {
+                                num: "01",
+                                title: "Lack of Trust & Transparency",
+                                desc: "Investing from abroad often means relying on limited or unverified information. NRIs face challenges in verifying property authenticity, developer credibility, legal clearances, and project progress without trusted local support.",
+                                orderClass: "order-1"
+                            },
+                            {
+                                num: "02",
+                                title: "Compliance & Taxation Complexity",
+                                desc: "Understanding FEMA regulations, property registration requirements, PAN/TAN, TDS, capital gains tax, and fund repatriation rules can be complex and time-consuming without expert guidance.",
+                                orderClass: "order-2 md:order-3"
+                            },
+                            {
+                                num: "03",
+                                title: "Remote Property Management",
+                                desc: "Managing a property from overseas—including tenant management, maintenance, documentation, legal assistance, and dispute resolution—is difficult without a reliable local partner.",
+                                orderClass: "order-3 md:order-5"
+                            },
+                            {
+                                num: "04",
+                                title: "Limited Access to Verified Opportunities",
+                                desc: "Finding genuine, high-quality investment opportunities with accurate market insights and verified documentation is often a challenge for NRIs.",
+                                orderClass: "order-4 md:order-2"
+                            },
+                            {
+                                num: "05",
+                                title: "Communication & Decision Delays",
+                                desc: "Time zone differences, inconsistent communication, and the need to coordinate with multiple stakeholders can slow down the investment process and create uncertainty.",
+                                orderClass: "order-5 md:order-4"
+                            },
+                            {
+                                num: "06",
+                                title: "Currency & Funding Hurdles",
+                                desc: "Fluctuating exchange rates can impact purchase cost and repatriation yields, while securing local financing involves navigating complex NRI-specific home loan criteria.",
+                                orderClass: "order-6 md:order-6"
+                            }
+                        ].map((challenge, i) => (
+                            <div key={i} className={`flex gap-4 items-start ${challenge.orderClass}`}>
+                                <div className="text-2xl font-extrabold text-[#D48035] shrink-0 select-none">
+                                    {challenge.num}
                                 </div>
-                                <h4 className="infra-card-title">{benefit.title}</h4>
-                                <p className="infra-card-desc">{benefit.desc}</p>
+                                <div>
+                                    <h4 className="text-lg font-bold text-[#D48035] mb-2">
+                                        {challenge.title}
+                                    </h4>
+                                    <p className="text-slate-600 dark:text-slate-300 text-sm leading-relaxed">
+                                        {challenge.desc}
+                                    </p>
+                                </div>
                             </div>
                         ))}
                     </div>
+
                 </div>
             </section>
+
+            <TestimonialsSection />
 
             {/* CONTACT SECTION */}
             <section

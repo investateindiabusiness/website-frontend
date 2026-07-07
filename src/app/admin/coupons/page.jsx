@@ -162,19 +162,19 @@ export default function AdminCoupons() {
       <div className="flex-grow flex pt-0">
         <main className="flex-1 p-6 md:p-10 overflow-x-hidden">
           
-          <div className="flex justify-between items-center mb-8">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-8">
             <div>
-              <h1 className="text-3xl font-bold text-slate-800 flex items-center gap-3">
-                <Tag className="w-8 h-8 text-[#0b264f]" />
+              <h1 className="text-2xl sm:text-3xl font-bold text-slate-800 flex items-center gap-3">
+                <Tag className="w-6 h-6 sm:w-8 sm:h-8 text-[#0b264f] flex-shrink-0" />
                 Coupon Management
               </h1>
-              <p className="text-slate-500 text-sm mt-1">Create and manage advertisement coupons — marketing or user-specific.</p>
+              <p className="text-slate-500 text-xs sm:text-sm mt-1 leading-relaxed">Create and manage advertisement coupons — marketing or user-specific.</p>
             </div>
             <Button 
               onClick={() => setIsModalOpen(true)}
-              className="bg-[#0b264f] hover:bg-[#1a4b8c] text-white rounded-xl shadow-md"
+              className="bg-[#0b264f] hover:bg-[#1a4b8c] text-white rounded-xl shadow-md self-start sm:self-center whitespace-nowrap"
             >
-              <Plus className="w-4 h-4 mr-2" /> Create Coupon
+              <Plus className="w-4 h-4 mr-2 flex-shrink-0" /> Create Coupon
             </Button>
           </div>
 
@@ -211,7 +211,7 @@ export default function AdminCoupons() {
                       {coupons.slice((currentPage - 1) * ITEMS_PER_PAGE, currentPage * ITEMS_PER_PAGE).map(c => (
                         <tr key={c.id} className="hover:bg-slate-50/50">
                           <td className="py-4 px-6 font-bold text-[#0b264f]">{c.code}</td>
-                          <td className="py-4 px-6 font-bold text-green-600">₹{c.discountAmount}</td>
+                          <td className="py-4 px-6 font-bold text-green-600">${c.discountAmount}</td>
                           <td className="py-4 px-6">
                             <Badge variant="outline" className={c.type === 'launch' ? 'bg-orange-50 text-orange-600 border-orange-200' : 'bg-blue-50 text-blue-600 border-blue-200'}>
                               {c.type}
@@ -323,7 +323,7 @@ export default function AdminCoupons() {
 
                 {/* Discount Amount */}
                 <div className="space-y-1.5">
-                  <label className="text-xs font-bold text-slate-600">Discount Amount (₹) <span className="text-red-500">*</span></label>
+                  <label className="text-xs font-bold text-slate-600">Discount Amount ($) <span className="text-red-500">*</span></label>
                   <input type="number" required min="1" value={formData.discountAmount} onChange={e => setFormData({...formData, discountAmount: e.target.value})} placeholder="e.g. 500" className="w-full border border-slate-200 rounded-xl px-4 py-2.5 text-sm outline-none focus:border-[#0b264f]" />
                 </div>
 

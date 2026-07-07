@@ -39,8 +39,8 @@ const INVESTOR_TYPE_LABELS = {
 const formatCrores = (val) => {
   const n = Number(val);
   if (!n || isNaN(n)) return "—";
-  if (n >= 100) return `₹${(n / 100).toFixed(1)} Cr`;
-  return `₹${n}L`;
+  if (n >= 100) return `$${(n / 100).toFixed(1)} Cr`;
+  return `$${n}L`;
 };
 
 function ComposeMessageModal({ recipient, onClose, onSent }) {
@@ -465,7 +465,7 @@ export default function SPDirectoryPage() {
       <div className="container mx-auto px-4 -mt-5 relative z-20">
         <div className="bg-white rounded-2xl shadow-md border border-slate-100 p-4 flex flex-wrap gap-3 items-center">
           {/* Role tabs */}
-          <div className="flex gap-2">
+          <div className="flex flex-wrap gap-2">
             {roleOptions.map((opt) => (
               <button
                 key={opt.value}

@@ -116,6 +116,7 @@ const HeaderContent = ({ transparent = false }) => {
         { label: 'Investor', path: '/investor' },
         { label: 'Builder', path: '/builder' },
         { label: 'Service Provider', path: '/service-provider' },
+        { label: 'Equity Raising', path: '/equity-raising' },
         // { label: 'About Us', path: '/about-us' },
         { label: 'Gallery', path: '/gallery' },
       ];

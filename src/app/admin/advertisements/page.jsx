@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import React, { useState, useEffect } from "react";
 import { useAuth } from "@/hooks/AuthContext";
@@ -664,7 +664,7 @@ export default function AdminAdvertisements() {
                                 </div>
                               </td>
                               <td className="py-4 px-4 font-bold text-slate-800">
-                                ₹{booking.cost}
+                                ${booking.cost}
                               </td>
                               <td className="py-4 px-4">
                                 <div className="space-y-1">
@@ -769,7 +769,7 @@ export default function AdminAdvertisements() {
                               {zone.name}
                             </span>
                             <span className="text-[10px] text-slate-500">
-                              ₹{zone.costPerDay}/day
+                              ${zone.costPerDay}/day
                             </span>
                           </button>
                           <Button
@@ -818,7 +818,7 @@ export default function AdminAdvertisements() {
                               Cost / Day
                             </span>
                             <p className="text-sm font-bold text-slate-700">
-                              ₹{selectedZone.costPerDay}
+                              ${selectedZone.costPerDay}
                             </p>
                           </div>
                           <div className="space-y-1">
@@ -974,7 +974,7 @@ export default function AdminAdvertisements() {
 
                 <div className="space-y-1.5">
                   <label className="text-xs font-bold text-slate-600 block">
-                    Cost Per Day (₹)
+                    Cost Per Day ($)
                   </label>
                   <input
                     type="number"
@@ -1210,7 +1210,7 @@ export default function AdminAdvertisements() {
                   </div>
                   <div className="space-y-1">
                     <span className="text-[10px] text-slate-400 uppercase font-bold tracking-wider block">Total Revenue</span>
-                    <p className="text-base font-extrabold text-slate-900">₹{previewBooking.cost}</p>
+                    <p className="text-base font-extrabold text-slate-900">${previewBooking.cost}</p>
                   </div>
                 </div>
 
