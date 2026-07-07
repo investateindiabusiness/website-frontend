@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
@@ -248,10 +248,7 @@ const RegisterDialog = ({ isOpen, onOpenChange, onLoginClick, initialData = {} }
     try {
       setLoading(true);
       let response = await registerStep1({ email: authData.email, password: authData.password, role: userType });
-<<<<<<< HEAD
 
-=======
->>>>>>> 5627b10a2105b23a802352e1ccd8df8ffd4e1612
       setUserId(response.uid); setStep(2);
       toast({ title: "Account Created", description: "Please complete Form 1 details." });
     } catch (err) {
@@ -513,17 +510,7 @@ const RegisterDialog = ({ isOpen, onOpenChange, onLoginClick, initialData = {} }
                 </div>
                 <div className="flex flex-col">
                   <p className="text-[10px] font-black text-gray-900 uppercase tracking-widest">Trusted Community</p>
-<<<<<<< HEAD
                   <p className="text-[9px] font-bold text-gray-400 uppercase tracking-tighter">Join 2,500+ Active Professionals</p>
-=======
-                  <p className="text-[9px] font-bold text-gray-400 uppercase tracking-tighter">
-                    {userType === 'investor' 
-                      ? 'Join our growing NRI investor community' 
-                      : userType === 'builder' 
-                        ? 'Join our growing network of builders' 
-                        : 'Join our growing network of professionals'}
-                  </p>
->>>>>>> 5627b10a2105b23a802352e1ccd8df8ffd4e1612
                 </div>
               </div>
               <p className="text-[10px] text-gray-500 font-medium leading-tight max-w-[240px]">
@@ -544,7 +531,7 @@ const RegisterDialog = ({ isOpen, onOpenChange, onLoginClick, initialData = {} }
 
                 <div>
                   <h2 className="text-3xl font-black text-gray-900 mb-2 tracking-tight">
-                    {isUpdateMode ? 'Update Submitted!' : 'Welcome Aboard! 🎉'}
+                    {isUpdateMode ? 'Update Submitted!' : 'Welcome Aboard! ðŸŽ‰'}
                   </h2>
                   <p className="text-gray-500 max-w-sm mx-auto text-sm leading-relaxed">
                     {isUpdateMode
@@ -555,7 +542,7 @@ const RegisterDialog = ({ isOpen, onOpenChange, onLoginClick, initialData = {} }
                   </p>
                 </div>
 
-                {/* Free Trial Info Card — only shown on new registration */}
+                {/* Free Trial Info Card â€” only shown on new registration */}
                 {!isUpdateMode && launchConfig && (
                   <div className="mx-auto max-w-xs bg-gradient-to-br from-[#0b264f] to-[#1a4b8c] text-white rounded-2xl p-5 shadow-xl space-y-4">
                     {/* Premium Badge */}
@@ -630,11 +617,11 @@ const RegisterDialog = ({ isOpen, onOpenChange, onLoginClick, initialData = {} }
                       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                         <div className="space-y-2">
                           <Label className="text-[10px] font-black text-gray-900 uppercase tracking-widest ml-1">Password</Label>
-                          <Input type="password" autoComplete="new-password" required value={authData.password} onChange={(e) => setAuthData({ ...authData, password: e.target.value })} className="h-11 px-6 bg-gray-50 border-gray-200 focus:bg-white focus:ring-[6px] focus:ring-orange-500/5 focus:border-orange-500 transition-all duration-300 rounded-2xl text-sm font-bold placeholder:text-gray-300" placeholder="••••••••" />
+                          <Input type="password" autoComplete="new-password" required value={authData.password} onChange={(e) => setAuthData({ ...authData, password: e.target.value })} className="h-11 px-6 bg-gray-50 border-gray-200 focus:bg-white focus:ring-[6px] focus:ring-orange-500/5 focus:border-orange-500 transition-all duration-300 rounded-2xl text-sm font-bold placeholder:text-gray-300" placeholder="â€¢â€¢â€¢â€¢â€¢â€¢â€¢â€¢" />
                         </div>
                         <div className="space-y-2">
                           <Label className="text-[10px] font-black text-gray-900 uppercase tracking-widest ml-1">Confirm Password</Label>
-                          <Input type="password" autoComplete="new-password" required value={authData.confirmPassword} onChange={(e) => setAuthData({ ...authData, confirmPassword: e.target.value })} className="h-11 px-6 bg-gray-50 border-gray-200 focus:bg-white focus:ring-[6px] focus:ring-orange-500/5 focus:border-orange-500 transition-all duration-300 rounded-2xl text-sm font-bold placeholder:text-gray-300" placeholder="••••••••" />
+                          <Input type="password" autoComplete="new-password" required value={authData.confirmPassword} onChange={(e) => setAuthData({ ...authData, confirmPassword: e.target.value })} className="h-11 px-6 bg-gray-50 border-gray-200 focus:bg-white focus:ring-[6px] focus:ring-orange-500/5 focus:border-orange-500 transition-all duration-300 rounded-2xl text-sm font-bold placeholder:text-gray-300" placeholder="â€¢â€¢â€¢â€¢â€¢â€¢â€¢â€¢" />
                         </div>
                       </div>
                       <Button 

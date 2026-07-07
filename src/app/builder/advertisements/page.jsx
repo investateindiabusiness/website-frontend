@@ -1,8 +1,4 @@
-<<<<<<< HEAD
-"use client";
-=======
 ﻿"use client";
->>>>>>> 5627b10a2105b23a802352e1ccd8df8ffd4e1612
 
 import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
@@ -156,7 +152,7 @@ export default function BuilderAdvertisements() {
       const res = await fetchMyCoupons();
       setMyCoupons(res?.data || []);
     } catch (err) {
-      // Silently ignore — coupons are an optional feature.
+      // Silently ignore â€” coupons are an optional feature.
       // A "Failed to fetch" is expected when the backend is not yet ready.
       setMyCoupons([]);
     }
@@ -173,11 +169,7 @@ export default function BuilderAdvertisements() {
           ...z,
           name: z.name || z.id,
           costPerDay: z.costPerDay ?? 0,
-<<<<<<< HEAD
           campaignDuration: z.campaignDuration ?? 1,
-=======
-          campaignDuration: z.campaignDuration ?? 7,
->>>>>>> 5627b10a2105b23a802352e1ccd8df8ffd4e1612
         }));
       setZones(enriched);
       if (selectedZone) {
@@ -433,11 +425,7 @@ export default function BuilderAdvertisements() {
     if (dateString < currentDate) return null;
 
     if (selectedZone) {
-<<<<<<< HEAD
       const duration = selectedZone.campaignDuration || 1;
-=======
-      const duration = selectedZone.campaignDuration || 7;
->>>>>>> 5627b10a2105b23a802352e1ccd8df8ffd4e1612
       const start = new Date(dateString);
       const end = new Date(start);
       end.setDate(end.getDate() + duration - 1);
@@ -648,11 +636,7 @@ export default function BuilderAdvertisements() {
                       </div>
                       <div className="space-y-1">
                         <span className="text-[10px] text-slate-400 uppercase font-semibold flex items-center"><Clock className="w-3.5 h-3.5 mr-0.5 text-blue-600" /> Campaign Duration</span>
-<<<<<<< HEAD
                         <p className="text-base font-bold text-slate-800">Per Day</p>
-=======
-                        <p className="text-base font-bold text-slate-800">{selectedZone.campaignDuration} Days</p>
->>>>>>> 5627b10a2105b23a802352e1ccd8df8ffd4e1612
                       </div>
                     </div>
 
@@ -702,14 +686,14 @@ export default function BuilderAdvertisements() {
                             onClick={prevMonth}
                             className="p-1.5 hover:bg-slate-100 rounded-lg text-slate-600 transition-colors border border-slate-200 shadow-sm"
                           >
-                            ❮
+                            â®
                           </button>
                           <button
                             type="button"
                             onClick={nextMonth}
                             className="p-1.5 hover:bg-slate-100 rounded-lg text-slate-600 transition-colors border border-slate-200 shadow-sm"
                           >
-                            ❯
+                            â¯
                           </button>
                         </div>
                       </div>
@@ -775,18 +759,18 @@ export default function BuilderAdvertisements() {
                 </CardContent>
               </Card>
 
-              {/* Live Cost Preview Card — investor-style free range */}
+              {/* Live Cost Preview Card â€” investor-style free range */}
               {rangeStart && (
                 <Card className={`border rounded-2xl p-4 shadow-sm animate-in fade-in slide-in-from-bottom-2 duration-200 ${rangeEnd ? 'border-[#0b264f] bg-[#0b264f]/5' : 'border-blue-200 bg-blue-50/50'}`}>
                   <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
                     <div>
                       <h4 className="text-xs font-bold text-[#0b264f] uppercase tracking-wide">
-                        {rangeEnd ? 'Selected Campaign Window' : 'Select an End Date…'}
+                        {rangeEnd ? 'Selected Campaign Window' : 'Select an End Dateâ€¦'}
                       </h4>
                       <p className="text-sm font-bold text-slate-800 mt-1">
                         {formatDate(rangeStart)}
                         {(rangeEnd || hoverDate) && (
-                          <> → {formatDate(rangeEnd || hoverDate)}</>
+                          <> â†’ {formatDate(rangeEnd || hoverDate)}</>
                         )}
                       </p>
                       {selectionDays > 0 && (
@@ -796,7 +780,7 @@ export default function BuilderAdvertisements() {
                     <div className="flex items-center gap-6 w-full md:w-auto justify-between md:justify-end border-t md:border-none border-slate-100 pt-3 md:pt-0">
                       <div className="text-right">
                         <span className="text-[10px] text-slate-400 uppercase font-semibold block">
-                          ${selectedZone?.costPerDay}/day × {selectionDays || (hoverDate ? Math.round((new Date(hoverDate) - new Date(rangeStart)) / 86400000) + 1 : '?')} days
+                          ${selectedZone?.costPerDay}/day Ã— {selectionDays || (hoverDate ? Math.round((new Date(hoverDate) - new Date(rangeStart)) / 86400000) + 1 : '?')} days
                         </span>
                         <p className="text-xl font-bold text-[#0b264f]">
                           {totalCost > 0 ? `$${totalCost}` : '...'}
@@ -816,7 +800,7 @@ export default function BuilderAdvertisements() {
                             onClick={handleOpenBookingModal}
                             className="bg-[#0b264f] hover:bg-[#0a1f3f] text-white rounded-xl shadow-md font-semibold px-5"
                           >
-                            Book Now →
+                            Book Now â†’
                           </Button>
                         </div>
                       ) : (
@@ -955,7 +939,7 @@ export default function BuilderAdvertisements() {
                   <CardTitle className="text-xl font-bold">{paymentClientSecret ? 'Complete Payment' : 'Campaign Details'}</CardTitle>
                   <CardDescription className="text-xs text-blue-100/80 mt-1">Book slot for: {selectedZone?.name}</CardDescription>
                 </div>
-                <button onClick={handleCloseBookingModal} className="text-white/80 hover:text-white text-xl">✕</button>
+                <button onClick={handleCloseBookingModal} className="text-white/80 hover:text-white text-xl">âœ•</button>
               </div>
             </CardHeader>
             {paymentClientSecret ? (
@@ -982,13 +966,8 @@ export default function BuilderAdvertisements() {
                       <strong className="text-slate-800 text-sm">{formatDate(bookingSlot.startDate)} to {formatDate(bookingSlot.endDate)}</strong>
                     </div>
                     <div className="text-right">
-<<<<<<< HEAD
                       <span className="font-semibold text-slate-400 uppercase tracking-wide block text-[9px]">${selectedZone?.costPerDay}/day</span>
                       <strong className="text-slate-800 text-sm">${(selectedZone?.costPerDay || 0) * (selectedZone?.campaignDuration || 1)}</strong>
-=======
-                      <span className="font-semibold text-slate-400 uppercase tracking-wide block text-[9px]">${selectedZone?.costPerDay}/day × {selectedZone?.campaignDuration} days</span>
-                      <strong className="text-slate-800 text-sm">${(selectedZone?.costPerDay || 0) * (selectedZone?.campaignDuration || 7)}</strong>
->>>>>>> 5627b10a2105b23a802352e1ccd8df8ffd4e1612
                     </div>
                   </div>
 
@@ -1087,11 +1066,7 @@ export default function BuilderAdvertisements() {
                     {appliedCoupon && selectedZone && (
                       <div className="flex justify-between items-center mt-2 font-bold text-sm pt-2 border-t border-slate-100">
                         <span className="text-slate-700">Final Total:</span>
-<<<<<<< HEAD
                         <span className="text-[#0b264f] text-lg">${Math.max(0, (selectedZone?.costPerDay || 0) * (selectedZone?.campaignDuration || 1) - appliedCoupon.discountAmount)}</span>
-=======
-                        <span className="text-[#0b264f] text-lg">${Math.max(0, (selectedZone?.costPerDay || 0) * (selectedZone?.campaignDuration || 7) - appliedCoupon.discountAmount)}</span>
->>>>>>> 5627b10a2105b23a802352e1ccd8df8ffd4e1612
                       </div>
                     )}
                   </div>
@@ -1169,7 +1144,7 @@ export default function BuilderAdvertisements() {
                   <CardTitle className="text-xl font-bold">Rectify Ad Campaign</CardTitle>
                   <CardDescription className="text-xs text-amber-50/80 mt-1">Review feedback and fix issues below</CardDescription>
                 </div>
-                <button onClick={handleCloseRectifyModal} className="text-white/80 hover:text-white text-xl">✕</button>
+                <button onClick={handleCloseRectifyModal} className="text-white/80 hover:text-white text-xl">âœ•</button>
               </div>
             </CardHeader>
             <form onSubmit={handleRectifySubmit}>

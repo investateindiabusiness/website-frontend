@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import React, { useEffect, useState, useCallback } from 'react';
 import { useRouter } from 'next/navigation';
@@ -20,7 +20,7 @@ import { toast } from '@/hooks/use-toast';
 
 const stripePromise = loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY || '');
 
-// ─── Stripe Payment Form ───────────────────────────────────────────────
+// â”€â”€â”€ Stripe Payment Form â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 function MembershipPaymentForm({ amount, paymentId, onSuccess }) {
   const stripe = useStripe();
   const elements = useElements();
@@ -92,7 +92,7 @@ function MembershipPaymentForm({ amount, paymentId, onSuccess }) {
         className="w-full bg-gradient-to-r from-orange-500 to-orange-600 hover:from-orange-600 hover:to-orange-700 text-white font-bold py-3.5 rounded-2xl text-base shadow-lg shadow-orange-500/20 flex items-center justify-center gap-2 disabled:opacity-60 disabled:cursor-not-allowed transition-all duration-200"
       >
         {isProcessing ? (
-          <><Loader2 className="w-5 h-5 animate-spin" /> Processing…</>
+          <><Loader2 className="w-5 h-5 animate-spin" /> Processingâ€¦</>
         ) : (
           <><CreditCard className="w-5 h-5" /> Pay ${amount} USD</>
         )}
@@ -100,13 +100,13 @@ function MembershipPaymentForm({ amount, paymentId, onSuccess }) {
 
       <div className="flex items-center justify-center gap-2 text-xs text-gray-600">
         <Lock className="w-3.5 h-3.5" />
-        Secured by Stripe · 256-bit SSL encryption
+        Secured by Stripe Â· 256-bit SSL encryption
       </div>
     </form>
   );
 }
 
-// ─── Success Screen ────────────────────────────────────────────────────
+// â”€â”€â”€ Success Screen â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 function SuccessScreen({ onContinue }) {
   return (
     <div className="flex flex-col items-center justify-center py-12 space-y-5 text-center">
@@ -127,7 +127,7 @@ function SuccessScreen({ onContinue }) {
   );
 }
 
-// ─── Main Page ─────────────────────────────────────────────────────────
+// â”€â”€â”€ Main Page â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 export default function MembershipPage() {
   const { user, refreshUser } = useAuth();
   const router = useRouter();
@@ -140,7 +140,7 @@ export default function MembershipPage() {
   const [success, setSuccess] = useState(false);
   const [error, setError] = useState(null);
 
-  // ── Check if arrived from Stripe redirect (3D-Secure flow)
+  // â”€â”€ Check if arrived from Stripe redirect (3D-Secure flow)
   useEffect(() => {
     const params = new URLSearchParams(window.location.search);
     if (params.get('status') === 'success') {
@@ -154,7 +154,7 @@ export default function MembershipPage() {
     }
   }, []);
 
-  // ── Fetch pricing for this user's role
+  // â”€â”€ Fetch pricing for this user's role
   const fetchPricing = useCallback(async () => {
     if (!user) return;
     try {
@@ -170,7 +170,7 @@ export default function MembershipPage() {
 
   useEffect(() => { fetchPricing(); }, [fetchPricing]);
 
-  // ── Create Stripe payment intent
+  // â”€â”€ Create Stripe payment intent
   const handleCreatePayment = async () => {
     if (!user || !pricing) return;
     setCreating(true);
@@ -199,12 +199,8 @@ export default function MembershipPage() {
 
   const handleSuccess = async () => {
     setSuccess(true);
-<<<<<<< HEAD
     try { await refreshUser?.(); } catch { }
-=======
-    try { await refreshUser?.(); } catch {}
->>>>>>> 5627b10a2105b23a802352e1ccd8df8ffd4e1612
-    toast({ title: '✅ Membership Activated', description: 'Your annual membership is now active.' });
+    toast({ title: 'âœ… Membership Activated', description: 'Your annual membership is now active.' });
   };
 
   const handleContinue = () => {
@@ -227,7 +223,7 @@ export default function MembershipPage() {
 
   const roleLabel = user?.role === 'serviceProvider' ? 'Service Provider' : user?.role ? user.role.charAt(0).toUpperCase() + user.role.slice(1) : '';
 
-  // ── Compute membership status display
+  // â”€â”€ Compute membership status display
   const isMembershipActive = user?.membershipStatus === 'active' && user?.membershipExpiry && new Date() <= new Date(user.membershipExpiry);
 
   return (
@@ -255,7 +251,7 @@ export default function MembershipPage() {
           <p className="text-gray-400 text-sm mt-2">
             {isMembershipActive
               ? `Your membership is active until ${new Date(user.membershipExpiry).toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' })}`
-              : `Annual membership for ${roleLabel} accounts · Billed in USD`}
+              : `Annual membership for ${roleLabel} accounts Â· Billed in USD`}
           </p>
         </div>
 
@@ -273,23 +269,10 @@ export default function MembershipPage() {
                   <span className="text-white font-bold text-sm">Annual Plan</span>
                 </div>
 
-<<<<<<< HEAD
                 <div>
                   <div className="text-4xl font-black text-white">Free</div>
                   <div className="text-orange-400 font-semibold text-xs mt-1 uppercase tracking-wider">For the First Year</div>
                 </div>
-=======
-                {loading ? (
-                  <div className="flex items-center gap-2 text-gray-500 text-sm">
-                    <Loader2 className="w-4 h-4 animate-spin" /> Loading price…
-                  </div>
-                ) : (
-                  <div>
-                    <div className="text-4xl font-black text-white">${pricing?.amount}</div>
-                    <div className="text-gray-500 text-xs mt-1">USD / year</div>
-                  </div>
-                )}
->>>>>>> 5627b10a2105b23a802352e1ccd8df8ffd4e1612
 
                 <div className="border-t border-gray-800 pt-4 space-y-2.5">
                   {[
@@ -320,7 +303,6 @@ export default function MembershipPage() {
               {isMembershipActive ? (
                 <div className="flex flex-col items-center justify-center py-8 text-center space-y-5">
                   <div className="w-16 h-16 rounded-full bg-green-500/10 border border-green-500/30 flex items-center justify-center">
-<<<<<<< HEAD
                     <Star className="w-8 h-8 text-orange-400 fill-orange-400" />
                   </div>
                   <div>
@@ -335,22 +317,6 @@ export default function MembershipPage() {
                       <span className="text-orange-400 font-semibold uppercase text-[10px] tracking-wider">Free (First Year)</span>
                     </div> */}
                   {/* <div className="flex justify-between text-xs text-gray-500">
-=======
-                    <CheckCircle2 className="w-8 h-8 text-green-400" />
-                  </div>
-                  <div>
-                    <h2 className="text-white font-bold text-lg">Your Membership is Active</h2>
-                    <p className="text-sm text-gray-400 mt-2">
-                      Thank you for being a valued member! You currently have full access to vetted listings and platform tools.
-                    </p>
-                  </div>
-                  <div className="w-full bg-gray-900/40 rounded-xl p-4 border border-gray-800/60 text-left space-y-2">
-                    <div className="flex justify-between text-xs text-gray-500">
-                      <span>Billed Amount:</span>
-                      <span className="text-gray-300 font-semibold">${pricing?.amount || 49} USD</span>
-                    </div>
-                    <div className="flex justify-between text-xs text-gray-500">
->>>>>>> 5627b10a2105b23a802352e1ccd8df8ffd4e1612
                       <span>Expires On:</span>
                       <span className="text-gray-300 font-semibold">
                         {new Date(user.membershipExpiry).toLocaleDateString('en-US', {
@@ -359,13 +325,8 @@ export default function MembershipPage() {
                           year: 'numeric'
                         })}
                       </span>
-<<<<<<< HEAD
                     </div> */}
                   {/* </div> */}
-=======
-                    </div>
-                  </div>
->>>>>>> 5627b10a2105b23a802352e1ccd8df8ffd4e1612
                   <Button
                     onClick={handleContinue}
                     className="w-full bg-[#D48035] hover:bg-[#B45309] text-white text-xs font-bold py-2.5 rounded-xl transition-all"
@@ -374,7 +335,6 @@ export default function MembershipPage() {
                   </Button>
                 </div>
               ) : (
-<<<<<<< HEAD
                 <div className="flex flex-col items-center justify-center py-8 text-center space-y-5">
                   <div className="w-16 h-16 rounded-full bg-orange-500/10 border border-orange-500/30 flex items-center justify-center">
                     <Star className="w-8 h-8 text-orange-400 fill-orange-400" />
@@ -392,66 +352,11 @@ export default function MembershipPage() {
                     Go to Dashboard
                   </Button>
                 </div>
-=======
-                <>
-                  <h2 className="text-white font-bold text-base mb-5 flex items-center gap-2">
-                    <CreditCard className="w-4 h-4 text-orange-400" />
-                    Payment Details
-                  </h2>
-
-                  {error && (
-                    <div className="flex items-start gap-3 bg-red-500/10 border border-red-500/25 rounded-xl px-4 py-3 text-sm text-red-400 mb-4">
-                      <AlertCircle className="w-4 h-4 flex-shrink-0 mt-0.5" />
-                      {error}
-                    </div>
-                  )}
-
-                  {!clientSecret ? (
-                    <div className="space-y-4">
-                      <p className="text-sm text-gray-400">
-                        Click below to initialize a secure Stripe checkout session for your ${pricing?.amount ?? '—'} USD annual membership.
-                      </p>
-                      <Button
-                        onClick={handleCreatePayment}
-                        disabled={creating || loading}
-                        className="w-full bg-gradient-to-r from-orange-500 to-orange-600 hover:from-orange-600 hover:to-orange-700 text-white font-bold py-3 rounded-2xl flex items-center justify-center gap-2 disabled:opacity-60"
-                      >
-                        {creating ? (
-                          <><Loader2 className="w-4 h-4 animate-spin" /> Preparing…</>
-                        ) : (
-                          <><CreditCard className="w-4 h-4" /> Proceed to Payment</>
-                        )}
-                      </Button>
-                    </div>
-                  ) : stripeOptions ? (
-                    <Elements stripe={stripePromise} options={stripeOptions}>
-                      <MembershipPaymentForm
-                        amount={pricing?.amount}
-                        paymentId={paymentId}
-                        onSuccess={handleSuccess}
-                      />
-                    </Elements>
-                  ) : null}
-
-                  {clientSecret && (
-                    <button
-                      onClick={() => { setClientSecret(null); setPaymentId(null); setError(null); }}
-                      className="mt-4 flex items-center gap-1.5 text-xs text-gray-600 hover:text-gray-400 transition-colors"
-                    >
-                      <RefreshCw className="w-3 h-3" /> Start over
-                    </button>
-                  )}
-                </>
->>>>>>> 5627b10a2105b23a802352e1ccd8df8ffd4e1612
               )}
             </div>
           </div>
         )}
       </div>
-<<<<<<< HEAD
     </div >
-=======
-    </div>
->>>>>>> 5627b10a2105b23a802352e1ccd8df8ffd4e1612
   );
 }

@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -50,11 +50,7 @@ export default function TestimonialsSection() {
   const handleNext = () => setActiveIndex((prev) => (prev >= maxIndex ? 0 : prev + 1));
 
   return (
-<<<<<<< HEAD
     <section className="py-24 bg-[#FEFEFE] dark:bg-[#111] relative overflow-hidden" id="testimonials">
-=======
-    <section className="py-24 bg-[var(--color-light-bg,#FAFAF9)] relative overflow-hidden" id="testimonials">
->>>>>>> 5627b10a2105b23a802352e1ccd8df8ffd4e1612
       {/* Decorative background elements */}
       <div className="absolute top-0 left-0 w-full h-full overflow-hidden pointer-events-none">
         <div className="absolute top-[-10%] left-[-5%] w-96 h-96 bg-[var(--color-accent,#D48035)] rounded-full mix-blend-multiply filter blur-[120px] opacity-10"></div>
@@ -77,7 +73,7 @@ export default function TestimonialsSection() {
           onMouseEnter={() => setIsHovered(true)}
           onMouseLeave={() => setIsHovered(false)}
         >
-          {/* Left Arrow — beside cards */}
+          {/* Left Arrow â€” beside cards */}
           <button 
             onClick={handlePrev}
             className="absolute left-0 top-1/2 -translate-y-1/2 z-20 w-12 h-12 rounded-full border border-gray-200 bg-white flex items-center justify-center text-gray-500 hover:text-[var(--color-accent,#D48035)] hover:border-[var(--color-accent,#D48035)] hover:shadow-lg transition-all duration-300 transform hover:-translate-x-1 hidden md:flex"
@@ -85,7 +81,7 @@ export default function TestimonialsSection() {
             <ChevronLeft className="w-6 h-6" />
           </button>
 
-          {/* Right Arrow — beside cards */}
+          {/* Right Arrow â€” beside cards */}
           <button 
             onClick={handleNext}
             className="absolute right-0 top-1/2 -translate-y-1/2 z-20 w-12 h-12 rounded-full border border-gray-200 bg-white flex items-center justify-center text-gray-500 hover:text-[var(--color-accent,#D48035)] hover:border-[var(--color-accent,#D48035)] hover:shadow-lg transition-all duration-300 transform hover:translate-x-1 hidden md:flex"
@@ -126,7 +122,7 @@ export default function TestimonialsSection() {
             </motion.div>
           </div>
 
-          {/* Mobile arrows + Dots — bottom center */}
+          {/* Mobile arrows + Dots â€” bottom center */}
           <div className="flex justify-center items-center gap-4 mt-8 z-20">
             <button 
               onClick={handlePrev}

@@ -31,4 +31,5 @@ yarn-error.log*
 /INVESTATE.zip
 /diff.txt
 /.run-logs/
+/.npm-cache/
 

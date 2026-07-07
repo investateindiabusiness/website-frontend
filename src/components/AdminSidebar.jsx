@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import React, { useState } from 'react';
 import Link from 'next/link';
@@ -32,10 +32,7 @@ import {
   CardMembership as MembershipIcon,
   Forum as OutreachIcon,
   ContactMail as DirectoryIcon,
-<<<<<<< HEAD
   CardGiftcard as ReferralsIcon,
-=======
->>>>>>> 5627b10a2105b23a802352e1ccd8df8ffd4e1612
 } from '@mui/icons-material';
 
 const DRAWER_WIDTH = 240;
@@ -57,10 +54,7 @@ const NAV_ITEMS_BY_ROLE = {
     { label: 'Advertisements',   path: '/admin/advertisements',    icon: <AdsIcon /> },
     { label: 'Newsletter',       path: '/admin/newsletter',        icon: <NewsletterIcon /> },
     { label: 'Coupons',          path: '/admin/coupons',           icon: <CouponsIcon /> },
-<<<<<<< HEAD
     { label: 'Referrals',        path: '/admin/referrals',         icon: <ReferralsIcon /> },
-=======
->>>>>>> 5627b10a2105b23a802352e1ccd8df8ffd4e1612
     { label: 'Membership Pricing', path: '/admin/membership-pricing', icon: <MembershipIcon /> },
   ],
   builder: [
@@ -68,10 +62,7 @@ const NAV_ITEMS_BY_ROLE = {
     { label: 'Projects',      path: '/builder/projects',        icon: <ProjectsIcon /> },
     { label: 'Advertise',     path: '/builder/advertisements',  icon: <AdsIcon /> },
     { label: 'Payments',      path: '/builder/payments',        icon: <LeadsIcon /> },
-<<<<<<< HEAD
     { label: 'Referrals',     path: '/builder/referrals',      icon: <ReferralsIcon /> },
-=======
->>>>>>> 5627b10a2105b23a802352e1ccd8df8ffd4e1612
     { label: 'Coupons',       path: '/builder/coupons',         icon: <CouponsIcon /> },
     { label: 'SP Inbox',      path: '/builder/outreach-inbox',  icon: <OutreachIcon /> },
   ],
@@ -80,10 +71,7 @@ const NAV_ITEMS_BY_ROLE = {
     { label: 'Properties',    path: '/properties',             icon: <ProjectsIcon /> },
     { label: 'KYC Verification', path: '/investor/kyc',         icon: <KYCIcon /> },
     { label: 'Advertise',     path: '/investor/advertisements',icon: <AdsIcon /> },
-<<<<<<< HEAD
     { label: 'Referrals',     path: '/investor/referrals',     icon: <ReferralsIcon /> },
-=======
->>>>>>> 5627b10a2105b23a802352e1ccd8df8ffd4e1612
     { label: 'Payments',      path: '/investor/payments',      icon: <LeadsIcon /> },
     { label: 'Coupons',       path: '/investor/coupons',       icon: <CouponsIcon /> },
     { label: 'SP Inbox',      path: '/investor/outreach-inbox',icon: <OutreachIcon /> },
@@ -92,10 +80,7 @@ const NAV_ITEMS_BY_ROLE = {
     { label: 'Dashboard',     path: '/service-provider/dashboard',       icon: <DashboardIcon /> },
     { label: 'Directory',     path: '/service-provider/directory',       icon: <DirectoryIcon /> },
     { label: 'My Outreach',   path: '/service-provider/outreach',        icon: <OutreachIcon /> },
-<<<<<<< HEAD
     { label: 'Referrals',     path: '/service-provider/referrals',      icon: <ReferralsIcon /> },
-=======
->>>>>>> 5627b10a2105b23a802352e1ccd8df8ffd4e1612
     { label: 'Advertise',     path: '/service-provider/advertisements',  icon: <AdsIcon /> },
     { label: 'Payments',      path: '/service-provider/payments',        icon: <LeadsIcon /> },
     { label: 'Coupons',       path: '/service-provider/coupons',         icon: <CouponsIcon /> },
@@ -295,7 +280,7 @@ export default function AdminSidebar({ children }) {
           </IconButton>
           <img src="/logo-small-white.png" alt="Logo" style={{ height: 36, objectFit: 'contain' }} />
           <Box sx={{ ml: 'auto', display: 'flex', alignItems: 'center', gap: 1 }}>
-            {/* Profile Dropdown — mobile */}
+            {/* Profile Dropdown â€” mobile */}
             <div ref={profileDropdownRefMobile} style={{ position: 'relative' }}>
               <button
                 onClick={() => setProfileDropdownOpen(p => !p)}
@@ -372,7 +357,7 @@ export default function AdminSidebar({ children }) {
           </Box>
 
           <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
-            {/* Profile Dropdown — desktop */}
+            {/* Profile Dropdown â€” desktop */}
           <div ref={profileDropdownRefDesktop} style={{ position: 'relative' }}>
             <button
               onClick={() => setProfileDropdownOpen(p => !p)}

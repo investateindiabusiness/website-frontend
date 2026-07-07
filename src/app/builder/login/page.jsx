@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import React, { useState, useEffect, Suspense } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
@@ -117,11 +117,7 @@ function BuilderLoginContent() {
       console.log("[BUILDER LOGIN] Catch Block Intercepted:", err);
 
       const errMsg = err.message || '';
-<<<<<<< HEAD
       const isRoleMismatch =
-=======
-      const isRoleMismatch = 
->>>>>>> 5627b10a2105b23a802352e1ccd8df8ffd4e1612
         errMsg.toLowerCase().includes('registered as') ||
         errMsg.toLowerCase().includes('role mismatch') ||
         errMsg.toLowerCase().includes('use the investor tab') ||
@@ -158,11 +154,7 @@ function BuilderLoginContent() {
         return;
       }
 
-<<<<<<< HEAD
       const isLoginFailure =
-=======
-      const isLoginFailure = 
->>>>>>> 5627b10a2105b23a802352e1ccd8df8ffd4e1612
         errMsg.toLowerCase().includes('login failed') ||
         errMsg.toLowerCase().includes('invalid credentials') ||
         err.error === 'INVALID_LOGIN_CREDENTIALS';
@@ -176,17 +168,10 @@ function BuilderLoginContent() {
           const res = await fetch(signUpUrl, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-<<<<<<< HEAD
             body: JSON.stringify({
               email: formData.email,
               password: 'CheckEmailExistencePassword123!',
               returnSecureToken: true
-=======
-            body: JSON.stringify({ 
-              email: formData.email, 
-              password: 'CheckEmailExistencePassword123!', 
-              returnSecureToken: true 
->>>>>>> 5627b10a2105b23a802352e1ccd8df8ffd4e1612
             })
           });
 
@@ -215,15 +200,9 @@ function BuilderLoginContent() {
           setError('Login failed');
         }
       } else {
-<<<<<<< HEAD
         const isNotRegistered =
           errMsg.toLowerCase().includes('user not found') ||
           errMsg.toLowerCase().includes('not registered') ||
-=======
-        const isNotRegistered = 
-          errMsg.toLowerCase().includes('user not found') || 
-          errMsg.toLowerCase().includes('not registered') || 
->>>>>>> 5627b10a2105b23a802352e1ccd8df8ffd4e1612
           errMsg.toLowerCase().includes('no user found') ||
           errMsg.toLowerCase().includes('not exist') ||
           err.error === 'USER_NOT_FOUND' ||
@@ -285,11 +264,7 @@ function BuilderLoginContent() {
 
   return (
     <div className="min-h-screen w-full flex flex-col lg:flex-row bg-white overflow-hidden">
-<<<<<<< HEAD
 
-=======
-      
->>>>>>> 5627b10a2105b23a802352e1ccd8df8ffd4e1612
       {/* Mobile Back Button */}
       <div className="lg:hidden p-4 border-b border-gray-100 flex items-center">
         <Link href="/" className="inline-flex items-center gap-2 text-xs font-bold text-gray-600 uppercase tracking-wider hover:text-gray-900 transition-colors">
@@ -335,11 +310,7 @@ function BuilderLoginContent() {
               </div>
               <div className="flex flex-col">
                 <p className="text-[10px] font-black text-white uppercase tracking-widest">Global Network</p>
-<<<<<<< HEAD
                 <p className="text-[9px] font-bold text-gray-400 uppercase tracking-tighter">Trusted by 2K+ Professionals</p>
-=======
-                <p className="text-[9px] font-bold text-gray-400 uppercase tracking-tighter">Part of a growing network of builders</p>
->>>>>>> 5627b10a2105b23a802352e1ccd8df8ffd4e1612
               </div>
             </div>
             <p className="text-[10px] text-gray-300 font-medium leading-tight max-w-[280px]">
@@ -386,7 +357,7 @@ function BuilderLoginContent() {
                   <button type="button" onClick={handleForgotPassword} className="text-[9px] font-black text-orange-600 uppercase tracking-widest hover:underline">Forgot?</button>
                 </div>
                 <div className="relative">
-                  <Input id="password" type={showPassword ? 'text' : 'password'} autoComplete="new-password" placeholder="••••••••" value={formData.password} onChange={(e) => { setFormData({ ...formData, password: e.target.value }); setError(null); }} required className="h-11 px-6 pr-12 bg-gray-50 border-gray-200 focus:bg-white focus:ring-[6px] focus:ring-orange-500/5 focus:border-orange-500 transition-all duration-300 rounded-2xl text-sm font-bold placeholder:text-gray-300" />
+                  <Input id="password" type={showPassword ? 'text' : 'password'} autoComplete="new-password" placeholder="â€¢â€¢â€¢â€¢â€¢â€¢â€¢â€¢" value={formData.password} onChange={(e) => { setFormData({ ...formData, password: e.target.value }); setError(null); }} required className="h-11 px-6 pr-12 bg-gray-50 border-gray-200 focus:bg-white focus:ring-[6px] focus:ring-orange-500/5 focus:border-orange-500 transition-all duration-300 rounded-2xl text-sm font-bold placeholder:text-gray-300" />
                   <button type="button" onClick={() => setShowPassword(prev => !prev)} className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-700 transition-colors" tabIndex={-1}>
                     {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
                   </button>
@@ -428,11 +399,7 @@ function BuilderLoginContent() {
             <h3 className="text-lg font-black text-gray-900 uppercase tracking-tight mb-2">
               {alertModal.type === 'role_mismatch' ? 'Account Role Mismatch' : 'Account Not Found'}
             </h3>
-<<<<<<< HEAD
 
-=======
-            
->>>>>>> 5627b10a2105b23a802352e1ccd8df8ffd4e1612
             <p className="text-xs text-gray-500 font-semibold leading-relaxed mb-6 px-2">
               {alertModal.message}
             </p>
@@ -456,11 +423,7 @@ function BuilderLoginContent() {
                   Register Now
                 </Button>
               )}
-<<<<<<< HEAD
 
-=======
-              
->>>>>>> 5627b10a2105b23a802352e1ccd8df8ffd4e1612
               <Button
                 variant="outline"
                 onClick={() => setAlertModal(prev => ({ ...prev, isOpen: false }))}

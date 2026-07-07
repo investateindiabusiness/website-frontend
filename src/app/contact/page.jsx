@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import React, { useEffect, useState } from 'react';
 import Header from '@/components/Header';
@@ -69,11 +69,7 @@ export default function ContactUs() {
                       <div className="bg-white/10 p-3 rounded-lg text-orange-400"><Mail className="w-6 h-6" /></div>
                       <div>
                         <p className="text-xs text-blue-200 uppercase font-semibold mb-1">Email Us</p>
-<<<<<<< HEAD
                         <a href="mailto:investateindia.business@gmail.com" className="text-[14px] min-[375px]:text-base md:text-lg font-medium hover:text-orange-400 transition-colors">
-=======
-                        <a href="mailto:investateindia.business@gmail.com" className="text-[14px] min-[375px]:text-base md:text-lg font-medium hover:text-orange-400 transition-colors whitespace-nowrap">
->>>>>>> 5627b10a2105b23a802352e1ccd8df8ffd4e1612
                           investateindia.business@gmail.com
                         </a>
                       </div>
@@ -81,15 +77,10 @@ export default function ContactUs() {
                     <div className="flex items-start gap-4">
                       <div className="bg-white/10 p-3 rounded-lg text-orange-400"><MapPin className="w-6 h-6" /></div>
                       <div>
-<<<<<<< HEAD
                         <p className="text-xs text-blue-200 uppercase font-semibold mb-1">Call Us</p>
                         <a href="tel:+914048293000" className="text-[14px] min-[375px]:text-base md:text-lg font-medium hover:text-orange-400 transition-colors">
                           +91 40 4829 3000
                         </a>
-=======
-                        <p className="text-xs text-blue-200 uppercase font-semibold mb-1">Head Office</p>
-                        <p className="text-lg font-medium leading-snug">Hyderabad, India <br /> New York, USA</p>
->>>>>>> 5627b10a2105b23a802352e1ccd8df8ffd4e1612
                       </div>
                     </div>
                   </div>
@@ -132,7 +123,6 @@ export default function ContactUs() {
           </div>
         </div>
       </section>
-<<<<<<< HEAD
 
       {/* Office Locations Section */}
       <section className="py-24 bg-[#FEFEFE] dark:bg-[#111] border-t border-gray-100 dark:border-slate-800 relative z-20">
@@ -190,8 +180,6 @@ export default function ContactUs() {
         </div>
       </section>
 
-=======
->>>>>>> 5627b10a2105b23a802352e1ccd8df8ffd4e1612
       <Footer />
     </div>
   );
