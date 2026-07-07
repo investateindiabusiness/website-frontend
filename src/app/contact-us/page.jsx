@@ -137,6 +137,7 @@ export default function ContactUs() {
               <div className="space-y-8">
                 <div className="flex items-start gap-6">
                   <div className="text-orange-400 mt-1 flex-shrink-0">
+<<<<<<< HEAD
                     <Mail className="w-12 h-12 stroke-[1.25]" />
                   </div>
                   <div className="border-l-2 border-orange-400/30 pl-6">
@@ -148,11 +149,23 @@ export default function ContactUs() {
                     >
                       investateindia.business@gmail.com
                     </a>
+=======
+                    <Globe className="w-12 h-12 stroke-[1.25]" />
+                  </div>
+                  <div className="border-l-2 border-orange-400/30 pl-6">
+                    <h3 className="text-xl font-bold text-[#0b264f] mb-2">Location</h3>
+                    <p className="text-gray-500 leading-relaxed">
+                      Corporate Office: Hyderabad, India <br />
+                      Valentine Mark Corporation
+                      55 West 47 Street Suite 425 New York, NY 10036 USA
+                    </p>
+>>>>>>> 5627b10a2105b23a802352e1ccd8df8ffd4e1612
                   </div>
                 </div>
 
                 <div className="flex items-start gap-6 pt-6 border-t border-gray-100">
                   <div className="text-orange-400 mt-1 flex-shrink-0">
+<<<<<<< HEAD
                     <Phone className="w-12 h-12 stroke-[1.25]" />
                   </div>
                   <div className="border-l-2 border-orange-400/30 pl-6">
@@ -163,6 +176,17 @@ export default function ContactUs() {
                       className="text-gray-700 font-semibold hover:text-orange-500 transition-colors duration-200"
                     >
                       +91 40 4829 3000
+=======
+                    <Mail className="w-12 h-12 stroke-[1.25]" />
+                  </div>
+                  <div className="border-l-2 border-orange-400/30 pl-6">
+                    <h3 className="text-xl font-bold text-[#0b264f] mb-2">Email Us</h3>
+                    <a
+                      href="mailto:investateindia.business@gmail.com"
+                      className="text-gray-500 hover:text-orange-500 transition-colors duration-200"
+                    >
+                      investateindia.business@gmail.com
+>>>>>>> 5627b10a2105b23a802352e1ccd8df8ffd4e1612
                     </a>
                   </div>
                 </div>
@@ -289,6 +313,7 @@ export default function ContactUs() {
         </div>
       </section>
 
+<<<<<<< HEAD
       {/* Office Locations Section */}
       <section className="py-24 bg-[#FEFEFE] dark:bg-[#111] border-t border-gray-100 dark:border-slate-800 relative z-20">
         <div className="container mx-auto px-4 max-w-6xl">
@@ -345,6 +370,8 @@ export default function ContactUs() {
         </div>
       </section>
 
+=======
+>>>>>>> 5627b10a2105b23a802352e1ccd8df8ffd4e1612
       <Footer />
     </div>
   );

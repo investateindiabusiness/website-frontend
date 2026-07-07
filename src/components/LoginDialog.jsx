@@ -108,6 +108,7 @@ const LoginDialog = ({ isOpen, onOpenChange, onSwitchToRegister, initialData = {
         } catch (_) { /* non-blocking */ }
       }
 
+<<<<<<< HEAD
       // Check if user came from an ad "Book this Space" click
       const pendingRedirect = sessionStorage.getItem('postLoginRedirect');
       if (pendingRedirect === '/advertisements') {
@@ -119,6 +120,8 @@ const LoginDialog = ({ isOpen, onOpenChange, onSwitchToRegister, initialData = {
         return router.push('/builder/advertisements');
       }
 
+=======
+>>>>>>> 5627b10a2105b23a802352e1ccd8df8ffd4e1612
       if (userData.role === 'admin') router.push('/admin/dashboard');
       else if (userData.role === 'builder') router.push('/builder/dashboard');
       else if (userData.role === 'serviceProvider') router.push('/service-provider/dashboard');
@@ -464,7 +467,17 @@ const LoginDialog = ({ isOpen, onOpenChange, onSwitchToRegister, initialData = {
                 </div>
                 <div className="flex flex-col">
                   <p className="text-[10px] font-black text-white uppercase tracking-widest">Global Network</p>
+<<<<<<< HEAD
                   <p className="text-[9px] font-bold text-gray-400 uppercase tracking-tighter">Trusted by 2k+ Professionals</p>
+=======
+                  <p className="text-[9px] font-bold text-gray-400 uppercase tracking-tighter">
+                    {userType === 'investor' 
+                      ? 'Part of a growing NRI investor community' 
+                      : userType === 'builder' 
+                        ? 'Part of a growing network of builders' 
+                        : 'Part of a growing network of professionals'}
+                  </p>
+>>>>>>> 5627b10a2105b23a802352e1ccd8df8ffd4e1612
                 </div>
               </div>
               <p className="text-[10px] text-gray-300 font-medium leading-tight max-w-[240px]">

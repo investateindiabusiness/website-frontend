@@ -5,10 +5,15 @@ import { useRouter } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
 import AwardsSection from "@/components/AwardsSection";
 import TestimonialsSection from "@/components/TestimonialsSection";
+<<<<<<< HEAD
 import DeepakProfileSection from "@/components/DeepakProfileSection";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import AdBanner from "@/components/AdBanner";
+=======
+import Header from "@/components/Header";
+import Footer from "@/components/Footer";
+>>>>>>> 5627b10a2105b23a802352e1ccd8df8ffd4e1612
 import {
     ShieldCheck,
     Scale,
@@ -24,14 +29,22 @@ import {
 
 const heroSlides = [
     {
+<<<<<<< HEAD
         image: "/images/image copy 6.png",
+=======
+        image: "/images/mumbai-luxury-skyline.jpg",
+>>>>>>> 5627b10a2105b23a802352e1ccd8df8ffd4e1612
         tag: "Global Investment Gateway",
         title: "INVESTATE INDIA",
         highlight: "Gateway to Indian Opportunities",
         subtitle: "Connecting Investors, Opportunities and Professional Services through a technology-enabled platform.",
     },
     {
+<<<<<<< HEAD
         image: "/images/image copy 8.png",
+=======
+        image: "/images/investment-growth-hd.png",
+>>>>>>> 5627b10a2105b23a802352e1ccd8df8ffd4e1612
         tag: "Platform Overview",
         title: "Connecting Global Capital with",
         highlight: "Verified Investment Opportunities",
@@ -39,22 +52,40 @@ const heroSlides = [
     },
 ];
 
+<<<<<<< HEAD
 const serviceProviderBenefits = [
     {
         title: "Challenges Faced by NRIs",
         desc: "Navigating unverified property listings, remote monitoring friction, complex taxation, and FEMA compliance bottlenecks from overseas.",
+=======
+
+const serviceProviderBenefits = [
+    {
+        title: "Global Reach & Access",
+        desc: "Empowering investors across North America, Europe, Middle East, and Asia-Pacific with direct access to top-tier, handpicked Indian asset classes.",
+>>>>>>> 5627b10a2105b23a802352e1ccd8df8ffd4e1612
         image:
             "https://images.unsplash.com/photo-1557804506-669a67965ba0?q=80&w=2070&auto=format&fit=crop",
     },
     {
+<<<<<<< HEAD
         title: "Platform Solution",
         desc: "Providing safety through institutional-grade due diligence, verified builder coordinates, and secure digital compliance tracking.",
+=======
+        title: "Cross-Border Compliance",
+        desc: "Simplifying regulatory, taxation, and legal requirements for global transactions including FEMA compliance and repatriation support.",
+>>>>>>> 5627b10a2105b23a802352e1ccd8df8ffd4e1612
         image:
             "https://images.unsplash.com/photo-1460925895917-afdab827c52f?q=80&w=2070&auto=format&fit=crop",
     },
     {
+<<<<<<< HEAD
         title: "Potential Opportunities",
         desc: "Unlocking access to high-yield real estate developments, alternative investments, and India's high-growth economic assets.",
+=======
+        title: "Vetted Opportunities",
+        desc: "Every listed investment undergoes rigorous multi-tier institutional due diligence to safeguard overseas capital.",
+>>>>>>> 5627b10a2105b23a802352e1ccd8df8ffd4e1612
         image:
             "https://images.unsplash.com/photo-1522071820081-009f0129c71c?q=80&w=2070&auto=format&fit=crop",
     },
@@ -73,6 +104,7 @@ const serviceProviderChallenges = [
         desc: "Designed for the needs of global investors, with cross-border compliance, FEMA guidance, and repatriation support.",
         icon: <Layers className="w-8 h-8 text-white" />,
     },
+<<<<<<< HEAD
     // {
     //     id: "02",
     //     text: "Verified Opportunities",
@@ -83,6 +115,18 @@ const serviceProviderChallenges = [
         id: "03",
         text: "End-to-End Support",
         desc: "Complete support across legal, financial, advisory and operational needs — from discovery to investment completion. We connect investors to real estate & equity, builders to global capital, and service providers to compliance & advisory needs.",
+=======
+    {
+        id: "02",
+        text: "Verified Opportunities",
+        desc: "Every opportunity is curated and due-diligenced through a multi-tier review process to protect investor capital.",
+        icon: <ShieldCheck className="w-8 h-8 text-white" />,
+    },
+    {
+        id: "03",
+        text: "End-to-End Support",
+        desc: "Complete support across legal, financial, advisory and operational needs — from discovery to investment completion.",
+>>>>>>> 5627b10a2105b23a802352e1ccd8df8ffd4e1612
         icon: <Target className="w-8 h-8 text-white" />,
     },
     {
@@ -121,8 +165,26 @@ export default function ServiceProviderHome() {
     const router = useRouter();
     const [activeStepIndex, setActiveStepIndex] = useState(0);
     const [heroIndex, setHeroIndex] = useState(0);
+<<<<<<< HEAD
     const [isHeroPaused, setIsHeroPaused] = useState(false);
 
+=======
+    const [benefitsPage, setBenefitsPage] = useState(0);
+    const benefitsPerPage = 2;
+    const totalBenefitsPages = Math.ceil(
+        serviceProviderBenefits.length / benefitsPerPage,
+    );
+
+    const nextBenefits = () => {
+        setBenefitsPage((prev) => (prev + 1) % totalBenefitsPages);
+    };
+
+    const prevBenefits = () => {
+        setBenefitsPage(
+            (prev) => (prev - 1 + totalBenefitsPages) % totalBenefitsPages,
+        );
+    };
+>>>>>>> 5627b10a2105b23a802352e1ccd8df8ffd4e1612
 
     const handleAuthClick = (action, role) => {
         if (action === "login") {
@@ -133,6 +195,7 @@ export default function ServiceProviderHome() {
     };
 
     useEffect(() => {
+<<<<<<< HEAD
         if (isHeroPaused) return;
         const timer = setInterval(() => {
             setHeroIndex((prev) => (prev + 1) % heroSlides.length);
@@ -143,12 +206,22 @@ export default function ServiceProviderHome() {
     const activeStepData = serviceProviderSteps[activeStepIndex];
     const totalSlides = heroSlides.length + 1;   // last slot = ad slide
     const isAdSlide = heroIndex === heroSlides.length;
+=======
+        const timer = setInterval(() => {
+            setHeroIndex((prev) => (prev + 1) % heroSlides.length);
+        }, 6000);
+        return () => clearInterval(timer);
+    }, []);
+
+    const activeStepData = serviceProviderSteps[activeStepIndex];
+>>>>>>> 5627b10a2105b23a802352e1ccd8df8ffd4e1612
 
     return (
         <div className="theme-builder w-full bg-white overflow-x-hidden">
             <Header transparent={true} />
 
             {/* HERO SECTION */}
+<<<<<<< HEAD
             <section
                 className="fullscreen-section hero-section"
                 onMouseEnter={() => setIsHeroPaused(true)}
@@ -160,10 +233,32 @@ export default function ServiceProviderHome() {
                             key="ad-bg"
                             src="https://images.unsplash.com/photo-1560518883-ce09059eeffa?w=1200&q=80"
                             alt="Sponsor background"
+=======
+            <section className="fullscreen-section hero-section">
+                <AnimatePresence mode="sync">
+                    <picture
+                        key={heroIndex}
+                        className="absolute inset-0 w-full h-full z-0"
+                    >
+                        <source
+                            media="(max-width: 768px)"
+                            srcSet={heroSlides[heroIndex]?.image.replace(
+                                "w=2070",
+                                "w=600&q=70",
+                            )}
+                        />
+                        <motion.img
+                            src={heroSlides[heroIndex]?.image.replace(
+                                "w=2070",
+                                "w=1200&q=75",
+                            )}
+                            alt="Hero background"
+>>>>>>> 5627b10a2105b23a802352e1ccd8df8ffd4e1612
                             className="absolute inset-0 w-full h-full object-cover z-0 hero-split-image"
                             initial={{ opacity: 0 }}
                             animate={{ opacity: 1 }}
                             exit={{ opacity: 0 }}
+<<<<<<< HEAD
                             transition={{ duration: 1.2, ease: 'easeInOut' }}
                         />
                     ) : (
@@ -193,17 +288,45 @@ export default function ServiceProviderHome() {
                     onClick={() => setHeroIndex((prev) => (prev - 1 + totalSlides) % totalSlides)}
                     aria-label="Previous image"
                     className="absolute left-5 top-1/2 -translate-y-1/2 z-[20] bg-white/10 backdrop-blur-md border border-white/20 rounded-full w-11 h-11 flex items-center justify-center cursor-pointer text-white hover:bg-white/25 transition-colors"
+=======
+                            transition={{ duration: 1.2, ease: "easeInOut" }}
+                            loading="eager"
+                            fetchPriority="high"
+                        />
+                    </picture>
+                </AnimatePresence>
+                <div
+                    className="absolute inset-0 z-[1] hero-split-overlay"
+                />
+
+                {/* Prev / Next buttons */}
+                <button
+                    onClick={() =>
+                        setHeroIndex(
+                            (prev) => (prev - 1 + heroSlides.length) % heroSlides.length,
+                        )
+                    }
+                    aria-label="Previous image"
+                    className="absolute left-5 top-1/2 -translate-y-1/2 z-10 bg-white/10 backdrop-blur-md border border-white/20 rounded-full w-11 h-11 flex items-center justify-center cursor-pointer text-white hover:bg-white/25 transition-colors"
+>>>>>>> 5627b10a2105b23a802352e1ccd8df8ffd4e1612
                 >
                     ❮
                 </button>
                 <button
+<<<<<<< HEAD
                     onClick={() => setHeroIndex((prev) => (prev + 1) % totalSlides)}
                     aria-label="Next image"
                     className="absolute right-5 top-1/2 -translate-y-1/2 z-[20] bg-white/10 backdrop-blur-md border border-white/20 rounded-full w-11 h-11 flex items-center justify-center cursor-pointer text-white hover:bg-white/25 transition-colors"
+=======
+                    onClick={() => setHeroIndex((prev) => (prev + 1) % heroSlides.length)}
+                    aria-label="Next image"
+                    className="absolute right-5 top-1/2 -translate-y-1/2 z-10 bg-white/10 backdrop-blur-md border border-white/20 rounded-full w-11 h-11 flex items-center justify-center cursor-pointer text-white hover:bg-white/25 transition-colors"
+>>>>>>> 5627b10a2105b23a802352e1ccd8df8ffd4e1612
                 >
                     ❯
                 </button>
 
+<<<<<<< HEAD
                 {/* Slide dots */}
                 <div className="absolute bottom-6 left-1/2 -translate-x-1/2 z-[20] flex gap-2">
                     {Array.from({ length: totalSlides }).map((_, i) => (
@@ -253,11 +376,24 @@ export default function ServiceProviderHome() {
                             transition={{ duration: 0.6, ease: 'easeOut' }}
                         >
                             <div className="hero-content">
+=======
+                <div className="container relative z-[2]">
+                    <div className="hero-content">
+                        <AnimatePresence mode="wait">
+                            <motion.div
+                                key={heroIndex}
+                                initial={{ opacity: 0, y: 20 }}
+                                animate={{ opacity: 1, y: 0 }}
+                                exit={{ opacity: 0, y: -20 }}
+                                transition={{ duration: 0.6, ease: "easeOut" }}
+                            >
+>>>>>>> 5627b10a2105b23a802352e1ccd8df8ffd4e1612
                                 <span className="hero-tag bg-slate-700/80 text-blue-200 border-none">
                                     {heroSlides[heroIndex]?.tag}
                                 </span>
                                 <h1 className="hero-headline">
                                     {heroSlides[heroIndex]?.title} <br />
+<<<<<<< HEAD
                                     <span className="text-white">{heroSlides[heroIndex]?.highlight}</span>
                                 </h1>
                                 <p className="hero-subheadline">{heroSlides[heroIndex]?.subtitle}</p>
@@ -273,6 +409,27 @@ export default function ServiceProviderHome() {
                         </motion.div>
                     )}
                 </AnimatePresence>
+=======
+                                    <span className="text-white">
+                                        {heroSlides[heroIndex]?.highlight}
+                                    </span>
+                                </h1>
+                                <p className="hero-subheadline">
+                                    {heroSlides[heroIndex]?.subtitle}
+                                </p>
+                            </motion.div>
+                        </AnimatePresence>
+                        <div className="hero-cta-group flex gap-4">
+                            <button
+                                onClick={() => router.push("/contact-us")}
+                                className="btn bg-[#D48035] hover:bg-[#B45309] border-none text-white px-8 py-3 rounded-full font-bold shadow-lg transition-transform hover:scale-105 active:scale-95"
+                            >
+                                Talk to Us
+                            </button>
+                        </div>
+                    </div>
+                </div>
+>>>>>>> 5627b10a2105b23a802352e1ccd8df8ffd4e1612
             </section>
 
             {/* Executive Summary Section */}
@@ -296,6 +453,7 @@ export default function ServiceProviderHome() {
                             </div>
 
                             {/* Why Now */}
+<<<<<<< HEAD
                             <div style={{ borderLeft: '4px solid #D48035', paddingLeft: '1.5rem', margin: '1.5rem 0' }}>
                                 <h4 className="text-xs font-bold uppercase tracking-[0.25em] text-[#D48035] mb-2">
                                     Why Now
@@ -320,6 +478,15 @@ export default function ServiceProviderHome() {
                                         <span><strong>Distance Management:</strong> Managing properties, renting out, or resolving legal disputes from overseas without a trusted local interface.</span>
                                     </li>
                                 </ul>
+=======
+                            <div style={{ borderLeft: '4px solid #D48035', paddingLeft: '1.5rem', margin: '0.5rem 0' }}>
+                                <h4 className="text-xs font-bold uppercase tracking-[0.25em] text-[#D48035] mb-2">
+                                    Why Now
+                                </h4>
+                                <p className="text-slate-600 text-sm md:text-base leading-relaxed italic m-0">
+                                    "Digital adoption, regulatory transparency and rising NRI wealth are creating significant demand for trusted investment platforms."
+                                </p>
+>>>>>>> 5627b10a2105b23a802352e1ccd8df8ffd4e1612
                             </div>
 
                             {/* Market Stats */}
@@ -382,8 +549,12 @@ export default function ServiceProviderHome() {
                                     {[
                                         "Investment Discovery", "Real Estate Opportunities", "Equity Investment Opportunities",
                                         "Alternative Investments", "Professional Services Integration", "Investor Enablement",
+<<<<<<< HEAD
                                         "Legal & Financial Enablement", "End-to-End Investment Support",
                                         "Import & Export Services", "NRI Services"
+=======
+                                        "Legal & Financial Enablement", "End-to-End Investment Support"
+>>>>>>> 5627b10a2105b23a802352e1ccd8df8ffd4e1612
                                     ].map((cap, i) => (
                                         <div key={i} className="flex items-center gap-2.5">
                                             <span className="w-1.5 h-1.5 bg-[#D48035] rounded-full shrink-0" />
@@ -413,7 +584,11 @@ export default function ServiceProviderHome() {
                         </span>
                     </h2>
                     <p className="infra-subtitle max-w-2xl mx-auto mt-4 text-slate-600">
+<<<<<<< HEAD
                         Our collaborative model integrates developers, investors, and legal or financial service providers to streamline secure, cross-border capital deployment and compliance.
+=======
+                        Investate India is a technology-enabled investment platform that connects global investors with verified investment opportunities in India.
+>>>>>>> 5627b10a2105b23a802352e1ccd8df8ffd4e1612
                     </p>
                 </div>
 
@@ -470,6 +645,7 @@ export default function ServiceProviderHome() {
                                     Investate India is structurally designed to connect international investors, Non-Resident Indians (NRIs), and global wealth managers with the high-yield growth potential of Indian markets.
                                 </p>
 
+<<<<<<< HEAD
                                 <div className="flex flex-col gap-8">
                                     {serviceProviderBenefits.map((benefit, index) => (
                                         <div
@@ -484,6 +660,57 @@ export default function ServiceProviderHome() {
                                             </p>
                                         </div>
                                     ))}
+=======
+                                <div className="relative min-h-[220px]">
+                                    <AnimatePresence mode="wait">
+                                        <motion.div
+                                            key={benefitsPage}
+                                            initial={{ opacity: 0, x: 20 }}
+                                            animate={{ opacity: 1, x: 0 }}
+                                            exit={{ opacity: 0, x: -20 }}
+                                            transition={{ duration: 0.3 }}
+                                            className="grid grid-cols-1 md:grid-cols-2 gap-x-12 gap-y-10"
+                                        >
+                                            {serviceProviderBenefits
+                                                .slice(
+                                                    benefitsPage * benefitsPerPage,
+                                                    (benefitsPage + 1) * benefitsPerPage,
+                                                )
+                                                .map((benefit, index) => (
+                                                    <div
+                                                        key={index}
+                                                        className="border-l-4 border-[#D48035] pl-5"
+                                                    >
+                                                        <h4 className="text-lg font-bold text-slate-900 mb-2">
+                                                            {benefit.title}
+                                                        </h4>
+                                                        <p className="text-sm text-slate-600 leading-relaxed">
+                                                            {benefit.desc}
+                                                        </p>
+                                                    </div>
+                                                ))}
+                                        </motion.div>
+                                    </AnimatePresence>
+                                </div>
+
+                                {/* Pagination Controls */}
+                                <div className="benefits-pagination flex gap-4 mt-8 items-center">
+                                    <button
+                                        onClick={prevBenefits}
+                                        className="w-10 h-10 rounded-full border border-slate-200 bg-white hover:bg-slate-100 flex items-center justify-center cursor-pointer transition-colors"
+                                    >
+                                        ❮
+                                    </button>
+                                    <div className="text-xs text-slate-500 font-bold">
+                                        {benefitsPage + 1} / {totalBenefitsPages}
+                                    </div>
+                                    <button
+                                        onClick={nextBenefits}
+                                        className="w-10 h-10 rounded-full border border-slate-200 bg-white hover:bg-slate-100 flex items-center justify-center cursor-pointer transition-colors"
+                                    >
+                                        ❯
+                                    </button>
+>>>>>>> 5627b10a2105b23a802352e1ccd8df8ffd4e1612
                                 </div>
                             </div>
                         </motion.div>
@@ -519,6 +746,7 @@ export default function ServiceProviderHome() {
             <AwardsSection />
 
             {/* ORGANIZATION / TEAM SECTION */}
+<<<<<<< HEAD
             <section className="team-section-integrated section-theme py-16" id="how-it-works">
                 <div className="container mx-auto px-4 max-w-6xl">
                     <div className="text-center mb-12">
@@ -531,6 +759,20 @@ export default function ServiceProviderHome() {
                         </p>
                     </div>
                     <div className="flex flex-wrap justify-center gap-8">
+=======
+            <section className="team-section-integrated section-theme" id="how-it-works">
+                <div className="team-integrated-wrapper">
+                    <div className="team-text-banner">
+                        <div className="team-text-content-inner">
+                            <h2 className="team-main-title">Meet the Team Behind <span className="text-highlight">Your Trust</span></h2>
+                            <p className="team-main-desc">
+                                <strong>Built on transparency. Driven by experience.</strong><br />
+                                Investate India is led by Deepak Kavadia, Pankaj Gupta, and Atish Agarwal.
+                            </p>
+                        </div>
+                    </div>
+                    <div className="team-cards-scroll-area" id="team-cards-row-home">
+>>>>>>> 5627b10a2105b23a802352e1ccd8df8ffd4e1612
                         {[
                             { name: "Deepak Kavadia", role: "CEO & Founder", image: "/deepak.png" },
                             { name: "Pankaj Gupta", role: "Co-Founder", image: "/pankaj.png" },
@@ -547,6 +789,7 @@ export default function ServiceProviderHome() {
                             </div>
                         ))}
                     </div>
+<<<<<<< HEAD
                 </div>
             </section>
 
@@ -630,6 +873,51 @@ export default function ServiceProviderHome() {
 
             <DeepakProfileSection />
 
+=======
+
+                    {/* Mobile scroll arrows */}
+                    <div className="flex justify-center gap-4 mt-6 md:hidden">
+                        <button
+                            onClick={() => document.getElementById('team-cards-row-home').scrollBy({ left: -320, behavior: 'smooth' })}
+                            style={{ width: '3rem', height: '3rem', borderRadius: '50%', border: '1.5px solid rgba(0,0,0,0.1)', background: '#fff', color: '#333', fontSize: '1.1rem', display: 'flex', alignItems: 'center', justifyContent: 'center', boxShadow: '0 4px 12px rgba(0,0,0,0.06)' }}
+                        >❮</button>
+                        <button
+                            onClick={() => document.getElementById('team-cards-row-home').scrollBy({ left: 320, behavior: 'smooth' })}
+                            style={{ width: '3rem', height: '3rem', borderRadius: '50%', border: '1.5px solid rgba(0,0,0,0.1)', background: '#fff', color: '#333', fontSize: '1.1rem', display: 'flex', alignItems: 'center', justifyContent: 'center', boxShadow: '0 4px 12px rgba(0,0,0,0.06)' }}
+                        >❯</button>
+                    </div>
+                </div>
+            </section>
+
+            {/* Connecting Global Capital Cards */}
+            <section className="py-20 bg-white" id="connecting-global">
+                <div className="container mx-auto px-4 max-w-6xl">
+                    <div className="text-center mb-14">
+                        <h2 className="text-3xl md:text-4xl font-bold text-[#1a1a1a] mb-4">
+                            Connecting Global Capital
+                        </h2>
+                        <p className="text-slate-600 max-w-2xl mx-auto text-sm md:text-base leading-relaxed">
+                            Investate India is structurally designed to connect international investors, Non-Resident Indians (NRIs), and global wealth managers with the high-yield growth potential of Indian markets.
+                        </p>
+                    </div>
+                    <div className="flex flex-wrap justify-center gap-6">
+                        {serviceProviderBenefits.map((benefit, index) => (
+                            <div key={index} className="infra-marquee-card bg-white" style={{ position: 'static', margin: '0' }}>
+                                <div className="infra-card-icon-wrapper">
+                                    {index === 0 && <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3.055 11H5a2 2 0 012 2v1a2 2 0 002 2 2 2 0 012 2v2.945M8 3.935V5.5A2.5 2.5 0 0010.5 8h.5a2 2 0 012 2 2 2 0 104 0 2 2 0 012-2h1.064M15 20.488V18a2 2 0 012-2h3.064" /></svg>}
+                                    {index === 1 && <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" /></svg>}
+                                    {index === 2 && <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 13.255A23.931 23.931 0 0112 15c-3.183 0-6.22-.62-9-1.745M16 6V4a2 2 0 00-2-2h-4a2 2 0 00-2 2v2m4 6h.01M5 20h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" /></svg>}
+                                    {index === 3 && <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" /></svg>}
+                                </div>
+                                <h4 className="infra-card-title">{benefit.title}</h4>
+                                <p className="infra-card-desc">{benefit.desc}</p>
+                            </div>
+                        ))}
+                    </div>
+                </div>
+            </section>
+
+>>>>>>> 5627b10a2105b23a802352e1ccd8df8ffd4e1612
             {/* CONTACT SECTION */}
             <section
                 className="fullscreen-section py-20 text-white text-center"

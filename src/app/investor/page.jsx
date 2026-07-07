@@ -7,7 +7,10 @@ import Header from '@/components/Header';
 import Footer from '@/components/Footer';
 import AwardsSection from '@/components/AwardsSection';
 import TestimonialsSection from '@/components/TestimonialsSection';
+<<<<<<< HEAD
 import DeepakProfileSection from '@/components/DeepakProfileSection';
+=======
+>>>>>>> 5627b10a2105b23a802352e1ccd8df8ffd4e1612
 import dynamic from 'next/dynamic';
 import Image from 'next/image';
 import AdBanner from '@/components/AdBanner';
@@ -19,6 +22,7 @@ import { Loader2, Search, Users, FileText, Gavel, ShieldCheck, Globe } from 'luc
 
 const heroSlides = [
     {
+<<<<<<< HEAD
         image: '/images/image copy 14.png',
         tag: 'India\'s Most Trusted NRI Platform',
         title: 'You Built Your Future Abroad.',
@@ -31,13 +35,31 @@ const heroSlides = [
         title: 'Beyond Investment —',
         highlight: 'Complete NRI Asset Protection',
         subtitle: 'From real estate investment to legal support, rental management, tax planning, succession advisory, and structured exit plans — all in one trusted ecosystem.'
+=======
+        image: 'https://images.unsplash.com/photo-1613490493576-7fde63acd811?q=80&w=2071&auto=format&fit=crop',
+        tag: 'India\'s Most Trusted NRI Platform',
+        title: 'You Built Your Future Abroad.',
+        highlight: 'We Protect & Grow Your Wealth in India.',
+        subtitle: "We don't just help NRIs invest in premium assets like properties, flats, or builder projects. We protect, manage, and grow their wealth with dedicated resale and exit plans whenever they want to exit."
+    },
+    {
+        image: '/images/image copy 2.png',
+        tag: 'End-to-End NRI Wealth Management',
+        title: 'Beyond Investment —',
+        highlight: 'Complete NRI Asset Protection',
+        subtitle: 'From real estate investment and secondary market reselling to legal support, rental management, tax planning, and flexible exit plans — all in one trusted ecosystem.'
+>>>>>>> 5627b10a2105b23a802352e1ccd8df8ffd4e1612
     },
     {
         image: 'https://images.unsplash.com/photo-1600585154340-be6161a56a0c?q=80&w=2070&auto=format&fit=crop',
         tag: 'Institutional Standards',
         title: 'Bridging Global NRIs to',
         highlight: 'Verified Indian Real Estate',
+<<<<<<< HEAD
         subtitle: 'Institutional-grade transparency, verified developer credentials, and professional on-ground representation for the global Indian diaspora.'
+=======
+        subtitle: 'Institutional-grade transparency, verified developer credentials, and structured exit/resale options with professional on-ground representation.'
+>>>>>>> 5627b10a2105b23a802352e1ccd8df8ffd4e1612
     }
 ];
 
@@ -45,7 +67,11 @@ const contentDataForSection2 = [
     {
         id: "01",
         title: "Investment Opportunities",
+<<<<<<< HEAD
         text: "Curated, pre-verified real estate projects with standardized RERA disclosures and performance tracking — so you invest based on merit, not marketing. We also offer rental income management, ROI tracking, resale support, and structured exit planning for every stage of your investment.",
+=======
+        text: "Curated, pre-verified real estate projects with standardized RERA disclosures and performance tracking — so you invest based on merit, not marketing.",
+>>>>>>> 5627b10a2105b23a802352e1ccd8df8ffd4e1612
         image: "/images/media1.png"
     },
     {
@@ -162,6 +188,7 @@ const teamMembers = [
 
 const faqsList = [
     {
+<<<<<<< HEAD
         question: "How do I invest?",
         answer: "Browse verified projects, review details, and submit your investment interest."
     },
@@ -180,6 +207,22 @@ const faqsList = [
     {
         question: "What investment types are available?",
         answer: "Eligible equity-based real estate opportunities."
+=======
+        question: "Is Investate India a broker?",
+        answer: "No. We are a discovery and facilitation platform. We provide structured information and verify builder credentials to ensure transparent connections."
+    },
+    {
+        question: "Is there a registration fee?",
+        answer: "Registration is currently free for NRI investors. We prioritize transparency and will inform you well in advance of any future service fees."
+    },
+    {
+        question: "How do you verify builders?",
+        answer: "We assess RERA compliance, financial health, past delivery records, and market reputation through a rigorous multi-step process."
+    },
+    {
+        question: "Which cities do you cover?",
+        answer: "We focus on major metros: Bangalore, Mumbai, Delhi-NCR, and Hyderabad, with plans to expand to quality Tier-2 developments."
+>>>>>>> 5627b10a2105b23a802352e1ccd8df8ffd4e1612
     }
 ];
 
@@ -230,9 +273,14 @@ export default function Index() {
 
     useEffect(() => {
         if (isHeroPaused) return;
+<<<<<<< HEAD
         const totalSlides = heroSlides.length + 1;
         const timer = setInterval(() => {
             setHeroIndex((prev) => (prev + 1) % totalSlides);
+=======
+        const timer = setInterval(() => {
+            setHeroIndex((prev) => (prev + 1) % heroSlides.length);
+>>>>>>> 5627b10a2105b23a802352e1ccd8df8ffd4e1612
         }, 8000);
         return () => clearInterval(timer);
     }, [isHeroPaused]);
@@ -258,8 +306,11 @@ export default function Index() {
     };
 
     const activeStepData = investorSteps[activeStepIndex];
+<<<<<<< HEAD
     const totalSlides = heroSlides.length + 1;
     const isAdSlide = heroIndex === heroSlides.length;
+=======
+>>>>>>> 5627b10a2105b23a802352e1ccd8df8ffd4e1612
 
     const handleAuthClick = (action, role) => {
         if (action === 'login') {
@@ -279,16 +330,25 @@ export default function Index() {
                 onMouseLeave={() => setIsHeroPaused(false)}
             >
                 <AnimatePresence mode="sync">
+<<<<<<< HEAD
                     {isAdSlide ? (
                         <motion.img
                             key="ad-bg"
                             src="https://images.unsplash.com/photo-1560518883-ce09059eeffa?w=1200&q=80"
                             alt="Advertisement background"
+=======
+                    <picture key={heroIndex} className="absolute inset-0 w-full h-full z-0">
+                        <source media="(max-width: 768px)" srcSet={heroSlides[heroIndex].image.replace('.png', '_mobile.jpg')} />
+                        <motion.img
+                            src={heroSlides[heroIndex].image}
+                            alt="Hero background"
+>>>>>>> 5627b10a2105b23a802352e1ccd8df8ffd4e1612
                             className="absolute inset-0 w-full h-full object-cover z-0 hero-split-image"
                             initial={{ opacity: 0 }}
                             animate={{ opacity: 1 }}
                             exit={{ opacity: 0 }}
                             transition={{ duration: 1.2, ease: 'easeInOut' }}
+<<<<<<< HEAD
                         />
                     ) : (
                         <picture key={heroIndex} className="absolute inset-0 w-full h-full z-0">
@@ -306,16 +366,30 @@ export default function Index() {
                             />
                         </picture>
                     )}
+=======
+                            loading="eager"
+                            fetchPriority="high"
+                        />
+                    </picture>
+>>>>>>> 5627b10a2105b23a802352e1ccd8df8ffd4e1612
                 </AnimatePresence>
                 <div className="absolute inset-0 z-[1] hero-split-overlay" />
 
                 {/* Prev / Next buttons */}
                 <button
+<<<<<<< HEAD
                     onClick={() => setHeroIndex((prev) => (prev - 1 + totalSlides) % totalSlides)}
                     aria-label="Previous image"
                     style={{
                         position: 'absolute', left: '1.25rem', top: '50%', transform: 'translateY(-50%)',
                         zIndex: 20, background: 'rgba(255,255,255,0.15)', backdropFilter: 'blur(6px)',
+=======
+                    onClick={() => setHeroIndex((prev) => (prev - 1 + heroSlides.length) % heroSlides.length)}
+                    aria-label="Previous image"
+                    style={{
+                        position: 'absolute', left: '1.25rem', top: '50%', transform: 'translateY(-50%)',
+                        zIndex: 10, background: 'rgba(255,255,255,0.15)', backdropFilter: 'blur(6px)',
+>>>>>>> 5627b10a2105b23a802352e1ccd8df8ffd4e1612
                         border: '1px solid rgba(255,255,255,0.3)', borderRadius: '50%',
                         width: '2.75rem', height: '2.75rem', display: 'flex', alignItems: 'center',
                         justifyContent: 'center', cursor: 'pointer', color: '#fff', fontSize: '1.1rem',
@@ -323,11 +397,19 @@ export default function Index() {
                     }}
                 >❮</button>
                 <button
+<<<<<<< HEAD
                     onClick={() => setHeroIndex((prev) => (prev + 1) % totalSlides)}
                     aria-label="Next image"
                     style={{
                         position: 'absolute', right: '1.25rem', top: '50%', transform: 'translateY(-50%)',
                         zIndex: 20, background: 'rgba(255,255,255,0.15)', backdropFilter: 'blur(6px)',
+=======
+                    onClick={() => setHeroIndex((prev) => (prev + 1) % heroSlides.length)}
+                    aria-label="Next image"
+                    style={{
+                        position: 'absolute', right: '1.25rem', top: '50%', transform: 'translateY(-50%)',
+                        zIndex: 10, background: 'rgba(255,255,255,0.15)', backdropFilter: 'blur(6px)',
+>>>>>>> 5627b10a2105b23a802352e1ccd8df8ffd4e1612
                         border: '1px solid rgba(255,255,255,0.3)', borderRadius: '50%',
                         width: '2.75rem', height: '2.75rem', display: 'flex', alignItems: 'center',
                         justifyContent: 'center', cursor: 'pointer', color: '#fff', fontSize: '1.1rem',
@@ -336,8 +418,13 @@ export default function Index() {
                 >❯</button>
 
                 {/* Dot indicators */}
+<<<<<<< HEAD
                 <div style={{ position: 'absolute', bottom: '1.5rem', left: '50%', transform: 'translateX(-50%)', zIndex: 20, display: 'flex', gap: '0.5rem' }}>
                     {Array.from({ length: totalSlides }).map((_, i) => (
+=======
+                <div style={{ position: 'absolute', bottom: '1.5rem', left: '50%', transform: 'translateX(-50%)', zIndex: 10, display: 'flex', gap: '0.5rem' }}>
+                    {heroSlides.map((_, i) => (
+>>>>>>> 5627b10a2105b23a802352e1ccd8df8ffd4e1612
                         <button
                             key={i}
                             onClick={() => setHeroIndex(i)}
@@ -354,6 +441,7 @@ export default function Index() {
                     ))}
                 </div>
 
+<<<<<<< HEAD
                 <AnimatePresence mode="wait">
                     {isAdSlide ? (
                         <motion.div
@@ -385,6 +473,18 @@ export default function Index() {
                             transition={{ duration: 0.6, ease: 'easeOut' }}
                         >
                             <div className="hero-content">
+=======
+                <div className="container relative z-[2]">
+                    <div className="hero-content">
+                        <AnimatePresence mode="wait">
+                            <motion.div
+                                key={heroIndex}
+                                initial={{ opacity: 0, y: 20 }}
+                                animate={{ opacity: 1, y: 0 }}
+                                exit={{ opacity: 0, y: -20 }}
+                                transition={{ duration: 0.6, ease: "easeOut" }}
+                            >
+>>>>>>> 5627b10a2105b23a802352e1ccd8df8ffd4e1612
                                 <span className="hero-tag">{heroSlides[heroIndex].tag}</span>
                                 <h1 className="hero-headline">
                                     {heroSlides[heroIndex].title} <br />
@@ -393,6 +493,7 @@ export default function Index() {
                                 <p className="hero-subheadline">
                                     {heroSlides[heroIndex].subtitle}
                                 </p>
+<<<<<<< HEAD
                                 <div className="hero-cta-group">
                                     <button onClick={() => handleAuthClick('register', 'investor')} className="btn btn-primary">
                                         Explore Opportunities
@@ -406,6 +507,20 @@ export default function Index() {
 
 
 
+=======
+                            </motion.div>
+                        </AnimatePresence>
+                        <div className="hero-cta-group">
+                            <button onClick={() => handleAuthClick('register', 'investor')} className="btn btn-primary">
+                                Explore Opportunities
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+
+>>>>>>> 5627b10a2105b23a802352e1ccd8df8ffd4e1612
             <section className="fullscreen-section section-light" id="about">
                 <div className="container">
                     <div className="section-heading">
@@ -658,6 +773,11 @@ export default function Index() {
                 </div>
             </section>
 
+<<<<<<< HEAD
+=======
+            <TestimonialsSection />
+
+>>>>>>> 5627b10a2105b23a802352e1ccd8df8ffd4e1612
             <section
                 className="fullscreen-section section-light relative overflow-hidden"
                 id="trust"
@@ -695,6 +815,7 @@ export default function Index() {
                 </div>
             </section>
 
+<<<<<<< HEAD
             <section className="team-section-integrated section-theme py-16" id="team">
                 <div className="container mx-auto px-4 max-w-6xl">
                     <div className="text-center mb-12">
@@ -707,6 +828,24 @@ export default function Index() {
                         </p>
                     </div>
                     <div className="flex flex-wrap justify-center gap-8">
+=======
+            <section className="team-section-integrated section-theme" id="team">
+                <div className="team-integrated-wrapper">
+                    <div className="team-text-banner">
+                        <div className="team-text-content-inner">
+                            <h2 className="team-main-title">Meet the Team Behind <span className="text-highlight">Your Trust</span></h2>
+                            <p className="team-main-desc">
+                                <strong>Built on transparency. Driven by experience.</strong><br />
+                                Investate India is led by Deepak Kavadia, Pankaj Gupta, and Atish Agarwal.
+                            </p>
+                            {/* <div className="team-nav-arrows-inline">
+                                <button className="team-nav-btn prev"><span>❮</span></button>
+                                <button className="team-nav-btn next"><span>❯</span></button>
+                            </div> */}
+                        </div>
+                    </div>
+                    <div className="team-cards-scroll-area" id="team-cards-row">
+>>>>>>> 5627b10a2105b23a802352e1ccd8df8ffd4e1612
                         {teamMembers.map((member, index) => (
                             <div className="team-card-premium" key={index}>
                                 <div className="team-card-image">
@@ -719,6 +858,33 @@ export default function Index() {
                             </div>
                         ))}
                     </div>
+<<<<<<< HEAD
+=======
+
+                    {/* Team navigation arrows for mobile */}
+                    <div className="flex justify-center gap-4 mt-6 md:hidden">
+                        <button
+                            onClick={() => document.getElementById('team-cards-row').scrollBy({ left: -320, behavior: 'smooth' })}
+                            className="nav-arrow-btn"
+                            style={{
+                                width: '3rem', height: '3rem', borderRadius: '50%',
+                                border: '1.5px solid rgba(0,0,0,0.1)', background: '#fff',
+                                color: '#333', fontSize: '1.1rem', display: 'flex', alignItems: 'center', justifyContent: 'center',
+                                boxShadow: '0 4px 12px rgba(0,0,0,0.06)'
+                            }}
+                        >❮</button>
+                        <button
+                            onClick={() => document.getElementById('team-cards-row').scrollBy({ left: 320, behavior: 'smooth' })}
+                            className="nav-arrow-btn"
+                            style={{
+                                width: '3rem', height: '3rem', borderRadius: '50%',
+                                border: '1.5px solid rgba(0,0,0,0.1)', background: '#fff',
+                                color: '#333', fontSize: '1.1rem', display: 'flex', alignItems: 'center', justifyContent: 'center',
+                                boxShadow: '0 4px 12px rgba(0,0,0,0.06)'
+                            }}
+                        >❯</button>
+                    </div>
+>>>>>>> 5627b10a2105b23a802352e1ccd8df8ffd4e1612
                 </div>
             </section>
 
@@ -811,8 +977,11 @@ export default function Index() {
                 </div>
             </section>
 
+<<<<<<< HEAD
             <DeepakProfileSection pageType="investor" />
 
+=======
+>>>>>>> 5627b10a2105b23a802352e1ccd8df8ffd4e1612
             <section className="fullscreen-section py-20 text-white text-center" id="contact" style={{ backgroundColor: '#1a1a1a' }}>
                 <div className="container text-center">
                     <div className="cta-minimal-badge mb-6" style={{ borderColor: 'rgba(255,255,255,0.2)' }}>

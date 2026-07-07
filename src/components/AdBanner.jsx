@@ -1,11 +1,18 @@
 "use client";
 
 import React, { useState, useEffect } from 'react';
+<<<<<<< HEAD
 import { createPortal } from 'react-dom';
 import { fetchActiveAd } from '@/api';
 import { useAuth } from '@/hooks/AuthContext';
 import { getSocket, joinZone, leaveZone } from '@/utils/socket';
 import { ExternalLink, Loader2, TrendingUp, CheckCircle, Building2, MapPin, PlusCircle, X, User, HardHat, Wrench, ChevronRight } from 'lucide-react';
+=======
+import { fetchActiveAd, fetchMyBookings } from '@/api';
+import { useAuth } from '@/hooks/AuthContext';
+import { getSocket, joinZone, leaveZone } from '@/utils/socket';
+import { ExternalLink, Loader2, TrendingUp, CheckCircle, Building2, MapPin, PlusCircle } from 'lucide-react';
+>>>>>>> 5627b10a2105b23a802352e1ccd8df8ffd4e1612
 import { Button } from '@/components/ui/button';
 
 // Zone pixel dimensions from the API spec
@@ -27,6 +34,7 @@ const ZONE_CONFIG = {
  *             "spotlight" → large prominent banner section below the hero,
  *                           styled like the home page's zone5 placement
  */
+<<<<<<< HEAD
 export default function AdBanner({ zoneId, variant = 'default', forceRole }) {
   const [ad, setAd] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -35,6 +43,12 @@ export default function AdBanner({ zoneId, variant = 'default', forceRole }) {
   const { user } = useAuth();
 
   useEffect(() => { setMounted(true); }, []);
+=======
+export default function AdBanner({ zoneId, variant = 'default' }) {
+  const [ad, setAd]           = useState(null);
+  const [loading, setLoading] = useState(true);
+  const { user }              = useAuth();
+>>>>>>> 5627b10a2105b23a802352e1ccd8df8ffd4e1612
 
   useEffect(() => {
     let active = true;
@@ -50,7 +64,11 @@ export default function AdBanner({ zoneId, variant = 'default', forceRole }) {
         if (active) setLoading(false);
       }
     };
+<<<<<<< HEAD
 
+=======
+    
+>>>>>>> 5627b10a2105b23a802352e1ccd8df8ffd4e1612
     loadAd();
     joinZone(zoneId);
 
@@ -64,7 +82,11 @@ export default function AdBanner({ zoneId, variant = 'default', forceRole }) {
 
     socket.on('activeAdUpdated', handleAdUpdate);
 
+<<<<<<< HEAD
     return () => {
+=======
+    return () => { 
+>>>>>>> 5627b10a2105b23a802352e1ccd8df8ffd4e1612
       active = false;
       leaveZone(zoneId);
       socket.off('activeAdUpdated', handleAdUpdate);
@@ -73,6 +95,7 @@ export default function AdBanner({ zoneId, variant = 'default', forceRole }) {
 
   const zone = ZONE_CONFIG[zoneId] || { width: 728, height: 90 };
 
+<<<<<<< HEAD
   // Role-specific advertisement URLs
   const AD_PATHS = {
     admin: '/admin/advertisements',
@@ -260,6 +283,15 @@ export default function AdBanner({ zoneId, variant = 'default', forceRole }) {
     }
 
     return defaultBannerInner;
+=======
+  // Determine booking url based on role
+  const getBookingUrl = () => {
+    if (!user) return '/builder/advertisements';
+    if (user.role === 'admin') return '/admin/advertisements';
+    if (user.role === 'investor') return '/investor/advertisements';
+    if (user.role === 'serviceProvider') return '/service-provider/advertisements';
+    return '/builder/advertisements';
+>>>>>>> 5627b10a2105b23a802352e1ccd8df8ffd4e1612
   };
 
   const handleAdClick = (targetUrl) => {
@@ -304,7 +336,10 @@ export default function AdBanner({ zoneId, variant = 'default', forceRole }) {
 
     const { imageUrl, targetUrl, text } = ad.adContent;
     return (
+<<<<<<< HEAD
       <>
+=======
+>>>>>>> 5627b10a2105b23a802352e1ccd8df8ffd4e1612
       <div
         className="group bg-white rounded-[2rem] overflow-hidden shadow-sm hover:shadow-xl transition-all duration-300 border border-gray-200 flex flex-col h-full cursor-pointer"
         onClick={() => handleAdClick(targetUrl)}
@@ -330,7 +365,11 @@ export default function AdBanner({ zoneId, variant = 'default', forceRole }) {
               Sponsored
             </span>
           </div>
+<<<<<<< HEAD
 
+=======
+          
+>>>>>>> 5627b10a2105b23a802352e1ccd8df8ffd4e1612
           {/* Bottom Overlay - Yield slot */}
           <div className="absolute bottom-4 left-4 right-4 text-white">
             <span className="text-xs font-bold bg-[#10B981] text-white inline-flex items-center px-2.5 py-1 rounded-md mb-1 shadow-sm">
@@ -371,8 +410,11 @@ export default function AdBanner({ zoneId, variant = 'default', forceRole }) {
           </Button>
         </div>
       </div>
+<<<<<<< HEAD
       {portal}
     </>
+=======
+>>>>>>> 5627b10a2105b23a802352e1ccd8df8ffd4e1612
     );
   }
 
@@ -381,8 +423,12 @@ export default function AdBanner({ zoneId, variant = 'default', forceRole }) {
      matches the home page hero section feel
   ───────────────────────────────────────── */
   if (variant === 'spotlight') {
+<<<<<<< HEAD
     const spotlightFallback = (
       <>
+=======
+    const SpotlightFallback = () => (
+>>>>>>> 5627b10a2105b23a802352e1ccd8df8ffd4e1612
       <div
         className="relative w-full max-w-5xl mx-auto rounded-2xl overflow-hidden shadow-lg"
         style={{ height: 340 }}
@@ -399,6 +445,7 @@ export default function AdBanner({ zoneId, variant = 'default', forceRole }) {
         <div className="absolute top-4 right-4 flex items-center gap-1.5 bg-black/55 backdrop-blur-sm text-white text-[10px] font-bold tracking-widest px-3 py-1.5 rounded-full border border-white/20 uppercase pointer-events-none">
           SPONSORED <ExternalLink className="w-2.5 h-2.5 opacity-70" />
         </div>
+<<<<<<< HEAD
         <div className="absolute inset-y-0 left-0 flex flex-col justify-center px-10 md:px-14 max-w-xl z-10">
           <h2 className="text-white font-extrabold text-3xl md:text-4xl leading-tight mb-5 drop-shadow-xl">
             Advertise your project here!
@@ -415,6 +462,26 @@ export default function AdBanner({ zoneId, variant = 'default', forceRole }) {
     const { imageUrl, targetUrl, text } = ad.adContent;
     return (
       <>
+=======
+        <div className="absolute inset-y-0 left-0 flex flex-col justify-center px-10 md:px-14 max-w-xl">
+          <h2 className="text-white font-extrabold text-3xl md:text-4xl leading-tight mb-5 drop-shadow-xl">
+            Invest in premium real estate today!
+          </h2>
+          <a
+            href="/properties"
+            className="inline-flex items-center gap-2 bg-orange-500 hover:bg-orange-600 text-white font-bold text-sm px-6 py-3 rounded-lg shadow-lg transition-all duration-200 w-fit"
+          >
+            Learn More <ExternalLink className="w-4 h-4" />
+          </a>
+        </div>
+      </div>
+    );
+    if (loading) return <SpotlightFallback />;
+    if (!ad?.adContent || (!ad.adContent.imageUrl && !ad.adContent.text)) return <SpotlightFallback />;
+
+    const { imageUrl, targetUrl, text } = ad.adContent;
+    return (
+>>>>>>> 5627b10a2105b23a802352e1ccd8df8ffd4e1612
       <div
         className="relative w-full max-w-6xl mx-auto rounded-3xl overflow-hidden cursor-pointer group shadow-lg hover:shadow-xl transition-shadow duration-300"
         style={{ height: 380 }}
@@ -451,7 +518,11 @@ export default function AdBanner({ zoneId, variant = 'default', forceRole }) {
               onClick={(e) => e.stopPropagation()}
               className="mt-4 self-start inline-flex items-center gap-2 bg-orange-500 hover:bg-orange-600 text-white text-sm font-bold px-5 py-2 rounded-lg transition-colors shadow-md"
             >
+<<<<<<< HEAD
               View More <ExternalLink className="w-4 h-4" />
+=======
+              Learn More <ExternalLink className="w-4 h-4" />
+>>>>>>> 5627b10a2105b23a802352e1ccd8df8ffd4e1612
             </a>
           )}
         </div>
@@ -462,8 +533,11 @@ export default function AdBanner({ zoneId, variant = 'default', forceRole }) {
           {targetUrl && <ExternalLink className="w-2.5 h-2.5 opacity-60" />}
         </div>
       </div>
+<<<<<<< HEAD
       {portal}
     </>
+=======
+>>>>>>> 5627b10a2105b23a802352e1ccd8df8ffd4e1612
     );
   }
 
@@ -483,7 +557,10 @@ export default function AdBanner({ zoneId, variant = 'default', forceRole }) {
 
     const { imageUrl, targetUrl, text } = ad.adContent;
     return (
+<<<<<<< HEAD
       <>
+=======
+>>>>>>> 5627b10a2105b23a802352e1ccd8df8ffd4e1612
       <div
         className="w-full relative group rounded-2xl overflow-hidden cursor-pointer shadow-lg hover:shadow-xl transition-all duration-300 border border-white/10"
         style={{ height: zone.height, minHeight: 80 }}
@@ -515,12 +592,16 @@ export default function AdBanner({ zoneId, variant = 'default', forceRole }) {
           </div>
         )}
       </div>
+<<<<<<< HEAD
       {portal}
     </>
+=======
+>>>>>>> 5627b10a2105b23a802352e1ccd8df8ffd4e1612
     );
   }
 
   /* ─────────────────────────────────────────
+<<<<<<< HEAD
      CTA-ONLY VARIANT
   ───────────────────────────────────────── */
   if (variant === 'cta-only') {
@@ -552,6 +633,12 @@ export default function AdBanner({ zoneId, variant = 'default', forceRole }) {
   ───────────────────────────────────────── */
   /* Static fallback banner — shown when loading OR when no API ad is available */
   const staticFallbackBanner = (
+=======
+     DEFAULT VARIANT — floating card
+  ───────────────────────────────────────── */
+  /* Static fallback banner — shown when loading OR when no API ad is available */
+  const StaticFallbackBanner = () => (
+>>>>>>> 5627b10a2105b23a802352e1ccd8df8ffd4e1612
     <div
       className="relative w-full mx-auto rounded-2xl overflow-hidden shadow-md"
       style={{ maxWidth: '100%', height: 180 }}
@@ -572,23 +659,42 @@ export default function AdBanner({ zoneId, variant = 'default', forceRole }) {
         Advertise Here
       </div>
       {/* Text + CTA */}
+<<<<<<< HEAD
       <div className="absolute inset-0 flex flex-col justify-center px-8 max-w-lg z-10">
         <h2 className="text-white font-extrabold text-2xl md:text-3xl leading-tight mb-4 drop-shadow-lg">
           Showcase your projects here
         </h2>
         {renderViewMoreButton("inline-flex items-center gap-2 bg-orange-500 hover:bg-orange-600 active:bg-orange-700 text-white font-bold text-sm px-5 py-2.5 rounded-lg shadow-lg transition-all duration-200 w-fit", PlusCircle)}
+=======
+      <div className="absolute inset-0 flex flex-col justify-center px-8 max-w-lg">
+        <h2 className="text-white font-extrabold text-2xl md:text-3xl leading-tight mb-4 drop-shadow-lg">
+          Showcase your projects here
+        </h2>
+        <a
+          href={getBookingUrl()}
+          className="inline-flex items-center gap-2 bg-orange-500 hover:bg-orange-600 active:bg-orange-700 text-white font-bold text-sm px-5 py-2.5 rounded-lg shadow-lg transition-all duration-200 w-fit"
+        >
+          Book this Space <PlusCircle className="w-4 h-4" />
+        </a>
+>>>>>>> 5627b10a2105b23a802352e1ccd8df8ffd4e1612
       </div>
     </div>
   );
 
+<<<<<<< HEAD
   if (loading) return staticFallbackBanner;
   if (!ad?.adContent || (!ad.adContent.imageUrl && !ad.adContent.text)) return staticFallbackBanner;
+=======
+  if (loading) return <StaticFallbackBanner />;
+  if (!ad?.adContent || (!ad.adContent.imageUrl && !ad.adContent.text)) return <StaticFallbackBanner />;
+>>>>>>> 5627b10a2105b23a802352e1ccd8df8ffd4e1612
 
   const { imageUrl, targetUrl, text } = ad.adContent;
   // Padding-bottom trick for bulletproof aspect ratio
   const paddingBottom = `${((zone.height / zone.width) * 100).toFixed(4)}%`;
 
   return (
+<<<<<<< HEAD
     <>
       <div
         className="w-full mx-auto relative group rounded-2xl shadow-sm hover:shadow-md hover:scale-[1.005] active:scale-[0.998] transition-all duration-300 cursor-pointer select-none border border-slate-200/60 dark:border-slate-700/60"
@@ -620,5 +726,63 @@ export default function AdBanner({ zoneId, variant = 'default', forceRole }) {
       </div>
       {portal}
     </>
+=======
+    <div
+      className="w-full mx-auto relative group rounded-2xl shadow-sm hover:shadow-md hover:scale-[1.005] active:scale-[0.998] transition-all duration-300 cursor-pointer select-none border border-slate-200/60 dark:border-slate-700/60"
+      style={{ maxWidth: zone.width }}
+      onClick={() => targetUrl && window.open(targetUrl, '_blank', 'noopener,noreferrer')}
+      role={targetUrl ? 'link' : undefined}
+      aria-label={text || 'Sponsored advertisement'}
+    >
+      <div className="absolute top-2 right-2 z-20 flex items-center gap-1 bg-white/90 dark:bg-slate-900/90 backdrop-blur-sm px-2 py-0.5 rounded-full border border-slate-200/60 text-[9px] font-bold text-slate-500 uppercase tracking-widest pointer-events-none shadow-sm">
+        <span>Sponsored</span>
+        {targetUrl && <ExternalLink className="w-2.5 h-2.5 opacity-60 group-hover:opacity-100 transition-opacity" />}
+      </div>
+      {imageUrl ? (
+        <div className="relative w-full rounded-2xl overflow-hidden bg-slate-900" style={{ paddingBottom }}>
+          <img
+            src={imageUrl}
+            alt={text || 'Advertisement'}
+            className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
+          />
+          {text && (
+            <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/70 via-black/30 to-transparent px-4 py-3 text-white text-xs md:text-sm font-medium line-clamp-1 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+              {text}
+            </div>
+          )}
+        </div>
+      ) : (
+        <div
+          className={`w-full rounded-2xl flex flex-col items-center justify-center text-center gap-3 px-6 transition-colors ${
+            ad.type === 'default'
+              ? 'bg-gradient-to-r from-gray-100 to-gray-200 border-2 border-dashed border-gray-300 hover:border-orange-400 hover:bg-orange-50'
+              : 'bg-gradient-to-r from-[#0b264f] to-[#1a4b8c]'
+          }`}
+          style={{ height: zone.height, minHeight: 90 }}
+          onClick={(e) => {
+            if (ad.type === 'default') {
+              e.stopPropagation();
+              window.location.href = getBookingUrl();
+            }
+          }}
+        >
+          {ad.type === 'default' ? (
+            <>
+              <p className="text-sm md:text-base font-bold text-gray-700 leading-snug max-w-[85%] flex items-center gap-2">
+                <PlusCircle className="w-5 h-5 text-gray-400" /> Book this Ad Space
+              </p>
+              <span className="text-[10px] uppercase font-bold text-orange-600 tracking-wider flex items-center gap-1">
+                Boost your visibility today
+              </span>
+            </>
+          ) : (
+            <p className="text-sm md:text-base font-bold text-white leading-snug max-w-[85%] text-center line-clamp-2">
+              {text}
+            </p>
+          )}
+        </div>
+      )}
+    </div>
+>>>>>>> 5627b10a2105b23a802352e1ccd8df8ffd4e1612
   );
 }

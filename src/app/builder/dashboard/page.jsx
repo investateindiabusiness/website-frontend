@@ -9,13 +9,20 @@ import {
   Clock, ArrowRight, Inbox
 } from 'lucide-react';
 import { AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
+<<<<<<< HEAD
 
+=======
+import AdBanner from '@/components/AdBanner';
+>>>>>>> 5627b10a2105b23a802352e1ccd8df8ffd4e1612
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { useAuth } from '@/hooks/AuthContext';
 import { fetchBuilderProjects } from '@/api';
 import { toast } from '@/hooks/use-toast';
+<<<<<<< HEAD
 import AdBanner from '@/components/AdBanner';
+=======
+>>>>>>> 5627b10a2105b23a802352e1ccd8df8ffd4e1612
 
 export default function BuilderDashboard() {
   const router = useRouter();

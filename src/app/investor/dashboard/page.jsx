@@ -7,7 +7,11 @@ import {
   Building2, MapPin, Search, TrendingUp, Shield, CheckCircle,
   Loader2, MessageSquare, ArrowRight, Filter, Inbox
 } from 'lucide-react';
+<<<<<<< HEAD
 
+=======
+import AdBanner from '@/components/AdBanner';
+>>>>>>> 5627b10a2105b23a802352e1ccd8df8ffd4e1612
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { useAuth } from '@/hooks/AuthContext';
@@ -138,7 +142,16 @@ export default function InvestorDashboard() {
           </Button>
         </div>
 
+<<<<<<< HEAD
         {/* Ad Banner Removed as per requirements */}
+=======
+        {/* Ad Banner */}
+        <div className="flex justify-center">
+          <div className="w-full max-w-lg">
+            <AdBanner zoneId="zone2" variant="card" />
+          </div>
+        </div>
+>>>>>>> 5627b10a2105b23a802352e1ccd8df8ffd4e1612
 
         {/* Location Pills */}
         <div>

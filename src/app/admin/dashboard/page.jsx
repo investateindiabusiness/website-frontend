@@ -33,9 +33,15 @@ export default function AdminDashboard() {
     try {
       setLoading(true);
       const [projectsData, leadsData, inquiriesData] = await Promise.all([
+<<<<<<< HEAD
         fetchAllProjects({ page: 1, limit: 1000 }).catch(e => { console.error('Failed to fetch projects', e); return []; }),
         fetchAllLeads().catch(e => { console.error('Failed to fetch leads', e); return []; }),
         fetchAllInquiries().catch(e => { console.error('Failed to fetch inquiries', e); return []; })
+=======
+        fetchAllProjects({ page: 1, limit: 1000 }),
+        fetchAllLeads(),
+        fetchAllInquiries()
+>>>>>>> 5627b10a2105b23a802352e1ccd8df8ffd4e1612
       ]);
       setProjects(Array.isArray(projectsData?.data) ? projectsData.data : []);
       setLeads(Array.isArray(leadsData) ? leadsData : (leadsData?.data || []));

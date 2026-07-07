@@ -4,7 +4,10 @@ import React, { useState, useEffect, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import AwardsSection from "@/components/AwardsSection";
 import TestimonialsSection from "@/components/TestimonialsSection";
+<<<<<<< HEAD
 import DeepakProfileSection from "@/components/DeepakProfileSection";
+=======
+>>>>>>> 5627b10a2105b23a802352e1ccd8df8ffd4e1612
 import {
   Globe,
   Search,
@@ -12,6 +15,10 @@ import {
   Users,
   FileText,
   Activity,
+<<<<<<< HEAD
+=======
+  Megaphone,
+>>>>>>> 5627b10a2105b23a802352e1ccd8df8ffd4e1612
 } from "lucide-react";
 import { useRouter } from "next/navigation";
 import Header from "@/components/Header";
@@ -19,7 +26,11 @@ import Footer from "@/components/Footer";
 const heroSlides = [
   {
     image:
+<<<<<<< HEAD
       "/images/image (1).png",
+=======
+      "https://images.unsplash.com/photo-1504307651254-35680f356dfd?q=80&w=2066&auto=format&fit=crop",
+>>>>>>> 5627b10a2105b23a802352e1ccd8df8ffd4e1612
     tag: "Institutional Capital Access",
     title: "Direct Connectivity to",
     highlight: "High-Net-Worth NRI Capital",
@@ -28,7 +39,11 @@ const heroSlides = [
   },
   {
     image:
+<<<<<<< HEAD
       "/images/image copy 19.png",
+=======
+      "/images/builder.png",
+>>>>>>> 5627b10a2105b23a802352e1ccd8df8ffd4e1612
     tag: "Global Reach & Trust",
     title: "Elevate Your Brand with",
     highlight: "Verified Institutional Credibility",
@@ -114,8 +129,13 @@ const builderChallenges = [
   },
   {
     id: "05",
+<<<<<<< HEAD
     text: "Credibility Proof",
     desc: "Showcasing project credibility and RERA compliance effectively to a remote audience.",
+=======
+    text: "Pre-Sale & Offer Verification",
+    desc: "Verifying pre-sale and launch offers from developers seeking early-stage investors, cross-checking structures and credentials for credibility.",
+>>>>>>> 5627b10a2105b23a802352e1ccd8df8ffd4e1612
     icon: <FileText className="w-8 h-8 text-white" />,
   },
   {
@@ -124,6 +144,15 @@ const builderChallenges = [
     desc: "Managing long sales cycles due to cross-border documentation and payment logistics.",
     icon: <Activity className="w-8 h-8 text-white" />,
   },
+<<<<<<< HEAD
+=======
+  {
+    id: "07",
+    text: "Global Brand Scaling",
+    desc: "Promoting developers' brands globally, hosting their projects on our platform and marketing them to international hubs like USA and New York.",
+    icon: <Megaphone className="w-8 h-8 text-white" />,
+  },
+>>>>>>> 5627b10a2105b23a802352e1ccd8df8ffd4e1612
 ];
 
 const builderSteps = [
@@ -181,7 +210,11 @@ const trustFeatures = [
     title: "Global Reach",
     desc: "Gain immediate visibility among a concentrated pool of Non-Resident Indians seeking properties.",
     image:
+<<<<<<< HEAD
       "https://images.unsplash.com/photo-1569336415962-a4bd9f69cd83?q=80&w=1000&auto=format&fit=crop" /* Stylized global network with glowing golden/orange connections */,
+=======
+      "https://images.unsplash.com/photo-1521295121783-8a321d551ad2?q=80&w=1000&auto=format&fit=crop" /* World globe digital network connections */,
+>>>>>>> 5627b10a2105b23a802352e1ccd8df8ffd4e1612
     icon: (
       <svg
         viewBox="0 0 24 24"
@@ -198,6 +231,28 @@ const trustFeatures = [
     ),
   },
   {
+<<<<<<< HEAD
+=======
+    id: "brand",
+    title: "Global Brand Scaling",
+    desc: "Establish your presence internationally, presenting your projects directly to markets in the USA and New York.",
+    image:
+      "https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?q=80&w=1000&auto=format&fit=crop",
+    icon: (
+      <svg
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        strokeWidth="2"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      >
+        <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon>
+      </svg>
+    ),
+  },
+  {
+>>>>>>> 5627b10a2105b23a802352e1ccd8df8ffd4e1612
     id: "support",
     title: "Dedicated Coordinators",
     desc: "Our team handles the heavy lifting of communication and scheduling to save you time.",
@@ -221,6 +276,7 @@ const trustFeatures = [
   },
 ];
 
+<<<<<<< HEAD
 const faqsList = [
   {
     question: "How do I list a project?",
@@ -244,15 +300,20 @@ const faqsList = [
   }
 ];
 
+=======
+>>>>>>> 5627b10a2105b23a802352e1ccd8df8ffd4e1612
 export default function BuilderHome() {
   const router = useRouter();
   const [activeStepIndex, setActiveStepIndex] = useState(0);
   const [heroIndex, setHeroIndex] = useState(0);
+<<<<<<< HEAD
   const [activeFaq, setActiveFaq] = useState(null);
   const toggleFaq = (index) => {
     setActiveFaq(activeFaq === index ? null : index);
   };
   const [isHeroPaused, setIsHeroPaused] = useState(false);
+=======
+>>>>>>> 5627b10a2105b23a802352e1ccd8df8ffd4e1612
   const [hoveredBuilderCard, setHoveredBuilderCard] = useState(null);
   const [builderChallengePage, setBuilderChallengePage] = useState(0);
   const builderChallengesScrollRef = useRef(null);
@@ -284,12 +345,20 @@ export default function BuilderHome() {
   };
 
   useEffect(() => {
+<<<<<<< HEAD
     if (isHeroPaused) return;
     const timer = setInterval(() => {
       setHeroIndex((prev) => (prev + 1) % heroSlides.length);
     }, 8000);
     return () => clearInterval(timer);
   }, [isHeroPaused]);
+=======
+    const timer = setInterval(() => {
+      setHeroIndex((prev) => (prev + 1) % heroSlides.length);
+    }, 6000);
+    return () => clearInterval(timer);
+  }, []);
+>>>>>>> 5627b10a2105b23a802352e1ccd8df8ffd4e1612
 
   const activeStepData = builderSteps[activeStepIndex];
 
@@ -297,11 +366,16 @@ export default function BuilderHome() {
     <div className="theme-builder w-full bg-[var(--color-light-bg)] overflow-x-hidden">
       <Header transparent={true} />
 
+<<<<<<< HEAD
       <section
         className="fullscreen-section hero-section"
         onMouseEnter={() => setIsHeroPaused(true)}
         onMouseLeave={() => setIsHeroPaused(false)}
       >
+=======
+      {/* HERO SECTION */}
+      <section className="fullscreen-section hero-section">
+>>>>>>> 5627b10a2105b23a802352e1ccd8df8ffd4e1612
         <AnimatePresence mode="sync">
           <picture
             key={heroIndex}
@@ -673,7 +747,11 @@ export default function BuilderHome() {
                 }}
               >
                 <img
+<<<<<<< HEAD
                   src="/images/image copy 11.png"
+=======
+                  src="/images/overlap_optimized.jpg"
+>>>>>>> 5627b10a2105b23a802352e1ccd8df8ffd4e1612
                   alt="Modern Cityscape"
                   width={800}
                   height={600}
@@ -782,6 +860,11 @@ export default function BuilderHome() {
         </div>
       </section>
 
+<<<<<<< HEAD
+=======
+      <TestimonialsSection />
+
+>>>>>>> 5627b10a2105b23a802352e1ccd8df8ffd4e1612
       <section className="fullscreen-section section-theme" id="trust">
         <div className="container">
           <div className="trust-split-wrapper">
@@ -834,6 +917,7 @@ export default function BuilderHome() {
         </div>
       </section>
 
+<<<<<<< HEAD
       <section className="faq-premium-section section-theme" id="faq">
         <div className="container">
           <div className="faq-header-full text-center mb-16">
@@ -872,6 +956,8 @@ export default function BuilderHome() {
 
       <DeepakProfileSection pageType="builder" />
 
+=======
+>>>>>>> 5627b10a2105b23a802352e1ccd8df8ffd4e1612
       {/* CONTACT SECTION */}
       <section className="fullscreen-section py-20 text-white text-center" id="contact" style={{ backgroundColor: '#1a1a1a' }}>
         <div className="container text-center">

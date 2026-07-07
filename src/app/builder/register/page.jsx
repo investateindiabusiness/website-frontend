@@ -202,7 +202,10 @@ function BuilderRegisterContent() {
     try {
       setLoading(true);
       let response = await registerStep1({ email: authData.email, password: authData.password, role: 'builder' });
+<<<<<<< HEAD
 
+=======
+>>>>>>> 5627b10a2105b23a802352e1ccd8df8ffd4e1612
       setUserId(response.uid);
       setStep(2);
       toast({ title: "Account Created", description: "Please complete basic details." });
@@ -397,7 +400,11 @@ function BuilderRegisterContent() {
               </div>
               <div className="flex flex-col">
                 <p className="text-[10px] font-black text-white uppercase tracking-widest">Trusted Community</p>
+<<<<<<< HEAD
                 <p className="text-[9px] font-bold text-gray-400 uppercase tracking-tighter">Join 2,500+ Active Professionals</p>
+=======
+                <p className="text-[9px] font-bold text-gray-400 uppercase tracking-tighter">Join our growing network of builders</p>
+>>>>>>> 5627b10a2105b23a802352e1ccd8df8ffd4e1612
               </div>
             </div>
             <p className="text-[10px] text-gray-300 font-medium leading-tight max-w-[280px]">

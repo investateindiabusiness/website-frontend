@@ -112,6 +112,7 @@ function ServiceProviderLoginContent() {
         } catch (_) { /* non-blocking */ }
       }
 
+<<<<<<< HEAD
       // Check for post-login redirect (e.g. coming from ad "Book this Space" click)
       const pendingRedirect = sessionStorage.getItem('postLoginRedirect');
       if (pendingRedirect === '/advertisements') {
@@ -119,6 +120,8 @@ function ServiceProviderLoginContent() {
         return router.push('/service-provider/advertisements');
       }
 
+=======
+>>>>>>> 5627b10a2105b23a802352e1ccd8df8ffd4e1612
       router.push('/service-provider/dashboard');
 
     } catch (err) {
@@ -329,7 +332,11 @@ function ServiceProviderLoginContent() {
               </div>
               <div className="flex flex-col">
                 <p className="text-[10px] font-black text-white uppercase tracking-widest">Global Network</p>
+<<<<<<< HEAD
                 <p className="text-[9px] font-bold text-gray-400 uppercase tracking-tighter">Trusted by 2K+ Professionals</p>
+=======
+                <p className="text-[9px] font-bold text-gray-400 uppercase tracking-tighter">Part of a growing network of professionals</p>
+>>>>>>> 5627b10a2105b23a802352e1ccd8df8ffd4e1612
               </div>
             </div>
             <p className="text-[10px] text-gray-300 font-medium leading-tight max-w-[280px]">

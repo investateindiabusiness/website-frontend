@@ -1,4 +1,8 @@
+<<<<<<< HEAD
 "use client";
+=======
+﻿"use client";
+>>>>>>> 5627b10a2105b23a802352e1ccd8df8ffd4e1612
 
 import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
@@ -42,11 +46,19 @@ import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/com
 
 // Zone display metadata
 const ZONE_META = {
+<<<<<<< HEAD
   zone1: { name: 'Home Page Spotlight', cost: 63, campaignDuration: 1 },
   zone2: { name: 'Public Investor Page Spotlight', cost: 70, campaignDuration: 1 },
   zone3: { name: 'Project Search Results Inline Ad', cost: 70, campaignDuration: 1 },
   zone4: { name: 'Investor Project Details', cost: 70, campaignDuration: 1 },
   zone5: { name: 'Landing Page Hero Spotlight', cost: 70, campaignDuration: 1 },
+=======
+  zone1: { name: 'Builder Dashboard Leaderboard', cost: 63, campaignDuration: 7 },
+  zone2: { name: 'Investor Dashboard Leaderboard', cost: 70, campaignDuration: 7 },
+  zone3: { name: 'Project Search Results Inline Ad', cost: 70, campaignDuration: 7 },
+  zone4: { name: 'Investor Project Details', cost: 70, campaignDuration: 7 },
+  zone5: { name: 'Landing Page Hero Spotlight', cost: 70, campaignDuration: 7 },
+>>>>>>> 5627b10a2105b23a802352e1ccd8df8ffd4e1612
 };
 
 const stripePromise = loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY || 'pk_test_placeholder');
@@ -138,7 +150,11 @@ export default function ServiceProviderAdvertisements() {
         ...z,
         name: z.name || ZONE_META[z.id]?.name || z.id,
         cost: z.cost ?? ZONE_META[z.id]?.cost ?? '—',
+<<<<<<< HEAD
         campaignDuration: z.campaignDuration ?? ZONE_META[z.id]?.campaignDuration ?? 1,
+=======
+        campaignDuration: z.campaignDuration ?? ZONE_META[z.id]?.campaignDuration ?? '—',
+>>>>>>> 5627b10a2105b23a802352e1ccd8df8ffd4e1612
       }));
       setZones(enriched);
       if (enriched.length > 0) {
@@ -206,7 +222,11 @@ export default function ServiceProviderAdvertisements() {
     if (dateString < currentDate) return null;
 
     if (selectedZone) {
+<<<<<<< HEAD
       const duration = selectedZone.campaignDuration || 1;
+=======
+      const duration = selectedZone.campaignDuration || 7;
+>>>>>>> 5627b10a2105b23a802352e1ccd8df8ffd4e1612
       const start = new Date(dateString);
       const end = new Date(start);
       end.setDate(end.getDate() + duration - 1);
@@ -594,7 +614,11 @@ export default function ServiceProviderAdvertisements() {
                             {zone.name}
                           </span>
                           <span className="text-xs font-semibold text-orange-500">
+<<<<<<< HEAD
                             ${zone.cost} / day
+=======
+                            ${zone.cost} / {zone.campaignDuration} days
+>>>>>>> 5627b10a2105b23a802352e1ccd8df8ffd4e1612
                           </span>
                         </div>
                       </button>
@@ -617,7 +641,11 @@ export default function ServiceProviderAdvertisements() {
                       </div>
                       <div className="space-y-1">
                         <span className="text-[10px] text-slate-400 uppercase font-semibold flex items-center"><Clock className="w-3.5 h-3.5 mr-0.5 text-blue-600" /> Duration</span>
+<<<<<<< HEAD
                         <p className="text-base font-bold text-slate-800">Per Day</p>
+=======
+                        <p className="text-base font-bold text-slate-800">{selectedZone.campaignDuration} Days</p>
+>>>>>>> 5627b10a2105b23a802352e1ccd8df8ffd4e1612
                       </div>
                     </div>
 
