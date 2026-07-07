@@ -202,6 +202,7 @@ function BuilderRegisterContent() {
     try {
       setLoading(true);
       let response = await registerStep1({ email: authData.email, password: authData.password, role: 'builder' });
+
       setUserId(response.uid);
       setStep(2);
       toast({ title: "Account Created", description: "Please complete basic details." });

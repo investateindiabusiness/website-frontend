@@ -108,6 +108,17 @@ const LoginDialog = ({ isOpen, onOpenChange, onSwitchToRegister, initialData = {
         } catch (_) { /* non-blocking */ }
       }
 
+      // Check if user came from an ad "Book this Space" click
+      const pendingRedirect = sessionStorage.getItem('postLoginRedirect');
+      if (pendingRedirect === '/advertisements') {
+        sessionStorage.removeItem('postLoginRedirect');
+        const role = userData.role;
+        if (role === 'admin') return router.push('/admin/advertisements');
+        if (role === 'investor') return router.push('/investor/advertisements');
+        if (role === 'serviceProvider') return router.push('/service-provider/advertisements');
+        return router.push('/builder/advertisements');
+      }
+
       if (userData.role === 'admin') router.push('/admin/dashboard');
       else if (userData.role === 'builder') router.push('/builder/dashboard');
       else if (userData.role === 'serviceProvider') router.push('/service-provider/dashboard');

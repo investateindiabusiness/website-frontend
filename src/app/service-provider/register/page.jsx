@@ -196,6 +196,7 @@ function ServiceProviderRegisterContent() {
     try {
       setLoading(true);
       const response = await registerStep1({ email: authData.email, password: authData.password, role: 'serviceProvider' });
+
       setUserId(response.uid);
       setStep(2);
       toast({ title: "Account Created", description: "Please complete profile registration details." });

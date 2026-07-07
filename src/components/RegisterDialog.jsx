@@ -248,6 +248,7 @@ const RegisterDialog = ({ isOpen, onOpenChange, onLoginClick, initialData = {} }
     try {
       setLoading(true);
       let response = await registerStep1({ email: authData.email, password: authData.password, role: userType });
+
       setUserId(response.uid); setStep(2);
       toast({ title: "Account Created", description: "Please complete Form 1 details." });
     } catch (err) {

@@ -41,8 +41,8 @@ import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/com
 
 // Zone display metadata
 const ZONE_META = {
-  zone1: { name: 'Builder Dashboard Leaderboard', cost: 63, campaignDuration: 7 },
-  zone2: { name: 'Investor Dashboard Leaderboard', cost: 70, campaignDuration: 7 },
+  zone1: { name: 'Home Page Spotlight', cost: 63, campaignDuration: 7 },
+  zone2: { name: 'Public Investor Page Spotlight', cost: 70, campaignDuration: 7 },
   zone3: { name: 'Project Search Results Inline Ad', cost: 70, campaignDuration: 7 },
   zone4: { name: 'Investor Project Details', cost: 70, campaignDuration: 7 },
   zone5: { name: 'Landing Page Hero Spotlight', cost: 70, campaignDuration: 7 },

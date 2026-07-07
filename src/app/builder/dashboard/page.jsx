@@ -9,7 +9,7 @@ import {
   Clock, AlertCircle, ArrowRight, Inbox
 } from 'lucide-react';
 import { AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
-import AdBanner from '@/components/AdBanner';
+
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { useAuth } from '@/hooks/AuthContext';
@@ -131,12 +131,6 @@ export default function BuilderDashboard() {
       </div>
 
       <div className="container mx-auto px-4 md:px-6 -mt-10 relative z-10 space-y-8">
-        {/* Ad Banner */}
-        <div className="flex justify-center">
-          <div className="w-full max-w-lg">
-            <AdBanner zoneId="zone1" variant="card" />
-          </div>
-        </div>
 
         {/* Charts + Summary */}
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">

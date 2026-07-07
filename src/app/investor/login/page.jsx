@@ -1,4 +1,4 @@
-﻿"use client";
+"use client";
 
 import React, { useState, useEffect, Suspense } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
@@ -109,6 +109,13 @@ function InvestorLoginContent() {
             // Non-blocking fallback
           });
         } catch (_) { /* non-blocking */ }
+      }
+
+      // Check for post-login redirect (e.g. coming from ad "Book this Space" click)
+      const pendingRedirect = sessionStorage.getItem('postLoginRedirect');
+      if (pendingRedirect === '/advertisements') {
+        sessionStorage.removeItem('postLoginRedirect');
+        return router.push('/investor/advertisements');
       }
 
       router.push('/dashboard');

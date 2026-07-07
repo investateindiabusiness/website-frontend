@@ -117,7 +117,7 @@ function BuilderLoginContent() {
       console.log("[BUILDER LOGIN] Catch Block Intercepted:", err);
 
       const errMsg = err.message || '';
-      const isRoleMismatch = 
+      const isRoleMismatch =
         errMsg.toLowerCase().includes('registered as') ||
         errMsg.toLowerCase().includes('role mismatch') ||
         errMsg.toLowerCase().includes('use the investor tab') ||
@@ -154,7 +154,7 @@ function BuilderLoginContent() {
         return;
       }
 
-      const isLoginFailure = 
+      const isLoginFailure =
         errMsg.toLowerCase().includes('login failed') ||
         errMsg.toLowerCase().includes('invalid credentials') ||
         err.error === 'INVALID_LOGIN_CREDENTIALS';
@@ -168,10 +168,10 @@ function BuilderLoginContent() {
           const res = await fetch(signUpUrl, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ 
-              email: formData.email, 
-              password: 'CheckEmailExistencePassword123!', 
-              returnSecureToken: true 
+            body: JSON.stringify({
+              email: formData.email,
+              password: 'CheckEmailExistencePassword123!',
+              returnSecureToken: true
             })
           });
 
@@ -200,9 +200,9 @@ function BuilderLoginContent() {
           setError('Login failed');
         }
       } else {
-        const isNotRegistered = 
-          errMsg.toLowerCase().includes('user not found') || 
-          errMsg.toLowerCase().includes('not registered') || 
+        const isNotRegistered =
+          errMsg.toLowerCase().includes('user not found') ||
+          errMsg.toLowerCase().includes('not registered') ||
           errMsg.toLowerCase().includes('no user found') ||
           errMsg.toLowerCase().includes('not exist') ||
           err.error === 'USER_NOT_FOUND' ||
@@ -264,7 +264,7 @@ function BuilderLoginContent() {
 
   return (
     <div className="min-h-screen w-full flex flex-col lg:flex-row bg-white overflow-hidden">
-      
+
       {/* Mobile Back Button */}
       <div className="lg:hidden p-4 border-b border-gray-100 flex items-center">
         <Link href="/" className="inline-flex items-center gap-2 text-xs font-bold text-gray-600 uppercase tracking-wider hover:text-gray-900 transition-colors">
@@ -399,7 +399,7 @@ function BuilderLoginContent() {
             <h3 className="text-lg font-black text-gray-900 uppercase tracking-tight mb-2">
               {alertModal.type === 'role_mismatch' ? 'Account Role Mismatch' : 'Account Not Found'}
             </h3>
-            
+
             <p className="text-xs text-gray-500 font-semibold leading-relaxed mb-6 px-2">
               {alertModal.message}
             </p>
@@ -423,7 +423,7 @@ function BuilderLoginContent() {
                   Register Now
                 </Button>
               )}
-              
+
               <Button
                 variant="outline"
                 onClick={() => setAlertModal(prev => ({ ...prev, isOpen: false }))}
