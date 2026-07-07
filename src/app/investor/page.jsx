@@ -7,6 +7,7 @@ import Header from '@/components/Header';
 import Footer from '@/components/Footer';
 import AwardsSection from '@/components/AwardsSection';
 import TestimonialsSection from '@/components/TestimonialsSection';
+import DeepakProfileSection from '@/components/DeepakProfileSection';
 import dynamic from 'next/dynamic';
 import Image from 'next/image';
 import AdBanner from '@/components/AdBanner';
@@ -805,6 +806,8 @@ export default function Index() {
                     </div>
                 </div>
             </section>
+
+            <DeepakProfileSection pageType="investor" />
 
             <section className="fullscreen-section py-20 text-white text-center" id="contact" style={{ backgroundColor: '#1a1a1a' }}>
                 <div className="container text-center">

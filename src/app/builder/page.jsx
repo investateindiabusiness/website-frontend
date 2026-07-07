@@ -4,6 +4,7 @@ import React, { useState, useEffect, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import AwardsSection from "@/components/AwardsSection";
 import TestimonialsSection from "@/components/TestimonialsSection";
+import DeepakProfileSection from "@/components/DeepakProfileSection";
 import {
   Globe,
   Search,
@@ -805,6 +806,8 @@ export default function BuilderHome() {
           </div>
         </div>
       </section>
+
+      <DeepakProfileSection pageType="builder" />
 
       {/* CONTACT SECTION */}
       <section className="fullscreen-section py-20 text-white text-center" id="contact" style={{ backgroundColor: '#1a1a1a' }}>
