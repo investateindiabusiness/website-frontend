@@ -30,6 +30,8 @@ import {
   ChevronLeft as ChevronLeftIcon,
   VerifiedUser as KYCIcon,
   CardMembership as MembershipIcon,
+  Forum as OutreachIcon,
+  ContactMail as DirectoryIcon,
 } from '@mui/icons-material';
 
 const DRAWER_WIDTH = 240;
@@ -42,6 +44,7 @@ const NAV_ITEMS_BY_ROLE = {
     { label: 'Investors',        path: '/admin/investors',         icon: <InvestorIcon /> },
     { label: 'KYC Verifications Investor', path: '/admin/kyc-verifications', icon: <KYCIcon /> },
     { label: 'Service Providers',path: '/admin/service-providers', icon: <ServiceProviderIcon /> },
+    { label: 'SP Outreach',      path: '/admin/sp-outreach',       icon: <OutreachIcon /> },
     { label: 'Users',            path: '/admin/users',             icon: <UsersIcon /> },
     { label: 'Projects',         path: '/admin/projects',          icon: <ProjectsIcon /> },
     { label: 'Leads',            path: '/admin/leads',             icon: <LeadsIcon /> },
@@ -58,6 +61,7 @@ const NAV_ITEMS_BY_ROLE = {
     { label: 'Advertise',     path: '/builder/advertisements',  icon: <AdsIcon /> },
     { label: 'Payments',      path: '/builder/payments',        icon: <LeadsIcon /> },
     { label: 'Coupons',       path: '/builder/coupons',         icon: <CouponsIcon /> },
+    { label: 'SP Inbox',      path: '/builder/outreach-inbox',  icon: <OutreachIcon /> },
   ],
   investor: [
     { label: 'Dashboard',     path: '/dashboard',              icon: <DashboardIcon /> },
@@ -66,9 +70,12 @@ const NAV_ITEMS_BY_ROLE = {
     { label: 'Advertise',     path: '/investor/advertisements',icon: <AdsIcon /> },
     { label: 'Payments',      path: '/investor/payments',      icon: <LeadsIcon /> },
     { label: 'Coupons',       path: '/investor/coupons',       icon: <CouponsIcon /> },
+    { label: 'SP Inbox',      path: '/investor/outreach-inbox',icon: <OutreachIcon /> },
   ],
   serviceProvider: [
     { label: 'Dashboard',     path: '/service-provider/dashboard',       icon: <DashboardIcon /> },
+    { label: 'Directory',     path: '/service-provider/directory',       icon: <DirectoryIcon /> },
+    { label: 'My Outreach',   path: '/service-provider/outreach',        icon: <OutreachIcon /> },
     { label: 'Advertise',     path: '/service-provider/advertisements',  icon: <AdsIcon /> },
     { label: 'Payments',      path: '/service-provider/payments',        icon: <LeadsIcon /> },
     { label: 'Coupons',       path: '/service-provider/coupons',         icon: <CouponsIcon /> },
@@ -82,12 +89,15 @@ export default function AdminSidebar({ children }) {
   const [collapsed, setCollapsed] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
   const [profileDropdownOpen, setProfileDropdownOpen] = useState(false);
-  const profileDropdownRef = React.useRef(null);
+  const profileDropdownRefMobile = React.useRef(null);
+  const profileDropdownRefDesktop = React.useRef(null);
 
   // Close dropdown on outside click
   React.useEffect(() => {
     const handleClick = (e) => {
-      if (profileDropdownRef.current && !profileDropdownRef.current.contains(e.target)) {
+      const clickedMobile = profileDropdownRefMobile.current && profileDropdownRefMobile.current.contains(e.target);
+      const clickedDesktop = profileDropdownRefDesktop.current && profileDropdownRefDesktop.current.contains(e.target);
+      if (!clickedMobile && !clickedDesktop) {
         setProfileDropdownOpen(false);
       }
     };
@@ -201,7 +211,7 @@ export default function AdminSidebar({ children }) {
   );
 
   return (
-    <Box sx={{ display: 'flex', minHeight: '100vh', bgcolor: '#f8fafc' }}>
+    <Box sx={{ display: 'flex', minHeight: '100vh', bgcolor: '#f8fafc', overflowX: 'hidden', maxWidth: '100vw' }}>
       {/* Mobile Drawer */}
       <Drawer
         variant="temporary"
@@ -245,6 +255,9 @@ export default function AdminSidebar({ children }) {
           flexDirection: 'column',
           minHeight: '100vh',
           transition: 'margin-left 0.25s ease',
+          overflowX: 'hidden',
+          width: '100%',
+          minWidth: 0,
         }}
       >
         {/* Mobile top bar */}
@@ -263,7 +276,7 @@ export default function AdminSidebar({ children }) {
           <img src="/logo-small-white.png" alt="Logo" style={{ height: 36, objectFit: 'contain' }} />
           <Box sx={{ ml: 'auto', display: 'flex', alignItems: 'center', gap: 1 }}>
             {/* Profile Dropdown — mobile */}
-            <div ref={profileDropdownRef} style={{ position: 'relative' }}>
+            <div ref={profileDropdownRefMobile} style={{ position: 'relative' }}>
               <button
                 onClick={() => setProfileDropdownOpen(p => !p)}
                 style={{
@@ -310,20 +323,37 @@ export default function AdminSidebar({ children }) {
             <NotificationBell iconColor="rgba(255,255,255,0.7)" hoverColor="white" />
           </Box>
         </Box>
-
         {/* Desktop top bar */}
         <Box sx={{
           display: { xs: 'none', md: 'flex' },
           alignItems: 'center',
-          justifyContent: 'flex-end',
+          justifyContent: 'space-between',
           px: 3,
           height: 50,
           bgcolor: 'white',
           borderBottom: '1px solid #e2e8f0',
           position: 'sticky', top: 0, zIndex: 100,
         }}>
-          {/* Profile Dropdown — desktop */}
-          <div ref={profileDropdownRef} style={{ position: 'relative' }}>
+          {/* Logo visible when sidebar is collapsed */}
+          <Box sx={{ 
+            opacity: collapsed ? 1 : 0, 
+            visibility: collapsed ? 'visible' : 'hidden', 
+            transition: 'opacity 0.25s ease, visibility 0.25s ease', 
+            display: 'flex', 
+            alignItems: 'center',
+            bgcolor: '#0f172a',
+            px: 1.5,
+            py: 0.2,
+            borderRadius: '6px',
+          }}>
+            <Link href="/" style={{ display: 'flex', alignItems: 'center' }}>
+              <img src="/logo-small-white.png" alt="Logo" style={{ height: 38, objectFit: 'contain' }} />
+            </Link>
+          </Box>
+
+          <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
+            {/* Profile Dropdown — desktop */}
+          <div ref={profileDropdownRefDesktop} style={{ position: 'relative' }}>
             <button
               onClick={() => setProfileDropdownOpen(p => !p)}
               style={{
@@ -378,13 +408,16 @@ export default function AdminSidebar({ children }) {
           </div>
           <NotificationBell iconColor="#64748b" hoverColor="#0f172a" />
         </Box>
+      </Box>
 
         {/* Page Content */}
         <Box sx={{
           flex: 1,
-          px: { xs: 2, md: 3 },
+          px: { xs: 0, md: 3 },
           pb: { xs: 2, md: 3 },
           pt: 0,
+          overflowX: 'hidden',
+          maxWidth: '100%',
           '& > div:not(.min-h-screen)': { marginTop: '0 !important', paddingTop: '16px !important' },
           '& > div.min-h-screen': { marginTop: '0 !important' },
           '& > main': { marginTop: '0 !important', paddingTop: '12px !important' },

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+﻿import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Building2, MapPin, Search, TrendingUp, Shield, CheckCircle, Filter, PieChart as PieChartIcon, BarChart as BarChartIcon, Loader2 } from 'lucide-react';
 import { AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, BarChart, Bar } from 'recharts';
@@ -163,7 +163,7 @@ const InvestorDashboard = () => {
                   <h3 className="font-bold text-gray-900 text-lg flex items-center">
                     <TrendingUp className="w-5 h-5 mr-2 text-[#0b264f]" /> Portfolio Growth
                   </h3>
-                  <p className="text-xs text-gray-500">Invested Amount vs. Market Value (₹ Cr)</p>
+                  <p className="text-xs text-gray-500">Invested Amount vs. Market Value ($ Cr)</p>
                 </div>
               </div>
               <div className="h-64 w-full">
@@ -184,7 +184,7 @@ const InvestorDashboard = () => {
                     <YAxis axisLine={false} tickLine={false} tick={{ fill: '#9ca3af', fontSize: 12 }} />
                     <Tooltip
                       contentStyle={{ borderRadius: '12px', border: 'none', boxShadow: '0 4px 12px rgba(0,0,0,0.1)' }}
-                      formatter={(value, name) => [`₹${value} Cr`, name === 'value' ? 'Market Value' : 'Invested']}
+                      formatter={(value, name) => [`$${value} Cr`, name === 'value' ? 'Market Value' : 'Invested']}
                     />
                     <Area type="monotone" dataKey="value" stroke="#10b981" strokeWidth={3} fillOpacity={1} fill="url(#colorValue)" />
                     <Area type="monotone" dataKey="invested" stroke="#94a3b8" strokeWidth={2} strokeDasharray="5 5" fill="url(#colorInvested)" />

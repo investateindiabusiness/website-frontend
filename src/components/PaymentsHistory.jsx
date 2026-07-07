@@ -113,9 +113,11 @@ export default function PaymentsHistory({ userId = null }) {
         </FormControl>
 
         <Tooltip title="Refresh">
-          <IconButton onClick={handleRefresh} disabled={loading} size="small" sx={{ ml: 'auto' }}>
-            <RefreshIcon fontSize="small" />
-          </IconButton>
+          <span>
+            <IconButton onClick={handleRefresh} disabled={loading} size="small" sx={{ ml: 'auto' }}>
+              <RefreshIcon fontSize="small" />
+            </IconButton>
+          </span>
         </Tooltip>
       </Box>
 

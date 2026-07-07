@@ -30,8 +30,8 @@ const FORM1_EDITABLE_FIELDS = [
   { id: 'fullName', label: 'Full Name' },
   { id: 'contactNumber', label: 'Contact Number' },
   { id: 'investorType', label: 'Investor Type' },
-  { id: 'investmentRangeMin', label: 'Min Investment Range (₹)' },
-  { id: 'investmentRangeMax', label: 'Max Investment Range (₹)' },
+  { id: 'investmentRangeMin', label: 'Min Investment Range ($)' },
+  { id: 'investmentRangeMax', label: 'Max Investment Range ($)' },
   { id: 'address', label: 'Street Address' },
   { id: 'city', label: 'City' },
   { id: 'state', label: 'State' },
@@ -271,11 +271,11 @@ export default function AdminInvestors() {
 
   return (
     <div className="">
-      <div className="flex-1 container mx-auto px-4 py-24 max-w-7xl">
-        <div className="flex flex-col md:flex-row md:items-end justify-between mb-8 gap-4">
+      <div className="flex-1 container mx-auto px-4 py-6 sm:py-8 max-w-7xl">
+        <div className="flex flex-col md:flex-row md:items-start justify-between mb-6 gap-3">
           <div>
-            <h1 className="text-3xl font-bold text-gray-900 mb-2">Manage Investors</h1>
-            <p className="text-gray-600">{total.toLocaleString()} investor{total !== 1 ? 's' : ''} registered</p>
+            <h1 className="text-2xl sm:text-3xl font-bold text-gray-900 mb-1">Manage Investors</h1>
+            <p className="text-gray-600 text-sm">{total.toLocaleString()} investor{total !== 1 ? 's' : ''} registered</p>
           </div>
         </div>
 
@@ -326,7 +326,7 @@ export default function AdminInvestors() {
                       <div><span className="text-gray-500 block mb-1">Full Name</span><span className="font-medium">{viewInvestorData.fullName || '-'}</span></div>
                       <div><span className="text-gray-500 block mb-1">Contact Number</span><span className="font-medium">{viewInvestorData.contactNumber || '-'}</span></div>
                       <div><span className="text-gray-500 block mb-1">Investor Type</span><span className="font-medium">{viewInvestorData.investorType || '-'}</span></div>
-                      <div><span className="text-gray-500 block mb-1">Intended Range</span><span className="font-medium text-green-700">₹{viewInvestorData.investmentRangeMin || '0'} - ₹{viewInvestorData.investmentRangeMax || '0'}</span></div>
+                      <div><span className="text-gray-500 block mb-1">Intended Range</span><span className="font-medium text-green-700">${viewInvestorData.investmentRangeMin || '0'} - ${viewInvestorData.investmentRangeMax || '0'}</span></div>
                     </>
                   ) : (
                     <>

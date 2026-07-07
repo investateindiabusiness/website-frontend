@@ -18,7 +18,7 @@ import Footer from "@/components/Footer";
 const heroSlides = [
   {
     image:
-      "https://images.unsplash.com/photo-1541888946425-d81bb19240f5?q=80&w=2070&auto=format&fit=crop" /* Ultra-HD 4K+ stunning steel skyscraper construction with crane at golden sunset */,
+      "https://images.unsplash.com/photo-1504307651254-35680f356dfd?q=80&w=2066&auto=format&fit=crop",
     tag: "Institutional Capital Access",
     title: "Direct Connectivity to",
     highlight: "High-Net-Worth NRI Capital",
@@ -27,20 +27,13 @@ const heroSlides = [
   },
   {
     image:
-      "/images/skyscraper-construction-hd.png",
+      "/images/builder.png",
     tag: "Global Reach & Trust",
     title: "Elevate Your Brand with",
     highlight: "Verified Institutional Credibility",
     subtitle:
       "Position your developments within a transparency-first ecosystem that reinforces your reputation for corporate governance and delivery excellence to a global audience.",
   },
-  /* {
-        image: 'https://images.unsplash.com/photo-1512917774080-9991f1c4c750?q=80&w=2070&auto=format&fit=crop',
-        tag: 'Sales Acceleration',
-        title: 'Transform Your Reach with',
-        highlight: 'Precision-Vetted Buyer Intent',
-        subtitle: 'Eliminate administrative friction and connect with high-intent investors who meet strict acquisition criteria. Your global sales expansion, simplified.'
-    } */
 ];
 
 const builderBenefits = [
@@ -432,16 +425,16 @@ export default function BuilderHome() {
       </section>
 
       {/* ── Infrastructure-style Marquee Section ── */}
-      <section id="challenges" className="infra-section">
+      <section id="challenges" className="infra-section py-20 bg-[#f8f8f8]">
         {/* ── Develite-style Header ── */}
         <div className="infra-section-header">
-          <h2 className="infra-title">
+          <h2 className="infra-title text-[#1a1a1a]">
             Overcoming{" "}
-            <span className="infra-title-accent">Market Friction</span>
+            <span className="infra-title-accent text-[#D48035]">Market Friction</span>
           </h2>
         </div>
 
-        <p className="infra-subtitle">
+        <p className="infra-subtitle text-slate-600">
           Connecting with international investors requires more than traditional
           marketing. We solve the specific trust and logistical challenges that
           prevent visionary developers from reaching the global Indian diaspora.
@@ -811,23 +804,23 @@ export default function BuilderHome() {
       </section>
 
       {/* CONTACT SECTION */}
-      <section className="fullscreen-section section-theme py-24" id="contact">
+      <section className="fullscreen-section py-20 text-white text-center" id="contact" style={{ backgroundColor: '#1a1a1a' }}>
         <div className="container text-center">
-          <div className="cta-minimal-badge mb-6">
-            <span className="cta-badge-text">GET STARTED TODAY</span>
-            <div className="cta-badge-star">★</div>
+          <div className="cta-minimal-badge mb-6" style={{ borderColor: 'rgba(255,255,255,0.2)' }}>
+            <span className="cta-badge-text text-white">GET STARTED TODAY</span>
+            <div className="cta-badge-star text-[#D48035]">★</div>
           </div>
-          <h2 className="cta-minimal-title mb-6">
-            Ready to Expand Your <span className="text-highlight">Reach?</span>
+          <h2 className="cta-minimal-title mb-6 text-white">
+            Ready to Expand Your <span className="text-[#D48035]">Reach?</span>
           </h2>
-          <p className="cta-minimal-subtitle text-gray-600 text-lg mb-10 max-w-2xl mx-auto">
+          <p className="cta-minimal-subtitle text-slate-300 text-lg mb-10 max-w-2xl mx-auto">
             Join an exclusive network of top-tier Indian developers connecting
             directly with serious NRI investors.
           </p>
           <div className="flex justify-center">
             <button
               onClick={() => handleAuthClick("register", "builder")}
-              className="cta-minimal-btn"
+              className="cta-minimal-btn bg-[#D48035] hover:bg-[#b06725] text-white border-none shadow-xl"
             >
               Apply as Builder <span className="ml-2">→</span>
             </button>

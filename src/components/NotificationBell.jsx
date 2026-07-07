@@ -22,7 +22,10 @@ export default function NotificationBell({ iconColor = 'rgba(255,255,255,0.7)', 
       const res = await apiRequest('/api/notifications/unread-count', { method: 'GET' });
       setUnreadCount(res.count || 0);
     } catch (err) {
-      console.warn('Failed to fetch unread count (graceful bypass):', err?.message || (typeof err === 'object' ? JSON.stringify(err) : err));
+      const errMsg = err?.message || (typeof err === 'string' ? err : '');
+      if (errMsg !== 'Session expired' && !errMsg.includes('Session expired')) {
+        console.warn('Failed to fetch unread count (graceful bypass):', err?.message || (typeof err === 'object' ? JSON.stringify(err) : err));
+      }
     }
   };
 
@@ -33,7 +36,10 @@ export default function NotificationBell({ iconColor = 'rgba(255,255,255,0.7)', 
       const res = await apiRequest('/api/notifications?limit=10', { method: 'GET' });
       setNotifications(res.data || []);
     } catch (err) {
-      console.warn('Failed to fetch notifications (graceful bypass):', err?.message || (typeof err === 'object' ? JSON.stringify(err) : err));
+      const errMsg = err?.message || (typeof err === 'string' ? err : '');
+      if (errMsg !== 'Session expired' && !errMsg.includes('Session expired')) {
+        console.warn('Failed to fetch notifications (graceful bypass):', err?.message || (typeof err === 'object' ? JSON.stringify(err) : err));
+      }
     } finally {
       setLoading(false);
     }
@@ -72,9 +78,11 @@ export default function NotificationBell({ iconColor = 'rgba(255,255,255,0.7)', 
 
   const handleMarkAllRead = async () => {
     try {
-      await apiRequest('/api/notifications/read-all', { method: 'PATCH' });
+      const response = await apiRequest('/api/notifications/read-all', { method: 'PATCH' });
       setNotifications(prev => prev.map(n => ({ ...n, isRead: true })));
       setUnreadCount(0);
+      // Refetch notifications to ensure persistence after refresh
+      fetchNotifications();
     } catch (err) {
       console.error('Failed to mark all as read:', err);
     }
@@ -85,7 +93,7 @@ export default function NotificationBell({ iconColor = 'rgba(255,255,255,0.7)', 
     if (!notif.isRead) {
       handleMarkAsRead(notif.id);
     }
-    
+
     // Close popover
     setAnchorEl(null);
 
@@ -97,7 +105,7 @@ export default function NotificationBell({ iconColor = 'rgba(255,255,255,0.7)', 
       else if (user?.role === 'builder') basePath = '/builder/helpdesk';
       else if (user?.role === 'investor') basePath = '/investor/helpdesk';
       else if (user?.role === 'serviceProvider') basePath = '/service-provider/helpdesk';
-      
+
       router.push(`${basePath}?ticketId=${notif.ticketId}`);
     }
   };
@@ -142,15 +150,15 @@ export default function NotificationBell({ iconColor = 'rgba(255,255,255,0.7)', 
         ) : notifications.length > 0 ? (
           <List sx={{ p: 0 }}>
             {notifications.map((notif) => (
-              <ListItem 
-                key={notif.id} 
+              <ListItem
+                key={notif.id}
                 disablePadding
                 sx={{ borderBottom: '1px solid #f5f5f5' }}
               >
-                <ListItemButton 
+                <ListItemButton
                   onClick={() => handleNotificationClick(notif)}
-                  sx={{ 
-                    bgcolor: notif.isRead ? 'transparent' : 'rgba(212,128,53,0.05)', 
+                  sx={{
+                    bgcolor: notif.isRead ? 'transparent' : 'rgba(212,128,53,0.05)',
                     alignItems: 'flex-start',
                     px: 2,
                     py: 1.5

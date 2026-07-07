@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import React, { useState, useEffect, Suspense } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
@@ -265,7 +265,7 @@ function BookingFormContent() {
       if (res.data) {
         setAppliedCoupon(res.data);
         setCouponCodeInput(code);
-        toast({ title: "Coupon Applied!", description: `Discount of ₹${res.data.discountAmount} applied.` });
+        toast({ title: "Coupon Applied!", description: `Discount of $${res.data.discountAmount} applied.` });
       }
     } catch (error) {
       toast({ title: "Invalid Coupon", description: error.message || "Failed to validate coupon.", variant: "destructive" });
@@ -426,9 +426,9 @@ function BookingFormContent() {
                 <span className="text-[9px] font-semibold text-slate-400 uppercase tracking-wide">Total Cost</span>
                 <div className="text-right">
                   {appliedCoupon && (
-                    <span className="text-xs text-slate-400 line-through mr-2">₹{selectedZone?.cost}</span>
+                    <span className="text-xs text-slate-400 line-through mr-2">${selectedZone?.cost}</span>
                   )}
-                  <strong className="text-[#0b264f] text-base font-bold">₹{discountedCost}</strong>
+                  <strong className="text-[#0b264f] text-base font-bold">${discountedCost}</strong>
                 </div>
               </div>
             </div>
@@ -479,7 +479,7 @@ function BookingFormContent() {
                         className="flex items-center gap-1.5 bg-indigo-50 border border-indigo-100 hover:border-indigo-300 hover:bg-indigo-100/50 text-indigo-700 text-xs font-bold px-3 py-2 rounded-xl transition-all shadow-sm"
                       >
                         <Tag className="w-3.5 h-3.5" />
-                        <span>{coupon.code} (Save ₹{coupon.discountAmount})</span>
+                        <span>{coupon.code} (Save ${coupon.discountAmount})</span>
                       </button>
                     ))}
                   </div>

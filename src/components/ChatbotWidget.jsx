@@ -2,7 +2,8 @@
 
 import React, { useEffect, useMemo, useState } from 'react';
 import { Bot, CheckCircle2, ChevronLeft, Loader2, MessageCircle, Send, ShieldCheck, X } from 'lucide-react';
-import { fetchChatbotFaqs, submitChatbotRequest } from '@/api';
+import { usePathname } from 'next/navigation';
+import { fetchChatbotFaqs, submitContactInquiry } from '@/api';
 import { chatbotFaqGroups, fallbackQuestion } from '@/data/chatbotFaqs';
 import { useAuth } from '@/hooks/AuthContext';
 
@@ -18,7 +19,7 @@ const initialForm = {
 const audienceContent = {
   public: {
     label: 'Company Assistant',
-    intro: 'Before login, I can answer company and operations questions only.',
+    intro: 'I can answer company and operations questions only.',
     requestContext: 'Company or purpose of inquiry',
   },
   investor: {
@@ -47,6 +48,7 @@ const roleToAudience = (user) => {
 
 export default function ChatbotWidget() {
   const { user, loading } = useAuth() || {};
+  const pathname = usePathname();
   const [open, setOpen] = useState(false);
   const [activeQuestion, setActiveQuestion] = useState(null);
   const [showRequestForm, setShowRequestForm] = useState(false);
@@ -58,6 +60,10 @@ export default function ChatbotWidget() {
   const audience = roleToAudience(user);
   const content = audienceContent[audience] || audienceContent.public;
   const fallbackGroup = chatbotFaqGroups[audience] || chatbotFaqGroups.public;
+
+  if (pathname?.startsWith('/admin')) {
+    return null;
+  }
 
   const faqs = useMemo(() => {
     return remoteFaqs.length > 0 ? remoteFaqs : fallbackGroup.faqs;
@@ -112,15 +118,27 @@ export default function ChatbotWidget() {
     setStatus({ type: 'loading', message: 'Submitting your request...' });
 
     try {
-      await submitChatbotRequest({
-        ...form,
-        userType: audience,
-        selectedQuestion: activeQuestion?.question || fallbackQuestion,
+      const inquiryMessage = [
+        form.message,
+        form.organization ? `Context: ${form.organization}` : '',
+        `Preferred contact: ${form.preferredContact}`,
+        `User type: ${audience}`,
+        `Selected question: ${activeQuestion?.question || fallbackQuestion}`,
+      ]
+        .filter(Boolean)
+        .join('\n\n');
+
+      await submitContactInquiry({
+        name: form.name,
+        email: form.email,
+        phone: form.phone,
+        subject: activeQuestion?.question || 'Chatbot Support Request',
+        message: inquiryMessage,
       });
 
       setStatus({
         type: 'success',
-        message: 'Thanks. Your request has been shared with the Investate team.',
+        message: 'Thanks. Your request has been sent to the inquiries panel for the Investate team.',
       });
       setForm(initialForm);
       setActiveQuestion(null);

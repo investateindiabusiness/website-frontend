@@ -112,7 +112,8 @@ const HeaderContent = ({ transparent = false }) => {
   const getNavLinks = () => {
     if (!displayUser) {
       return [
-        { label: 'Investor', path: '/' },
+        { label: 'Home', path: '/' },
+        { label: 'Investor', path: '/investor' },
         { label: 'Builder', path: '/builder' },
         { label: 'Service Provider', path: '/service-provider' },
         // { label: 'About Us', path: '/about-us' },
@@ -170,13 +171,8 @@ const HeaderContent = ({ transparent = false }) => {
             {user?.role === 'admin' ? (
               <>
                 <button
-                  onClick={(e) => {
-                    if (pathname === '/') {
-                      e.preventDefault();
-                      router.push('/business-overview');
-                    } else {
-                      setLogoMenuOpen(prev => !prev);
-                    }
+                  onClick={() => {
+                    setLogoMenuOpen(prev => !prev);
                   }}
                   className="flex items-center focus:outline-none cursor-pointer"
                 >
@@ -225,12 +221,6 @@ const HeaderContent = ({ transparent = false }) => {
             ) : (
               <Link
                 href={logoHref}
-                onClick={(e) => {
-                  if (pathname === '/') {
-                    e.preventDefault();
-                    router.push('/business-overview');
-                  }
-                }}
                 className="flex items-center cursor-pointer"
               >
                 <img src="/logo-big.png" alt="LOGO" className="hidden md:block h-12 w-auto object-contain" />

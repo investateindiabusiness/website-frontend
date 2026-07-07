@@ -28,6 +28,11 @@ export default function BuilderDashboard() {
   const [searchQuery, setSearchQuery] = useState('');
   const [projects, setProjects] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
   useEffect(() => {
     const loadProjects = async () => {
@@ -46,7 +51,7 @@ export default function BuilderDashboard() {
     loadProjects();
   }, [user]);
 
-  const totalRevenue = "₹0 Cr";
+  const totalRevenue = "$0 Cr";
   const totalUnitsSold = 0;
   const totalLeads = projects.reduce((acc, curr) => acc + (curr.inquiries || 0), 0);
 
@@ -103,21 +108,23 @@ export default function BuilderDashboard() {
                 </h3>
               </div>
               <div className="h-56 md:h-64 w-full">
-                <ResponsiveContainer width="100%" height={256}>
-                  <AreaChart data={ANALYTICS_DATA}>
-                    <defs>
-                      <linearGradient id="colorSales" x1="0" y1="0" x2="0" y2="1">
-                        <stop offset="5%" stopColor="#0b264f" stopOpacity={0.3} />
-                        <stop offset="95%" stopColor="#0b264f" stopOpacity={0} />
-                      </linearGradient>
-                    </defs>
-                    <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#f0f0f0" />
-                    <XAxis dataKey="name" axisLine={false} tickLine={false} tick={{ fill: '#9ca3af', fontSize: 12 }} dy={10} />
-                    <YAxis axisLine={false} tickLine={false} tick={{ fill: '#9ca3af', fontSize: 12 }} width={30} />
-                    <Tooltip contentStyle={{ borderRadius: '12px', border: 'none', boxShadow: '0 4px 12px rgba(0,0,0,0.1)' }} />
-                    <Area type="monotone" dataKey="sales" stroke="#0b264f" strokeWidth={3} fillOpacity={1} fill="url(#colorSales)" />
-                  </AreaChart>
-                </ResponsiveContainer>
+                {mounted && (
+                  <ResponsiveContainer width="100%" height="100%" minWidth={0}>
+                    <AreaChart data={ANALYTICS_DATA}>
+                      <defs>
+                        <linearGradient id="colorSales" x1="0" y1="0" x2="0" y2="1">
+                          <stop offset="5%" stopColor="#0b264f" stopOpacity={0.3} />
+                          <stop offset="95%" stopColor="#0b264f" stopOpacity={0} />
+                        </linearGradient>
+                      </defs>
+                      <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#f0f0f0" />
+                      <XAxis dataKey="name" axisLine={false} tickLine={false} tick={{ fill: '#9ca3af', fontSize: 12 }} dy={10} />
+                      <YAxis axisLine={false} tickLine={false} tick={{ fill: '#9ca3af', fontSize: 12 }} width={30} />
+                      <Tooltip contentStyle={{ borderRadius: '12px', border: 'none', boxShadow: '0 4px 12px rgba(0,0,0,0.1)' }} />
+                      <Area type="monotone" dataKey="sales" stroke="#0b264f" strokeWidth={3} fillOpacity={1} fill="url(#colorSales)" />
+                    </AreaChart>
+                  </ResponsiveContainer>
+                )}
               </div>
             </div>
 

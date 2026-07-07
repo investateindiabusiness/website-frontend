@@ -7,7 +7,7 @@ import { toast } from '@/hooks/use-toast';
 import AdminSidebar from '@/components/AdminSidebar';
 import MembershipGuard from '@/components/MembershipGuard';
 
-const INVESTOR_PUBLIC_PATHS = ['/investor/login', '/investor/register'];
+const INVESTOR_PUBLIC_PATHS = ['/investor', '/investor/login', '/investor/register'];
 
 export default function InvestorLayout({ children }) {
   const { user, loading } = useAuth();
@@ -16,10 +16,16 @@ export default function InvestorLayout({ children }) {
 
   useEffect(() => {
     if (!loading) {
-      const isPublicPage = INVESTOR_PUBLIC_PATHS.some(p => pathname === p);
+      // Normalize pathname to handle trailing slashes
+      const normalizedPath = pathname.endsWith('/') && pathname.length > 1 
+        ? pathname.slice(0, -1) 
+        : pathname;
+        
+      const isPublicPage = INVESTOR_PUBLIC_PATHS.includes(normalizedPath);
+      
       if (!user && !isPublicPage) {
         router.push('/investor/login');
-      } else if (user && user.role !== 'investor') {
+      } else if (user && user.role !== 'investor' && !isPublicPage) {
         toast({ title: "Access Denied", description: "You need an Investor account to access this area.", variant: "destructive" });
         router.push('/');
       }
@@ -35,7 +41,10 @@ export default function InvestorLayout({ children }) {
   }
 
   // Don't wrap public investor pages in the sidebar
-  if (INVESTOR_PUBLIC_PATHS.includes(pathname)) {
+  const normalizedPath = pathname.endsWith('/') && pathname.length > 1 
+    ? pathname.slice(0, -1) 
+    : pathname;
+  if (INVESTOR_PUBLIC_PATHS.includes(normalizedPath)) {
     return <>{children}</>;
   }
 

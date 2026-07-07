@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
@@ -343,7 +343,7 @@ export default function BuilderAdvertisements() {
       setCouponError('');
       const res = await validateCoupon(couponCodeInput);
       setAppliedCoupon(res.data);
-      toast({ title: "Coupon Applied", description: `Discount of ₹${res.data.discountAmount} applied.` });
+      toast({ title: "Coupon Applied", description: `Discount of $${res.data.discountAmount} applied.` });
     } catch (err) {
       setCouponError(err.message || 'Invalid coupon');
       setAppliedCoupon(null);
@@ -612,7 +612,7 @@ export default function BuilderAdvertisements() {
                             {zone.name}
                           </span>
                           <span className="text-xs font-semibold text-orange-500">
-                            ₹{zone.costPerDay}/day
+                            ${zone.costPerDay}/day
                           </span>
                         </div>
 
@@ -632,7 +632,7 @@ export default function BuilderAdvertisements() {
                     <div className="grid grid-cols-2 gap-4">
                       <div className="space-y-1">
                         <span className="text-[10px] text-slate-400 uppercase font-semibold flex items-center"><DollarSign className="w-3.5 h-3.5 mr-0.5 text-green-600" /> Cost / Day</span>
-                        <p className="text-lg font-bold text-slate-800">₹{selectedZone.costPerDay}</p>
+                        <p className="text-lg font-bold text-slate-800">${selectedZone.costPerDay}</p>
                       </div>
                       <div className="space-y-1">
                         <span className="text-[10px] text-slate-400 uppercase font-semibold flex items-center"><Clock className="w-3.5 h-3.5 mr-0.5 text-blue-600" /> Campaign Duration</span>
@@ -780,10 +780,10 @@ export default function BuilderAdvertisements() {
                     <div className="flex items-center gap-6 w-full md:w-auto justify-between md:justify-end border-t md:border-none border-slate-100 pt-3 md:pt-0">
                       <div className="text-right">
                         <span className="text-[10px] text-slate-400 uppercase font-semibold block">
-                          ₹{selectedZone?.costPerDay}/day × {selectionDays || (hoverDate ? Math.round((new Date(hoverDate) - new Date(rangeStart)) / 86400000) + 1 : '?')} days
+                          ${selectedZone?.costPerDay}/day × {selectionDays || (hoverDate ? Math.round((new Date(hoverDate) - new Date(rangeStart)) / 86400000) + 1 : '?')} days
                         </span>
                         <p className="text-xl font-bold text-[#0b264f]">
-                          {totalCost > 0 ? `₹${totalCost}` : '...'}
+                          {totalCost > 0 ? `$${totalCost}` : '...'}
                         </p>
                       </div>
                       {rangeEnd ? (
@@ -881,7 +881,7 @@ export default function BuilderAdvertisements() {
                                 </div>
                               </div>
                             </td>
-                            <td className="py-4 px-4 font-bold text-slate-800">₹{booking.cost}</td>
+                            <td className="py-4 px-4 font-bold text-slate-800">${booking.cost}</td>
                             <td className="py-4 px-4">
                               <div className="space-y-1">
                                 {getStatusBadge(booking.approvalStatus)}
@@ -966,8 +966,8 @@ export default function BuilderAdvertisements() {
                       <strong className="text-slate-800 text-sm">{formatDate(bookingSlot.startDate)} to {formatDate(bookingSlot.endDate)}</strong>
                     </div>
                     <div className="text-right">
-                      <span className="font-semibold text-slate-400 uppercase tracking-wide block text-[9px]">₹{selectedZone?.costPerDay}/day × {selectedZone?.campaignDuration} days</span>
-                      <strong className="text-slate-800 text-sm">₹{(selectedZone?.costPerDay || 0) * (selectedZone?.campaignDuration || 7)}</strong>
+                      <span className="font-semibold text-slate-400 uppercase tracking-wide block text-[9px]">${selectedZone?.costPerDay}/day × {selectedZone?.campaignDuration} days</span>
+                      <strong className="text-slate-800 text-sm">${(selectedZone?.costPerDay || 0) * (selectedZone?.campaignDuration || 7)}</strong>
                     </div>
                   </div>
 
@@ -1050,7 +1050,7 @@ export default function BuilderAdvertisements() {
                     {appliedCoupon && (
                       <div className="flex justify-between items-center text-xs text-green-600 font-semibold bg-green-50 p-2 rounded-lg mt-2">
                         <span>Discount Applied:</span>
-                        <span>-₹{appliedCoupon.discountAmount}</span>
+                        <span>-${appliedCoupon.discountAmount}</span>
                       </div>
                     )}
                     {myCoupons.length > 0 && !appliedCoupon && (
@@ -1066,7 +1066,7 @@ export default function BuilderAdvertisements() {
                     {appliedCoupon && selectedZone && (
                       <div className="flex justify-between items-center mt-2 font-bold text-sm pt-2 border-t border-slate-100">
                         <span className="text-slate-700">Final Total:</span>
-                        <span className="text-[#0b264f] text-lg">₹{Math.max(0, (selectedZone?.costPerDay || 0) * (selectedZone?.campaignDuration || 7) - appliedCoupon.discountAmount)}</span>
+                        <span className="text-[#0b264f] text-lg">${Math.max(0, (selectedZone?.costPerDay || 0) * (selectedZone?.campaignDuration || 7) - appliedCoupon.discountAmount)}</span>
                       </div>
                     )}
                   </div>

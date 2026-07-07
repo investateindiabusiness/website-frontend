@@ -9,7 +9,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Checkbox } from '@/components/ui/checkbox';
 import { toast } from '@/hooks/use-toast';
-import { CheckCircle, ChevronRight, Loader2, FileWarning, ClipboardList, ArrowLeft } from 'lucide-react';
+import { CheckCircle, ChevronRight, Loader2, FileWarning, ClipboardList, ArrowLeft, Eye, EyeOff } from 'lucide-react';
 import { getAuth } from 'firebase/auth';
 import { app } from '@/firebase';
 import { registerStep1, submitServiceProviderForm1, submitRequestedChanges } from '@/api';
@@ -28,6 +28,8 @@ function ServiceProviderRegisterContent() {
 
   // Form states
   const [authData, setAuthData] = useState({ email: '', password: '', confirmPassword: '' });
+  const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [serviceProviderData, setServiceProviderData] = useState({
     fullName: '', contactNumber: '', serviceCategory: '', yearsOfExperience: '',
     address: '', country: '', state: '', city: '', zip: '', termsAccepted: false
@@ -429,27 +431,37 @@ function ServiceProviderRegisterContent() {
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
                       <div className="space-y-2">
                         <Label htmlFor="password" className="text-[10px] font-black text-gray-900 uppercase tracking-widest ml-1">Password</Label>
-                        <Input
-                          id="password"
-                          type="password"
-                          required
-                          value={authData.password}
-                          onChange={e => setAuthData({ ...authData, password: e.target.value })}
-                          placeholder="••••••••"
-                          className="h-11 px-6 bg-gray-50 border-gray-200 focus:bg-white focus:ring-[6px] focus:ring-orange-500/5 focus:border-orange-500 transition-all duration-300 rounded-2xl text-sm font-bold placeholder:text-gray-300 w-full"
-                        />
+                        <div className="relative">
+                          <Input
+                            id="password"
+                            type={showPassword ? 'text' : 'password'}
+                            required
+                            value={authData.password}
+                            onChange={e => setAuthData({ ...authData, password: e.target.value })}
+                            placeholder="••••••••"
+                            className="h-11 px-6 pr-12 bg-gray-50 border-gray-200 focus:bg-white focus:ring-[6px] focus:ring-orange-500/5 focus:border-orange-500 transition-all duration-300 rounded-2xl text-sm font-bold placeholder:text-gray-300 w-full"
+                          />
+                          <button type="button" onClick={() => setShowPassword(prev => !prev)} className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-700 transition-colors" tabIndex={-1}>
+                            {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+                          </button>
+                        </div>
                       </div>
                       <div className="space-y-2">
                         <Label htmlFor="confirmPassword" className="text-[10px] font-black text-gray-900 uppercase tracking-widest ml-1">Confirm Password</Label>
-                        <Input
-                          id="confirmPassword"
-                          type="password"
-                          required
-                          value={authData.confirmPassword}
-                          onChange={e => setAuthData({ ...authData, confirmPassword: e.target.value })}
-                          placeholder="••••••••"
-                          className="h-11 px-6 bg-gray-50 border-gray-200 focus:bg-white focus:ring-[6px] focus:ring-orange-500/5 focus:border-orange-500 transition-all duration-300 rounded-2xl text-sm font-bold placeholder:text-gray-300 w-full"
-                        />
+                        <div className="relative">
+                          <Input
+                            id="confirmPassword"
+                            type={showConfirmPassword ? 'text' : 'password'}
+                            required
+                            value={authData.confirmPassword}
+                            onChange={e => setAuthData({ ...authData, confirmPassword: e.target.value })}
+                            placeholder="••••••••"
+                            className="h-11 px-6 pr-12 bg-gray-50 border-gray-200 focus:bg-white focus:ring-[6px] focus:ring-orange-500/5 focus:border-orange-500 transition-all duration-300 rounded-2xl text-sm font-bold placeholder:text-gray-300 w-full"
+                          />
+                          <button type="button" onClick={() => setShowConfirmPassword(prev => !prev)} className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-700 transition-colors" tabIndex={-1}>
+                            {showConfirmPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+                          </button>
+                        </div>
                       </div>
                     </div>
 

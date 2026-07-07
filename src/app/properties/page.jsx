@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
@@ -37,7 +37,6 @@ export default function InvestorProperties() {
         setLoadingProjects(true);
         const data = await apiRequest('/api/projects?role=investor', {
           method: 'GET',
-          headers: { 'Authorization': `Bearer ${user?.token}` }
         });
 
         const projectsArray = data.data || [];
@@ -195,7 +194,7 @@ export default function InvestorProperties() {
                       const displayBuilder = isCensored ? "••••••••••••••••" : property.builder;
                       const displayLocation = isCensored ? "••••••••, India" : property.location;
                       const displayYield = isCensored ? "••• ROI" : property.yield;
-                      const displayPrice = isCensored ? "₹ ••.•• Cr" : property.price;
+                      const displayPrice = isCensored ? "$ ••.•• Cr" : property.price;
                       const displayImage = isCensored ? "https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?w=10&q=10" : property.image;
 
                       return (

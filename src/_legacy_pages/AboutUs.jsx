@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+﻿import React, { useEffect } from 'react';
 import Header from '../components/Header';
 import Footer from '../components/Footer';
 import { Shield, Users, Globe, Target, Award, Briefcase, ArrowRight, CheckCircle2 } from 'lucide-react';
@@ -107,7 +107,7 @@ const AboutUs = () => {
                 <div className="text-sm md:text-base text-gray-300">Verified Builders</div>
               </div>
               <div className="p-4">
-                <div className="text-4xl md:text-5xl font-bold text-orange-400 mb-2">₹500Cr</div>
+                <div className="text-4xl md:text-5xl font-bold text-orange-400 mb-2">$500Cr</div>
                 <div className="text-sm md:text-base text-gray-300">Assets Managed</div>
               </div>
               <div className="p-4">

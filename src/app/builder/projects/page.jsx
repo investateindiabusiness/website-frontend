@@ -1,7 +1,7 @@
-"use client";
+﻿"use client";
 
 import React, { useState, useEffect, useCallback } from 'react';
-import { Plus, Search, Edit, Trash2, Eye, ArrowLeft, Save, Building2, MapPin, FileText, ShieldAlert, CheckCircle, FileWarning, Loader2, Clock, XCircle, RefreshCw, LayoutDashboard, Layers, Landmark, IndianRupee, ImagePlus, X } from 'lucide-react';
+import { Plus, Search, Edit, Trash2, Eye, ArrowLeft, Save, Building2, MapPin, FileText, ShieldAlert, CheckCircle, FileWarning, Loader2, Clock, XCircle, RefreshCw, LayoutDashboard, Layers, Landmark, DollarSign, ImagePlus, X } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Input } from '@/components/ui/input';
@@ -10,7 +10,7 @@ import { Textarea } from '@/components/ui/textarea';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from '@/components/ui/dialog';
 import { toast } from '@/hooks/use-toast';
 import { useAuth } from '@/hooks/AuthContext';
-import { fetchBuilderProjects, createProject, updateProject, deleteProject, submitProjectChanges, appealProjectRejection, uploadFile } from '@/api';
+import { fetchBuilderProjects, createProject, updateProject, deleteProject, submitProjectChanges, appealProjectRejection, uploadFile, uploadImage } from '@/api';
 
 const initialFormState = {
     projectName: '', builderName: '', projectOverview: '', projectLocation: '', projectType: 'Residential',
@@ -125,13 +125,15 @@ export default function ProjectManager() {
             // Generate a temporary client-side ID for folder naming (backend will set the real Firestore ID)
             const tempId = isEditing ? currentProject.id : `proj_${Date.now()}`;
 
-            // Upload new image files via backend API
+            // Upload new image files via backend API (use uploadImage for proper image handling)
             const uploadedImages = [];
             for (const img of (currentProject.projectImages || [])) {
                 if (img instanceof File) {
-                    const response = await uploadFile(img, `${tempId}/ProjectDisplayImages`);
+                    const response = await uploadImage(img, `${tempId}/ProjectDisplayImages`);
+                    if (!response?.url) throw new Error(`Image upload failed for ${img.name}`);
                     uploadedImages.push(response.url);
-                } else {
+                } else if (typeof img === 'string' && img.startsWith('http')) {
+                    // Already a URL from a previous upload — keep it
                     uploadedImages.push(img);
                 }
             }
@@ -362,9 +364,8 @@ export default function ProjectManager() {
                                                 key={page}
                                                 onClick={() => setCurrentPage(page)}
                                                 variant={currentPage === page ? 'default' : 'outline'}
-                                                className={`h-9 w-9 p-0 rounded-lg text-xs font-bold ${
-                                                    currentPage === page ? 'bg-slate-900 text-white hover:bg-slate-800' : 'hover:bg-slate-100 bg-white'
-                                                }`}
+                                                className={`h-9 w-9 p-0 rounded-lg text-xs font-bold ${currentPage === page ? 'bg-slate-900 text-white hover:bg-slate-800' : 'hover:bg-slate-100 bg-white'
+                                                    }`}
                                             >
                                                 {page}
                                             </Button>
@@ -475,7 +476,7 @@ export default function ProjectManager() {
                                     <>
                                         <div className="animate-in fade-in slide-in-from-top-2">
                                             <Label className={labelStyle}>Borrowing Amount *</Label>
-                                            <Input required name="existingBorrowingsAmount" value={currentProject.existingBorrowingsAmount} onChange={handleInputChange} className={inputStyle} placeholder="e.g. ₹50 Crores" />
+                                            <Input required name="existingBorrowingsAmount" value={currentProject.existingBorrowingsAmount} onChange={handleInputChange} className={inputStyle} placeholder="e.g. $50 Crores" />
                                         </div>
                                         <div className="animate-in fade-in slide-in-from-top-2">
                                             <Label className={labelStyle}>Purpose of Borrowing *</Label>
@@ -488,7 +489,7 @@ export default function ProjectManager() {
 
                         <div className={cardStyle}>
                             <div className={cardHeaderStyle}>
-                                <IndianRupee className="w-5 h-5 mr-2 text-[#0b264f]" />
+                                <DollarSign className="w-3 h-3" />
                                 <h3 className="text-lg font-bold text-gray-900">Pricing & Offerings</h3>
                             </div>
                             <div className="p-6 grid grid-cols-1 md:grid-cols-2 gap-6 bg-white">
@@ -536,14 +537,21 @@ export default function ProjectManager() {
                                     </div>
                                     {currentProject.projectImages?.length > 0 && (
                                         <div className="mt-4 space-y-2">
-                                            <p className="text-xs font-semibold text-gray-500 uppercase tracking-wider">Selected Images</p>
-                                            <div className="max-h-40 overflow-y-auto pr-2 custom-scrollbar space-y-2">
-                                                {currentProject.projectImages.map((file, idx) => (
-                                                    <div key={idx} className="flex items-center justify-between bg-gray-50 p-2 rounded-lg border border-gray-100 text-sm">
-                                                        <span className="truncate pr-4 text-gray-700">{typeof file === 'string' ? "Uploaded Image" : file.name}</span>
-                                                        <button type="button" onClick={() => removeImage(idx)} className="text-gray-400 hover:text-red-500 p-1"><X className="w-4 h-4" /></button>
-                                                    </div>
-                                                ))}
+                                            <p className="text-xs font-semibold text-gray-500 uppercase tracking-wider">Selected Images ({currentProject.projectImages.length})</p>
+                                            <div className="grid grid-cols-2 gap-2 max-h-56 overflow-y-auto pr-1 custom-scrollbar">
+                                                {currentProject.projectImages.map((file, idx) => {
+                                                    const src = typeof file === 'string' ? file : URL.createObjectURL(file);
+                                                    const name = typeof file === 'string' ? `Image ${idx + 1}` : file.name;
+                                                    return (
+                                                        <div key={idx} className="relative group rounded-lg overflow-hidden border border-gray-200 aspect-video">
+                                                            <img src={src} alt={name} className="w-full h-full object-cover" />
+                                                            <div className="absolute inset-0 bg-black/0 group-hover:bg-black/30 transition-all flex items-center justify-center">
+                                                                <button type="button" onClick={() => removeImage(idx)} className="opacity-0 group-hover:opacity-100 bg-red-500 text-white rounded-full p-1 transition-all shadow"><X className="w-3 h-3" /></button>
+                                                            </div>
+                                                            <p className="absolute bottom-0 left-0 right-0 bg-black/50 text-white text-xs px-1.5 py-0.5 truncate">{name}</p>
+                                                        </div>
+                                                    );
+                                                })}
                                             </div>
                                         </div>
                                     )}
@@ -631,6 +639,49 @@ export default function ProjectManager() {
                                     );
                                 })}
                             </div>
+
+                            {/* Project Images Gallery */}
+                            {Array.isArray(currentProject.projectImages) && currentProject.projectImages.length > 0 && (
+                                <div className="mt-8">
+                                    <h3 className="text-sm font-semibold text-gray-500 uppercase tracking-wider mb-3 flex items-center gap-2">
+                                        <ImagePlus className="w-4 h-4" /> Project Images ({currentProject.projectImages.length})
+                                    </h3>
+                                    <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
+                                        {currentProject.projectImages.map((imgUrl, idx) => (
+                                            typeof imgUrl === 'string' && imgUrl.startsWith('http') ? (
+                                                <div key={idx} className="relative aspect-video rounded-xl overflow-hidden border border-gray-200 shadow-sm">
+                                                    <img src={imgUrl} alt={`Project image ${idx + 1}`} className="w-full h-full object-cover hover:scale-105 transition-transform" />
+                                                </div>
+                                            ) : null
+                                        ))}
+                                    </div>
+                                </div>
+                            )}
+
+                            {/* Project Documents */}
+                            {Array.isArray(currentProject.projectDocuments) && currentProject.projectDocuments.length > 0 && (
+                                <div className="mt-6">
+                                    <h3 className="text-sm font-semibold text-gray-500 uppercase tracking-wider mb-3 flex items-center gap-2">
+                                        <FileText className="w-4 h-4" /> Documents ({currentProject.projectDocuments.length})
+                                    </h3>
+                                    <div className="space-y-2">
+                                        {currentProject.projectDocuments.map((doc, idx) => (
+                                            <div key={idx} className="flex items-center justify-between bg-gray-50 p-3 rounded-lg border border-gray-100">
+                                                <div className="flex items-center gap-2">
+                                                    <FileText className="w-4 h-4 text-[#0b264f]" />
+                                                    <span className="text-sm font-medium text-gray-700">{doc.docName || `Document ${idx + 1}`}</span>
+                                                    {doc.fileName && <span className="text-xs text-gray-400">({doc.fileName})</span>}
+                                                </div>
+                                                {doc.url && (
+                                                    <a href={doc.url} target="_blank" rel="noopener noreferrer" className="text-xs text-[#0b264f] hover:underline font-semibold flex items-center gap-1">
+                                                        <CheckCircle className="w-3 h-3" /> View
+                                                    </a>
+                                                )}
+                                            </div>
+                                        ))}
+                                    </div>
+                                </div>
+                            )}
 
                             {currentProject.status === 'changes_requested' && currentProject.adminRequests && currentProject.adminRequests.length > 0 && (
                                 <div className="mt-10 bg-orange-50 border border-orange-200 rounded-xl p-6 md:p-8 shadow-sm">

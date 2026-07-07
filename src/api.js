@@ -1,6 +1,16 @@
 // Use NEXT_PUBLIC_API_BASE_URL directly. In local dev with rewrites, it can be empty.
 // In production (Netlify), it must point to the actual backend URL.
-const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL || '';
+const API_BASE_URL = typeof window !== 'undefined' ? '' : (process.env.NEXT_PUBLIC_API_BASE_URL || '');
+
+const isProtectedRoute = (path) => {
+  if (!path) return false;
+  const isAdminRoute = path.startsWith('/admin') && path !== '/admin/login';
+  const isBuilderRoute = (path.startsWith('/builder/') && path !== '/builder/login' && path !== '/builder/register') || path === '/builder/dashboard' || path === '/builder/projects' || path === '/builder/advertisements';
+  const isInvestorRoute = path === '/dashboard' || path === '/properties' || (path.startsWith('/investor/') && path !== '/investor/login' && path !== '/investor/register') || path.startsWith('/project/');
+  const isServiceProviderRoute = (path.startsWith('/service-provider/') && path !== '/service-provider' && path !== '/service-provider/login' && path !== '/service-provider/register') || path === '/service-provider/dashboard' || path === '/service-provider/advertisements';
+
+  return isAdminRoute || isBuilderRoute || isInvestorRoute || isServiceProviderRoute;
+};
 
 export const apiRequest = async (endpoint, options = {}) => {
   let session = null;
@@ -19,6 +29,16 @@ export const apiRequest = async (endpoint, options = {}) => {
     ...(session?.token && { 'Authorization': `Bearer ${session.token}` }),
     ...options.headers,
   };
+
+  // Defensive guard: if caller passed an invalid Authorization header (e.g. Bearer undefined),
+  // fall back to the session token to prevent spurious 401s.
+  if (headers['Authorization'] && (headers['Authorization'].includes('undefined') || headers['Authorization'].includes('null'))) {
+    if (session?.token) {
+      headers['Authorization'] = `Bearer ${session.token}`;
+    } else {
+      delete headers['Authorization'];
+    }
+  }
 
   try {
     const response = await fetch(`${API_BASE_URL}${endpoint}`, {
@@ -48,14 +68,17 @@ export const apiRequest = async (endpoint, options = {}) => {
           sessionStorage.removeItem('user_session');
         }
 
-        if (role === 'admin') {
-          window.location.href = '/admin/login?session_expired=true';
-        } else if (role === 'builder') {
-          window.location.href = '/builder/login?session_expired=true';
-        } else if (role === 'serviceProvider') {
-          window.location.href = '/service-provider/login?session_expired=true';
-        } else {
-          window.location.href = '/investor/login?session_expired=true';
+        const currentPath = typeof window !== 'undefined' ? window.location.pathname : '';
+        if (isProtectedRoute(currentPath)) {
+          if (role === 'admin') {
+            window.location.href = '/admin/login?session_expired=true';
+          } else if (role === 'builder') {
+            window.location.href = '/builder/login?session_expired=true';
+          } else if (role === 'serviceProvider') {
+            window.location.href = '/service-provider/login?session_expired=true';
+          } else {
+            window.location.href = '/investor/login?session_expired=true';
+          }
         }
 
         return Promise.reject('Session expired');
@@ -635,3 +658,70 @@ export const fetchAdminUsers = (params = {}) => {
   const query = new URLSearchParams(params).toString();
   return apiRequest(`/api/admin/users${query ? `?${query}` : ''}`);
 };
+
+// ─────────────────────────────────────────────────────────────
+// SP Outreach Module
+// ─────────────────────────────────────────────────────────────
+
+// Service Provider: browse privacy-safe directory
+export const fetchSPDirectory = (params = {}) => {
+  const qs = new URLSearchParams(params).toString();
+  return apiRequest(`/api/sp-outreach/directory${qs ? `?${qs}` : ''}`);
+};
+
+// Service Provider: send a message to investor/builder
+export const sendSPOutreachMessage = (payload) =>
+  apiRequest('/api/sp-outreach/messages', {
+    method: 'POST',
+    body: JSON.stringify(payload),
+  });
+
+// Service Provider: get own sent messages + statuses
+export const fetchMySentOutreachMessages = () =>
+  apiRequest('/api/sp-outreach/messages/my-sent');
+
+// Service Provider: get replies on a specific message
+export const fetchOutreachMessageReplies = (messageId) =>
+  apiRequest(`/api/sp-outreach/messages/${messageId}/replies`);
+
+// Admin: list all SP outreach messages
+export const adminFetchSPOutreachMessages = (params = {}) => {
+  const qs = new URLSearchParams(params).toString();
+  return apiRequest(`/api/sp-outreach/admin/messages${qs ? `?${qs}` : ''}`);
+};
+
+// Admin: accept or reject a message
+export const adminReviewSPOutreachMessage = (messageId, action, adminNote = '') =>
+  apiRequest(`/api/sp-outreach/admin/messages/${messageId}/review`, {
+    method: 'PATCH',
+    body: JSON.stringify({ action, adminNote }),
+  });
+
+// Admin: full thread detail
+export const adminFetchOutreachThread = (messageId) =>
+  apiRequest(`/api/sp-outreach/admin/messages/${messageId}`);
+
+// Investor / Builder: get their SP message inbox
+export const fetchOutreachInbox = () =>
+  apiRequest('/api/sp-outreach/inbox');
+
+// Investor / Builder: reply to a message
+export const replyToSPOutreachMessage = (messageId, body) =>
+  apiRequest(`/api/sp-outreach/messages/${messageId}/reply`, {
+    method: 'POST',
+    body: JSON.stringify({ body }),
+  });
+
+// Service Provider: reply inside thread
+export const spReplyToOutreachMessage = (messageId, body) =>
+  apiRequest(`/api/sp-outreach/messages/${messageId}/sp-reply`, {
+    method: 'POST',
+    body: JSON.stringify({ body }),
+  });
+
+// Admin: block or unblock conversation
+export const adminBlockOutreachConversation = (messageId, block, reason) =>
+  apiRequest(`/api/sp-outreach/admin/messages/${messageId}/block`, {
+    method: 'PATCH',
+    body: JSON.stringify({ block, reason }),
+  });

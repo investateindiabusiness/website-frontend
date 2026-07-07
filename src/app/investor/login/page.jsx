@@ -9,7 +9,7 @@ import { loginRequest } from '@/api';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { Loader2, LogIn, ArrowRight, AlertCircle, AlertTriangle, ArrowLeft } from 'lucide-react';
+import { Loader2, LogIn, ArrowRight, AlertCircle, AlertTriangle, ArrowLeft, Eye, EyeOff } from 'lucide-react';
 import GoogleAuthButton from '@/components/GoogleAuthButton';
 import { getAuth, signInWithEmailAndPassword, sendPasswordResetEmail } from 'firebase/auth';
 import { app } from '@/firebase';
@@ -22,6 +22,7 @@ function InvestorLoginContent() {
   const [formData, setFormData] = useState({ email: '', password: '' });
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState(null);
+  const [showPassword, setShowPassword] = useState(false);
   const [alertModal, setAlertModal] = useState({
     isOpen: false,
     type: '', // 'role_mismatch' | 'not_registered'
@@ -116,7 +117,7 @@ function InvestorLoginContent() {
       console.log("[INVESTOR LOGIN] Catch Block Intercepted:", err);
 
       const errMsg = err.message || '';
-      const isRoleMismatch = 
+      const isRoleMismatch =
         errMsg.toLowerCase().includes('registered as') ||
         errMsg.toLowerCase().includes('role mismatch') ||
         errMsg.toLowerCase().includes('use the investor tab') ||
@@ -153,7 +154,7 @@ function InvestorLoginContent() {
         return;
       }
 
-      const isLoginFailure = 
+      const isLoginFailure =
         errMsg.toLowerCase().includes('login failed') ||
         errMsg.toLowerCase().includes('invalid credentials') ||
         err.error === 'INVALID_LOGIN_CREDENTIALS';
@@ -167,10 +168,10 @@ function InvestorLoginContent() {
           const res = await fetch(signUpUrl, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ 
-              email: formData.email, 
-              password: 'CheckEmailExistencePassword123!', 
-              returnSecureToken: true 
+            body: JSON.stringify({
+              email: formData.email,
+              password: 'CheckEmailExistencePassword123!',
+              returnSecureToken: true
             })
           });
 
@@ -199,9 +200,9 @@ function InvestorLoginContent() {
           setError('Login failed');
         }
       } else {
-        const isNotRegistered = 
-          errMsg.toLowerCase().includes('user not found') || 
-          errMsg.toLowerCase().includes('not registered') || 
+        const isNotRegistered =
+          errMsg.toLowerCase().includes('user not found') ||
+          errMsg.toLowerCase().includes('not registered') ||
           errMsg.toLowerCase().includes('no user found') ||
           errMsg.toLowerCase().includes('not exist') ||
           err.error === 'USER_NOT_FOUND' ||
@@ -263,7 +264,7 @@ function InvestorLoginContent() {
 
   return (
     <div className="min-h-screen w-full flex flex-col lg:flex-row bg-white overflow-hidden">
-      
+
       {/* Mobile Back Button */}
       <div className="lg:hidden p-4 border-b border-gray-100 flex items-center">
         <Link href="/" className="inline-flex items-center gap-2 text-xs font-bold text-gray-600 uppercase tracking-wider hover:text-gray-900 transition-colors">
@@ -355,7 +356,12 @@ function InvestorLoginContent() {
                   <Label htmlFor="password" className="text-[10px] font-black text-gray-900 uppercase tracking-widest ml-1">Password</Label>
                   <button type="button" onClick={handleForgotPassword} className="text-[9px] font-black text-orange-600 uppercase tracking-widest hover:underline">Forgot?</button>
                 </div>
-                <Input id="password" type="password" autoComplete="new-password" placeholder="••••••••" value={formData.password} onChange={(e) => { setFormData({ ...formData, password: e.target.value }); setError(null); }} required className="h-11 px-6 bg-gray-50 border-gray-200 focus:bg-white focus:ring-[6px] focus:ring-orange-500/5 focus:border-orange-500 transition-all duration-300 rounded-2xl text-sm font-bold placeholder:text-gray-300" />
+                <div className="relative">
+                  <Input id="password" type={showPassword ? 'text' : 'password'} autoComplete="new-password" placeholder="••••••••" value={formData.password} onChange={(e) => { setFormData({ ...formData, password: e.target.value }); setError(null); }} required className="h-11 px-6 pr-12 bg-gray-50 border-gray-200 focus:bg-white focus:ring-[6px] focus:ring-orange-500/5 focus:border-orange-500 transition-all duration-300 rounded-2xl text-sm font-bold placeholder:text-gray-300" />
+                  <button type="button" onClick={() => setShowPassword(prev => !prev)} className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-700 transition-colors" tabIndex={-1}>
+                    {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+                  </button>
+                </div>
               </div>
             </div>
 
@@ -393,7 +399,7 @@ function InvestorLoginContent() {
             <h3 className="text-lg font-black text-gray-900 uppercase tracking-tight mb-2">
               {alertModal.type === 'role_mismatch' ? 'Account Role Mismatch' : 'Account Not Found'}
             </h3>
-            
+
             <p className="text-xs text-gray-500 font-semibold leading-relaxed mb-6 px-2">
               {alertModal.message}
             </p>
@@ -417,7 +423,7 @@ function InvestorLoginContent() {
                   Register Now
                 </Button>
               )}
-              
+
               <Button
                 variant="outline"
                 onClick={() => setAlertModal(prev => ({ ...prev, isOpen: false }))}

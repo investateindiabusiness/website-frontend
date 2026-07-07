@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+﻿import React, { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Header from '../components/Header';
 import Footer from '../components/Footer';
@@ -15,7 +15,7 @@ const AVAILABLE_PROPERTIES = [
     builder: 'Apex Constructors',
     location: 'Mumbai, Maharashtra',
     type: '3 BHK Luxury',
-    price: '₹2.5 Cr',
+    price: '$2.5 Cr',
     yield: '+12% proj. ROI',
     image: 'https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?w=800&q=80',
     status: 'Ready to Move',
@@ -27,8 +27,8 @@ const AVAILABLE_PROPERTIES = [
     builder: 'City Developers',
     location: 'Hyderabad, Telangana',
     type: '2 BHK Smart Home',
-    price: '₹1.1 Cr',
-    yield: 'Rental: ₹45k/mo',
+    price: '$1.1 Cr',
+    yield: 'Rental: $45k/mo',
     image: 'https://images.unsplash.com/photo-1493663284031-b7e3aefcae8e?w=800&q=80',
     status: 'Under Construction',
     isShortlisted: true
@@ -39,7 +39,7 @@ const AVAILABLE_PROPERTIES = [
     builder: 'Coastal Living',
     location: 'Kochi, Kerala',
     type: '4 BHK Sea View',
-    price: '₹3.2 Cr',
+    price: '$3.2 Cr',
     yield: 'Premium Segment',
     image: 'https://images.unsplash.com/photo-1512917774080-9991f1c4c750?w=800&q=80',
     status: 'Ready to Move',
@@ -51,7 +51,7 @@ const AVAILABLE_PROPERTIES = [
     builder: 'Apex Constructors',
     location: 'Mumbai, Maharashtra',
     type: '3 BHK Luxury',
-    price: '₹2.5 Cr',
+    price: '$2.5 Cr',
     yield: '+12% proj. ROI',
     image: 'https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?w=800&q=80',
     status: 'Ready to Move',
@@ -63,8 +63,8 @@ const AVAILABLE_PROPERTIES = [
     builder: 'City Developers',
     location: 'Hyderabad, Telangana',
     type: '2 BHK Smart Home',
-    price: '₹1.1 Cr',
-    yield: 'Rental: ₹45k/mo',
+    price: '$1.1 Cr',
+    yield: 'Rental: $45k/mo',
     image: 'https://images.unsplash.com/photo-1493663284031-b7e3aefcae8e?w=800&q=80',
     status: 'Under Construction',
     isShortlisted: false
@@ -75,7 +75,7 @@ const AVAILABLE_PROPERTIES = [
     builder: 'Coastal Living',
     location: 'Kochi, Kerala',
     type: '4 BHK Sea View',
-    price: '₹3.2 Cr',
+    price: '$3.2 Cr',
     yield: 'Premium Segment',
     image: 'https://images.unsplash.com/photo-1512917774080-9991f1c4c750?w=800&q=80',
     status: 'Ready to Move',
@@ -339,7 +339,7 @@ const Home = () => {
                     className="flex items-center gap-3 cursor-pointer"
                     onClick={() => setShowBudgetDropdown(!showBudgetDropdown)}
                   >
-                    <div className="bg-orange-100 text-orange-400 rounded-full w-5 h-5 flex items-center justify-center text-xs font-bold flex-shrink-0">₹</div>
+                    <div className="bg-orange-100 text-orange-400 rounded-full w-5 h-5 flex items-center justify-center text-xs font-bold flex-shrink-0">$</div>
                     <div className="w-full">
                       <div className="flex items-center gap-2">
                         <div className="text-xs font-bold text-gray-500 uppercase tracking-wide">Budget</div>
@@ -353,7 +353,7 @@ const Home = () => {
                   {showBudgetDropdown && (
                     <div className="absolute top-full right-0 w-full md:w-[300px] bg-white rounded-xl shadow-xl border border-gray-100 mt-2 p-4 z-[100]">
                       <div className="max-h-48 overflow-y-auto space-y-2">
-                        {['₹5 Lac', '₹10 Lac', '₹20 Lac', '₹50 Lac', '₹1 Cr', '₹2 Cr', '₹5 Cr+'].map((price) => (
+                        {['$5 Lac', '$10 Lac', '$20 Lac', '$50 Lac', '$1 Cr', '$2 Cr', '$5 Cr+'].map((price) => (
                           <div
                             key={price}
                             className="px-3 py-2 hover:bg-gray-50 rounded cursor-pointer text-sm text-gray-700"
@@ -418,7 +418,7 @@ const Home = () => {
                 <div className="text-white text-sm">Premium Projects</div>
               </div>
               <div className="text-center">
-                <div className="text-3xl md:text-4xl font-bold mb-2">₹500Cr+</div>
+                <div className="text-3xl md:text-4xl font-bold mb-2">$500Cr+</div>
                 <div className="text-white text-sm">Investments Facilitated</div>
               </div>
             </div>
