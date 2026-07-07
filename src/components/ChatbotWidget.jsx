@@ -65,9 +65,6 @@ export default function ChatbotWidget() {
   const content = audienceContent[audience] || audienceContent.public;
   const fallbackGroup = chatbotFaqGroups[audience] || chatbotFaqGroups.public;
 
-  if (pathname?.startsWith('/admin')) {
-    return null;
-  }
 
   const faqs = useMemo(() => {
     return remoteFaqs.length > 0 ? remoteFaqs : fallbackGroup.faqs;
@@ -230,6 +227,10 @@ export default function ChatbotWidget() {
       });
     }
   };
+
+  if (pathname?.startsWith('/admin') || user?.role === 'admin') {
+    return null;
+  }
 
   return (
     <div className="fixed bottom-5 right-5 z-[80] font-sans">
