@@ -15,6 +15,7 @@ import { Badge } from '@/components/ui/badge';
 import { useAuth } from '@/hooks/AuthContext';
 import { fetchBuilderProjects } from '@/api';
 import { toast } from '@/hooks/use-toast';
+import AdBanner from '@/components/AdBanner';
 
 export default function BuilderDashboard() {
   const router = useRouter();

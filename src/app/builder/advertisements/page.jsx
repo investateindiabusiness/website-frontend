@@ -1,4 +1,4 @@
-﻿"use client";
+"use client";
 
 import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
@@ -169,7 +169,7 @@ export default function BuilderAdvertisements() {
           ...z,
           name: z.name || z.id,
           costPerDay: z.costPerDay ?? 0,
-          campaignDuration: z.campaignDuration ?? 7,
+          campaignDuration: z.campaignDuration ?? 1,
         }));
       setZones(enriched);
       if (selectedZone) {
@@ -425,7 +425,7 @@ export default function BuilderAdvertisements() {
     if (dateString < currentDate) return null;
 
     if (selectedZone) {
-      const duration = selectedZone.campaignDuration || 7;
+      const duration = selectedZone.campaignDuration || 1;
       const start = new Date(dateString);
       const end = new Date(start);
       end.setDate(end.getDate() + duration - 1);
@@ -636,7 +636,7 @@ export default function BuilderAdvertisements() {
                       </div>
                       <div className="space-y-1">
                         <span className="text-[10px] text-slate-400 uppercase font-semibold flex items-center"><Clock className="w-3.5 h-3.5 mr-0.5 text-blue-600" /> Campaign Duration</span>
-                        <p className="text-base font-bold text-slate-800">{selectedZone.campaignDuration} Days</p>
+                        <p className="text-base font-bold text-slate-800">Per Day</p>
                       </div>
                     </div>
 
@@ -966,8 +966,8 @@ export default function BuilderAdvertisements() {
                       <strong className="text-slate-800 text-sm">{formatDate(bookingSlot.startDate)} to {formatDate(bookingSlot.endDate)}</strong>
                     </div>
                     <div className="text-right">
-                      <span className="font-semibold text-slate-400 uppercase tracking-wide block text-[9px]">${selectedZone?.costPerDay}/day × {selectedZone?.campaignDuration} days</span>
-                      <strong className="text-slate-800 text-sm">${(selectedZone?.costPerDay || 0) * (selectedZone?.campaignDuration || 7)}</strong>
+                      <span className="font-semibold text-slate-400 uppercase tracking-wide block text-[9px]">${selectedZone?.costPerDay}/day</span>
+                      <strong className="text-slate-800 text-sm">${(selectedZone?.costPerDay || 0) * (selectedZone?.campaignDuration || 1)}</strong>
                     </div>
                   </div>
 
@@ -1066,7 +1066,7 @@ export default function BuilderAdvertisements() {
                     {appliedCoupon && selectedZone && (
                       <div className="flex justify-between items-center mt-2 font-bold text-sm pt-2 border-t border-slate-100">
                         <span className="text-slate-700">Final Total:</span>
-                        <span className="text-[#0b264f] text-lg">${Math.max(0, (selectedZone?.costPerDay || 0) * (selectedZone?.campaignDuration || 7) - appliedCoupon.discountAmount)}</span>
+                        <span className="text-[#0b264f] text-lg">${Math.max(0, (selectedZone?.costPerDay || 0) * (selectedZone?.campaignDuration || 1) - appliedCoupon.discountAmount)}</span>
                       </div>
                     )}
                   </div>
