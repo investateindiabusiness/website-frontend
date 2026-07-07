@@ -93,7 +93,6 @@ export default function EquityRaisingPage() {
         <div className="container mx-auto px-4 max-w-6xl">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
             <motion.div {...fadeUp(0.1)} className="space-y-6">
-              <span className="text-xs uppercase tracking-widest text-[#D48035] font-bold">Executive Summary</span>
               <SectionTitle>Global Investment Gateway to India</SectionTitle>
               <p className="text-gray-600 text-sm md:text-base leading-relaxed">
                 Investate India is a technology-enabled investment platform designed to facilitate participation in Indian investment opportunities through a curated ecosystem of investors, opportunity providers, and professional service partners.
@@ -218,12 +217,12 @@ export default function EquityRaisingPage() {
             <SectionTitle light>The Platform Ecosystem</SectionTitle>
             <p className="text-gray-400 max-w-2xl mx-auto">Connecting stakeholders through structured channels to simplify and secure cross-border investments.</p>
           </motion.div>
-          
+
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 items-stretch">
             {/* Connect */}
             <motion.div {...fadeUp(0.1)} className="bg-white/5 border border-white/10 rounded-3xl p-8 flex flex-col justify-between">
               <div>
-                <span className="text-xs uppercase tracking-widest text-[#D48035] font-bold block mb-4">01 / Connect</span>
+                <span className="text-xs uppercase tracking-widest text-[#D48035] font-bold block mb-4">Connect</span>
                 <h3 className="text-xl font-bold mb-4">Sourcing & Advisory Channels</h3>
                 <p className="text-gray-400 text-sm leading-relaxed mb-6">Bringing together the key players to kickstart investment opportunities and scale developer funding corridors.</p>
               </div>
@@ -240,7 +239,7 @@ export default function EquityRaisingPage() {
             {/* Invest */}
             <motion.div {...fadeUp(0.2)} className="bg-white/5 border border-white/10 rounded-3xl p-8 flex flex-col justify-between">
               <div>
-                <span className="text-xs uppercase tracking-widest text-[#D48035] font-bold block mb-4">02 / Invest</span>
+                <span className="text-xs uppercase tracking-widest text-[#D48035] font-bold block mb-4">Invest</span>
                 <h3 className="text-xl font-bold mb-4">Curated Asset Classes</h3>
                 <p className="text-gray-400 text-sm leading-relaxed mb-6">Select from verified debt, mezzanine, and equity opportunities designed for downside protection and structured returns.</p>
               </div>
@@ -257,7 +256,7 @@ export default function EquityRaisingPage() {
             {/* Support */}
             <motion.div {...fadeUp(0.3)} className="bg-white/5 border border-white/10 rounded-3xl p-8 flex flex-col justify-between">
               <div>
-                <span className="text-xs uppercase tracking-widest text-[#D48035] font-bold block mb-4">03 / Support</span>
+                <span className="text-xs uppercase tracking-widest text-[#D48035] font-bold block mb-4">Support</span>
                 <h3 className="text-xl font-bold mb-4">Compliance & Enablement</h3>
                 <p className="text-gray-400 text-sm leading-relaxed mb-6">Providing investor protection through dedicated relationship support, auditing, and structured legal frameworks.</p>
               </div>
@@ -349,7 +348,7 @@ export default function EquityRaisingPage() {
                 ))}
               </div>
             </motion.div>
-            
+
             {/* Illustrative Example Card */}
             <motion.div {...fadeUp(0.2)}>
               <div className="bg-[#1a1a1a] text-white rounded-3xl p-8 border border-white/5 shadow-xl relative overflow-hidden">
@@ -519,9 +518,9 @@ export default function EquityRaisingPage() {
                 </div>
               ))}
             </div>
-            <p className="mt-5 text-center text-sm font-semibold text-[#111] border-t border-gray-200 pt-5">
+            {/* <p className="mt-5 text-center text-sm font-semibold text-[#111] border-t border-gray-200 pt-5">
               Clear Shift: <span className="text-gray-400 font-normal">Emotional buying</span> &rarr; <span className="text-[#D48035]">Structured, return-driven investing</span>
-            </p>
+            </p> */}
           </motion.div>
         </div>
       </section>
@@ -533,7 +532,7 @@ export default function EquityRaisingPage() {
             <SectionTitle>Meet the Leadership</SectionTitle>
             <p className="text-gray-500 max-w-2xl mx-auto">Connecting global capital access, diaspora connectivity, and structured investment expertise.</p>
           </motion.div>
-          
+
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
             {[
               {
@@ -647,7 +646,7 @@ export default function EquityRaisingPage() {
             <p className="text-gray-400 max-w-xl mx-auto">VTMC & Investate partners with credible businesses to create secure, scalable, and high-value investment opportunities.</p>
           </motion.div>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            
+
             {/* US Office */}
             <motion.div {...fadeUp(0.1)} className="bg-white/5 border border-white/10 rounded-2xl p-8">
               <div className="flex items-center gap-3 mb-5">

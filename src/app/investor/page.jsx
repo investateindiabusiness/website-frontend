@@ -18,14 +18,14 @@ import { Loader2, Search, Users, FileText, Gavel, ShieldCheck, Globe } from 'luc
 
 const heroSlides = [
     {
-        image: 'https://images.unsplash.com/photo-1613490493576-7fde63acd811?q=80&w=2071&auto=format&fit=crop',
+        image: '/images/image copy 14.png',
         tag: 'India\'s Most Trusted NRI Platform',
         title: 'You Built Your Future Abroad.',
         highlight: 'We Protect & Grow Your Wealth in India.',
         subtitle: "We don't just help NRIs invest in India. We help them protect, manage, and grow their wealth with absolute confidence."
     },
     {
-        image: '/images/image copy 2.png',
+        image: '/images/image copy 18.png',
         tag: 'End-to-End NRI Wealth Management',
         title: 'Beyond Investment —',
         highlight: 'Complete NRI Asset Protection',
