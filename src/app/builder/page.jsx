@@ -221,10 +221,37 @@ const trustFeatures = [
   },
 ];
 
+const faqsList = [
+  {
+    question: "How do I list a project?",
+    answer: "Register as a Builder and submit project details for review."
+  },
+  {
+    question: "Can I edit my listing?",
+    answer: "Yes, until or after review where permitted."
+  },
+  {
+    question: "How do I know approval status?",
+    answer: "Track it in your dashboard."
+  },
+  {
+    question: "Can I upload multiple projects?",
+    answer: "Yes."
+  },
+  {
+    question: "Why was my project rejected?",
+    answer: "Review comments and resubmit after corrections."
+  }
+];
+
 export default function BuilderHome() {
   const router = useRouter();
   const [activeStepIndex, setActiveStepIndex] = useState(0);
   const [heroIndex, setHeroIndex] = useState(0);
+  const [activeFaq, setActiveFaq] = useState(null);
+  const toggleFaq = (index) => {
+    setActiveFaq(activeFaq === index ? null : index);
+  };
   const [isHeroPaused, setIsHeroPaused] = useState(false);
   const [hoveredBuilderCard, setHoveredBuilderCard] = useState(null);
   const [builderChallengePage, setBuilderChallengePage] = useState(0);
@@ -800,6 +827,42 @@ export default function BuilderHome() {
                   </div>
                   <h3 className="trust-feature-title">{feature.title}</h3>
                   <p className="trust-feature-desc">{feature.desc}</p>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section className="faq-premium-section section-theme" id="faq">
+        <div className="container">
+          <div className="faq-header-full text-center mb-16">
+            <h2 className="faq-premium-title">Frequently Asked <span className="text-highlight">Questions</span></h2>
+            <p className="faq-premium-subtitle mx-auto">
+              Get clear answers to the most common questions about listing on Investate India and how we connect you with verified NRI investors.
+            </p>
+          </div>
+          <div className="faq-premium-grid justify-center">
+            <div className="faq-accordion-column w-full max-w-[800px]">
+              {faqsList.map((faq, index) => (
+                <div
+                  className={`faq-accordion-item ${activeFaq === index ? "active" : ""}`}
+                  key={index}
+                  onClick={() => toggleFaq(index)}
+                >
+                  <div className="faq-accordion-header">
+                    <h4 className="faq-accordion-question">{faq.question}</h4>
+                    <div className="faq-accordion-arrow">
+                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                        <polyline points="18 15 12 9 6 15"></polyline>
+                      </svg>
+                    </div>
+                  </div>
+                  {activeFaq === index && (
+                    <div className="faq-accordion-content">
+                      <p>{faq.answer}</p>
+                    </div>
+                  )}
                 </div>
               ))}
             </div>

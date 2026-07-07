@@ -117,9 +117,36 @@ const stepImages = [
   "https://images.unsplash.com/photo-1556761175-5973dc0f32e7?q=80&w=1000&auto=format&fit=crop",
 ];
 
+const faqsList = [
+  {
+    question: "Who can register as a Service Provider?",
+    answer: "Professionals and companies offering real-estate related services."
+  },
+  {
+    question: "How do I receive enquiries?",
+    answer: "Through your registered profile."
+  },
+  {
+    question: "Can I manage my profile?",
+    answer: "Yes, anytime."
+  },
+  {
+    question: "What services can I offer?",
+    answer: "Legal, financial, valuation, marketing and related services."
+  },
+  {
+    question: "How do clients contact me?",
+    answer: "Using the platform contact options."
+  }
+];
+
 export default function ServiceProviderHome() {
   const router = useRouter();
   const [activeStepIndex, setActiveStepIndex] = useState(0);
+  const [activeFaq, setActiveFaq] = useState(null);
+  const toggleFaq = (index) => {
+    setActiveFaq(activeFaq === index ? null : index);
+  };
   const [heroIndex, setHeroIndex] = useState(0);
   const [isHeroPaused, setIsHeroPaused] = useState(false);
   const [benefitsPage, setBenefitsPage] = useState(0);
@@ -482,6 +509,42 @@ export default function ServiceProviderHome() {
                   </div>
                 </div>
               </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section className="faq-premium-section section-theme" id="faq">
+        <div className="container">
+          <div className="faq-header-full text-center mb-16">
+            <h2 className="faq-premium-title">Frequently Asked <span className="text-highlight">Questions</span></h2>
+            <p className="faq-premium-subtitle mx-auto">
+              Get clear answers to the most common questions about offering your services on Investate India.
+            </p>
+          </div>
+          <div className="faq-premium-grid justify-center">
+            <div className="faq-accordion-column w-full max-w-[800px]">
+              {faqsList.map((faq, index) => (
+                <div
+                  className={`faq-accordion-item ${activeFaq === index ? "active" : ""}`}
+                  key={index}
+                  onClick={() => toggleFaq(index)}
+                >
+                  <div className="faq-accordion-header">
+                    <h4 className="faq-accordion-question">{faq.question}</h4>
+                    <div className="faq-accordion-arrow">
+                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                        <polyline points="18 15 12 9 6 15"></polyline>
+                      </svg>
+                    </div>
+                  </div>
+                  {activeFaq === index && (
+                    <div className="faq-accordion-content">
+                      <p>{faq.answer}</p>
+                    </div>
+                  )}
+                </div>
+              ))}
             </div>
           </div>
         </div>
