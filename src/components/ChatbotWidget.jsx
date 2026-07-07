@@ -73,6 +73,10 @@ const getFaqCategory = (faq, audience) => {
   return categoryFallbacks[audience] || 'Support';
 };
 
+const isDuplicatePublicFallback = (faq, audience) => {
+  return audience === 'public' && faq.question === 'What if my question is not listed?';
+};
+
 export default function ChatbotWidget() {
   const { user, loading } = useAuth() || {};
   const pathname = usePathname();
@@ -92,8 +96,9 @@ export default function ChatbotWidget() {
   const fallbackGroup = chatbotFaqGroups[audience] || chatbotFaqGroups.public;
 
   const faqs = useMemo(() => {
-    return remoteFaqs.length > 0 ? remoteFaqs : fallbackGroup.faqs;
-  }, [fallbackGroup.faqs, remoteFaqs]);
+    const sourceFaqs = remoteFaqs.length > 0 ? remoteFaqs : fallbackGroup.faqs;
+    return sourceFaqs.filter((faq) => !isDuplicatePublicFallback(faq, audience));
+  }, [audience, fallbackGroup.faqs, remoteFaqs]);
 
   const generateId = () => Math.random().toString(36).slice(2, 11);
 
