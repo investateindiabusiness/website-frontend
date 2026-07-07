@@ -32,6 +32,7 @@ import {
   CardMembership as MembershipIcon,
   Forum as OutreachIcon,
   ContactMail as DirectoryIcon,
+  CardGiftcard as ReferralsIcon,
 } from '@mui/icons-material';
 
 const DRAWER_WIDTH = 240;
@@ -53,6 +54,7 @@ const NAV_ITEMS_BY_ROLE = {
     { label: 'Advertisements',   path: '/admin/advertisements',    icon: <AdsIcon /> },
     { label: 'Newsletter',       path: '/admin/newsletter',        icon: <NewsletterIcon /> },
     { label: 'Coupons',          path: '/admin/coupons',           icon: <CouponsIcon /> },
+    { label: 'Referrals',        path: '/admin/referrals',         icon: <ReferralsIcon /> },
     { label: 'Membership Pricing', path: '/admin/membership-pricing', icon: <MembershipIcon /> },
   ],
   builder: [
@@ -60,6 +62,7 @@ const NAV_ITEMS_BY_ROLE = {
     { label: 'Projects',      path: '/builder/projects',        icon: <ProjectsIcon /> },
     { label: 'Advertise',     path: '/builder/advertisements',  icon: <AdsIcon /> },
     { label: 'Payments',      path: '/builder/payments',        icon: <LeadsIcon /> },
+    { label: 'Referrals',     path: '/builder/referrals',      icon: <ReferralsIcon /> },
     { label: 'Coupons',       path: '/builder/coupons',         icon: <CouponsIcon /> },
     { label: 'SP Inbox',      path: '/builder/outreach-inbox',  icon: <OutreachIcon /> },
   ],
@@ -68,6 +71,7 @@ const NAV_ITEMS_BY_ROLE = {
     { label: 'Properties',    path: '/properties',             icon: <ProjectsIcon /> },
     { label: 'KYC Verification', path: '/investor/kyc',         icon: <KYCIcon /> },
     { label: 'Advertise',     path: '/investor/advertisements',icon: <AdsIcon /> },
+    { label: 'Referrals',     path: '/investor/referrals',     icon: <ReferralsIcon /> },
     { label: 'Payments',      path: '/investor/payments',      icon: <LeadsIcon /> },
     { label: 'Coupons',       path: '/investor/coupons',       icon: <CouponsIcon /> },
     { label: 'SP Inbox',      path: '/investor/outreach-inbox',icon: <OutreachIcon /> },
@@ -76,6 +80,7 @@ const NAV_ITEMS_BY_ROLE = {
     { label: 'Dashboard',     path: '/service-provider/dashboard',       icon: <DashboardIcon /> },
     { label: 'Directory',     path: '/service-provider/directory',       icon: <DirectoryIcon /> },
     { label: 'My Outreach',   path: '/service-provider/outreach',        icon: <OutreachIcon /> },
+    { label: 'Referrals',     path: '/service-provider/referrals',      icon: <ReferralsIcon /> },
     { label: 'Advertise',     path: '/service-provider/advertisements',  icon: <AdsIcon /> },
     { label: 'Payments',      path: '/service-provider/payments',        icon: <LeadsIcon /> },
     { label: 'Coupons',       path: '/service-provider/coupons',         icon: <CouponsIcon /> },

@@ -225,8 +225,9 @@ export default function Index() {
 
     useEffect(() => {
         if (isHeroPaused) return;
+        const totalSlides = heroSlides.length + 1;
         const timer = setInterval(() => {
-            setHeroIndex((prev) => (prev + 1) % heroSlides.length);
+            setHeroIndex((prev) => (prev + 1) % totalSlides);
         }, 8000);
         return () => clearInterval(timer);
     }, [isHeroPaused]);
@@ -252,6 +253,8 @@ export default function Index() {
     };
 
     const activeStepData = investorSteps[activeStepIndex];
+    const totalSlides = heroSlides.length + 1;
+    const isAdSlide = heroIndex === heroSlides.length;
 
     const handleAuthClick = (action, role) => {
         if (action === 'login') {
@@ -271,30 +274,43 @@ export default function Index() {
                 onMouseLeave={() => setIsHeroPaused(false)}
             >
                 <AnimatePresence mode="sync">
-                    <picture key={heroIndex} className="absolute inset-0 w-full h-full z-0">
-                        <source media="(max-width: 768px)" srcSet={heroSlides[heroIndex].image.replace('.png', '_mobile.jpg')} />
+                    {isAdSlide ? (
                         <motion.img
-                            src={heroSlides[heroIndex].image}
-                            alt="Hero background"
+                            key="ad-bg"
+                            src="https://images.unsplash.com/photo-1560518883-ce09059eeffa?w=1200&q=80"
+                            alt="Advertisement background"
                             className="absolute inset-0 w-full h-full object-cover z-0 hero-split-image"
                             initial={{ opacity: 0 }}
                             animate={{ opacity: 1 }}
                             exit={{ opacity: 0 }}
                             transition={{ duration: 1.2, ease: 'easeInOut' }}
-                            loading="eager"
-                            fetchPriority="high"
                         />
-                    </picture>
+                    ) : (
+                        <picture key={heroIndex} className="absolute inset-0 w-full h-full z-0">
+                            <source media="(max-width: 768px)" srcSet={heroSlides[heroIndex].image.replace('.png', '_mobile.jpg')} />
+                            <motion.img
+                                src={heroSlides[heroIndex].image}
+                                alt="Hero background"
+                                className="absolute inset-0 w-full h-full object-cover z-0 hero-split-image"
+                                initial={{ opacity: 0 }}
+                                animate={{ opacity: 1 }}
+                                exit={{ opacity: 0 }}
+                                transition={{ duration: 1.2, ease: 'easeInOut' }}
+                                loading="eager"
+                                fetchPriority="high"
+                            />
+                        </picture>
+                    )}
                 </AnimatePresence>
                 <div className="absolute inset-0 z-[1] hero-split-overlay" />
 
                 {/* Prev / Next buttons */}
                 <button
-                    onClick={() => setHeroIndex((prev) => (prev - 1 + heroSlides.length) % heroSlides.length)}
+                    onClick={() => setHeroIndex((prev) => (prev - 1 + totalSlides) % totalSlides)}
                     aria-label="Previous image"
                     style={{
                         position: 'absolute', left: '1.25rem', top: '50%', transform: 'translateY(-50%)',
-                        zIndex: 10, background: 'rgba(255,255,255,0.15)', backdropFilter: 'blur(6px)',
+                        zIndex: 20, background: 'rgba(255,255,255,0.15)', backdropFilter: 'blur(6px)',
                         border: '1px solid rgba(255,255,255,0.3)', borderRadius: '50%',
                         width: '2.75rem', height: '2.75rem', display: 'flex', alignItems: 'center',
                         justifyContent: 'center', cursor: 'pointer', color: '#fff', fontSize: '1.1rem',
@@ -302,11 +318,11 @@ export default function Index() {
                     }}
                 >❮</button>
                 <button
-                    onClick={() => setHeroIndex((prev) => (prev + 1) % heroSlides.length)}
+                    onClick={() => setHeroIndex((prev) => (prev + 1) % totalSlides)}
                     aria-label="Next image"
                     style={{
                         position: 'absolute', right: '1.25rem', top: '50%', transform: 'translateY(-50%)',
-                        zIndex: 10, background: 'rgba(255,255,255,0.15)', backdropFilter: 'blur(6px)',
+                        zIndex: 20, background: 'rgba(255,255,255,0.15)', backdropFilter: 'blur(6px)',
                         border: '1px solid rgba(255,255,255,0.3)', borderRadius: '50%',
                         width: '2.75rem', height: '2.75rem', display: 'flex', alignItems: 'center',
                         justifyContent: 'center', cursor: 'pointer', color: '#fff', fontSize: '1.1rem',
@@ -315,8 +331,8 @@ export default function Index() {
                 >❯</button>
 
                 {/* Dot indicators */}
-                <div style={{ position: 'absolute', bottom: '1.5rem', left: '50%', transform: 'translateX(-50%)', zIndex: 10, display: 'flex', gap: '0.5rem' }}>
-                    {heroSlides.map((_, i) => (
+                <div style={{ position: 'absolute', bottom: '1.5rem', left: '50%', transform: 'translateX(-50%)', zIndex: 20, display: 'flex', gap: '0.5rem' }}>
+                    {Array.from({ length: totalSlides }).map((_, i) => (
                         <button
                             key={i}
                             onClick={() => setHeroIndex(i)}
@@ -333,16 +349,37 @@ export default function Index() {
                     ))}
                 </div>
 
-                <div className="container relative z-[2]">
-                    <div className="hero-content">
-                        <AnimatePresence mode="wait">
-                            <motion.div
-                                key={heroIndex}
-                                initial={{ opacity: 0, y: 20 }}
-                                animate={{ opacity: 1, y: 0 }}
-                                exit={{ opacity: 0, y: -20 }}
-                                transition={{ duration: 0.6, ease: "easeOut" }}
-                            >
+                <AnimatePresence mode="wait">
+                    {isAdSlide ? (
+                        <motion.div
+                            key="ad-slide-content"
+                            className="absolute inset-0 z-[2] flex flex-col justify-center px-10 md:px-20"
+                            initial={{ opacity: 0, y: 20 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            exit={{ opacity: 0, y: -20 }}
+                            transition={{ duration: 0.6, ease: 'easeOut' }}
+                        >
+                            <div className="container relative h-full flex flex-col justify-center">
+                                <span className="inline-block text-xs font-bold uppercase tracking-widest bg-orange-500/80 text-white px-3 py-1.5 rounded-full mb-5 w-fit">
+                                    Sponsored
+                                </span>
+                                <h1 className="hero-headline drop-shadow-xl text-white">Advertise Your<br /><span className="text-orange-400">Project Here!</span></h1>
+                                <p className="hero-subheadline max-w-lg text-white/90">Reach thousands of global NRI investors. Get your property or service featured on Investate India.</p>
+                                <div className="hero-cta-group flex gap-4 mt-4">
+                                    <AdBanner zoneId="zone2" variant="cta-only" forceRole="investor" />
+                                </div>
+                            </div>
+                        </motion.div>
+                    ) : (
+                        <motion.div
+                            key={`slide-${heroIndex}`}
+                            className="absolute inset-0 z-[2] container flex flex-col justify-center"
+                            initial={{ opacity: 0, y: 20 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            exit={{ opacity: 0, y: -20 }}
+                            transition={{ duration: 0.6, ease: 'easeOut' }}
+                        >
+                            <div className="hero-content">
                                 <span className="hero-tag">{heroSlides[heroIndex].tag}</span>
                                 <h1 className="hero-headline">
                                     {heroSlides[heroIndex].title} <br />
@@ -351,16 +388,17 @@ export default function Index() {
                                 <p className="hero-subheadline">
                                     {heroSlides[heroIndex].subtitle}
                                 </p>
-                            </motion.div>
-                        </AnimatePresence>
-                        <div className="hero-cta-group">
-                            <button onClick={() => handleAuthClick('register', 'investor')} className="btn btn-primary">
-                                Explore Opportunities
-                            </button>
-                        </div>
-                    </div>
-                </div>
+                                <div className="hero-cta-group">
+                                    <button onClick={() => handleAuthClick('register', 'investor')} className="btn btn-primary">
+                                        Explore Opportunities
+                                    </button>
+                                </div>
+                            </div>
+                        </motion.div>
+                    )}
+                </AnimatePresence>
             </section>
+
 
 
             <section className="fullscreen-section section-light" id="about">

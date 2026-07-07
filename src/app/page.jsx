@@ -7,6 +7,7 @@ import AwardsSection from "@/components/AwardsSection";
 import TestimonialsSection from "@/components/TestimonialsSection";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
+import AdBanner from "@/components/AdBanner";
 import {
     ShieldCheck,
     Scale,
@@ -139,6 +140,8 @@ export default function ServiceProviderHome() {
     }, [isHeroPaused]);
 
     const activeStepData = serviceProviderSteps[activeStepIndex];
+    const totalSlides = heroSlides.length + 1;   // last slot = ad slide
+    const isAdSlide = heroIndex === heroSlides.length;
 
     return (
         <div className="theme-builder w-full bg-white overflow-x-hidden">
@@ -151,91 +154,124 @@ export default function ServiceProviderHome() {
                 onMouseLeave={() => setIsHeroPaused(false)}
             >
                 <AnimatePresence mode="sync">
-                    <picture
-                        key={heroIndex}
-                        className="absolute inset-0 w-full h-full z-0"
-                    >
-                        <source
-                            media="(max-width: 768px)"
-                            srcSet={heroSlides[heroIndex]?.image.replace(
-                                "w=2070",
-                                "w=600&q=70",
-                            )}
-                        />
+                    {isAdSlide ? (
                         <motion.img
-                            src={heroSlides[heroIndex]?.image.replace(
-                                "w=2070",
-                                "w=1200&q=75",
-                            )}
-                            alt="Hero background"
+                            key="ad-bg"
+                            src="https://images.unsplash.com/photo-1560518883-ce09059eeffa?w=1200&q=80"
+                            alt="Sponsor background"
                             className="absolute inset-0 w-full h-full object-cover z-0 hero-split-image"
                             initial={{ opacity: 0 }}
                             animate={{ opacity: 1 }}
                             exit={{ opacity: 0 }}
-                            transition={{ duration: 1.2, ease: "easeInOut" }}
-                            loading="eager"
-                            fetchPriority="high"
+                            transition={{ duration: 1.2, ease: 'easeInOut' }}
                         />
-                    </picture>
+                    ) : (
+                        <picture key={heroIndex} className="absolute inset-0 w-full h-full z-0">
+                            <source
+                                media="(max-width: 768px)"
+                                srcSet={heroSlides[heroIndex]?.image.replace("w=2070", "w=600&q=70")}
+                            />
+                            <motion.img
+                                src={heroSlides[heroIndex]?.image.replace("w=2070", "w=1200&q=75")}
+                                alt="Hero background"
+                                className="absolute inset-0 w-full h-full object-cover z-0 hero-split-image"
+                                initial={{ opacity: 0 }}
+                                animate={{ opacity: 1 }}
+                                exit={{ opacity: 0 }}
+                                transition={{ duration: 1.2, ease: "easeInOut" }}
+                                loading="eager"
+                                fetchPriority="high"
+                            />
+                        </picture>
+                    )}
                 </AnimatePresence>
-                <div
-                    className="absolute inset-0 z-[1] hero-split-overlay"
-                />
+                <div className="absolute inset-0 z-[1] hero-split-overlay" />
 
                 {/* Prev / Next buttons */}
                 <button
-                    onClick={() =>
-                        setHeroIndex(
-                            (prev) => (prev - 1 + heroSlides.length) % heroSlides.length,
-                        )
-                    }
+                    onClick={() => setHeroIndex((prev) => (prev - 1 + totalSlides) % totalSlides)}
                     aria-label="Previous image"
-                    className="absolute left-5 top-1/2 -translate-y-1/2 z-10 bg-white/10 backdrop-blur-md border border-white/20 rounded-full w-11 h-11 flex items-center justify-center cursor-pointer text-white hover:bg-white/25 transition-colors"
+                    className="absolute left-5 top-1/2 -translate-y-1/2 z-[20] bg-white/10 backdrop-blur-md border border-white/20 rounded-full w-11 h-11 flex items-center justify-center cursor-pointer text-white hover:bg-white/25 transition-colors"
                 >
                     ❮
                 </button>
                 <button
-                    onClick={() => setHeroIndex((prev) => (prev + 1) % heroSlides.length)}
+                    onClick={() => setHeroIndex((prev) => (prev + 1) % totalSlides)}
                     aria-label="Next image"
-                    className="absolute right-5 top-1/2 -translate-y-1/2 z-10 bg-white/10 backdrop-blur-md border border-white/20 rounded-full w-11 h-11 flex items-center justify-center cursor-pointer text-white hover:bg-white/25 transition-colors"
+                    className="absolute right-5 top-1/2 -translate-y-1/2 z-[20] bg-white/10 backdrop-blur-md border border-white/20 rounded-full w-11 h-11 flex items-center justify-center cursor-pointer text-white hover:bg-white/25 transition-colors"
                 >
                     ❯
                 </button>
 
-                <div className="container relative z-[2]">
-                    <div className="hero-content">
-                        <AnimatePresence mode="wait">
-                            <motion.div
-                                key={heroIndex}
-                                initial={{ opacity: 0, y: 20 }}
-                                animate={{ opacity: 1, y: 0 }}
-                                exit={{ opacity: 0, y: -20 }}
-                                transition={{ duration: 0.6, ease: "easeOut" }}
-                            >
+                {/* Slide dots */}
+                <div className="absolute bottom-6 left-1/2 -translate-x-1/2 z-[20] flex gap-2">
+                    {Array.from({ length: totalSlides }).map((_, i) => (
+                        <button
+                            key={i}
+                            onClick={() => setHeroIndex(i)}
+                            aria-label={`Go to slide ${i + 1}`}
+                            style={{
+                                width: i === heroIndex ? '1.5rem' : '0.5rem',
+                                height: '0.5rem',
+                                borderRadius: '9999px',
+                                background: i === heroIndex ? '#fff' : 'rgba(255,255,255,0.45)',
+                                border: 'none', cursor: 'pointer',
+                                transition: 'all 0.3s ease', padding: 0,
+                            }}
+                        />
+                    ))}
+                </div>
+
+                {/* Ad slide content */}
+                <AnimatePresence mode="wait">
+                    {isAdSlide ? (
+                        <motion.div
+                            key="ad-slide-content"
+                            className="absolute inset-0 z-[2] flex flex-col justify-center px-10 md:px-20"
+                            initial={{ opacity: 0, y: 20 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            exit={{ opacity: 0, y: -20 }}
+                            transition={{ duration: 0.6, ease: 'easeOut' }}
+                        >
+                            <span className="inline-block text-xs font-bold uppercase tracking-widest bg-orange-500/80 text-white px-3 py-1.5 rounded-full mb-5 w-fit">
+                                Sponsored
+                            </span>
+                            <h1 className="hero-headline drop-shadow-xl">Advertise Your<br /><span className="text-orange-400">Project Here!</span></h1>
+                            <p className="hero-subheadline max-w-lg">Reach thousands of global NRI investors. Get your property or service featured on Investate India.</p>
+                            <div className="hero-cta-group flex gap-4 mt-4">
+                                <AdBanner zoneId="spotlight" variant="cta-only" />
+                            </div>
+                        </motion.div>
+                    ) : (
+                        <motion.div
+                            key={`slide-${heroIndex}`}
+                            className="absolute inset-0 z-[2] container flex flex-col justify-center"
+                            initial={{ opacity: 0, y: 20 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            exit={{ opacity: 0, y: -20 }}
+                            transition={{ duration: 0.6, ease: 'easeOut' }}
+                        >
+                            <div className="hero-content">
                                 <span className="hero-tag bg-slate-700/80 text-blue-200 border-none">
                                     {heroSlides[heroIndex]?.tag}
                                 </span>
                                 <h1 className="hero-headline">
                                     {heroSlides[heroIndex]?.title} <br />
-                                    <span className="text-white">
-                                        {heroSlides[heroIndex]?.highlight}
-                                    </span>
+                                    <span className="text-white">{heroSlides[heroIndex]?.highlight}</span>
                                 </h1>
-                                <p className="hero-subheadline">
-                                    {heroSlides[heroIndex]?.subtitle}
-                                </p>
-                            </motion.div>
-                        </AnimatePresence>
-                        <div className="hero-cta-group flex gap-4">
-                            <button
-                                onClick={() => router.push("/contact-us")}
-                                className="btn bg-[#D48035] hover:bg-[#B45309] border-none text-white px-8 py-3 rounded-full font-bold shadow-lg transition-transform hover:scale-105 active:scale-95"
-                            >
-                                Talk to Us
-                            </button>
-                        </div>
-                    </div>
-                </div>
+                                <p className="hero-subheadline">{heroSlides[heroIndex]?.subtitle}</p>
+                                <div className="hero-cta-group flex gap-4">
+                                    <button
+                                        onClick={() => router.push("/contact-us")}
+                                        className="btn bg-[#D48035] hover:bg-[#B45309] border-none text-white px-8 py-3 rounded-full font-bold shadow-lg transition-transform hover:scale-105 active:scale-95"
+                                    >
+                                        Talk to Us
+                                    </button>
+                                </div>
+                            </div>
+                        </motion.div>
+                    )}
+                </AnimatePresence>
             </section>
 
             {/* Executive Summary Section */}

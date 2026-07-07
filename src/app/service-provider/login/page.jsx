@@ -112,6 +112,13 @@ function ServiceProviderLoginContent() {
         } catch (_) { /* non-blocking */ }
       }
 
+      // Check for post-login redirect (e.g. coming from ad "Book this Space" click)
+      const pendingRedirect = sessionStorage.getItem('postLoginRedirect');
+      if (pendingRedirect === '/advertisements') {
+        sessionStorage.removeItem('postLoginRedirect');
+        return router.push('/service-provider/advertisements');
+      }
+
       router.push('/service-provider/dashboard');
 
     } catch (err) {
