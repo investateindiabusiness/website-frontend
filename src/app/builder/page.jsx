@@ -224,6 +224,7 @@ export default function BuilderHome() {
   const router = useRouter();
   const [activeStepIndex, setActiveStepIndex] = useState(0);
   const [heroIndex, setHeroIndex] = useState(0);
+  const [isHeroPaused, setIsHeroPaused] = useState(false);
   const [hoveredBuilderCard, setHoveredBuilderCard] = useState(null);
   const [builderChallengePage, setBuilderChallengePage] = useState(0);
   const builderChallengesScrollRef = useRef(null);
@@ -255,11 +256,12 @@ export default function BuilderHome() {
   };
 
   useEffect(() => {
+    if (isHeroPaused) return;
     const timer = setInterval(() => {
       setHeroIndex((prev) => (prev + 1) % heroSlides.length);
-    }, 6000);
+    }, 8000);
     return () => clearInterval(timer);
-  }, []);
+  }, [isHeroPaused]);
 
   const activeStepData = builderSteps[activeStepIndex];
 
@@ -267,8 +269,11 @@ export default function BuilderHome() {
     <div className="theme-builder w-full bg-[var(--color-light-bg)] overflow-x-hidden">
       <Header transparent={true} />
 
-      {/* HERO SECTION */}
-      <section className="fullscreen-section hero-section">
+      <section
+        className="fullscreen-section hero-section"
+        onMouseEnter={() => setIsHeroPaused(true)}
+        onMouseLeave={() => setIsHeroPaused(false)}
+      >
         <AnimatePresence mode="sync">
           <picture
             key={heroIndex}
@@ -748,8 +753,6 @@ export default function BuilderHome() {
           </div>
         </div>
       </section>
-
-      <TestimonialsSection />
 
       <section className="fullscreen-section section-theme" id="trust">
         <div className="container">

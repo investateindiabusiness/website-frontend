@@ -50,7 +50,7 @@ export default function TestimonialsSection() {
   const handleNext = () => setActiveIndex((prev) => (prev >= maxIndex ? 0 : prev + 1));
 
   return (
-    <section className="py-24 bg-[var(--color-light-bg,#FAFAF9)] relative overflow-hidden" id="testimonials">
+    <section className="py-24 bg-[#FEFEFE] dark:bg-[#111] relative overflow-hidden" id="testimonials">
       {/* Decorative background elements */}
       <div className="absolute top-0 left-0 w-full h-full overflow-hidden pointer-events-none">
         <div className="absolute top-[-10%] left-[-5%] w-96 h-96 bg-[var(--color-accent,#D48035)] rounded-full mix-blend-multiply filter blur-[120px] opacity-10"></div>

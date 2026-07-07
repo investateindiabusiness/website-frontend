@@ -29,7 +29,7 @@ const heroSlides = [
         tag: 'End-to-End NRI Wealth Management',
         title: 'Beyond Investment —',
         highlight: 'Complete NRI Asset Protection',
-        subtitle: 'From real estate investment to legal support, rental management, tax planning and succession advisory — all in one trusted ecosystem.'
+        subtitle: 'From real estate investment to legal support, rental management, tax planning, succession advisory, and structured exit plans — all in one trusted ecosystem.'
     },
     {
         image: 'https://images.unsplash.com/photo-1600585154340-be6161a56a0c?q=80&w=2070&auto=format&fit=crop',
@@ -44,7 +44,7 @@ const contentDataForSection2 = [
     {
         id: "01",
         title: "Investment Opportunities",
-        text: "Curated, pre-verified real estate projects with standardized RERA disclosures and performance tracking — so you invest based on merit, not marketing.",
+        text: "Curated, pre-verified real estate projects with standardized RERA disclosures and performance tracking — so you invest based on merit, not marketing. We also offer rental income management, ROI tracking, resale support, and structured exit planning for every stage of your investment.",
         image: "/images/media1.png"
     },
     {
@@ -615,8 +615,6 @@ export default function Index() {
                 </div>
             </section>
 
-            <TestimonialsSection />
-
             <section
                 className="fullscreen-section section-light relative overflow-hidden"
                 id="trust"
@@ -654,22 +652,18 @@ export default function Index() {
                 </div>
             </section>
 
-            <section className="team-section-integrated section-theme" id="team">
-                <div className="team-integrated-wrapper">
-                    <div className="team-text-banner">
-                        <div className="team-text-content-inner">
-                            <h2 className="team-main-title">Meet the Team Behind <span className="text-highlight">Your Trust</span></h2>
-                            <p className="team-main-desc">
-                                <strong>Built on transparency. Driven by experience.</strong><br />
-                                Investate India is led by Deepak Kavadia, Pankaj Gupta, and Atish Agarwal.
-                            </p>
-                            {/* <div className="team-nav-arrows-inline">
-                                <button className="team-nav-btn prev"><span>❮</span></button>
-                                <button className="team-nav-btn next"><span>❯</span></button>
-                            </div> */}
-                        </div>
+            <section className="team-section-integrated section-theme py-16" id="team">
+                <div className="container mx-auto px-4 max-w-6xl">
+                    <div className="text-center mb-12">
+                        <h2 className="text-3xl md:text-4xl font-bold mb-4">
+                            Meet the Team Behind <span className="text-highlight">Your Trust</span>
+                        </h2>
+                        <p className="text-slate-600 dark:text-slate-300 max-w-2xl mx-auto text-sm md:text-base leading-relaxed">
+                            <strong>Built on transparency. Driven by experience.</strong><br />
+                            Investate India is led by Deepak Kavadia, Pankaj Gupta, and Atish Agarwal.
+                        </p>
                     </div>
-                    <div className="team-cards-scroll-area" id="team-cards-row">
+                    <div className="flex flex-wrap justify-center gap-8">
                         {teamMembers.map((member, index) => (
                             <div className="team-card-premium" key={index}>
                                 <div className="team-card-image">
@@ -681,30 +675,6 @@ export default function Index() {
                                 </div>
                             </div>
                         ))}
-                    </div>
-
-                    {/* Team navigation arrows for mobile */}
-                    <div className="flex justify-center gap-4 mt-6 md:hidden">
-                        <button
-                            onClick={() => document.getElementById('team-cards-row').scrollBy({ left: -320, behavior: 'smooth' })}
-                            className="nav-arrow-btn"
-                            style={{
-                                width: '3rem', height: '3rem', borderRadius: '50%',
-                                border: '1.5px solid rgba(0,0,0,0.1)', background: '#fff',
-                                color: '#333', fontSize: '1.1rem', display: 'flex', alignItems: 'center', justifyContent: 'center',
-                                boxShadow: '0 4px 12px rgba(0,0,0,0.06)'
-                            }}
-                        >❮</button>
-                        <button
-                            onClick={() => document.getElementById('team-cards-row').scrollBy({ left: 320, behavior: 'smooth' })}
-                            className="nav-arrow-btn"
-                            style={{
-                                width: '3rem', height: '3rem', borderRadius: '50%',
-                                border: '1.5px solid rgba(0,0,0,0.1)', background: '#fff',
-                                color: '#333', fontSize: '1.1rem', display: 'flex', alignItems: 'center', justifyContent: 'center',
-                                boxShadow: '0 4px 12px rgba(0,0,0,0.06)'
-                            }}
-                        >❯</button>
                     </div>
                 </div>
             </section>
