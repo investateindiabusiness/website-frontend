@@ -4,6 +4,7 @@ import React, { useState, useEffect, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import AwardsSection from "@/components/AwardsSection";
 import TestimonialsSection from "@/components/TestimonialsSection";
+import DeepakProfileSection from "@/components/DeepakProfileSection";
 import {
   Globe,
   Search,
@@ -18,7 +19,7 @@ import Footer from "@/components/Footer";
 const heroSlides = [
   {
     image:
-      "https://images.unsplash.com/photo-1504307651254-35680f356dfd?q=80&w=2066&auto=format&fit=crop",
+      "/images/image (1).png",
     tag: "Institutional Capital Access",
     title: "Direct Connectivity to",
     highlight: "High-Net-Worth NRI Capital",
@@ -27,7 +28,7 @@ const heroSlides = [
   },
   {
     image:
-      "/images/builder.png",
+      "/images/image copy 19.png",
     tag: "Global Reach & Trust",
     title: "Elevate Your Brand with",
     highlight: "Verified Institutional Credibility",
@@ -645,7 +646,7 @@ export default function BuilderHome() {
                 }}
               >
                 <img
-                  src="/images/overlap_optimized.jpg"
+                  src="/images/image copy 11.png"
                   alt="Modern Cityscape"
                   width={800}
                   height={600}
@@ -805,6 +806,8 @@ export default function BuilderHome() {
           </div>
         </div>
       </section>
+
+      <DeepakProfileSection pageType="builder" />
 
       {/* CONTACT SECTION */}
       <section className="fullscreen-section py-20 text-white text-center" id="contact" style={{ backgroundColor: '#1a1a1a' }}>

@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
 import AwardsSection from "@/components/AwardsSection";
 import TestimonialsSection from "@/components/TestimonialsSection";
+import DeepakProfileSection from "@/components/DeepakProfileSection";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import {
@@ -485,6 +486,8 @@ export default function ServiceProviderHome() {
           </div>
         </div>
       </section>
+
+      <DeepakProfileSection pageType="serviceProvider" />
 
       {/* CONTACT SECTION */}
       <section

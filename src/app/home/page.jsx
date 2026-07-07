@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
 import AwardsSection from "@/components/AwardsSection";
 import TestimonialsSection from "@/components/TestimonialsSection";
+import DeepakProfileSection from "@/components/DeepakProfileSection";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import {
@@ -22,7 +23,7 @@ import {
 
 const heroSlides = [
     {
-        image: "/images/image copy 6.png",
+        image: "/images/image copy 10.png",
         tag: "Global Investment Gateway",
         title: "INVESTATE INDIA",
         highlight: "Gateway to Indian Opportunities",
@@ -590,6 +591,8 @@ export default function ServiceProviderHome() {
             </section>
 
             <TestimonialsSection />
+
+            <DeepakProfileSection />
 
             {/* CONTACT SECTION */}
             <section

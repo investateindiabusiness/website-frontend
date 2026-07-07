@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
 import AwardsSection from "@/components/AwardsSection";
 import TestimonialsSection from "@/components/TestimonialsSection";
+import DeepakProfileSection from "@/components/DeepakProfileSection";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import AdBanner from "@/components/AdBanner";
@@ -626,6 +627,8 @@ export default function ServiceProviderHome() {
             </section>
 
             <TestimonialsSection />
+
+            <DeepakProfileSection />
 
             {/* CONTACT SECTION */}
             <section
