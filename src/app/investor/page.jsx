@@ -162,20 +162,24 @@ const teamMembers = [
 
 const faqsList = [
     {
-        question: "Is Investate India a broker?",
-        answer: "No. We are a discovery and facilitation platform. We provide structured information and verify builder credentials to ensure transparent connections."
+        question: "How do I invest?",
+        answer: "Browse verified projects, review details, and submit your investment interest."
     },
     {
-        question: "Is there a registration fee?",
-        answer: "Registration is currently free for NRI investors. We prioritize transparency and will inform you well in advance of any future service fees."
+        question: "Can I track investments?",
+        answer: "Yes, from your dashboard."
     },
     {
-        question: "How do you verify builders?",
-        answer: "We assess RERA compliance, financial health, past delivery records, and market reputation through a rigorous multi-step process."
+        question: "Are projects verified?",
+        answer: "Yes, listed projects undergo platform review."
     },
     {
-        question: "Which cities do you cover?",
-        answer: "We focus on major metros: Bangalore, Mumbai, Delhi-NCR, and Hyderabad, with plans to expand to quality Tier-2 developments."
+        question: "Can I contact the builder?",
+        answer: "Yes, through the platform."
+    },
+    {
+        question: "What investment types are available?",
+        answer: "Eligible equity-based real estate opportunities."
     }
 ];
 

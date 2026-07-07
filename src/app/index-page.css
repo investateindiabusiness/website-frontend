@@ -3925,8 +3925,8 @@ h4,
     display: flex !important;
     flex-direction: row !important;
     gap: 60px;
-    align-items: flex-start;
-    /* Changed from stretch to flex-start */
+    align-items: center;
+    /* Changed from flex-start to center to align the side image in the middle */
     width: 100%;
     max-width: 1200px;
     margin: 0 auto;
