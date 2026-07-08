@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState, useEffect } from 'react';
-import { useRouter } from 'next/navigation';
+import { useRouter, useSearchParams } from 'next/navigation';
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import { useAuth } from '@/hooks/AuthContext';
@@ -25,12 +25,28 @@ const ROLES = [
 
 export default function UnifiedLoginPage() {
   const router = useRouter();
+  const searchParams = useSearchParams();
   const { login, user } = useAuth();
 
-  const [selectedRole, setSelectedRole] = useState(ROLES[0]);
+  // Pre-select role from query param e.g. /login?role=investor
+  const initialRole = () => {
+    const roleParam = searchParams?.get('role');
+    return ROLES.find(r => r.id === roleParam) || ROLES[0];
+  };
+
+  const [selectedRole, setSelectedRole] = useState(initialRole);
   const [formData, setFormData] = useState({ email: '', password: '' });
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState(null);
+
+  // Update selected role if query param changes
+  useEffect(() => {
+    const roleParam = searchParams?.get('role');
+    if (roleParam) {
+      const match = ROLES.find(r => r.id === roleParam);
+      if (match) setSelectedRole(match);
+    }
+  }, [searchParams]);
 
   // If already logged in, redirect away
   useEffect(() => {
@@ -82,8 +98,8 @@ export default function UnifiedLoginPage() {
       if (app) {
         try {
           const fbAuth = getAuth(app);
-          await signInWithEmailAndPassword(fbAuth, formData.email, formData.password).catch(() => {});
-        } catch (_) {}
+          await signInWithEmailAndPassword(fbAuth, formData.email, formData.password).catch(() => { });
+        } catch (_) { }
       }
 
       // Check if user came from ad CTA
@@ -105,7 +121,7 @@ export default function UnifiedLoginPage() {
       setSubmitting(false);
 
       const errMsg = err.message || '';
-      
+
       if (err.error === 'STEP2_PENDING') {
         toast({ title: 'Profile Incomplete', description: 'Please complete your initial profile details.' });
         router.push(`/${selectedRole.id}/register?uid=${err.uid}&email=${err.email}&name=${err.name || ''}&skipStep1=true`);
@@ -132,31 +148,31 @@ export default function UnifiedLoginPage() {
   return (
     <div className="min-h-screen bg-[#0b1120] flex flex-col font-sans">
       <Header transparent={false} />
-      
-      <main className="flex-1 relative flex items-center justify-center p-4">
+
+      <main className="flex-1 relative flex items-start justify-center p-4 pt-20">
         {/* Background ambient glow */}
         <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[500px] bg-orange-900/10 rounded-full blur-[120px] pointer-events-none" />
-        
-        <div className="relative z-10 w-full max-w-md bg-white rounded-3xl shadow-2xl p-8 md:p-10 border border-gray-100">
-          <div className="text-center mb-8">
-            <h1 className="text-3xl font-black text-gray-900 mb-2">Login Portal</h1>
-            <p className="text-gray-500 text-sm font-medium">Select your role and enter credentials</p>
+
+        <div className="relative z-10 w-full max-w-sm bg-white rounded-2xl shadow-2xl p-6 border border-gray-100">
+          <div className="text-center mb-5">
+            <h1 className="text-2xl font-black text-gray-900 mb-1">Login Portal</h1>
+            <p className="text-gray-500 text-xs font-medium">Select your role and enter credentials</p>
           </div>
 
           {error && (
-            <div className="mb-6 p-4 bg-red-50 border border-red-100 rounded-2xl flex items-start gap-3">
-              <AlertCircle className="w-5 h-5 text-red-500 shrink-0 mt-0.5" />
-              <p className="text-sm font-semibold text-red-700 leading-tight">{error}</p>
+            <div className="mb-4 p-3 bg-red-50 border border-red-100 rounded-xl flex items-start gap-2">
+              <AlertCircle className="w-4 h-4 text-red-500 shrink-0 mt-0.5" />
+              <p className="text-xs font-semibold text-red-700 leading-tight">{error}</p>
             </div>
           )}
 
-          <form onSubmit={handleSubmit} className="space-y-5">
+          <form onSubmit={handleSubmit} className="space-y-3">
             <div>
-              <label className="block text-xs font-bold text-gray-400 uppercase tracking-wider mb-2">
+              <label className="block text-[10px] font-bold text-gray-400 uppercase tracking-wider mb-1">
                 Log in as
               </label>
               <DropdownMenu>
-                <DropdownMenuTrigger className="w-full flex items-center justify-between bg-gray-50 border border-gray-200 hover:border-gray-300 text-gray-800 font-semibold px-4 py-3 rounded-xl transition-colors focus:outline-none focus:ring-2 focus:ring-orange-500/20">
+                <DropdownMenuTrigger className="w-full flex items-center justify-between bg-gray-50 border border-gray-200 hover:border-orange-400 text-gray-800 font-semibold px-3 py-2.5 rounded-lg transition-colors focus:outline-none focus:ring-2 focus:ring-orange-500/20 text-sm">
                   {selectedRole.label}
                   <ChevronDown className="w-4 h-4 text-gray-400" />
                 </DropdownMenuTrigger>
@@ -165,11 +181,10 @@ export default function UnifiedLoginPage() {
                     <DropdownMenuItem
                       key={role.id}
                       onClick={() => setSelectedRole(role)}
-                      className={`px-4 py-3 text-sm font-medium rounded-lg cursor-pointer transition-colors ${
-                        selectedRole.id === role.id 
-                          ? "bg-orange-50 text-orange-700" 
-                          : "text-gray-600 hover:bg-gray-50 hover:text-gray-900"
-                      }`}
+                      className={`px-4 py-3 text-sm font-medium rounded-lg cursor-pointer transition-colors ${selectedRole.id === role.id
+                        ? "bg-orange-50 text-orange-700"
+                        : "text-gray-600 hover:bg-gray-50 hover:text-gray-900"
+                        }`}
                     >
                       {role.label}
                     </DropdownMenuItem>
@@ -179,7 +194,7 @@ export default function UnifiedLoginPage() {
             </div>
 
             <div>
-              <label className="block text-xs font-bold text-gray-400 uppercase tracking-wider mb-2">
+              <label className="block text-[10px] font-bold text-gray-400 uppercase tracking-wider mb-1">
                 Email Address
               </label>
               <input
@@ -187,14 +202,14 @@ export default function UnifiedLoginPage() {
                 name="email"
                 value={formData.email}
                 onChange={handleInputChange}
-                className="w-full h-12 px-4 bg-gray-50 border border-gray-200 focus:bg-white focus:ring-2 focus:ring-orange-500/10 focus:border-orange-500 transition-all rounded-xl focus:outline-none text-gray-800 font-medium text-sm"
+                className="w-full h-10 px-3 bg-gray-50 border border-gray-200 focus:bg-white focus:ring-2 focus:ring-orange-500/10 focus:border-orange-500 transition-all rounded-lg focus:outline-none text-gray-800 font-medium text-sm"
                 placeholder="name@company.com"
                 required
               />
             </div>
 
             <div>
-              <label className="block text-xs font-bold text-gray-400 uppercase tracking-wider mb-2">
+              <label className="block text-[10px] font-bold text-gray-400 uppercase tracking-wider mb-1">
                 Password
               </label>
               <input
@@ -202,7 +217,7 @@ export default function UnifiedLoginPage() {
                 name="password"
                 value={formData.password}
                 onChange={handleInputChange}
-                className="w-full h-12 px-4 bg-gray-50 border border-gray-200 focus:bg-white focus:ring-2 focus:ring-orange-500/10 focus:border-orange-500 transition-all rounded-xl focus:outline-none text-gray-800 font-medium text-sm"
+                className="w-full h-10 px-3 bg-gray-50 border border-gray-200 focus:bg-white focus:ring-2 focus:ring-orange-500/10 focus:border-orange-500 transition-all rounded-lg focus:outline-none text-gray-800 font-medium text-sm"
                 placeholder="••••••••"
                 required
               />
@@ -211,7 +226,7 @@ export default function UnifiedLoginPage() {
             <button
               type="submit"
               disabled={submitting}
-              className="w-full flex items-center justify-center gap-2 bg-gray-900 hover:bg-gray-800 disabled:bg-gray-300 text-white font-bold py-3.5 rounded-xl transition-all shadow-md active:scale-[0.98]"
+              className="w-full flex items-center justify-center gap-2 bg-gray-900 hover:bg-gray-800 disabled:bg-gray-300 text-white font-bold py-2.5 rounded-lg transition-all shadow-md active:scale-[0.98] text-sm"
             >
               {submitting ? (
                 <Loader2 className="w-5 h-5 animate-spin" />
@@ -223,16 +238,16 @@ export default function UnifiedLoginPage() {
             </button>
           </form>
 
-          <div className="relative py-6 flex items-center justify-center">
+          <div className="relative py-4 flex items-center justify-center">
             <div className="absolute inset-x-0 h-px bg-gray-100" />
-            <span className="relative bg-white px-4 text-xs font-semibold text-gray-400 uppercase tracking-widest">
+            <span className="relative bg-white px-3 text-[10px] font-semibold text-gray-400 uppercase tracking-widest">
               New User?
             </span>
           </div>
 
           <button
             onClick={handleRegisterRedirect}
-            className="w-full flex items-center justify-center gap-2 bg-orange-500 hover:bg-orange-600 text-white font-bold py-3.5 rounded-xl transition-all shadow-md active:scale-[0.98]"
+            className="w-full flex items-center justify-center gap-2 bg-orange-500 hover:bg-orange-600 text-white font-bold py-2.5 rounded-lg transition-all shadow-md active:scale-[0.98] text-sm"
           >
             <UserPlus className="w-4 h-4" /> Register as {selectedRole.label}
           </button>
