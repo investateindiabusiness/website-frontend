@@ -129,33 +129,31 @@ export default function ChatbotWidget() {
   const generateId = () => Math.random().toString(36).substr(2, 9);
 
   const showMainMenu = () => {
-    const groupedOptions = faqs.reduce((groups, faq) => {
-      const category = getFaqCategory(faq, audience);
-      if (!groups[category]) groups[category] = [];
-      groups[category].push({
-        label: faq.question,
-        action: "FAQ",
-        data: faq,
-      });
-      return groups;
-    }, {});
-
-    const optionGroups = Object.entries(groupedOptions).map(
-      ([label, options]) => ({
-        label,
-        options,
-      }),
+    const categories = Array.from(
+      new Set(faqs.map((faq) => getFaqCategory(faq, audience)))
     );
 
-    optionGroups.push({
-      label: user ? "Need More Help" : "Send A Query",
-      options: [
-        {
-          label: user ? "Create support ticket" : fallbackQuestion,
-          action: "CONTACT",
-        },
-      ],
-    });
+    const categoryOptions = categories.map((cat) => ({
+      label: cat,
+      action: "SELECT_CATEGORY",
+      data: cat,
+    }));
+
+    const optionGroups = [
+      {
+        label: "Select a Category",
+        options: categoryOptions,
+      },
+      {
+        label: user ? "Need More Help" : "Send A Query",
+        options: [
+          {
+            label: user ? "Create support ticket" : fallbackQuestion,
+            action: "CONTACT",
+          },
+        ],
+      },
+    ];
 
     setChatHistory((current) => [
       ...current,
@@ -219,8 +217,44 @@ export default function ChatbotWidget() {
     ]);
 
     setTimeout(() => {
-      if (option.action === 'FAQ') {
+      if (option.action === 'SELECT_CATEGORY') {
+        const categoryName = option.data;
+        const categoryFaqs = faqs.filter(
+          (faq) => getFaqCategory(faq, audience) === categoryName
+        );
+
+        const faqOptions = categoryFaqs.map((faq) => ({
+          label: faq.question || faq.label,
+          action: "FAQ",
+          data: faq,
+        }));
+
+        const optionsGroup = [
+          {
+            label: `${categoryName} Questions`,
+            options: faqOptions,
+          },
+          {
+            label: "Navigation",
+            options: [
+              { label: "Back to Main Menu", action: "MAIN_MENU" },
+            ],
+          },
+        ];
+
+        setChatHistory((current) => [
+          ...current,
+          { id: generateId(), sender: 'bot', type: 'text', text: `Here are questions under ${categoryName}:` },
+          {
+            id: generateId(),
+            sender: 'bot',
+            type: 'options',
+            groups: optionsGroup,
+          },
+        ]);
+      } else if (option.action === 'FAQ') {
         const faq = option.data;
+        const categoryName = getFaqCategory(faq, audience);
         setSelectedQuestion(faq);
         setChatHistory((current) => [
           ...current,
@@ -233,6 +267,7 @@ export default function ChatbotWidget() {
             groups: [{
               label: 'Next Step',
               options: [
+                { label: `Back to ${categoryName}`, action: 'SELECT_CATEGORY', data: categoryName },
                 { label: 'Main Menu', action: 'MAIN_MENU' },
                 { label: user ? 'Create support ticket' : fallbackQuestion, action: 'CONTACT' },
               ],
