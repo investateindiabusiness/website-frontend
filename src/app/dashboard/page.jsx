@@ -4,7 +4,7 @@ import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { Building2, MapPin, Search, TrendingUp, Shield, CheckCircle, Filter, PieChart as PieChartIcon, BarChart as BarChartIcon, Loader2, MessageSquare } from 'lucide-react';
 
-import AdBanner from '@/components/AdBanner';
+
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { useAuth } from '@/hooks/AuthContext';
@@ -148,12 +148,7 @@ export default function InvestorDashboard() {
           </div>
         </div>
 
-        {/* ── Ad Banner — below hero ── */}
-        <div className="container mx-auto px-4 pt-6 flex justify-center">
-          <div className="w-full max-w-md">
-            <AdBanner zoneId="zone2" variant="card" />
-          </div>
-        </div>
+
 
         <div className="container mx-auto px-4 mt-6 md:mt-8 relative z-20 space-y-6 md:space-y-10">
 

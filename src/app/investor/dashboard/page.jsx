@@ -1,4 +1,4 @@
-﻿"use client";
+"use client";
 
 import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
@@ -13,6 +13,7 @@ import { Badge } from '@/components/ui/badge';
 import { useAuth } from '@/hooks/AuthContext';
 import { apiRequest } from '@/api';
 import { parseProjectImages } from '@/utils/imageCompressor';
+
 
 export default function InvestorDashboard() {
   const router = useRouter();
@@ -138,7 +139,7 @@ export default function InvestorDashboard() {
           </Button>
         </div>
 
-        {/* Ad Banner Removed as per requirements */}
+
 
         {/* Location Pills */}
         <div>

@@ -9,6 +9,7 @@ import DeepakProfileSection from "@/components/DeepakProfileSection";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import AdBanner from "@/components/AdBanner";
+import SlideAdPanel from "@/components/SlideAdPanel";
 import {
     ShieldCheck,
     Scale,
@@ -237,16 +238,13 @@ export default function ServiceProviderHome() {
                                 </button>
                             </div>
 
-                            {/* Responsive Ad Banner: inline on small, fixed to right on md+ */}
-                            <div className="mt-8 w-full max-w-lg md:hidden">
-                                <AdBanner zoneId="zone5" variant="default" forceRole="service-provider" />
-                            </div>
-                            <div className="hidden md:block absolute right-[-300px] top-1/2 -translate-y-1/2 translate-y-16 w-full max-w-lg z-[25]">
-                                <AdBanner zoneId="zone5" variant="default" forceRole="service-provider" />
-                            </div>
+                            {/* Slide-out Ad Panel — rendered once, floats on right edge */}
                         </div>
                     </motion.div>
                 </AnimatePresence>
+
+                {/* Slide-out ad panel — peeks from right edge, slides in on click */}
+                <SlideAdPanel zoneId="zone1" forceRole="service-provider" loginPath="/login" />
             </section>
 
             {/* Executive Summary Section */}

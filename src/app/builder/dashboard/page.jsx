@@ -15,7 +15,7 @@ import { Badge } from '@/components/ui/badge';
 import { useAuth } from '@/hooks/AuthContext';
 import { fetchBuilderProjects } from '@/api';
 import { toast } from '@/hooks/use-toast';
-import AdBanner from '@/components/AdBanner';
+
 
 export default function BuilderDashboard() {
   const router = useRouter();
@@ -137,12 +137,7 @@ export default function BuilderDashboard() {
       </div>
 
       <div className="container mx-auto px-3 sm:px-4 md:px-6 -mt-10 relative z-10 space-y-6 sm:space-y-8">
-        {/* Ad Banner */}
-        <div className="flex justify-center">
-          <div className="w-full max-w-lg">
-            <AdBanner zoneId="zone1" variant="card" />
-          </div>
-        </div>
+
 
         {/* Charts + Summary — stacks on mobile */}
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 sm:gap-6">

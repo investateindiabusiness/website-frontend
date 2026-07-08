@@ -87,8 +87,8 @@ export const compressAdImage = async (file) => {
     const bitmap = await createImageBitmap(file);
 
     // Scale down aggressively — ad banners are small UI elements
-    const MAX_W = 600;
-    const MAX_H = 300;
+    const MAX_W = 500;
+    const MAX_H = 500;
     let w = bitmap.width;
     let h = bitmap.height;
     if (w > MAX_W || h > MAX_H) {

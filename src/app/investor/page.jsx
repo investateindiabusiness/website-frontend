@@ -11,6 +11,7 @@ import DeepakProfileSection from '@/components/DeepakProfileSection';
 import dynamic from 'next/dynamic';
 import Image from 'next/image';
 import AdBanner from '@/components/AdBanner';
+import SlideAdPanel from '@/components/SlideAdPanel';
 
 
 import { toast } from '@/hooks/use-toast';
@@ -362,17 +363,12 @@ export default function Index() {
                                     Explore Opportunities
                                 </button>
                             </div>
-
-                            {/* Responsive Ad Banner: inline on small, fixed to right on md+ (matches service-provider) */}
-                            <div className="mt-8 w-full max-w-lg md:hidden">
-                                <AdBanner zoneId="zone5" variant="default" forceRole="investor" />
-                            </div>
-                            <div className="hidden md:block absolute right-[-300px] top-1/2 -translate-y-1/2 translate-y-16 w-full max-w-lg z-[25]">
-                                <AdBanner zoneId="zone5" variant="default" forceRole="investor" />
-                            </div>
                         </div>
                     </motion.div>
                 </AnimatePresence>
+
+                {/* Slide-out ad panel — peeks from right edge, slides in on click */}
+                <SlideAdPanel zoneId="zone2" forceRole="investor" loginPath="/investor/login" />
             </section>
 
 
