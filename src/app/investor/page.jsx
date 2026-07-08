@@ -45,7 +45,7 @@ const contentDataForSection2 = [
     {
         id: "01",
         title: "Investment Opportunities",
-        text: "Curated, pre-verified real estate projects with standardized RERA disclosures and performance tracking — so you invest based on merit, not marketing. We also offer rental income management, ROI tracking, resale support, and structured exit planning for every stage of your investment.",
+        text: "Curated, pre-verified real estate projects with standardized RERA disclosures, pre-launch offers, and performance tracking — so you invest based on merit, not marketing. We also offer rental income management, ROI tracking, resale support, and structured exit planning for every stage of your investment.",
         image: "/images/media1.png"
     },
     {
@@ -142,7 +142,7 @@ const benefitsList = [
 
 const investorSteps = [
     { id: "1", title: "Register", text: "Share your preferences. A dedicated Relationship Manager will be assigned to guide your journey." },
-    { id: "2", title: "Discover", text: "Browse pre-verified builders with complete disclosures and RERA-verified timelines." },
+    { id: "2", title: "Discover", text: "Browse pre-verified builders with complete disclosures and RERA-verified timelines.We verify all project credentials, pre-launch proposals, and pre-sale offers to cross-check structure and legitimacy, safeguarding early-stage investor capital." },
     { id: "3", title: "Evaluate", text: "Receive expert support to vet documentation and identify profitable opportunities." },
     { id: "4", title: "Decide", text: "Make informed decisions with full transparency and ongoing on-ground support." }
 ];
@@ -160,7 +160,26 @@ const teamMembers = [
     { name: "Atish Agarwal", role: "Co-Founder", image: "/atish.png" }
 ];
 
-const faqsList = [
+const faqsListLeft = [
+    {
+        question: "Is Investate India a broker?",
+        answer: "No. We are a discovery and facilitation platform. We provide structured information and verify builder credentials to ensure transparent connections."
+    },
+    {
+        question: "Is there a registration fee?",
+        answer: "Registration is currently free for NRI investors. We prioritize transparency and will inform you well in advance of any future service fees."
+    },
+    {
+        question: "How do you verify builders?",
+        answer: "We assess RERA compliance, financial health, past delivery records, and market reputation through a rigorous multi-step process."
+    },
+    {
+        question: "What investment types are available?",
+        answer: "Eligible equity-based real estate opportunities."
+    }
+];
+
+const faqsListRight = [
     {
         question: "How do I invest?",
         answer: "Browse verified projects, review details, and submit your investment interest."
@@ -176,10 +195,6 @@ const faqsList = [
     {
         question: "Can I contact the builder?",
         answer: "Yes, through the platform."
-    },
-    {
-        question: "What investment types are available?",
-        answer: "Eligible equity-based real estate opportunities."
     }
 ];
 
@@ -191,7 +206,7 @@ const trustFeatures = [
 ];
 
 const currentFocusList = [
-    "Onboarding select builders in key metro cities (Bangalore, Mumbai, Pune, Delhi-NCR, Hyderabad etc.)",
+    // "Onboarding select builders in key metro cities (Bangalore, Mumbai, Pune, Delhi-NCR, Hyderabad etc.)",
     "Building our NRI investor community across USA, UK, UAE and across the globe."
 ];
 
@@ -320,6 +335,45 @@ export default function Index() {
                     }}
                 >❯</button>
 
+                {/* Floating Login Button - highlighted with pulse glow */}
+                <style>{`
+                  @keyframes loginPulseRing {
+                    0%   { box-shadow: 0 0 0 0 rgba(212,128,53,0.7), 0 8px 32px rgba(0,0,0,0.3); }
+                    60%  { box-shadow: 0 0 0 12px rgba(212,128,53,0), 0 8px 32px rgba(0,0,0,0.3); }
+                    100% { box-shadow: 0 0 0 0 rgba(212,128,53,0), 0 8px 32px rgba(0,0,0,0.3); }
+                  }
+                `}</style>
+                <motion.button
+                    onClick={() => handleAuthClick('login', 'investor')}
+                    aria-label="Investor Login"
+                    initial={{ opacity: 0, y: 60, scale: 0.85 }}
+                    animate={{ opacity: 1, y: 0, scale: 1 }}
+                    transition={{ delay: 0.8, duration: 0.5, type: 'spring', stiffness: 200, damping: 18 }}
+                    whileHover={{ scale: 1.07 }}
+                    whileTap={{ scale: 0.96 }}
+                    style={{
+                        position: 'absolute', bottom: '4.5rem', right: '2rem',
+                        zIndex: 30,
+                        background: '#D48035',
+                        borderRadius: '999px',
+                        padding: '0.7rem 1.8rem',
+                        color: '#fff',
+                        fontWeight: 700,
+                        fontSize: '0.95rem',
+                        letterSpacing: '0.04em',
+                        cursor: 'pointer',
+                        display: 'flex', alignItems: 'center', gap: '0.5rem',
+                        border: '2px solid rgba(255,255,255,0.5)',
+                        animation: 'loginPulseRing 2s ease-out infinite',
+                        textShadow: '0 1px 3px rgba(0,0,0,0.2)',
+                    }}
+                >
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                        <path d="M15 3h6v18h-6"/><polyline points="10 17 15 12 10 7"/><line x1="15" y1="12" x2="3" y2="12"/>
+                    </svg>
+                    Login
+                </motion.button>
+
                 {/* Dot indicators */}
                 <div style={{ position: 'absolute', bottom: '1.5rem', left: '50%', transform: 'translateX(-50%)', zIndex: 20, display: 'flex', gap: '0.5rem' }}>
                     {Array.from({ length: totalSlides }).map((_, i) => (
@@ -426,7 +480,7 @@ export default function Index() {
                 {/* â”€â”€ Infinite Marquee â”€â”€ */}
                 <div className="infra-marquee-wrapper">
                     <div className="infra-marquee-track">
-                        {[...challengesList, ...challengesList].map((challenge, i) => (
+                        {[...challengesList, ...challengesList, ...challengesList, ...challengesList].map((challenge, i) => (
                             <div key={i} className="infra-marquee-card">
                                 <div className="infra-card-icon-wrapper">
                                     {challenge.icon}
@@ -742,13 +796,13 @@ export default function Index() {
                             Get clear answers to the most common questions about Investate India and how we help you invest with absolute confidence.
                         </p>
                     </div>
-                    <div className="faq-premium-grid">
+                    <div className="faq-premium-grid" style={{ alignItems: "flex-start" }}>
                         <div className="faq-accordion-column">
-                            {faqsList.map((faq, index) => (
+                            {faqsListLeft.map((faq, index) => (
                                 <div
-                                    className={`faq-accordion-item ${activeFaq === index ? 'active' : ''}`}
-                                    key={index}
-                                    onClick={() => toggleFaq(index)}
+                                    className={`faq-accordion-item ${activeFaq === `left-${index}` ? 'active' : ''}`}
+                                    key={`left-${index}`}
+                                    onClick={() => setActiveFaq(activeFaq === `left-${index}` ? null : `left-${index}`)}
                                 >
                                     <div className="faq-accordion-header">
                                         <h4 className="faq-accordion-question">{faq.question}</h4>
@@ -758,7 +812,7 @@ export default function Index() {
                                             </svg>
                                         </div>
                                     </div>
-                                    {activeFaq === index && (
+                                    {activeFaq === `left-${index}` && (
                                         <div className="faq-accordion-content">
                                             <p>{faq.answer}</p>
                                         </div>
@@ -766,17 +820,28 @@ export default function Index() {
                                 </div>
                             ))}
                         </div>
-                        <div className="faq-image-column">
-                            <div className="faq-side-image-premium">
-                                <img
-                                    src="/images/hero_modern_cityscape_mobile.jpg"
-                                    alt="Modern Indian Cityscape"
-                                    loading="lazy"
-                                    decoding="async"
-                                    width={600}
-                                    height={400}
-                                />
-                            </div>
+                        <div className="faq-accordion-column">
+                            {faqsListRight.map((faq, index) => (
+                                <div
+                                    className={`faq-accordion-item ${activeFaq === `right-${index}` ? 'active' : ''}`}
+                                    key={`right-${index}`}
+                                    onClick={() => setActiveFaq(activeFaq === `right-${index}` ? null : `right-${index}`)}
+                                >
+                                    <div className="faq-accordion-header">
+                                        <h4 className="faq-accordion-question">{faq.question}</h4>
+                                        <div className="faq-accordion-arrow">
+                                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                                                <polyline points="18 15 12 9 6 15"></polyline>
+                                            </svg>
+                                        </div>
+                                    </div>
+                                    {activeFaq === `right-${index}` && (
+                                        <div className="faq-accordion-content">
+                                            <p>{faq.answer}</p>
+                                        </div>
+                                    )}
+                                </div>
+                            ))}
                         </div>
                     </div>
                 </div>

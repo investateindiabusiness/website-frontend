@@ -5,7 +5,7 @@ import { CheckCircle2 } from 'lucide-react';
 
 const PAGE_CONTENT = {
   investor: {
-    bio: "Deepak Kavadia is a seasoned entrepreneur and real estate investor who bridges the gap between global diaspora capital and vetted Indian property assets. With over 35 years of experience, he leads international capital access platforms and helps NRI wealth navigate the market with absolute security and institutional compliance.",
+    bio: "Deepak Kavadia is the Chairman of the NRI Federation and an international investment strategist who bridges the gap between global diaspora capital and vetted Indian property assets. With over 35 years of experience, he leads international capital access platforms and helps NRI wealth navigate the market with absolute security and institutional compliance.",
     expertise: [
       "35+ years of NRI investment advisory",
       "Frictionless cross-border capital safety",
@@ -17,10 +17,10 @@ const PAGE_CONTENT = {
       "Predictable NRI wealth expansion corridors"
     ],
     quote: "Deepak Kavadia focuses on absolute transparency and compliance, ensuring that NRI investors can deploy capital into Indian real estate with complete confidence and security.",
-    badges: ["NRI Wealth Protection", "Capital Corridors", "Real Estate Investor", "Gemstone Authority"]
+    badges: ["NRI Wealth Protection", "FEMA & Tax Compliance", "Real Estate Investment", "Secure Capital Corridors"]
   },
   builder: {
-    bio: "Deepak Kavadia is an international investment leader connecting premier Indian developers with global institutional and NRI diaspora capital. With 35+ years of experience, he is dedicated to creating structured finance solutions, cross-border investment corridors, and seamless developer-investor matching.",
+    bio: "Deepak Kavadia is the Chairman of the NRI Federation and a global investment coordinator connecting premier Indian developers with global institutional and NRI diaspora capital. With 35+ years of experience, he is dedicated to creating structured finance solutions, cross-border investment corridors, and seamless developer-investor matching.",
     expertise: [
       "Structured finance & exit strategies",
       "Global diaspora capital mobilization",
@@ -35,7 +35,7 @@ const PAGE_CONTENT = {
     badges: ["Capital Syndication", "Project Finance", "Developer Relations", "International Markets"]
   },
   serviceProvider: {
-    bio: "Deepak Kavadia is an entrepreneur and international trade strategist who guides professional legal, financial, and compliance service providers in serving global NRI markets. With over 35 years of experience in cross-border ecosystems, he champions transparent advisory standards and structural integrity.",
+    bio: "Deepak Kavadia is the Chairman of the NRI Federation and an international trade strategist who guides professional legal, financial, and compliance service providers in serving global NRI markets. With over 35 years of experience in cross-border ecosystems, he champions transparent advisory standards and structural integrity.",
     expertise: [
       "Cross-border advisory & coordination",
       "NRI legal & tax partner networks",
@@ -50,19 +50,19 @@ const PAGE_CONTENT = {
     badges: ["Advisory Ecosystem", "Tax & Law Partners", "FEMA Compliance", "Structural Integrity"]
   },
   default: {
-    bio: "Deepak Kavadia is an entrepreneur and real estate investor who leads international capital platforms connecting the United States and India. With over 35 years of expertise, he focuses on cross-border investment, structured finance, and global trade corridors.",
+    bio: "Deepak Kavadia is the Chairman of the NRI Federation. He leads the Investate India platform, connecting global diaspora capital, Indian developers, and compliance experts between the United States and India.",
     expertise: [
-      "35+ years of cross-border investment expertise",
-      "Focus on U.S. - India capital flows",
-      "Diaspora-driven investment platforms"
+      "Chairman of the NRI Federation",
+      "Connecting global capital with developers",
+      "Transparent cross-border compliance"
     ],
     vision: [
       "U.S. - India investment corridors",
-      "NRI diaspora capital & deal flow",
-      "Capital + Distribution + Exit platforms"
+      "Integrated developer & partner ecosystem",
+      "Secure global-diaspora liquidity"
     ],
-    quote: "Deepak Kavadia brings a unique combination of global capital access, diaspora connectivity, and structured investment expertise — positioning our platform as a next-generation cross-border investment gateway.",
-    badges: ["Nice Jewels", "NRI Federation", "Raj Holdings", "Prestige Developers"]
+    quote: "Investate India serves as a transparent ecosystem, uniting global capital with verified opportunities and certified advisory services.",
+    badges: ["NRI Federation", "Global Capital Gateway", "Developer & Investor Relations", "Cross-Border Compliance"]
   }
 };
 
@@ -77,7 +77,7 @@ export default function DeepakProfileSection({ pageType = "default" }) {
           {/* Left panel - Full-length cover photo with text underneath */}
           <div className="w-full md:w-1/3 flex flex-col bg-slate-50/50 dark:bg-black/20 border-b md:border-b-0 md:border-r border-gray-100 dark:border-gray-800/80 overflow-hidden">
             {/* Photo on top */}
-            <div className="w-full h-[290px] md:h-[350px] relative overflow-hidden flex-shrink-0">
+            <div className="w-full h-[220px] md:h-[270px] relative overflow-hidden flex-shrink-0">
               <img 
                 src="/deepak.png" 
                 alt="Deepak Kavadia" 
@@ -86,7 +86,7 @@ export default function DeepakProfileSection({ pageType = "default" }) {
             </div>
             
             {/* Text details underneath */}
-            <div className="p-5 flex flex-col items-center justify-center text-center flex-grow bg-[#FAFBFD] dark:bg-[#1a1a1a]">
+            <div className="p-4 flex flex-col items-center justify-center text-center flex-grow bg-[#FAFBFD] dark:bg-[#1a1a1a]">
               <h3 className="text-xl font-bold text-[#111] dark:text-white tracking-wide mb-1">
                 Deepak Kavadia
               </h3>
@@ -99,46 +99,12 @@ export default function DeepakProfileSection({ pageType = "default" }) {
           {/* Right panel - Content */}
           <div className="w-full md:w-2/3 p-6 md:p-8 flex flex-col justify-between">
             <div>
-              {/* Profile Description */}
-              <p className="text-gray-600 dark:text-gray-300 text-base md:text-lg leading-relaxed mb-5">
+              <p className="text-gray-600 dark:text-gray-300 text-base md:text-lg leading-relaxed mb-4">
                 {content.bio}
               </p>
 
-              {/* Grid: Expertise & Global Vision */}
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 mb-5">
-                {/* Expertise */}
-                <div>
-                  <h4 className="text-[#D48035] font-bold text-xs tracking-widest uppercase mb-2">
-                    EXPERTISE
-                  </h4>
-                  <ul className="space-y-1.5">
-                    {content.expertise.map((item, idx) => (
-                      <li key={idx} className="flex items-start gap-3 text-sm text-gray-600 dark:text-gray-300">
-                        <CheckCircle2 className="w-5 h-5 text-[#D48035] shrink-0 mt-0.5" />
-                        <span>{item}</span>
-                      </li>
-                    ))}
-                  </ul>
-                </div>
-
-                {/* Global Vision */}
-                <div>
-                  <h4 className="text-[#D48035] font-bold text-xs tracking-widest uppercase mb-2">
-                    GLOBAL VISION
-                  </h4>
-                  <ul className="space-y-1.5">
-                    {content.vision.map((item, idx) => (
-                      <li key={idx} className="flex items-start gap-3 text-sm text-gray-600 dark:text-gray-300">
-                        <CheckCircle2 className="w-5 h-5 text-[#D48035] shrink-0 mt-0.5" />
-                        <span>{item}</span>
-                      </li>
-                    ))}
-                  </ul>
-                </div>
-              </div>
-
               {/* Quote Block */}
-              <div className="bg-amber-50/50 dark:bg-amber-950/10 border border-amber-100 dark:border-amber-900/30 rounded-2xl py-3 px-4 mb-5">
+              <div className="bg-amber-50/50 dark:bg-amber-950/10 border border-amber-100 dark:border-amber-900/30 rounded-2xl py-3 px-4 mb-4">
                 <p className="text-amber-800 dark:text-amber-300 text-sm md:text-base italic font-light leading-relaxed">
                   "{content.quote}"
                 </p>

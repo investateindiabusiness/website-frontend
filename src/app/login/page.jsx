@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, Suspense } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
@@ -23,7 +23,7 @@ const ROLES = [
   { id: "service-provider", label: "Service Provider" },
 ];
 
-export default function UnifiedLoginPage() {
+function UnifiedLoginPageContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const { login, user } = useAuth();
@@ -256,5 +256,17 @@ export default function UnifiedLoginPage() {
 
       <Footer />
     </div>
+  );
+}
+
+export default function UnifiedLoginPage() {
+  return (
+    <Suspense fallback={
+      <div className="min-h-screen bg-[#0b1120] flex items-center justify-center text-white">
+        <Loader2 className="w-8 h-8 animate-spin text-orange-500" />
+      </div>
+    }>
+      <UnifiedLoginPageContent />
+    </Suspense>
   );
 }

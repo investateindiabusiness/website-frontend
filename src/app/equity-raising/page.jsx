@@ -1,647 +1,441 @@
 "use client";
 
-import React, { useState } from 'react';
-import { motion } from 'framer-motion';
-import Header from '@/components/Header';
-import Footer from '@/components/Footer';
-import { CheckCircle, ArrowRight, Shield, TrendingUp, Users, Globe, Briefcase, Building2, Star, Phone, Mail, MapPin, Compass, Award, Cpu, Link as LinkIcon } from 'lucide-react';
+import React, { useState, useEffect } from "react";
+import { motion } from "framer-motion";
+import Header from "@/components/Header";
+import Footer from "@/components/Footer";
+import { useRouter } from "next/navigation";
+import Head from "next/head";
+import {
+  CheckCircle,
+  ArrowRight,
+  Shield,
+  FileText,
+  Users,
+  Building2,
+  ChevronDown,
+  ChevronUp,
+  Phone,
+  Mail,
+  MapPin,
+  Lock,
+  Handshake,
+  ClipboardList,
+  BadgeCheck,
+} from "lucide-react";
 
 const fadeUp = (delay = 0) => ({
-  initial: { opacity: 0, y: 24 },
+  initial: { opacity: 0, y: 28 },
   whileInView: { opacity: 1, y: 0 },
   viewport: { once: true },
-  transition: { duration: 0.6, delay },
+  transition: { duration: 0.55, delay, ease: "easeOut" },
 });
 
-const SectionTitle = ({ children, light }) => (
-  <h2 className={`text-3xl md:text-4xl font-bold mb-4 ${light ? 'text-white' : 'text-[#111]'}`}>{children}</h2>
-);
+const steps = [
+  {
+    id: "01",
+    icon: "ClipboardList",
+    title: "Share Your Proposal",
+    desc: "Tell us about your company, what you are building, and how much capital you are looking to raise. A brief overview of your business and current stage is enough to get started.",
+  },
+  {
+    id: "02",
+    icon: "BadgeCheck",
+    title: "Review & Verification",
+    desc: "Our team will review your submission and evaluate the basics - your business model, revenue potential, and the kind of security you can offer. We keep this process straightforward.",
+  },
+  {
+    id: "03",
+    icon: "Handshake",
+    title: "Investor Conversation",
+    desc: "If there is a fit, we connect you with the right investors from our network. They will want to understand your projections, collateral, and growth roadmap before any commitment is made.",
+  },
+  {
+    id: "04",
+    icon: "Lock",
+    title: "Structuring & Agreement",
+    desc: "Once both sides agree, a formal investment structure is drawn up - with clear terms around capital, repayment timeline, and security. Everything is legally documented.",
+  },
+];
 
-const Card = ({ children, className = '' }) => (
-  <div className={`bg-white rounded-2xl border border-gray-100 shadow-sm p-6 ${className}`}>{children}</div>
-);
+const proposalItems = [
+  "Company profile and background",
+  "What the funds will be used for",
+  "Your revenue projections and business plan",
+  "Collateral or assets you can offer as security",
+  "Estimated project or business timeline",
+  "Your expected capital requirement",
+];
 
-const OrangeTag = ({ children }) => (
-  <span className="inline-block bg-orange-50 text-[#D48035] text-xs font-bold px-3 py-1 rounded-full border border-orange-200 mr-2 mb-2">{children}</span>
-);
+const securityPoints = [
+  {
+    icon: "Building2",
+    title: "Asset-Backed Security",
+    desc: "Investors do not just take your word for it. Before funds are released, a charge is placed on your assets - similar to what a bank would require as collateral.",
+  },
+  {
+    icon: "FileText",
+    title: "Legal Documentation",
+    desc: "Every investment is backed by a formal legal agreement. This covers the capital amount, repayment terms, timeline, and what happens if either side does not follow through.",
+  },
+  {
+    icon: "Shield",
+    title: "Independent Due Diligence",
+    desc: "Third-party legal and financial checks are carried out before any money moves. This protects everyone - the investor and you.",
+  },
+  {
+    icon: "Users",
+    title: "Project Receivables",
+    desc: "In many cases, the future revenue or receivables of your project are also included as a security layer - giving investors added confidence in the deal.",
+  },
+];
 
-const Bullet = ({ children, light }) => (
-  <li className={`flex items-start gap-2.5 text-[1.05rem] leading-relaxed list-none ${light ? 'text-gray-300' : 'text-gray-600'}`}>
-    <CheckCircle className={`w-4 h-4 shrink-0 mt-0.5 text-[#D48035]`} />
-    <span>{children}</span>
-  </li>
-);
+const faqs = [
+  {
+    q: "What is the minimum amount I can raise through this program?",
+    a: "We do not have a strict minimum, but equity raising through our platform is generally suited for businesses looking to raise meaningful capital - enough to make a real difference to your growth. If you are unsure, just reach out and we will give you an honest answer.",
+  },
+  {
+    q: "Do I have to pay anything upfront like a bank EMI?",
+    a: "No. That is exactly what makes this different from a bank loan. There are no monthly repayments from day one. You and the investor agree on a timeline - say, after your project is completed - and that is when the repayment happens, as per the terms you both signed.",
+  },
+  {
+    q: "What kind of security do investors typically ask for?",
+    a: "Most investors will want a charge on your physical assets - land, property, equipment - and may also ask for corporate or personal guarantees depending on the deal size and structure.",
+  },
+  {
+    q: "Will my business details be kept confidential?",
+    a: "Yes. Before any detailed information is shared with investors, an NDA is signed. Your data is handled with full confidentiality throughout the process.",
+  },
+  {
+    q: "How long does the process usually take?",
+    a: "It depends on the complexity of your business and how prepared your documentation is. Simpler, well-documented proposals move faster. Once an investor expresses interest, the formal structuring and agreements typically take a few weeks.",
+  },
+];
+
+const IconMap = {
+  ClipboardList: ClipboardList,
+  BadgeCheck: BadgeCheck,
+  Handshake: Handshake,
+  Lock: Lock,
+  Building2: Building2,
+  FileText: FileText,
+  Shield: Shield,
+  Users: Users,
+};
 
 export default function EquityRaisingPage() {
+  const [openFaq, setOpenFaq] = useState(null);
+
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
+
   return (
-    <div className="theme-builder min-h-screen bg-white text-gray-800 flex flex-col" style={{ fontFamily: "'Inter', sans-serif" }}>
+    <>
+      <Head>
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
+        <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
+      </Head>
+      <div className="min-h-screen bg-white text-gray-800 flex flex-col" style={{ fontFamily: "'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif" }}>
       <Header />
 
-      {/* ── HERO ── */}
+      {/* HERO */}
       <section
-        className="relative min-h-screen flex items-center justify-center overflow-hidden pt-16"
-        style={{ background: 'linear-gradient(135deg, #0a0a0a 0%, #1a1a1a 55%, #2a2a2a 100%)' }}
+        className="relative flex items-center justify-center overflow-hidden pt-20 pb-28"
+        style={{ background: "linear-gradient(135deg, #0d0d0d 0%, #1c1c1c 60%, #242424 100%)", minHeight: "90vh" }}
       >
-        <div className="absolute inset-0 pointer-events-none">
-          <div className="absolute top-1/3 left-1/2 -translate-x-1/2 w-[800px] h-[800px] rounded-full opacity-[0.08]"
-            style={{ background: 'radial-gradient(circle, #D48035 0%, transparent 70%)' }} />
-          <div className="absolute bottom-0 left-0 w-full h-32 opacity-20"
-            style={{ background: 'linear-gradient(to top, #D48035, transparent)' }} />
+        <div className="absolute inset-0 pointer-events-none overflow-hidden">
+          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[700px] h-[700px] rounded-full opacity-[0.07]"
+            style={{ background: "radial-gradient(circle, #D48035 0%, transparent 70%)" }} />
+          <div className="absolute bottom-0 left-0 w-full h-28 opacity-10"
+            style={{ background: "linear-gradient(to top, #D48035, transparent)" }} />
         </div>
-        <div className="container mx-auto px-4 max-w-5xl text-center relative z-10 py-24">
+        <div className="container mx-auto px-4 max-w-4xl text-center relative z-10">
           <motion.div {...fadeUp()}>
-            <span className="inline-block px-4 py-1.5 rounded-full text-xs font-bold uppercase tracking-widest text-[#D48035] border border-[#D48035]/30 bg-[#D48035]/10 mb-5">
-              Investate India Capital Platform
+            <span className="inline-block px-4 py-1.5 rounded-full text-xs font-bold uppercase tracking-widest text-[#D48035] border border-[#D48035]/30 bg-[#D48035]/10 mb-6">
+              Investate India · Capital Program
             </span>
-            <h1 className="text-4xl md:text-6xl font-bold text-white mb-4 leading-tight">
-              $1 Billion India<br />
-              <span className="text-[#D48035]">Investment Platform</span>
+            <h1 className="text-4xl md:text-6xl font-bold text-white mb-6 leading-tight">
+              Equity Raising<br />
+              <span className="text-[#D48035]">For Growing Businesses</span>
             </h1>
-            <p className="text-gray-400 text-lg mb-3 font-medium tracking-wide">Secured · Structured · Scalable</p>
-            <p className="text-gray-400 text-base max-w-2xl mx-auto mb-3">Cross-Border Investment Platform (U.S. - India)</p>
-            <p className="text-gray-500 text-sm max-w-xl mx-auto mb-10">Real Estate · Infrastructure · Private Credit</p>
+            <p className="text-gray-400 text-lg md:text-xl max-w-2xl mx-auto mb-3 leading-relaxed">
+              If your business needs capital to grow, we connect you with serious investors - structured properly, secured clearly, and on terms that make sense for your timeline.
+            </p>
+            <p className="text-gray-500 text-lg max-w-xl mx-auto mb-10">
+              No upfront EMIs. No monthly interest. Just a clear agreement between you and an investor who believes in what you are building.
+            </p>
             <div className="flex flex-wrap gap-4 justify-center">
-              <a href="#contact" className="bg-[#D48035] hover:bg-[#B45309] text-white font-bold px-8 py-4 rounded-full shadow-lg transition-all hover:scale-105 text-sm uppercase tracking-wider">
-                Partner with Us
+              <a href="#how-it-works" className="bg-[#D48035] hover:bg-[#B45309] text-white font-bold px-8 py-4 rounded-full shadow-lg transition-all hover:scale-105 text-sm uppercase tracking-wider">
+                How It Works
               </a>
-              <a href="#ecosystem" className="border border-white/20 hover:border-[#D48035]/70 text-white font-semibold px-8 py-4 rounded-full transition-all text-sm uppercase tracking-wider">
-                Explore Ecosystem
+              <a href="#connect" className="border border-white/20 hover:border-[#D48035]/60 text-white font-semibold px-8 py-4 rounded-full transition-all text-sm uppercase tracking-wider">
+                Talk to Us
               </a>
             </div>
           </motion.div>
-
-          {/* Stat pills */}
-          <motion.div {...fadeUp(0.3)} className="mt-16 flex flex-wrap justify-center gap-5">
-            {[
-              { label: "Platform Target", value: "$1 Billion" },
-              { label: "Per Deal Range", value: "$5M - $100M" },
-              { label: "Target Returns", value: "16% - 22%" },
-              { label: "Investment Horizon", value: "2 - 5 Years" },
-              { label: "NRI Diaspora Access", value: "32M+" },
-            ].map((s, i) => (
-              <div key={i} className="bg-white/5 backdrop-blur-sm border border-white/10 rounded-2xl px-6 py-4 text-center min-w-[130px]">
-                <div className="text-xl font-bold text-[#D48035]">{s.value}</div>
-                <div className="text-xs text-gray-400 uppercase tracking-wide mt-1">{s.label}</div>
-              </div>
-            ))}
-          </motion.div>
         </div>
       </section>
 
-      {/* ── EXECUTIVE SUMMARY (INVESTATE) ── */}
-      <section className="py-24 bg-white border-b border-gray-100">
-        <div className="container mx-auto px-4 max-w-6xl">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
-            <motion.div {...fadeUp(0.1)} className="space-y-6">
-              <SectionTitle>Global Investment Gateway to India</SectionTitle>
-              <p className="responsive-paragraph text-gray-600 mb-6">
-                Investate India is a technology-enabled investment platform designed to facilitate participation in Indian investment opportunities through a curated ecosystem of investors, opportunity providers, and professional service partners.
-              </p>
-              <p className="responsive-paragraph text-gray-600 mb-6">
-                Through our structured cross-border network, specializing in global finance and investment structuring, we bridge global institutional capital with India's growth sectors.
-              </p>
-              <div className="flex flex-col gap-4 pt-4">
-                <Card className="flex items-center gap-4 px-5 py-3">
-                  <div className="w-10 h-10 rounded-xl bg-orange-50 flex items-center justify-center shrink-0">
-                    <Compass className="w-5 h-5 text-[#D48035]" />
-                  </div>
-                  <div className="space-y-0.5">
-                    <h4 className="font-bold text-[#111] text-lg leading-tight">Our Mission</h4>
-                    <p className="text-[1.05rem] text-gray-500 leading-normal">To simplify and secure investments into India through technology, transparency, and trusted partnerships.</p>
-                  </div>
-                </Card>
-                <Card className="flex items-center gap-4 px-5 py-3">
-                  <div className="w-10 h-10 rounded-xl bg-orange-50 flex items-center justify-center shrink-0">
-                    <Award className="w-5 h-5 text-[#D48035]" />
-                  </div>
-                  <div className="space-y-0.5">
-                    <h4 className="font-bold text-[#111] text-lg leading-tight">Our Vision</h4>
-                    <p className="text-[1.05rem] text-gray-500 leading-normal">To become the most trusted global gateway for investments into India.</p>
-                  </div>
-                </Card>
-              </div>
-            </motion.div>
-            <motion.div {...fadeUp(0.2)} className="bg-[#F8F8F8] border border-gray-100 rounded-3xl p-8 space-y-6">
-              <h3 className="text-lg font-bold text-[#111] flex items-center gap-2"><Cpu className="w-5 h-5 text-[#D48035]" /> Platform Capabilities</h3>
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                {[
-                  "Investment Discovery",
-                  "Real Estate Opportunities",
-                  "Equity Investment Opportunities",
-                  "Alternative Investments",
-                  "Professional Services Integration",
-                  "Investor Enablement",
-                  "Legal & Financial Enablement",
-                  "End-to-End Investment Support",
-                  "Import & Export Services",
-                  "NRI Services"
-                ].map((cap, idx) => (
-                  <div key={idx} className="flex items-center gap-2.5 bg-white px-4 py-1.5 rounded-xl border border-gray-100 shadow-sm">
-                    <div className="w-1.5 h-1.5 rounded-full bg-[#D48035] shrink-0" />
-                    <span className="text-[1.05rem] font-semibold text-gray-700">{cap}</span>
-                  </div>
-                ))}
-              </div>
-            </motion.div>
-          </div>
-        </div>
-      </section>
-
-      {/* ── INVESTMENT THESIS ── */}
-      <section className="py-24 bg-[#F8F8F8]">
-        <div className="container mx-auto px-4 max-w-6xl">
+      {/* WHAT IS THIS */}
+      <section className="py-20 bg-white" id="what-is-this">
+        <div className="container mx-auto px-4 max-w-5xl">
           <motion.div {...fadeUp()} className="text-center mb-14">
-            <SectionTitle>Bridging Global Capital with India's Growth</SectionTitle>
-            <p className="section-subtitle max-w-2xl mx-auto">India presents a significant opportunity driven by rapid growth and strong demand for structured capital.</p>
+            <span className="inline-block bg-orange-50 text-[#D48035] text-xs font-bold px-3 py-1 rounded-full border border-orange-200 mb-4">
+              Understanding the Program
+            </span>
+            <h2 className="text-3xl md:text-4xl font-bold text-[#111] mb-4">What Is Equity Raising?</h2>
+            <p className="text-gray-500 text-lg max-w-3xl mx-auto leading-relaxed">
+              Think of it this way - your business needs capital. You could go to a bank, but banks charge interest from day one and expect monthly repayments whether your project is done or not.
+            </p>
           </motion.div>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-            <motion.div {...fadeUp(0.1)}>
-              <Card className="h-full">
-                <h3 className="text-lg font-bold text-[#111] mb-4 flex items-center gap-2"><Globe className="w-5 h-5 text-[#D48035]" /> India Opportunity</h3>
-                <ul className="space-y-3">
-                  <Bullet>Rapid economic growth & rising urbanization</Bullet>
-                  <Bullet>Strong real estate and infrastructure demand</Bullet>
-                  <Bullet>Increasing need for structured financing among developers</Bullet>
-                </ul>
-              </Card>
-            </motion.div>
-            <motion.div {...fadeUp(0.2)}>
-              <Card className="h-full">
-                <h3 className="text-lg font-bold text-[#111] mb-4 flex items-center gap-2"><Briefcase className="w-5 h-5 text-[#D48035]" /> Our Platform Delivers</h3>
-                <ul className="space-y-3">
-                  <Bullet>Access to global institutional and HNW diaspora capital</Bullet>
-                  <Bullet>Structured, risk-mitigated, asset-backed investments</Bullet>
-                  <Bullet>Built-in exit & liquidity engine via NRI demand networks</Bullet>
-                </ul>
-              </Card>
-            </motion.div>
-          </div>
-        </div>
-      </section>
-
-      {/* ── THREE CORE PILLARS ── */}
-      <section className="py-24 bg-white border-b border-gray-100">
-        <div className="container mx-auto px-4 max-w-6xl">
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            {[
-              {
-                title: "NRI Focused",
-                desc: "Designed primarily for the specific compliance, taxation, FEMA regulation, and repatriation needs of Non-Resident Indians.",
-                icon: <Users className="w-6 h-6 text-white" />
-              },
-              {
-                title: "Verified Opportunities",
-                desc: "Every project undergoes strict multi-tier review, legal due diligence, and financial audits to protect investor capital.",
-                icon: <Shield className="w-6 h-6 text-white" />
-              },
-              {
-                title: "End-to-End Support",
-                desc: "Complete operational support across legal, financial, advisory, and asset management needs throughout the deal lifecycle.",
-                icon: <Award className="w-6 h-6 text-white" />
-              }
-            ].map((pillar, i) => (
-              <motion.div key={i} {...fadeUp(i * 0.1)} className="text-center p-8 bg-[#F8F8F8] border border-gray-100 rounded-3xl">
-                <div className="w-12 h-12 rounded-2xl bg-[#1a1a1a] flex items-center justify-center mx-auto mb-5 shadow-md">
-                  {pillar.icon}
+          <div className="grid md:grid-cols-2 gap-8 items-start">
+            <motion.div {...fadeUp(0.1)} className="bg-gray-50 rounded-2xl p-8 border border-gray-100">
+              <div className="flex items-center gap-3 mb-5">
+                <div className="w-10 h-10 rounded-xl bg-red-50 flex items-center justify-center">
+                  <Building2 className="w-5 h-5 text-red-400" />
                 </div>
-                <h3 className="text-lg font-bold text-[#111] mb-2">{pillar.title}</h3>
-                <p className="text-gray-500 text-[1.05rem] leading-relaxed">{pillar.desc}</p>
-              </motion.div>
-            ))}
+                <h3 className="font-bold text-lg text-[#111]">The Bank Route</h3>
+              </div>
+              <ul className="space-y-3 text-gray-600 text-base leading-relaxed">
+                <li className="flex gap-2.5"><span className="text-red-400 mt-1">x</span> Fixed interest from the first month</li>
+                <li className="flex gap-2.5"><span className="text-red-400 mt-1">x</span> Monthly EMI regardless of where your project stands</li>
+                <li className="flex gap-2.5"><span className="text-red-400 mt-1">x</span> Rigid terms, limited flexibility</li>
+                <li className="flex gap-2.5"><span className="text-red-400 mt-1">x</span> Collateral required, with fixed pressure on repayment</li>
+              </ul>
+            </motion.div>
+            <motion.div {...fadeUp(0.2)} className="bg-[#D48035]/5 rounded-2xl p-8 border border-[#D48035]/20">
+              <div className="flex items-center gap-3 mb-5">
+                <div className="w-10 h-10 rounded-xl bg-[#D48035]/10 flex items-center justify-center">
+                  <Handshake className="w-5 h-5 text-[#D48035]" />
+                </div>
+                <h3 className="font-bold text-lg text-[#111]">The Equity Route</h3>
+              </div>
+              <ul className="space-y-3 text-gray-600 text-base leading-relaxed">
+                <li className="flex gap-2.5"><CheckCircle className="w-4 h-4 text-[#D48035] shrink-0 mt-1" /> Investor puts in the capital you need</li>
+                <li className="flex gap-2.5"><CheckCircle className="w-4 h-4 text-[#D48035] shrink-0 mt-1" /> You provide collateral, just like with a bank</li>
+                <li className="flex gap-2.5"><CheckCircle className="w-4 h-4 text-[#D48035] shrink-0 mt-1" /> No monthly payments - repayment starts after your agreed timeline</li>
+                <li className="flex gap-2.5"><CheckCircle className="w-4 h-4 text-[#D48035] shrink-0 mt-1" /> Terms are discussed and agreed upon - not imposed</li>
+              </ul>
+            </motion.div>
           </div>
-        </div>
-      </section>
-
-      {/* ── THE ECOSYSTEM (VISUAL REPRESENTATION) ── */}
-      <section className="py-24 bg-[#1a1a1a] text-white" id="ecosystem">
-        <div className="container mx-auto px-4 max-w-6xl">
-          <motion.div {...fadeUp()} className="text-center mb-16">
-            <SectionTitle light>The Platform Ecosystem</SectionTitle>
-            <p className="section-subtitle text-gray-400 max-w-2xl mx-auto" style={{ color: '#9ca3af' }}>Connecting stakeholders through structured channels to simplify and secure cross-border investments.</p>
+          <motion.div {...fadeUp(0.3)} className="mt-10 bg-[#111] rounded-2xl p-8 text-center">
+            <p className="text-white text-lg leading-relaxed max-w-2xl mx-auto">
+              In simple terms - if your project completes in three years, you and the investor agree that repayment happens at that point. You focus on building. They wait for the returns. Both sides benefit, with a proper legal agreement protecting everyone.
+            </p>
           </motion.div>
-
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 items-stretch">
-            {/* Connect */}
-            <motion.div {...fadeUp(0.1)} className="bg-white/5 border border-white/10 rounded-3xl p-8 flex flex-col justify-between">
-              <div>
-                <span className="text-xs uppercase tracking-widest text-[#D48035] font-bold block mb-4">Connect</span>
-                <h3 className="text-xl font-bold mb-4">Sourcing & Advisory Channels</h3>
-                <p className="text-gray-400 text-[1.05rem] leading-relaxed mb-6">Bringing together the key players to kickstart investment opportunities and scale developer funding corridors.</p>
-              </div>
-              <div className="space-y-3">
-                {["Service Partners", "Developers", "Capital Seekers"].map((item, idx) => (
-                  <div key={idx} className="bg-white/5 border border-white/5 px-4 py-3 rounded-xl flex items-center justify-between">
-                    <span className="text-xs font-semibold text-gray-300">{item}</span>
-                    <ArrowRight className="w-3.5 h-3.5 text-[#D48035]" />
-                  </div>
-                ))}
-              </div>
-            </motion.div>
-
-            {/* Invest */}
-            <motion.div {...fadeUp(0.2)} className="bg-white/5 border border-white/10 rounded-3xl p-8 flex flex-col justify-between">
-              <div>
-                <span className="text-xs uppercase tracking-widest text-[#D48035] font-bold block mb-4">Invest</span>
-                <h3 className="text-xl font-bold mb-4">Curated Asset Classes</h3>
-                <p className="text-gray-400 text-[1.05rem] leading-relaxed mb-6">Select from verified debt, mezzanine, and equity opportunities designed for downside protection and structured returns.</p>
-              </div>
-              <div className="space-y-3">
-                {["Alternate Investments", "Equity Options", "Real Estate Opportunities"].map((item, idx) => (
-                  <div key={idx} className="bg-white/5 border border-white/5 px-4 py-3 rounded-xl flex items-center justify-between">
-                    <span className="text-xs font-semibold text-gray-300">{item}</span>
-                    <ArrowRight className="w-3.5 h-3.5 text-[#D48035]" />
-                  </div>
-                ))}
-              </div>
-            </motion.div>
-
-            {/* Support */}
-            <motion.div {...fadeUp(0.3)} className="bg-white/5 border border-white/10 rounded-3xl p-8 flex flex-col justify-between">
-              <div>
-                <span className="text-xs uppercase tracking-widest text-[#D48035] font-bold block mb-4">Support</span>
-                <h3 className="text-xl font-bold mb-4">Compliance & Enablement</h3>
-                <p className="text-gray-400 text-[1.05rem] leading-relaxed mb-6">Providing investor protection through dedicated relationship support, auditing, and structured legal frameworks.</p>
-              </div>
-              <div className="space-y-3">
-                {["Legal Support", "Financial Enablement", "Advisory Services"].map((item, idx) => (
-                  <div key={idx} className="bg-white/5 border border-white/5 px-4 py-3 rounded-xl flex items-center justify-between">
-                    <span className="text-xs font-semibold text-gray-300">{item}</span>
-                    <ArrowRight className="w-3.5 h-3.5 text-[#D48035]" />
-                  </div>
-                ))}
-              </div>
-            </motion.div>
-          </div>
         </div>
       </section>
 
-      {/* ── PLATFORM MODEL & OVERVIEW ── */}
-      <section className="py-24 bg-white" id="platform">
-        <div className="container mx-auto px-4 max-w-6xl">
+      {/* HOW IT WORKS */}
+      <section className="py-20 bg-gray-50" id="how-it-works">
+        <div className="container mx-auto px-4 max-w-5xl">
           <motion.div {...fadeUp()} className="text-center mb-14">
-            <SectionTitle>Capital + Structuring + Exit Platform Model</SectionTitle>
-            <p className="section-subtitle max-w-xl mx-auto">Our platform integrates three key components into a unified investment model.</p>
+            <span className="inline-block bg-orange-50 text-[#D48035] text-xs font-bold px-3 py-1 rounded-full border border-orange-200 mb-4">
+              The Process
+            </span>
+            <h2 className="text-3xl md:text-4xl font-bold text-[#111] mb-4">How It Works</h2>
+            <p className="text-gray-500 text-lg max-w-2xl mx-auto">
+              We have kept the process straightforward. You do not need to figure out the entire journey on your own - our team walks you through it.
+            </p>
           </motion.div>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12">
-            {[
-              { title: "Capital Access", desc: "Global investor network providing scalable capital deployment across real estate and infrastructure.", icon: <Globe className="w-6 h-6 text-[#D48035]" /> },
-              { title: "Structured Investments", desc: "Secured, risk-mitigated deal structures with asset-backed collateral and conservative LTV discipline.", icon: <Shield className="w-6 h-6 text-[#D48035]" /> },
-              { title: "NRI Exit & Distribution Engine", desc: "Access to 32M+ global diaspora for pre-sales and secondary exits - enabling faster capital rotation.", icon: <Users className="w-6 h-6 text-[#D48035]" /> },
-            ].map((item, i) => (
-              <motion.div key={i} {...fadeUp(i * 0.1)}>
-                <Card className="h-full text-center">
-                  <div className="w-12 h-12 rounded-xl bg-orange-50 flex items-center justify-center mx-auto mb-4">{item.icon}</div>
-                  <h3 className="text-base font-bold text-[#111] mb-2">{item.title}</h3>
-                  <p className="text-gray-500 text-[1.05rem] leading-relaxed">{item.desc}</p>
-                </Card>
-              </motion.div>
-            ))}
-          </div>
-
-          {/* Deal Parameters */}
-          <motion.div {...fadeUp(0.2)} className="bg-[#F8F8F8] rounded-2xl border border-gray-100 p-8">
-            <h3 className="text-lg font-bold text-[#111] mb-6 text-center">Platform Overview</h3>
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-5">
-              {[
-                { label: "Target Size", value: "Up to $1 Billion", note: "Phased deployment" },
-                { label: "Per Deal", value: "$5M - $100M", note: "Flexible structure" },
-                { label: "Target Returns", value: "16% - 22%", note: "Deal dependent" },
-                { label: "Horizon", value: "2 - 5 Years", note: "Per investment" },
-              ].map((item, i) => (
-                <div key={i} className="text-center bg-white rounded-xl p-5 border border-gray-100 shadow-sm">
-                  <div className="text-xl font-bold text-[#D48035]">{item.value}</div>
-                  <div className="text-xs font-bold text-[#111] mt-1">{item.label}</div>
-                  <div className="text-[11px] text-gray-400 mt-0.5">{item.note}</div>
-                </div>
-              ))}
-            </div>
-            <div className="mt-6 pt-5 border-t border-gray-200">
-              <p className="text-xs font-bold text-gray-400 uppercase tracking-widest mb-3 text-center">Focus Areas</p>
-              <div className="flex flex-wrap justify-center gap-2">
-                {["Real Estate", "Infrastructure", "Structured Credit", "Special Situations"].map((tag, i) => <OrangeTag key={i}>{tag}</OrangeTag>)}
-              </div>
-            </div>
-          </motion.div>
-        </div>
-      </section>
-
-      {/* ── WHY NOW SECTION ── */}
-      <section className="py-24 bg-[#F8F8F8]">
-        <div className="container mx-auto px-4 max-w-6xl">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
-            <motion.div {...fadeUp(0.1)} className="space-y-6">
-              <SectionTitle>Why Now?</SectionTitle>
-              <p className="responsive-paragraph text-gray-600">
-                India is experiencing a massive wave of digital adoption, regulatory transparency (post-RERA), and rising NRI wealth. The intersection of these trends creates significant demand for trusted investment gateways.
-              </p>
-              <div className="space-y-4">
-                {[
-                  { title: "Digital Enablement", desc: "Digital verification, onboarding, and tracking make remote asset management seamless." },
-                  { title: "Transparency post-RERA", desc: "RERA disclosures and strict local oversight protect capital from standard project execution risks." },
-                  { title: "Accelerating Wealth Corridors", desc: "India represents one of the world's fastest-growing major economies, attracting record FDI & diaspora capital." }
-                ].map((item, i) => (
-                  <div key={i} className="flex gap-3">
-                    <CheckCircle className="w-5 h-5 text-[#D48035] shrink-0 mt-0.5" />
+          <div className="grid md:grid-cols-2 gap-6">
+            {steps.map((step, idx) => {
+              const IconComp = IconMap[step.icon];
+              return (
+                <motion.div key={step.id} {...fadeUp(idx * 0.1)} className="bg-white rounded-2xl p-7 border border-gray-100 shadow-sm hover:shadow-md hover:border-[#D48035]/20 transition-all duration-300">
+                  <div className="flex items-start gap-4">
+                    <div className="w-12 h-12 rounded-xl bg-orange-50 flex items-center justify-center shrink-0">
+                      {IconComp && <IconComp className="w-6 h-6 text-[#D48035]" />}
+                    </div>
                     <div>
-                      <h4 className="font-bold text-[#111] text-lg">{item.title}</h4>
-                      <p className="text-[1.05rem] text-gray-500 mt-1">{item.desc}</p>
+                      <h3 className="font-bold text-[1.1rem] text-[#111] mb-2">{step.title}</h3>
+                      <p className="text-gray-500 text-base leading-relaxed">{step.desc}</p>
                     </div>
                   </div>
-                ))}
-              </div>
-            </motion.div>
-
-            {/* Illustrative Example Card */}
-            <motion.div {...fadeUp(0.2)}>
-              <div className="bg-[#1a1a1a] text-white rounded-3xl p-8 border border-white/5 shadow-xl relative overflow-hidden">
-                <div className="absolute top-0 right-0 w-32 h-32 bg-[#D48035]/15 rounded-full blur-xl pointer-events-none" />
-                <span className="text-xs font-bold uppercase tracking-wider text-[#D48035] bg-orange-400/10 px-3 py-1.5 rounded-full border border-orange-400/20">Illustrative Example</span>
-                <h3 className="text-xl font-bold mt-6 mb-2">Deal Structure Preview</h3>
-                <p className="text-gray-400 text-xs mb-6">Typical parameters for real estate equity capital rounds.</p>
-                <div className="space-y-4 border-t border-white/10 pt-6">
-                  {[
-                    { label: "Target Investment Size", value: "$20 Million" },
-                    { label: "Deal Structure", value: "Secured Mezzanine" },
-                    { label: "Asset Coverage Target", value: "~1.7x" },
-                    { label: "Target IRR", value: "~20%" },
-                    { label: "Exit Strategy Plan", value: "Global Pre-sales & NRI buyer network integration" }
-                  ].map((stat, i) => (
-                    <div key={i} className="flex justify-between items-start text-xs">
-                      <span className="text-gray-400">{stat.label}</span>
-                      <span className="font-bold text-white text-right max-w-[180px]">{stat.value}</span>
-                    </div>
-                  ))}
-                </div>
-              </div>
-            </motion.div>
+                </motion.div>
+              );
+            })}
           </div>
         </div>
       </section>
 
-      {/* ── INVESTMENT STRUCTURES ── */}
-      <section className="py-24 bg-white">
-        <div className="container mx-auto px-4 max-w-6xl">
+      {/* SECURITY */}
+      <section className="py-20 bg-white" id="security">
+        <div className="container mx-auto px-4 max-w-5xl">
           <motion.div {...fadeUp()} className="text-center mb-14">
-            <SectionTitle>Flexible Investment Structures</SectionTitle>
+            <span className="inline-block bg-orange-50 text-[#D48035] text-xs font-bold px-3 py-1 rounded-full border border-orange-200 mb-4">
+              Security & Agreements
+            </span>
+            <h2 className="text-3xl md:text-4xl font-bold text-[#111] mb-4">What Protects Everyone</h2>
+            <p className="text-gray-500 text-lg max-w-2xl mx-auto">
+              This is not a handshake deal. Every investment goes through proper legal structuring and independent checks.
+            </p>
           </motion.div>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            {[
-              { title: "Secured Debt", bg: "bg-[#1a1a1a]", points: ["Fixed return", "Priority repayment", "Collateral-backed"] },
-              { title: "Mezzanine Financing", bg: "bg-[#D48035]", points: ["Hybrid structure", "Equity upside potential", "Flexible deployment"] },
-              { title: "Equity Participation", bg: "bg-[#1a1a1a]", points: ["Select high-growth opportunities", "Strategic co-investment", "Long-term value creation"] },
-            ].map((item, i) => (
-              <motion.div key={i} {...fadeUp(i * 0.1)}>
-                <div className={`${item.bg} rounded-2xl p-8 text-white h-full shadow-sm`}>
-                  <h3 className="text-xl font-bold mb-5">{item.title}</h3>
-                  <ul className="space-y-3">
-                    {item.points.map((p, pi) => (
-                      <li key={pi} className="flex items-center gap-2.5 text-sm text-gray-300 list-none">
-                        <div className="w-1.5 h-1.5 rounded-full bg-[#D48035] shrink-0" />
-                        {p}
-                      </li>
-                    ))}
-                  </ul>
-                </div>
-              </motion.div>
-            ))}
+          <div className="grid md:grid-cols-2 gap-6">
+            {securityPoints.map((point, idx) => {
+              const IconComp = IconMap[point.icon];
+              return (
+                <motion.div key={idx} {...fadeUp(idx * 0.1)} className="flex gap-5 bg-gray-50 rounded-2xl p-7 border border-gray-100 hover:border-[#D48035]/20 transition-all">
+                  <div className="w-12 h-12 rounded-xl bg-orange-50 flex items-center justify-center shrink-0">
+                    {IconComp && <IconComp className="w-6 h-6 text-[#D48035]" />}
+                  </div>
+                  <div>
+                    <h3 className="font-bold text-lg text-[#111] mb-2">{point.title}</h3>
+                    <p className="text-gray-500 text-base leading-relaxed">{point.desc}</p>
+                  </div>
+                </motion.div>
+              );
+            })}
           </div>
-
-          {/* Philosophy */}
-          <motion.div {...fadeUp(0.2)} className="mt-10 bg-[#F8F8F8] rounded-2xl border border-gray-100 p-8">
-            <h3 className="text-lg font-bold text-[#111] mb-5 text-center">Investment Philosophy</h3>
-            <div className="grid grid-cols-2 md:grid-cols-5 gap-3">
-              {["Capital preservation first", "Asset-backed investments only", "Strong promoter alignment", "Downside protection through structuring", "Structured returns with asset-backed security"].map((p, i) => (
-                <div key={i} className="bg-white border border-gray-100 rounded-xl p-4 text-center shadow-sm">
-                  <p className="text-xs font-semibold text-[#111] leading-snug">{p}</p>
-                </div>
-              ))}
+          <motion.div {...fadeUp(0.4)} className="mt-10 rounded-2xl overflow-hidden border border-[#D48035]/20">
+            <div className="bg-[#D48035] px-8 py-5">
+              <h3 className="text-white font-bold text-lg">One thing we always say</h3>
+            </div>
+            <div className="bg-[#D48035]/5 px-8 py-6">
+              <p className="text-gray-700 text-lg leading-relaxed">
+                We do not encourage anyone to put money into a deal they have not fully understood. Before any agreement is signed, you will know exactly what is expected of you, what you are getting, and what happens on both sides if things go differently than planned. Transparency is not optional here - it is the foundation.
+              </p>
             </div>
           </motion.div>
         </div>
       </section>
 
-      {/* ── RISK & SECURITY ── */}
-      <section className="py-24 bg-[#1a1a1a] text-white">
-        <div className="container mx-auto px-4 max-w-6xl">
-          <motion.div {...fadeUp()} className="text-center mb-14">
-            <SectionTitle light>Built-In Investor Protection</SectionTitle>
+      {/* PROPOSAL */}
+      <section className="py-20" style={{ background: "linear-gradient(135deg, #111 0%, #1e1e1e 100%)" }} id="proposal">
+        <div className="container mx-auto px-4 max-w-4xl">
+          <motion.div {...fadeUp()} className="text-center mb-12">
+            <span className="inline-block bg-[#D48035]/10 text-[#D48035] text-xs font-bold px-3 py-1 rounded-full border border-[#D48035]/30 mb-4">
+              Getting Started
+            </span>
+            <h2 className="text-3xl md:text-4xl font-bold text-white mb-4">What You Will Need to Share</h2>
+            <p className="text-gray-400 text-lg max-w-2xl mx-auto">
+              To evaluate your proposal, our team and potential investors will need some basic information. There is no exact template - but here is what typically matters.
+            </p>
           </motion.div>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            {[
-              { icon: <Shield className="w-8 h-8 text-[#D48035]" />, title: "Asset Coverage", desc: "100% - 200% asset coverage with conservative loan-to-value discipline on all investments." },
-              { icon: <CheckCircle className="w-8 h-8 text-[#D48035]" />, title: "Security Package", points: ["Charge on assets", "Project receivables", "Corporate/personal guarantees"] },
-              { icon: <Star className="w-8 h-8 text-[#D48035]" />, title: "Independent Controls", points: ["Legal due diligence", "Financial audits", "Third-party valuation"] },
-            ].map((item, i) => (
-              <motion.div key={i} {...fadeUp(i * 0.1)} className="bg-white/5 border border-white/10 rounded-2xl p-7">
-                <div className="mb-4">{item.icon}</div>
-                <h3 className="text-base font-bold mb-4">{item.title}</h3>
-                {item.desc ? <p className="text-gray-400 text-[1.05rem] leading-relaxed">{item.desc}</p> : (
-                  <ul className="space-y-2">
-                    {item.points.map((p, pi) => <Bullet key={pi} light>{p}</Bullet>)}
-                  </ul>
+          <motion.div {...fadeUp(0.15)} className="bg-white/5 border border-white/10 rounded-2xl p-8 md:p-10 max-w-3xl mx-auto">
+            <div className="grid md:grid-cols-2 gap-x-8 gap-y-5 px-2 md:px-4">
+              {proposalItems.map((item, idx) => (
+                <div key={idx} className="flex items-start gap-3.5 text-gray-300 text-base leading-relaxed">
+                  <CheckCircle className="w-5 h-5 text-[#D48035] shrink-0 mt-0.5" />
+                  <span>{item}</span>
+                </div>
+              ))}
+            </div>
+            <div className="mt-8 pt-8 border-t border-white/10">
+              <p className="text-gray-400 text-base text-center">
+                Do not worry if you do not have everything ready. <span className="text-[#D48035] font-semibold">Reach out first</span> - our team will tell you exactly what you need.
+              </p>
+            </div>
+          </motion.div>
+        </div>
+      </section>
+
+      {/* FAQs */}
+      <section className="py-20 bg-gray-50" id="faq">
+        <div className="container mx-auto px-4 max-w-3xl">
+          <motion.div {...fadeUp()} className="text-center mb-12">
+            <span className="inline-block bg-orange-50 text-[#D48035] text-xs font-bold px-3 py-1 rounded-full border border-orange-200 mb-4">
+              Common Questions
+            </span>
+            <h2 className="text-3xl md:text-4xl font-bold text-[#111] mb-4">Things People Usually Ask</h2>
+          </motion.div>
+          <div className="space-y-3">
+            {faqs.map((faq, idx) => (
+              <motion.div key={idx} {...fadeUp(idx * 0.07)} className="bg-white rounded-xl border border-gray-100 shadow-sm overflow-hidden">
+                <button onClick={() => setOpenFaq(openFaq === idx ? null : idx)} className="w-full flex items-center justify-between px-6 py-5 text-left gap-4">
+                  <span className="font-semibold text-[#111] text-base leading-snug">{faq.q}</span>
+                  {openFaq === idx
+                    ? <ChevronUp className="w-5 h-5 text-[#D48035] shrink-0" />
+                    : <ChevronDown className="w-5 h-5 text-gray-400 shrink-0" />}
+                </button>
+                {openFaq === idx && (
+                  <div className="px-6 pb-5 text-gray-500 text-base leading-relaxed border-t border-gray-50 pt-4">
+                    {faq.a}
+                  </div>
                 )}
               </motion.div>
             ))}
           </div>
-
-          {/* Due Diligence */}
-          <motion.div {...fadeUp(0.2)} className="mt-10 bg-white/5 border border-white/10 rounded-2xl p-8">
-            <h3 className="text-lg font-bold text-white mb-6 text-center">Due Diligence Process</h3>
-            <div className="flex flex-wrap justify-center gap-3">
-              {["Initial Screening", "NDA Execution", "Detailed Evaluation", "Financial & Legal Due Diligence", "Site Visits", "Investment Committee Approval"].map((step, i) => (
-                <div key={i} className="flex items-center gap-2">
-                  <div className="flex items-center gap-2 bg-white/10 border border-white/10 rounded-full px-4 py-2">
-                    <span className="text-[#D48035] text-xs font-bold">{String(i + 1).padStart(2, '0')}</span>
-                    <span className="text-xs text-gray-300 font-medium">{step}</span>
-                  </div>
-                  {i < 5 && <ArrowRight className="w-3 h-3 text-[#D48035] hidden md:block" />}
-                </div>
-              ))}
-            </div>
-          </motion.div>
         </div>
       </section>
 
-      {/* ── NRI EXIT ENGINE ── */}
-      <section className="py-24 bg-white">
-        <div className="container mx-auto px-4 max-w-6xl">
-          <motion.div {...fadeUp()} className="text-center mb-14">
-            <SectionTitle>NRI Exit & Demand Engine</SectionTitle>
-            <p className="section-subtitle max-w-xl mx-auto">Direct access to 32M+ global Indian diaspora - our platform's most powerful competitive advantage.</p>
+      {/* CONNECT */}
+      <section className="py-20 bg-white" id="connect">
+        <div className="container mx-auto px-4 max-w-5xl">
+          <motion.div {...fadeUp()} className="text-center mb-12">
+            <span className="inline-block bg-orange-50 text-[#D48035] text-xs font-bold px-3 py-1 rounded-full border border-orange-200 mb-4">
+              Let us Talk
+            </span>
+            <h2 className="text-3xl md:text-4xl font-bold text-[#111] mb-4">Interested? Start Here.</h2>
+            <p className="text-gray-500 text-lg max-w-2xl mx-auto">
+              If you think your business is a good fit, reach out. There is no commitment at this stage - just a conversation to see if it makes sense.
+            </p>
           </motion.div>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-10">
-            <motion.div {...fadeUp(0.1)}>
-              <Card className="h-full">
-                <h3 className="text-lg font-bold text-[#111] mb-4">NRI Market Opportunity</h3>
-                <div className="flex gap-4 mb-5">
-                  <div className="bg-orange-50 border border-orange-100 rounded-xl p-4 flex-1 text-center">
-                    <div className="text-xl font-bold text-[#D48035]">$135B+</div>
-                    <div className="text-xs text-gray-500 mt-1">Annual Remittances</div>
+          <div className="grid md:grid-cols-2 gap-8 items-start">
+            <motion.div {...fadeUp(0.1)} className="space-y-5">
+              <div className="bg-gray-50 rounded-2xl p-7 border border-gray-100">
+                <h3 className="font-bold text-[1.1rem] text-[#111] mb-5">Get in Touch</h3>
+                <div className="space-y-4">
+                  <div className="flex items-start gap-3">
+                    <MapPin className="w-5 h-5 text-[#D48035] shrink-0 mt-0.5" />
+                    <div>
+                      <p className="font-semibold text-sm text-[#111]">New York, USA</p>
+                      <p className="text-gray-500 text-sm">55 West 47 Street, 4th Floor, New York, NY 10036</p>
+                    </div>
                   </div>
-                  <div className="bg-orange-50 border border-orange-100 rounded-xl p-4 flex-1 text-center">
-                    <div className="text-xl font-bold text-[#D48035]">~40%</div>
-                    <div className="text-xs text-gray-500 mt-1">Directed to Real Estate</div>
+                  <div className="flex items-start gap-3">
+                    <MapPin className="w-5 h-5 text-[#D48035] shrink-0 mt-0.5" />
+                    <div>
+                      <p className="font-semibold text-sm text-[#111]">Hyderabad, India</p>
+                      <p className="text-gray-500 text-sm">5th Floor, Sanghi One, Road No 10, Banjara Hills</p>
+                    </div>
+                  </div>
+                  <div className="flex items-center gap-3">
+                    <Mail className="w-5 h-5 text-[#D48035] shrink-0" />
+                    <a href="mailto:info@investateindia.com" className="text-gray-600 text-sm hover:text-[#D48035] transition-colors">info@investateindia.com</a>
+                  </div>
+                  <div className="flex items-center gap-3">
+                    <Phone className="w-5 h-5 text-[#D48035] shrink-0" />
+                    <a href="tel:+19144731711" className="text-gray-600 text-sm hover:text-[#D48035] transition-colors">+1 914-473-1711</a>
                   </div>
                 </div>
-                <ul className="space-y-2.5">
-                  <Bullet>15 - 20% of housing demand driven by NRIs</Bullet>
-                  <Bullet>Expected to grow to 25% of total market</Bullet>
-                  <Bullet>Shift toward structured, return-driven investments</Bullet>
-                </ul>
-              </Card>
+              </div>
+              <div className="bg-[#D48035] rounded-2xl p-7 text-white">
+                <h3 className="font-bold text-lg mb-2">Not Sure If You Qualify?</h3>
+                <p className="text-white/80 text-sm leading-relaxed mb-4">
+                  Just reach out with a short description of your business. We will come back to you honestly - even if this program is not the right fit right now.
+                </p>
+                <a href="/contact-us" className="inline-flex items-center gap-2 bg-white text-[#D48035] font-bold px-5 py-2.5 rounded-full text-sm hover:bg-orange-50 transition-colors">
+                  Contact Us <ArrowRight className="w-4 h-4" />
+                </a>
+              </div>
             </motion.div>
             <motion.div {...fadeUp(0.2)}>
-              <Card className="h-full">
-                <h3 className="text-lg font-bold text-[#111] mb-4">Developer Benefits</h3>
-                <ul className="space-y-3">
-                  <Bullet>Faster inventory sales through global pre-sales</Bullet>
-                  <Bullet>Secondary exits to NRI buyers with USD-linked purchasing power</Bullet>
-                  <Bullet>Premium pricing potential with international demand</Bullet>
-                  <Bullet>Lower holding risk and faster capital rotation</Bullet>
-                </ul>
-              </Card>
+              <div className="bg-gray-50 rounded-2xl p-8 border border-gray-100 shadow-sm">
+                <h3 className="font-bold text-[1.1rem] text-[#111] mb-2">Submit a Quick Inquiry</h3>
+                <p className="text-gray-500 text-sm mb-6">We will review it and get back to you within 2 business days.</p>
+                <form onSubmit={(e) => { e.preventDefault(); window.location.href = "/contact-us"; }} className="space-y-4">
+                  <input type="text" placeholder="Your Name" required className="w-full px-4 py-3 rounded-xl border border-gray-200 text-sm focus:outline-none focus:border-[#D48035] bg-white" />
+                  <input type="email" placeholder="Email Address" required className="w-full px-4 py-3 rounded-xl border border-gray-200 text-sm focus:outline-none focus:border-[#D48035] bg-white" />
+                  <input type="text" placeholder="Company / Business Name" required className="w-full px-4 py-3 rounded-xl border border-gray-200 text-sm focus:outline-none focus:border-[#D48035] bg-white" />
+                  <input type="text" placeholder="Capital Requirement (approximate)" className="w-full px-4 py-3 rounded-xl border border-gray-200 text-sm focus:outline-none focus:border-[#D48035] bg-white" />
+                  <textarea rows={3} placeholder="Briefly describe your business and what you are looking for..." className="w-full px-4 py-3 rounded-xl border border-gray-200 text-sm focus:outline-none focus:border-[#D48035] bg-white resize-none" />
+                  <button type="submit" className="w-full bg-[#D48035] hover:bg-[#B45309] text-white font-bold py-3.5 rounded-xl transition-all hover:scale-[1.02] text-sm uppercase tracking-wider">
+                    Send Inquiry
+                  </button>
+                </form>
+              </div>
             </motion.div>
           </div>
-
-          {/* Growth Timeline */}
-          <motion.div {...fadeUp(0.2)} className="bg-[#F8F8F8] rounded-2xl border border-gray-100 p-8">
-            <h3 className="text-lg font-bold text-[#111] mb-6">Historical NRI Investment Growth</h3>
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-              {[
-                { period: "2015 - 2018", label: "Foundation Phase", desc: "Primarily emotional/residential buying. Limited structured investments." },
-                { period: "2019 - 2021", label: "Accelerating Phase", desc: "NRI share grows to 10 - 12% of market. Investments reach ~$13B annually." },
-                { period: "2022 - 2024", label: "Growth Phase", desc: "~12% YoY increase (2023 - 24). Shift toward luxury + income-generating assets." },
-                { period: "2025 - 2026", label: "Current Phase", desc: "$14B+ annual investment. ~20% market contribution. 35% YoY growth in key segments." },
-              ].map((item, i) => (
-                <div key={i} className="bg-white rounded-xl border border-gray-100 shadow-sm p-5">
-                  <div className="text-xs font-bold text-[#D48035] uppercase tracking-wide mb-1">{item.period}</div>
-                  <div className="text-sm font-bold text-[#111] mb-2">{item.label}</div>
-                  <p className="text-[0.95rem] text-gray-500 leading-relaxed">{item.desc}</p>
-                </div>
-              ))}
-            </div>
-            {/* <p className="mt-5 text-center text-sm font-semibold text-[#111] border-t border-gray-200 pt-5">
-              Clear Shift: <span className="text-gray-400 font-normal">Emotional buying</span> &rarr; <span className="text-[#D48035]">Structured, return-driven investing</span>
-            </p> */}
-          </motion.div>
         </div>
       </section>
-
-      {/* ── LEADERSHIP (INVESTATE) ── */}
-      <section className="py-24 bg-[#F8F8F8]">
-        <div className="container mx-auto px-4 max-w-6xl">
-          <motion.div {...fadeUp()} className="text-center mb-16">
-            <SectionTitle>Meet the Leadership</SectionTitle>
-            <p className="section-subtitle max-w-2xl mx-auto">Connecting global capital access, diaspora connectivity, and structured investment expertise.</p>
-          </motion.div>
-
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-            {[
-              {
-                name: "Deepak Kavadia",
-                role: "Chief Executive Officer & Co-Founder",
-                image: "/deepak.png",
-                desc: "New York-based entrepreneur and global gemstone authority. Founder of Nice Gems Inc., Nice Jewels Inc., and Prestige Developers LLC, and Founder & Chairman of the NRI Federation, bringing over 35 years of cross-border investment and U.S.-India capital flow corridors."
-              },
-              {
-                name: "Pankaj Gupta",
-                role: "Co-Founder",
-                image: "/pankaj.png",
-                desc: "Has built a strong presence in the diamond and jewellery industry through Murari Cap Pvt. Ltd. and Avik Jewels, and is a recognized name in the Hyderabad real estate market through Swandurga Construction LLP."
-              },
-              {
-                name: "Atish Agarwal",
-                role: "Co-Founder",
-                image: "/atish.png",
-                desc: "Brings diversified entrepreneurial experience across textiles, retail, jewellery, and real estate advisory, with a focus on operations and structuring investment opportunities."
-              }
-            ].map((leader, i) => (
-              <motion.div key={i} {...fadeUp(i * 0.1)} className="bg-white rounded-3xl border border-gray-100 overflow-hidden shadow-sm flex flex-col justify-between">
-                <div className="p-6 flex flex-col items-center text-center">
-                  <div className="w-24 h-24 rounded-full overflow-hidden border-2 border-[#D48035]/60 mb-4 shadow-lg shrink-0">
-                    <img src={leader.image} alt={leader.name} className="w-full h-full object-cover object-top" />
-                  </div>
-                  <h3 className="text-lg font-bold text-[#111]">{leader.name}</h3>
-                  <p className="text-[#D48035] text-xs font-semibold mt-1">{leader.role}</p>
-                  <p className="text-gray-500 text-[0.95rem] mt-4 leading-relaxed text-left">{leader.desc}</p>
-                </div>
-                <div className="bg-gray-50 px-6 py-4 border-t border-gray-100">
-                  <p className="text-[11px] text-gray-400 uppercase tracking-widest text-center">Investate Executive Leadership</p>
-                </div>
-              </motion.div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* ── STRATEGIC ADVANTAGE & COMPETITIVE BENCHMARK ── */}
-      <section className="py-24 bg-white">
-        <div className="container mx-auto px-4 max-w-6xl">
-          <motion.div {...fadeUp()} className="text-center mb-14">
-            <SectionTitle>Why Partner with Us?</SectionTitle>
-            <p className="section-subtitle max-w-xl mx-auto">Investate India is not just a fund - it is a cross-border investment and exit platform combining capital, structuring, and liquidity.</p>
-          </motion.div>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5 mb-10">
-            {[
-              { title: "Access to Global Capital", desc: "Tap into our global institutional and NRI investor network spanning USA, UK, UAE, and beyond." },
-              { title: "Flexible Deal Structuring", desc: "Secured debt, mezzanine, or equity - we design the right structure for your project." },
-              { title: "Faster Execution", desc: "Streamlined due diligence and investor matching to accelerate time-to-capital." },
-              { title: "Transparent Governance", desc: "Standardized disclosures, milestone tracking, and independent audits at every stage." },
-              { title: "Long-Term Partnership", desc: "Not a one-time transaction - a lasting strategic relationship focused on mutual growth." },
-              { title: "Built-In Exit Platform", desc: "Unique NRI exit engine that reduces developer holding risk and provides liquidity certainty." },
-            ].map((item, i) => (
-              <motion.div key={i} {...fadeUp(i * 0.07)}>
-                <Card className="h-full hover:shadow-md transition-shadow">
-                  <h3 className="text-base font-bold text-[#111] mb-2">{item.title}</h3>
-                  <p className="text-gray-500 text-[1.05rem] leading-relaxed">{item.desc}</p>
-                </Card>
-              </motion.div>
-            ))}
-          </div>
-          <motion.div {...fadeUp(0.2)} className="bg-[#1a1a1a] rounded-2xl p-8 text-center text-white">
-            <p className="text-xl font-bold mb-2">Capital + Distribution + <span className="text-[#D48035]">Liquidity</span></p>
-            <p className="text-gray-400 text-sm">Our unique position as a platform combining global capital deployment, structured finance, and a built-in exit model.</p>
-          </motion.div>
-        </div>
-      </section>
-
-      {/* ── ENGAGEMENT PROCESS ── */}
-      <section className="py-24 bg-[#F8F8F8]">
-        <div className="container mx-auto px-4 max-w-5xl">
-          <motion.div {...fadeUp()} className="text-center mb-14">
-            <SectionTitle>How to Partner with Us</SectionTitle>
-          </motion.div>
-          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
-            {[
-              { num: "01", step: "Proposal Submission" },
-              { num: "02", step: "Preliminary Review" },
-              { num: "03", step: "Letter of Interest (LOI)" },
-              { num: "04", step: "Due Diligence" },
-              { num: "05", step: "Structuring & Negotiation" },
-              { num: "06", step: "Final Agreement" },
-            ].map((item, i) => (
-              <motion.div key={i} {...fadeUp(i * 0.07)} className="text-center">
-                <div className="w-12 h-12 rounded-2xl bg-[#1a1a1a] text-white font-extrabold text-base flex items-center justify-center mx-auto mb-3 shadow">{item.num}</div>
-                <p className="text-xs font-semibold text-[#111] leading-snug">{item.step}</p>
-              </motion.div>
-            ))}
-          </div>
-          <motion.div {...fadeUp(0.2)} className="mt-10 bg-white rounded-2xl border border-gray-100 p-8 shadow-sm">
-            <h3 className="text-lg font-bold text-[#111] mb-5">Proposal Requirements</h3>
-            <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
-              {["Company Profile", "Project Details", "Financial Projections", "Capital Requirement", "Security Details", "Exit Strategy"].map((req, i) => (
-                <div key={i} className="flex items-center gap-2.5 bg-[#F8F8F8] border border-gray-100 rounded-xl px-4 py-3">
-                  <CheckCircle className="w-4 h-4 text-[#D48035] shrink-0" />
-                  <span className="text-sm font-medium text-[#111]">{req}</span>
-                </div>
-              ))}
-            </div>
-          </motion.div>
-        </div>
-      </section>
-
 
       <Footer />
     </div>
+    </>
   );
 }
+

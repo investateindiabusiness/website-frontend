@@ -622,6 +622,8 @@ h4,
     display: flex;
     width: max-content;
     animation: scrollMarquee 40s linear infinite;
+    will-change: transform;
+    backface-visibility: hidden;
 }
 
 .infra-marquee-track:hover {

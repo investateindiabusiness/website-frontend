@@ -1,4 +1,4 @@
-﻿"use client";
+"use client";
 
 import React, { useEffect, useState } from 'react';
 import Header from '@/components/Header';
@@ -106,93 +106,159 @@ export default function ContactUs() {
 
       <section className="py-20 bg-white relative z-20">
         <div className="container mx-auto px-4 max-w-6xl">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 lg:gap-24">
+          
+          {/* Centered Contact Info */}
+          <motion.div
+            initial={{ opacity: 0, y: 30 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.8 }}
+            className="flex flex-col items-center text-center mb-8"
+          >
+            <div className="flex flex-col items-center mb-6">
+              <span className="text-xs uppercase tracking-widest text-[#0b264f] font-bold mb-1">QUICK CONTACT</span>
+              <div className="flex flex-col items-center justify-center w-24">
+                <span className="text-[#0b264f] text-[10px] leading-none mb-1">★</span>
+                <div className="w-full h-[1px] bg-[#0b264f]"></div>
+              </div>
+            </div>
 
-            {/* Left Column: Contact Info */}
-            <motion.div
-              initial={{ opacity: 0, x: -50 }}
-              whileInView={{ opacity: 1, x: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.8 }}
-              className="flex flex-col"
-            >
-              <div className="flex flex-col items-start mb-6">
-                <span className="text-xs uppercase tracking-widest text-[#0b264f] font-bold mb-1">QUICK CONTACT</span>
-                <div className="flex flex-col items-center justify-center w-24">
-                  <span className="text-[#0b264f] text-[10px] leading-none mb-1">★</span>
-                  <div className="w-full h-[1px] bg-[#0b264f]"></div>
+            <h2 className="text-4xl md:text-5xl font-extrabold text-[#0b264f] mb-6 leading-tight tracking-tight">
+              Have Questions?<br />
+              Don't Hesitate to Contact Us
+            </h2>
+
+            <p className="text-gray-500 mb-12 leading-relaxed text-base">
+              Investate India is here to guide you through every step of your international journey.
+              Whether you are looking for high-yield property investments, legal guidance, or developer partnerships, our experts are ready to assist you.
+            </p>
+
+            {/* Email and Phone side-by-side */}
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-8 w-full text-left pt-10 border-t border-gray-100">
+              <div className="flex items-start gap-6 bg-slate-50/50 p-6 rounded-2xl border border-slate-100 hover:shadow-md transition-all duration-300">
+                <div className="text-orange-400 mt-1 flex-shrink-0">
+                  <Mail className="w-10 h-10 stroke-[1.25]" />
+                </div>
+                <div className="border-l border-orange-400/30 pl-6">
+                  <h3 className="text-lg font-bold text-[#0b264f] mb-1">Email Us</h3>
+                  <p className="text-gray-500 mb-2 text-xs">For partnerships & general inquiries:</p>
+                  <a
+                    href="mailto:investateindia.business@gmail.com"
+                    className="text-gray-700 text-sm font-semibold hover:text-orange-500 transition-colors duration-200 break-all"
+                  >
+                    investateindia.business@gmail.com
+                  </a>
                 </div>
               </div>
 
-              <h2 className="text-4xl md:text-5xl font-extrabold text-[#0b264f] mb-6 leading-tight tracking-tight">
-                Have Questions?<br />
-                Don't Hesitate to Contact Us
+              <div className="flex items-start gap-6 bg-slate-50/50 p-6 rounded-2xl border border-slate-100 hover:shadow-md transition-all duration-300">
+                <div className="text-orange-400 mt-1 flex-shrink-0">
+                  <Phone className="w-10 h-10 stroke-[1.25]" />
+                </div>
+                <div className="border-l border-orange-400/30 pl-6">
+                  <h3 className="text-lg font-bold text-[#0b264f] mb-1">Call Us</h3>
+                  <p className="text-gray-500 mb-2 text-xs">Speak with our relationships manager:</p>
+                  <a
+                    href="tel:+914048293000"
+                    className="text-gray-700 text-sm font-semibold hover:text-orange-500 transition-colors duration-200"
+                  >
+                    +91 40 4829 3000
+                  </a>
+                </div>
+              </div>
+            </div>
+          </motion.div>
+
+          <hr className="border-gray-100 my-8" />
+
+          {/* Centered Global Office Locations (4 columns) */}
+          <motion.div
+            initial={{ opacity: 0, y: 30 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.8, delay: 0.2 }}
+            className="w-full mb-16"
+          >
+            <div className="text-center mb-12">
+              <h2 className="text-3xl md:text-5xl font-extrabold text-[#0b264f] mb-4">
+                Global Office Locations
               </h2>
-
-              <p className="text-gray-500 mb-10 leading-relaxed text-base">
-                Investate India is here to guide you through every step of your international journey.
-                Whether you are looking for high-yield property investments, legal guidance, or developer partnerships, our experts are ready to assist you.
+              <p className="text-gray-500 max-w-xl mx-auto text-sm md:text-base">
+                Visit our offices or connect with our regional teams across the globe for specialized assistance.
               </p>
+            </div>
 
-              <div className="space-y-8">
-                <div className="flex items-start gap-6">
-                  <div className="text-orange-400 mt-1 flex-shrink-0">
-                    <Mail className="w-12 h-12 stroke-[1.25]" />
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+              {[
+                {
+                  title: "Corporate Office (India)",
+                  address: "Jubilee Hills, Road No. 36, Hyderabad, Telangana 500033, India",
+                  phone: "+91 40 4829 3000",
+                  email: "india.office@investateindia.com",
+                },
+                {
+                  title: "United States Office",
+                  address: "Valentine Mark Corporation, 55 West 47 Street Suite 425, New York, NY 10036, USA",
+                  phone: "+1 212 901 3290",
+                  email: "usa.office@investateindia.com",
+                },
+                {
+                  title: "United Kingdom Office",
+                  address: "Valentine Mark Ltd, 128 City Road, London, EC1V 2NX, United Kingdom",
+                  phone: "+44 20 7946 0958",
+                  email: "uk.office@investateindia.com",
+                },
+                {
+                  title: "Middle East Office (UAE)",
+                  address: "Valentine Mark DMCC, Marina Plaza, Level 29, Dubai Marina, Dubai, UAE",
+                  phone: "+971 4 563 9200",
+                  email: "uae.office@investateindia.com",
+                }
+              ].map((loc, i) => (
+                <div key={i} className="bg-slate-50/50 rounded-2xl p-6 border border-slate-100 shadow-sm hover:shadow-md transition-all flex flex-col justify-between">
+                  <div>
+                    <div className="w-10 h-10 rounded-full bg-orange-50 flex items-center justify-center text-orange-500 mb-6">
+                      <MapPin className="w-5 h-5" />
+                    </div>
+                    <h3 className="text-lg font-bold text-[#0b264f] mb-3">{loc.title}</h3>
+                    <p className="text-gray-500 text-sm leading-relaxed mb-6">{loc.address}</p>
                   </div>
-                  <div className="border-l-2 border-orange-400/30 pl-6">
-                    <h3 className="text-xl font-bold text-[#0b264f] mb-2">Email Us</h3>
-                    <p className="text-gray-500 mb-1 text-sm">For partnerships & general inquiries:</p>
-                    <a
-                      href="mailto:investateindia.business@gmail.com"
-                      className="text-gray-700 font-semibold hover:text-orange-500 transition-colors duration-200"
-                    >
-                      investateindia.business@gmail.com
-                    </a>
+                  <div className="pt-4 border-t border-slate-100 text-xs text-gray-400 space-y-1">
+                    <div><span className="font-semibold text-gray-500">Phone:</span> {loc.phone}</div>
+                    <div><span className="font-semibold text-gray-500">Email:</span> {loc.email}</div>
                   </div>
                 </div>
+              ))}
+            </div>
+          </motion.div>
 
-                <div className="flex items-start gap-6 pt-6 border-t border-gray-100">
-                  <div className="text-orange-400 mt-1 flex-shrink-0">
-                    <Phone className="w-12 h-12 stroke-[1.25]" />
-                  </div>
-                  <div className="border-l-2 border-orange-400/30 pl-6">
-                    <h3 className="text-xl font-bold text-[#0b264f] mb-2">Call Us</h3>
-                    <p className="text-gray-500 mb-1 text-sm">Speak with our relationships manager:</p>
-                    <a
-                      href="tel:+914048293000"
-                      className="text-gray-700 font-semibold hover:text-orange-500 transition-colors duration-200"
-                    >
-                      +91 40 4829 3000
-                    </a>
-                  </div>
-                </div>
+          <hr className="border-gray-100 my-16" />
+
+          {/* Centered Message Form */}
+          <motion.div
+            initial={{ opacity: 0, y: 30 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.8, delay: 0.3 }}
+            className="flex flex-col items-center w-full max-w-2xl mx-auto"
+          >
+            <div className="flex flex-col items-center mb-6">
+              <span className="text-xs uppercase tracking-widest text-[#0b264f] font-bold mb-1">LET'S CONNECT</span>
+              <div className="flex flex-col items-center justify-center w-24">
+                <span className="text-[#0b264f] text-[10px] leading-none mb-1">★</span>
+                <div className="w-full h-[1px] bg-[#0b264f]"></div>
               </div>
-            </motion.div>
+            </div>
 
-            {/* Right Column: Form */}
-            <motion.div
-              initial={{ opacity: 0, x: 50 }}
-              whileInView={{ opacity: 1, x: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.8 }}
-              className="flex flex-col"
-            >
-              <div className="flex flex-col items-start mb-6">
-                <span className="text-xs uppercase tracking-widest text-[#0b264f] font-bold mb-1">LET'S CONNECT</span>
-                <div className="flex flex-col items-center justify-center w-24">
-                  <span className="text-[#0b264f] text-[10px] leading-none mb-1">★</span>
-                  <div className="w-full h-[1px] bg-[#0b264f]"></div>
-                </div>
-              </div>
+            <h2 className="text-3xl md:text-4xl font-extrabold text-[#0b264f] mb-6 leading-tight tracking-tight text-center">
+              Send Your Message
+            </h2>
 
-              <h2 className="text-4xl md:text-5xl font-extrabold text-[#0b264f] mb-6 leading-tight tracking-tight">
-                Send Your Message
-              </h2>
+            <p className="text-gray-500 mb-10 leading-relaxed text-sm md:text-base text-center max-w-lg">
+              Have a specific query? Send us a message and our team will get back to you within 24 hours.
+            </p>
 
-              <p className="text-gray-500 mb-10 leading-relaxed text-base">
-                Have a specific query? Send us a message and our team will get back to you within 24 hours to discuss your investment or partnership needs.
-              </p>
-
+            <div className="w-full">
               {isSubmitted ? (
                 <div className="bg-gray-50 rounded-2xl p-10 flex flex-col items-center justify-center text-center border border-gray-100 shadow-sm">
                   <div className="w-20 h-20 bg-green-50 rounded-full flex items-center justify-center mb-6">
@@ -210,7 +276,7 @@ export default function ContactUs() {
                   </button>
                 </div>
               ) : (
-                <form onSubmit={handleSubmit} className="space-y-6">
+                <form onSubmit={handleSubmit} className="space-y-6 w-full">
                   <div className="grid md:grid-cols-2 gap-6">
                     <input
                       required
@@ -218,7 +284,7 @@ export default function ContactUs() {
                       name="name"
                       value={formData.name}
                       onChange={handleChange}
-                      className="w-full px-6 py-4 bg-gray-50 border-none outline-none focus:ring-2 focus:ring-orange-400 text-gray-700 placeholder-gray-400 transition-all rounded-lg"
+                      className="w-full px-6 py-4 bg-gray-50 border border-transparent outline-none focus:border-orange-400 focus:ring-1 focus:ring-orange-400 text-gray-700 placeholder-gray-400 transition-all rounded-lg"
                       placeholder="Name"
                     />
                     <input
@@ -227,7 +293,7 @@ export default function ContactUs() {
                       name="email"
                       value={formData.email}
                       onChange={handleChange}
-                      className="w-full px-6 py-4 bg-gray-50 border-none outline-none focus:ring-2 focus:ring-orange-400 text-gray-700 placeholder-gray-400 transition-all rounded-lg"
+                      className="w-full px-6 py-4 bg-gray-50 border border-transparent outline-none focus:border-orange-400 focus:ring-1 focus:ring-orange-400 text-gray-700 placeholder-gray-400 transition-all rounded-lg"
                       placeholder="Email"
                     />
                   </div>
@@ -239,7 +305,7 @@ export default function ContactUs() {
                       name="phone"
                       value={formData.phone}
                       onChange={handleChange}
-                      className="w-full px-6 py-4 bg-gray-50 border-none outline-none focus:ring-2 focus:ring-orange-400 text-gray-700 placeholder-gray-400 transition-all rounded-lg"
+                      className="w-full px-6 py-4 bg-gray-50 border border-transparent outline-none focus:border-orange-400 focus:ring-1 focus:ring-orange-400 text-gray-700 placeholder-gray-400 transition-all rounded-lg"
                       placeholder="Phone"
                     />
                     <div className="relative">
@@ -247,7 +313,7 @@ export default function ContactUs() {
                         name="subject"
                         value={formData.subject}
                         onChange={handleChange}
-                        className="w-full px-6 py-4 bg-gray-50 border-none outline-none focus:ring-2 focus:ring-orange-400 text-gray-500 transition-all rounded-lg appearance-none cursor-pointer"
+                        className="w-full px-6 py-4 bg-gray-50 border border-transparent outline-none focus:border-orange-400 focus:ring-1 focus:ring-orange-400 text-gray-500 transition-all rounded-lg appearance-none cursor-pointer"
                       >
                         <option value="">Subject</option>
                         <option value="Buying Property">Buying Property</option>
@@ -269,79 +335,25 @@ export default function ContactUs() {
                     value={formData.message}
                     onChange={handleChange}
                     rows="6"
-                    className="w-full px-6 py-4 bg-gray-50 border-none outline-none focus:ring-2 focus:ring-orange-400 text-gray-700 placeholder-gray-400 transition-all resize-none rounded-lg"
+                    className="w-full px-6 py-4 bg-gray-50 border border-transparent outline-none focus:border-orange-400 focus:ring-1 focus:ring-orange-400 text-gray-700 placeholder-gray-400 transition-all resize-none rounded-lg"
                     placeholder="Your message here"
                   ></textarea>
 
-                  <button
-                    type="submit"
-                    disabled={isLoading || !isFormValid}
-                    className="bg-[#0b264f] hover:bg-orange-500 text-white font-bold py-4 px-10 transition-all duration-300 flex items-center justify-center gap-2 rounded-lg disabled:opacity-50 disabled:cursor-not-allowed uppercase tracking-wider text-sm shadow-md"
-                  >
-                    {isLoading ? <Loader2 className="w-5 h-5 animate-spin" /> : <Send className="w-4 h-4" />}
-                    {isLoading ? 'Sending...' : 'Send Message'}
-                  </button>
+                  <div className="flex justify-center">
+                    <button
+                      type="submit"
+                      disabled={isLoading || !isFormValid}
+                      className="bg-[#0b264f] hover:bg-orange-500 text-white font-bold py-4 px-10 transition-all duration-300 flex items-center justify-center gap-2 rounded-lg disabled:opacity-50 disabled:cursor-not-allowed uppercase tracking-wider text-sm shadow-md"
+                    >
+                      {isLoading ? <Loader2 className="w-5 h-5 animate-spin" /> : <Send className="w-4 h-4" />}
+                      {isLoading ? 'Sending...' : 'Send Message'}
+                    </button>
+                  </div>
                 </form>
               )}
-            </motion.div>
+            </div>
+          </motion.div>
 
-          </div>
-        </div>
-      </section>
-
-      {/* Office Locations Section */}
-      <section className="py-24 bg-[#FEFEFE] dark:bg-[#111] border-t border-gray-100 dark:border-slate-800 relative z-20">
-        <div className="container mx-auto px-4 max-w-6xl">
-          <div className="text-center mb-16">
-            {/* <span className="text-xs uppercase tracking-widest text-[#0b264f] dark:text-orange-400 font-bold mb-2 block">Our Offices</span> */}
-            <h2 className="text-3xl md:text-5xl font-extrabold text-[#0b264f] dark:text-white mb-4">Global Office Locations</h2>
-            <p className="text-gray-500 dark:text-slate-400 max-w-xl mx-auto text-sm md:text-base">
-              Visit our offices or connect with our regional teams across the globe for specialized assistance.
-            </p>
-          </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-            {[
-              {
-                title: "Corporate Office (India)",
-                address: "Jubilee Hills, Road No. 36, Hyderabad, Telangana 500033, India",
-                phone: "+91 40 4829 3000",
-                email: "india.office@investateindia.com",
-              },
-              {
-                title: "United States Office",
-                address: "Valentine Mark Corporation, 55 West 47 Street Suite 425, New York, NY 10036, USA",
-                phone: "+1 212 901 3290",
-                email: "usa.office@investateindia.com",
-              },
-              {
-                title: "United Kingdom Office",
-                address: "Valentine Mark Ltd, 128 City Road, London, EC1V 2NX, United Kingdom",
-                phone: "+44 20 7946 0958",
-                email: "uk.office@investateindia.com",
-              },
-              {
-                title: "Middle East Office (UAE)",
-                address: "Valentine Mark DMCC, Marina Plaza, Level 29, Dubai Marina, Dubai, UAE",
-                phone: "+971 4 563 9200",
-                email: "uae.office@investateindia.com",
-              }
-            ].map((loc, i) => (
-              <div key={i} className="bg-white dark:bg-slate-900 rounded-2xl p-6 border border-gray-100 dark:border-slate-800 shadow-sm hover:shadow-md transition-all flex flex-col justify-between">
-                <div>
-                  <div className="w-10 h-10 rounded-full bg-orange-50 dark:bg-slate-800 flex items-center justify-center text-orange-500 mb-6">
-                    <MapPin className="w-5 h-5" />
-                  </div>
-                  <h3 className="text-lg font-bold text-[#0b264f] dark:text-white mb-3">{loc.title}</h3>
-                  <p className="text-gray-500 dark:text-slate-400 text-sm leading-relaxed mb-6">{loc.address}</p>
-                </div>
-                <div className="pt-4 border-t border-gray-50 dark:border-slate-800 text-xs text-gray-400 space-y-1">
-                  <div><span className="font-semibold text-gray-500 dark:text-slate-400">Phone:</span> {loc.phone}</div>
-                  <div><span className="font-semibold text-gray-500 dark:text-slate-400">Email:</span> {loc.email}</div>
-                </div>
-              </div>
-            ))}
-          </div>
         </div>
       </section>
 

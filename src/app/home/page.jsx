@@ -1,4 +1,4 @@
-﻿"use client";
+"use client";
 
 import React, { useState, useEffect, useRef } from "react";
 import { useRouter } from "next/navigation";
@@ -40,20 +40,20 @@ const heroSlides = [
 
 const serviceProviderBenefits = [
     {
-        title: "Challenges Faced by NRIs",
-        desc: "Navigating unverified property listings, remote monitoring friction, complex taxation, and FEMA compliance bottlenecks from overseas.",
+        title: "Global Reach & Access",
+        desc: "Empowering investors across North America, Europe, Middle East, and Asia-Pacific with direct access to top-tier, handpicked Indian asset classes.",
         image:
             "https://images.unsplash.com/photo-1557804506-669a67965ba0?q=80&w=2070&auto=format&fit=crop",
     },
     {
-        title: "Platform Solution",
-        desc: "Providing safety through institutional-grade due diligence, verified builder coordinates, and secure digital compliance tracking.",
+        title: "Cross-Border Compliance",
+        desc: "Simplifying regulatory, taxation, and legal requirements for global transactions including FEMA compliance and repatriation support.",
         image:
             "https://images.unsplash.com/photo-1460925895917-afdab827c52f?q=80&w=2070&auto=format&fit=crop",
     },
     {
-        title: "Potential Opportunities",
-        desc: "Unlocking access to high-yield real estate developments, alternative investments, and India's high-growth economic assets.",
+        title: "Vetted Opportunities",
+        desc: "Every listed investment undergoes rigorous multi-tier institutional due diligence to safeguard overseas capital.",
         image:
             "https://images.unsplash.com/photo-1522071820081-009f0129c71c?q=80&w=2070&auto=format&fit=crop",
     },
@@ -68,27 +68,21 @@ const serviceProviderBenefits = [
 const serviceProviderChallenges = [
     {
         id: "01",
+        text: "Global Gateway",
+        desc: "Connecting global investors, premium builders, and professional service providers to simplify cross-border investments and compliance.",
+        icon: <Compass className="w-8 h-8 text-white" />,
+    },
+    {
+        id: "02",
         text: "NRI Focused",
-        desc: "Designed for the needs of global investors, with cross-border compliance, FEMA guidance, and repatriation support.",
+        desc: "Empowering non-resident Indians to secure, track, and manage their Indian investments and properties remotely with full trust.",
         icon: <Layers className="w-8 h-8 text-white" />,
     },
-    // {
-    //     id: "02",
-    //     text: "Verified Opportunities",
-    //     desc: "Every opportunity is curated and due-diligenced through a multi-tier review process to protect investor capital.",
-    //     icon: <ShieldCheck className="w-8 h-8 text-white" />,
-    // },
     {
         id: "03",
         text: "End-to-End Support",
-        desc: "Complete support across legal, financial, advisory and operational needs — from discovery to investment completion. We connect investors to real estate & equity, builders to global capital, and service providers to compliance & advisory needs.",
+        desc: "We connect investors to real estate & equity, builders to global capital, and service providers to compliance & advisory needs. Complete support across legal, financial, advisory and operational needs — from discovery to investment completion.",
         icon: <Target className="w-8 h-8 text-white" />,
-    },
-    {
-        id: "04",
-        text: "Platform Capabilities",
-        desc: "Real Estate, Equity, Alternative Investments, Professional Services Integration, Investor Enablement.",
-        icon: <Scale className="w-8 h-8 text-white" />,
     },
 ];
 
@@ -383,23 +377,27 @@ export default function ServiceProviderHome() {
 
                 <div className="infra-marquee-wrapper">
                     <div className="infra-marquee-track">
-                        {[...serviceProviderChallenges, ...serviceProviderChallenges].map(
-                            (challenge, i) => (
-                                <div
-                                    key={i}
-                                    className="infra-marquee-card bg-white border border-slate-200/80 p-6 rounded-2xl w-80 shrink-0 mx-4 shadow-sm"
-                                >
-                                    <div className="infra-card-icon-wrapper bg-[#D48035] p-3 rounded-xl w-14 h-14 flex items-center justify-center mb-4 text-white">
-                                        {challenge.icon}
-                                    </div>
-                                    <h3 className="infra-card-title text-lg font-bold text-[#1a1a1a] mb-2">
-                                        {challenge.text}
-                                    </h3>
-                                    <p className="infra-card-desc text-xs text-slate-600 leading-relaxed">
-                                        {challenge.desc}
-                                    </p>
+                        {[
+                            ...serviceProviderChallenges,
+                            ...serviceProviderChallenges,
+                            ...serviceProviderChallenges,
+                            ...serviceProviderChallenges,
+                        ].map((challenge, i) => (
+                            <div
+                                key={i}
+                                className="infra-marquee-card bg-white border border-slate-200/80 p-6 rounded-2xl w-80 shrink-0 mx-4 shadow-sm"
+                            >
+                                <div className="infra-card-icon-wrapper bg-[#D48035] p-3 rounded-xl w-14 h-14 flex items-center justify-center mb-4 text-white">
+                                    {challenge.icon}
                                 </div>
-                            ),
+                                <h3 className="infra-card-title text-lg font-bold text-[#1a1a1a] mb-2">
+                                    {challenge.text}
+                                </h3>
+                                <p className="infra-card-desc text-xs text-slate-600 leading-relaxed">
+                                    {challenge.desc}
+                                </p>
+                            </div>
+                        ),
                         )}
                     </div>
                 </div>
@@ -431,7 +429,7 @@ export default function ServiceProviderHome() {
                                     </span>
                                 </h2>
                                 <p className="responsive-paragraph text-slate-600 mb-8 max-w-lg">
-                                    Investate India is structurally designed to connect international investors, Non-Resident Indians (NRIs), and global wealth managers with the high-yield growth potential of Indian markets.
+                                    We connect global investors, NRIs, and wealth managers directly to high-yield Indian market opportunities.
                                 </p>
 
                                 <div className="flex flex-col gap-8">
@@ -461,7 +459,7 @@ export default function ServiceProviderHome() {
                         >
                             <div className="w-[85%] h-[85%] rounded-3xl overflow-hidden shadow-lg border border-slate-100">
                                 <img
-                                    src="https://images.unsplash.com/photo-1581092918056-0c4c3acd3789?q=80&w=2070&auto=format&fit=crop"
+                                    src="/images/image copy 22.png"
                                     alt="Professional Consultations"
                                     className="w-full h-full object-cover"
                                     loading="lazy"
@@ -531,58 +529,41 @@ export default function ServiceProviderHome() {
                         </p>
                     </div>
 
-                    {/* Two-Column Grid of Challenges */}
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-x-16 lg:gap-x-24 gap-y-12 max-w-6xl mx-auto text-left mt-12">
+                    {/* Three-Column Grid of Challenges (Styled as Cards) */}
+                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 max-w-6xl mx-auto text-left mt-12">
                         {[
                             {
-                                num: "01",
                                 title: "Lack of Trust & Transparency",
-                                desc: "Investing from abroad often means relying on limited or unverified information. NRIs face challenges in verifying property authenticity, developer credibility, legal clearances, and project progress without trusted local support.",
-                                orderClass: "order-1"
+                                desc: "Investing from abroad often means relying on limited or unverified information. NRIs face challenges in verifying property authenticity, developer credibility, legal clearances, and project progress without trusted local support."
                             },
                             {
-                                num: "02",
                                 title: "Compliance & Taxation Complexity",
-                                desc: "Understanding FEMA regulations, property registration requirements, PAN/TAN, TDS, capital gains tax, and fund repatriation rules can be complex and time-consuming without expert guidance.",
-                                orderClass: "order-2 md:order-3"
+                                desc: "Understanding FEMA regulations, property registration requirements, PAN/TAN, TDS, capital gains tax, and fund repatriation rules can be complex and time-consuming without expert guidance."
                             },
                             {
-                                num: "03",
                                 title: "Remote Property Management",
-                                desc: "Managing a property from overseas—including tenant management, maintenance, documentation, legal assistance, and dispute resolution—is difficult without a reliable local partner.",
-                                orderClass: "order-3 md:order-5"
+                                desc: "Managing a property from overseas—including tenant management, maintenance, documentation, legal assistance, and dispute resolution—is difficult without a reliable local partner."
                             },
                             {
-                                num: "04",
                                 title: "Limited Access to Verified Opportunities",
-                                desc: "Finding genuine, high-quality investment opportunities with accurate market insights and verified documentation is often a challenge for NRIs.",
-                                orderClass: "order-4 md:order-2"
+                                desc: "Finding genuine, high-quality investment opportunities with accurate market insights and verified documentation is often a challenge for NRIs."
                             },
                             {
-                                num: "05",
                                 title: "Communication & Decision Delays",
-                                desc: "Time zone differences, inconsistent communication, and the need to coordinate with multiple stakeholders can slow down the investment process and create uncertainty.",
-                                orderClass: "order-5 md:order-4"
+                                desc: "Time zone differences, inconsistent communication, and the need to coordinate with multiple stakeholders can slow down the investment process and create uncertainty."
                             },
                             {
-                                num: "06",
                                 title: "Currency & Funding Hurdles",
-                                desc: "Fluctuating exchange rates can impact purchase cost and repatriation yields, while securing local financing involves navigating complex NRI-specific home loan criteria.",
-                                orderClass: "order-6 md:order-6"
+                                desc: "Fluctuating exchange rates can impact purchase cost and repatriation yields, while securing local financing involves navigating complex NRI-specific home loan criteria."
                             }
                         ].map((challenge, i) => (
-                            <div key={i} className={`flex gap-4 items-start ${challenge.orderClass}`}>
-                                <div className="text-2xl font-extrabold text-[#D48035] shrink-0 select-none">
-                                    {challenge.num}
-                                </div>
-                                <div>
-                                    <h4 className="text-lg font-bold text-[#D48035] mb-2">
-                                        {challenge.title}
-                                    </h4>
-                                    <p className="text-slate-600 dark:text-slate-300 text-sm leading-relaxed">
-                                        {challenge.desc}
-                                    </p>
-                                </div>
+                            <div key={i} className="bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800 p-8 rounded-3xl shadow-sm hover:shadow-lg hover:scale-[1.02] transition-all duration-300">
+                                <h4 className="text-lg font-bold text-[#D48035] mb-3">
+                                    {challenge.title}
+                                </h4>
+                                <p className="text-slate-600 dark:text-slate-300 text-sm leading-relaxed">
+                                    {challenge.desc}
+                                </p>
                             </div>
                         ))}
                     </div>

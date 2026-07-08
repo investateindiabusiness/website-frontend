@@ -12,6 +12,8 @@ import {
   Users,
   FileText,
   Activity,
+  Award,
+  TrendingUp,
 } from "lucide-react";
 import { useRouter } from "next/navigation";
 import Header from "@/components/Header";
@@ -19,7 +21,7 @@ import Footer from "@/components/Footer";
 const heroSlides = [
   {
     image:
-      "/images/image (1).png",
+      "/images/image (2).png",
     tag: "Institutional Capital Access",
     title: "Direct Connectivity to",
     highlight: "High-Net-Worth NRI Capital",
@@ -115,7 +117,7 @@ const builderChallenges = [
   {
     id: "05",
     text: "Credibility Proof",
-    desc: "Showcasing project credibility and RERA compliance effectively to a remote audience.",
+    desc: "Browse pre-verified builders with complete disclosures and verified project timelines. We verify all project credentials, pre-launch proposals, and pre-sale offers to cross-check structure and legitimacy, safeguarding early-stage investor capital.",
     icon: <FileText className="w-8 h-8 text-white" />,
   },
   {
@@ -123,6 +125,18 @@ const builderChallenges = [
     text: "Logistical Friction",
     desc: "Managing long sales cycles due to cross-border documentation and payment logistics.",
     icon: <Activity className="w-8 h-8 text-white" />,
+  },
+  {
+    id: "07",
+    text: "Global Brand Elevation",
+    desc: "Promoting builder brands globally by taking your projects to key NRI corridors like New York, USA, to build international credibility.",
+    icon: <Award className="w-8 h-8 text-white" />,
+  },
+  {
+    id: "08",
+    text: "We Market, You Build",
+    desc: "When you register with us, we take your project directly to foreign NRI clients — from New York to Dubai — so you save on international marketing while we handle your global outreach at no extra cost.",
+    icon: <TrendingUp className="w-8 h-8 text-white" />,
   },
 ];
 
@@ -216,6 +230,25 @@ const trustFeatures = [
         <circle cx="9" cy="7" r="4"></circle>
         <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
         <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
+      </svg>
+    ),
+  },
+  {
+    id: "brand",
+    title: "Global Brand Elevation",
+    desc: "We promote your developer brand globally, showcasing projects directly in key NRI hubs like New York/USA to build international trust.",
+    image:
+      "https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?q=80&w=1000&auto=format&fit=crop" /* Modern skyscraper office for corporate branding */,
+    icon: (
+      <svg
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        strokeWidth="2"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      >
+        <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon>
       </svg>
     ),
   },
@@ -477,7 +510,7 @@ export default function BuilderHome() {
         <div className="infra-marquee-wrapper">
           <div className="infra-marquee-track">
             {/* Render twice for seamless loop */}
-            {[...builderChallenges, ...builderChallenges].map(
+            {[...builderChallenges, ...builderChallenges, ...builderChallenges, ...builderChallenges].map(
               (challenge, i) => (
                 <div key={i} className="infra-marquee-card">
                   <div className="infra-card-icon-wrapper">
@@ -673,7 +706,7 @@ export default function BuilderHome() {
                 }}
               >
                 <img
-                  src="/images/image copy 11.png"
+                  src="/images/image copy 21.png"
                   alt="Modern Cityscape"
                   width={800}
                   height={600}
@@ -842,8 +875,8 @@ export default function BuilderHome() {
               Get clear answers to the most common questions about listing on Investate India and how we connect you with verified NRI investors.
             </p>
           </div>
-          <div className="faq-premium-grid justify-center">
-            <div className="faq-accordion-column w-full max-w-[800px]">
+          <div className="faq-premium-grid">
+            <div className="faq-accordion-column">
               {faqsList.map((faq, index) => (
                 <div
                   className={`faq-accordion-item ${activeFaq === index ? "active" : ""}`}
@@ -865,6 +898,18 @@ export default function BuilderHome() {
                   )}
                 </div>
               ))}
+            </div>
+            <div className="faq-image-column">
+              <div className="faq-side-image-premium">
+                <img
+                  src="/images/skyscraper_night.png"
+                  alt="Modern Indian Skyscrapers"
+                  loading="lazy"
+                  decoding="async"
+                  width={600}
+                  height={400}
+                />
+              </div>
             </div>
           </div>
         </div>

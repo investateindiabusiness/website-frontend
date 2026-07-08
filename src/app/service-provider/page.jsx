@@ -79,12 +79,6 @@ const serviceProviderChallenges = [
     desc: "Overcoming geographical separation requires structured credentials and transparent verification.",
     icon: <ShieldCheck className="w-8 h-8 text-white" />,
   },
-  {
-    id: "03",
-    text: "Regulatory Compliance",
-    desc: "Ensuring cross-border transactions, RERA rules, and tax compliances are professionally certified.",
-    icon: <Scale className="w-8 h-8 text-white" />,
-  },
 ];
 
 const serviceProviderSteps = [
@@ -149,21 +143,7 @@ export default function ServiceProviderHome() {
   };
   const [heroIndex, setHeroIndex] = useState(0);
   const [isHeroPaused, setIsHeroPaused] = useState(false);
-  const [benefitsPage, setBenefitsPage] = useState(0);
-  const benefitsPerPage = 2;
-  const totalBenefitsPages = Math.ceil(
-    serviceProviderBenefits.length / benefitsPerPage,
-  );
 
-  const nextBenefits = () => {
-    setBenefitsPage((prev) => (prev + 1) % totalBenefitsPages);
-  };
-
-  const prevBenefits = () => {
-    setBenefitsPage(
-      (prev) => (prev - 1 + totalBenefitsPages) % totalBenefitsPages,
-    );
-  };
 
   const handleAuthClick = (action, role) => {
     if (action === "login") {
@@ -307,7 +287,7 @@ export default function ServiceProviderHome() {
 
         <div className="infra-marquee-wrapper">
           <div className="infra-marquee-track">
-            {[...serviceProviderChallenges, ...serviceProviderChallenges].map(
+            {[...serviceProviderChallenges, ...serviceProviderChallenges, ...serviceProviderChallenges, ...serviceProviderChallenges].map(
               (challenge, i) => (
                 <div
                   key={i}
@@ -360,55 +340,20 @@ export default function ServiceProviderHome() {
                   within an exclusive builder-investor ecosystem.
                 </p>
 
-                <div className="relative min-h-[220px]">
-                  <AnimatePresence mode="wait">
-                    <motion.div
-                      key={benefitsPage}
-                      initial={{ opacity: 0, x: 20 }}
-                      animate={{ opacity: 1, x: 0 }}
-                      exit={{ opacity: 0, x: -20 }}
-                      transition={{ duration: 0.3 }}
-                      className="grid grid-cols-1 md:grid-cols-2 gap-x-12 gap-y-10"
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-x-12 gap-y-10">
+                  {serviceProviderBenefits.map((benefit, index) => (
+                    <div
+                      key={index}
+                      className="border-l-4 border-[#D48035] pl-5"
                     >
-                      {serviceProviderBenefits
-                        .slice(
-                          benefitsPage * benefitsPerPage,
-                          (benefitsPage + 1) * benefitsPerPage,
-                        )
-                        .map((benefit, index) => (
-                          <div
-                            key={index}
-                            className="border-l-4 border-[#D48035] pl-5"
-                          >
-                            <h4 className="text-lg font-bold text-slate-900 mb-2">
-                              {benefit.title}
-                            </h4>
-                            <p className="text-sm text-slate-600 leading-relaxed">
-                              {benefit.desc}
-                            </p>
-                          </div>
-                        ))}
-                    </motion.div>
-                  </AnimatePresence>
-                </div>
-
-                {/* Pagination Controls */}
-                <div className="benefits-pagination flex gap-4 mt-8 items-center">
-                  <button
-                    onClick={prevBenefits}
-                    className="w-10 h-10 rounded-full border border-slate-200 bg-white hover:bg-slate-100 flex items-center justify-center cursor-pointer transition-colors"
-                  >
-                    ❮
-                  </button>
-                  <div className="text-xs text-slate-500 font-bold">
-                    {benefitsPage + 1} / {totalBenefitsPages}
-                  </div>
-                  <button
-                    onClick={nextBenefits}
-                    className="w-10 h-10 rounded-full border border-slate-200 bg-white hover:bg-slate-100 flex items-center justify-center cursor-pointer transition-colors"
-                  >
-                    ❯
-                  </button>
+                      <h4 className="text-lg font-bold text-slate-900 mb-2">
+                        {benefit.title}
+                      </h4>
+                      <p className="text-sm text-slate-600 leading-relaxed">
+                        {benefit.desc}
+                      </p>
+                    </div>
+                  ))}
                 </div>
               </div>
             </motion.div>
@@ -422,7 +367,7 @@ export default function ServiceProviderHome() {
             >
               <div className="w-[85%] h-[85%] rounded-3xl overflow-hidden shadow-lg border border-slate-100">
                 <img
-                  src="https://images.unsplash.com/photo-1581092918056-0c4c3acd3789?q=80&w=2070&auto=format&fit=crop"
+                  src="/images/image copy 25.png"
                   alt="Professional Consultations"
                   className="w-full h-full object-cover"
                   loading="lazy"
@@ -522,8 +467,8 @@ export default function ServiceProviderHome() {
               Get clear answers to the most common questions about offering your services on Investate India.
             </p>
           </div>
-          <div className="faq-premium-grid justify-center">
-            <div className="faq-accordion-column w-full max-w-[800px]">
+          <div className="faq-premium-grid">
+            <div className="faq-accordion-column">
               {faqsList.map((faq, index) => (
                 <div
                   className={`faq-accordion-item ${activeFaq === index ? "active" : ""}`}
@@ -545,6 +490,18 @@ export default function ServiceProviderHome() {
                   )}
                 </div>
               ))}
+            </div>
+            <div className="faq-image-column">
+              <div className="faq-side-image-premium">
+                <img
+                  src="/images/skyscraper_night.png"
+                  alt="Modern Indian Skyscrapers"
+                  loading="lazy"
+                  decoding="async"
+                  width={600}
+                  height={400}
+                />
+              </div>
             </div>
           </div>
         </div>

@@ -305,6 +305,58 @@ function InvestorLoginContent() {
           </h1>
         </div>
 
+        {/* App Download Card */}
+        <div className="p-5 bg-white/5 border border-white/10 rounded-2xl flex flex-col gap-4 text-left shadow-sm backdrop-blur-sm">
+          <div className="flex items-center gap-3">
+            <div className="w-10 h-10 bg-orange-600 rounded-xl flex items-center justify-center text-white shadow-md shadow-orange-600/20">
+              <svg className="w-5 h-5" fill="none" stroke="currentColor" strokeWidth="2.5" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" d="M2.25 12l8.954-8.955c.44-.439 1.152-.439 1.591 0L21.75 12M4.5 9.75v10.125c0 .621.504 1.125 1.125 1.125H9.75v-4.875c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125V21h4.125c.621 0 1.125-.504 1.125-1.125V9.75M8.25 21h8.25" />
+              </svg>
+            </div>
+            <div>
+              <h4 className="text-[10px] font-black text-white/55 uppercase tracking-widest leading-none mb-1">Get the App</h4>
+              <h3 className="text-sm font-black text-white uppercase tracking-tight">Investate Investor</h3>
+            </div>
+          </div>
+          
+          <p className="text-[11px] text-gray-300 font-semibold leading-relaxed">
+            Explore vetted properties, monitor assets safety, and manage rental income on the go.
+          </p>
+
+          <div className="grid grid-cols-2 gap-2">
+            <a
+              href="#"
+              onClick={(e) => e.preventDefault()}
+              className="flex items-center justify-center gap-2 px-3 py-2 bg-white/10 hover:bg-white/15 text-white rounded-xl transition duration-300 shadow-md shadow-black/10 select-none group border border-white/5"
+            >
+              <svg className="h-5 w-5 text-white" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M18.71 19.5c-.83 1.24-1.71 2.45-3.05 2.47-1.34.03-1.77-.79-3.29-.79-1.53 0-2 .77-3.27.82-1.31.05-2.3-1.32-3.14-2.53C4.25 17 2.94 12.45 4.7 9.39c.87-1.52 2.43-2.48 4.12-2.51 1.28-.02 2.5.87 3.29.87.78 0 2.26-1.07 3.81-.91.65.03 2.47.26 3.64 1.98-.09.06-2.17 1.28-2.15 3.81.03 3.02 2.65 4.03 2.68 4.04-.03.07-.42 1.44-1.38 2.83M15.97 4.17c.66-.81 1.11-1.93.99-3.06-.96.04-2.13.64-2.82 1.45-.6.69-1.12 1.84-.98 2.94.1.08.2.12.3.12.87 0 1.95-.57 2.51-1.45z"/>
+              </svg>
+              <div className="flex flex-col text-left">
+                <span className="text-[7px] font-black text-white/50 uppercase tracking-widest leading-none">Download on</span>
+                <span className="text-[10px] font-black text-white tracking-wide leading-none mt-0.5">App Store</span>
+              </div>
+            </a>
+
+            <a
+              href="#"
+              onClick={(e) => e.preventDefault()}
+              className="flex items-center justify-center gap-2 px-3 py-2 bg-white/10 hover:bg-white/15 text-white rounded-xl transition duration-300 shadow-md shadow-black/10 select-none group border border-white/5"
+            >
+              <svg className="h-5 w-5" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M3.25098 2.32764C3.0768 2.50854 2.97852 2.78453 2.97852 3.12591V20.8741C2.97852 21.2155 3.0768 21.4915 3.25098 21.6724L3.31305 21.7291L13.1118 11.9304V11.8105L3.31305 2.01172L3.25098 2.32764Z" fill="#EA4335" />
+                <path d="M16.3776 15.2016L13.1113 11.9353V11.8153L16.3789 8.54898L16.4526 8.59102L20.3204 10.79C21.4227 11.417 21.4227 12.4363 20.3204 13.0633L16.4526 15.2623L16.3776 15.2016Z" fill="#FBBC05" />
+                <path d="M13.2305 11.8754L3.3125 21.7933C3.65586 22.1557 4.21857 22.1977 4.8711 21.8267L16.3778 15.2818L13.2305 11.8754Z" fill="#34A853" />
+                <path d="M13.2305 11.8754L16.3778 8.469L4.8711 1.92408C4.21857 1.55305 3.65586 1.59509 3.3125 1.9575L13.2305 11.8754Z" fill="#4285F4" />
+              </svg>
+              <div className="flex flex-col text-left">
+                <span className="text-[7px] font-black text-white/50 uppercase tracking-widest leading-none">Get it on</span>
+                <span className="text-[10px] font-black text-white tracking-wide leading-none mt-0.5">Google Play</span>
+              </div>
+            </a>
+          </div>
+        </div>
+
         <div className="relative z-20 space-y-5">
           <div className="pt-8 border-t border-white/10 flex flex-col gap-4">
             <div className="flex items-center gap-4">
@@ -387,59 +439,6 @@ function InvestorLoginContent() {
             </div>
           </form>
 
-          {/* App Download Card */}
-          <div className="mt-8 p-5 bg-gradient-to-br from-slate-50 to-orange-50/20 border border-slate-100 rounded-2xl flex flex-col gap-4 text-left shadow-sm">
-            <div className="flex items-center gap-3">
-              <div className="w-10 h-10 bg-orange-600 rounded-xl flex items-center justify-center text-white shadow-md shadow-orange-600/10">
-                <svg className="w-5 h-5" fill="none" stroke="currentColor" strokeWidth="2.5" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" d="M2.25 12l8.954-8.955c.44-.439 1.152-.439 1.591 0L21.75 12M4.5 9.75v10.125c0 .621.504 1.125 1.125 1.125H9.75v-4.875c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125V21h4.125c.621 0 1.125-.504 1.125-1.125V9.75M8.25 21h8.25" />
-                </svg>
-              </div>
-              <div>
-                <h4 className="text-[10px] font-black text-gray-400 uppercase tracking-widest leading-none mb-1">Get the App</h4>
-                <h3 className="text-sm font-black text-gray-900 uppercase tracking-tight">Investate Investor</h3>
-              </div>
-            </div>
-            
-            <p className="text-[11px] text-gray-500 font-semibold leading-relaxed">
-              Explore vetted properties, monitor assets safety, and manage rental income on the go.
-            </p>
-
-            <div className="grid grid-cols-2 gap-2">
-              {/* App Store button */}
-              <a
-                href="#"
-                onClick={(e) => e.preventDefault()}
-                className="flex items-center justify-center gap-2 px-3 py-2 bg-black hover:bg-slate-900 text-white rounded-xl transition duration-300 shadow-md shadow-black/10 select-none group"
-              >
-                <svg className="h-5 w-5 text-white" viewBox="0 0 24 24" fill="currentColor">
-                  <path d="M18.71 19.5c-.83 1.24-1.71 2.45-3.05 2.47-1.34.03-1.77-.79-3.29-.79-1.53 0-2 .77-3.27.82-1.31.05-2.3-1.32-3.14-2.53C4.25 17 2.94 12.45 4.7 9.39c.87-1.52 2.43-2.48 4.12-2.51 1.28-.02 2.5.87 3.29.87.78 0 2.26-1.07 3.81-.91.65.03 2.47.26 3.64 1.98-.09.06-2.17 1.28-2.15 3.81.03 3.02 2.65 4.03 2.68 4.04-.03.07-.42 1.44-1.38 2.83M15.97 4.17c.66-.81 1.11-1.93.99-3.06-.96.04-2.13.64-2.82 1.45-.6.69-1.12 1.84-.98 2.94.1.08.2.12.3.12.87 0 1.95-.57 2.51-1.45z"/>
-                </svg>
-                <div className="flex flex-col text-left">
-                  <span className="text-[7px] font-black text-gray-400 uppercase tracking-widest leading-none">Download on</span>
-                  <span className="text-[10px] font-black text-white tracking-wide leading-none mt-0.5">App Store</span>
-                </div>
-              </a>
-
-              {/* Google Play button */}
-              <a
-                href="#"
-                onClick={(e) => e.preventDefault()}
-                className="flex items-center justify-center gap-2 px-3 py-2 bg-black hover:bg-slate-900 text-white rounded-xl transition duration-300 shadow-md shadow-black/10 select-none group"
-              >
-                <svg className="h-5 w-5" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                  <path d="M3.25098 2.32764C3.0768 2.50854 2.97852 2.78453 2.97852 3.12591V20.8741C2.97852 21.2155 3.0768 21.4915 3.25098 21.6724L3.31305 21.7291L13.1118 11.9304V11.8105L3.31305 2.01172L3.25098 2.32764Z" fill="#EA4335" />
-                  <path d="M16.3776 15.2016L13.1113 11.9353V11.8153L16.3789 8.54898L16.4526 8.59102L20.3204 10.79C21.4227 11.417 21.4227 12.4363 20.3204 13.0633L16.4526 15.2623L16.3776 15.2016Z" fill="#FBBC05" />
-                  <path d="M13.2305 11.8754L3.3125 21.7933C3.65586 22.1557 4.21857 22.1977 4.8711 21.8267L16.3778 15.2818L13.2305 11.8754Z" fill="#34A853" />
-                  <path d="M13.2305 11.8754L16.3778 8.469L4.8711 1.92408C4.21857 1.55305 3.65586 1.59509 3.3125 1.9575L13.2305 11.8754Z" fill="#4285F4" />
-                </svg>
-                <div className="flex flex-col text-left">
-                  <span className="text-[7px] font-black text-gray-400 uppercase tracking-widest leading-none">Get it on</span>
-                  <span className="text-[10px] font-black text-white tracking-wide leading-none mt-0.5">Google Play</span>
-                </div>
-              </a>
-            </div>
-          </div>
         </div>
       </div>
 
