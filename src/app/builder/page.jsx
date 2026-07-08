@@ -1,4 +1,4 @@
-﻿"use client";
+"use client";
 
 import React, { useState, useEffect, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
@@ -12,6 +12,7 @@ import {
   Users,
   FileText,
   Activity,
+  Megaphone,
 } from "lucide-react";
 import { useRouter } from "next/navigation";
 import Header from "@/components/Header";
@@ -115,7 +116,7 @@ const builderChallenges = [
   {
     id: "05",
     text: "Credibility Proof",
-    desc: "Showcasing project credibility and RERA compliance effectively to a remote audience.",
+    desc: "We are verifying all the pre-sale and launch offers, cross-checking if the developer is structured and credible even before construction starts.",
     icon: <FileText className="w-8 h-8 text-white" />,
   },
   {
@@ -123,6 +124,12 @@ const builderChallenges = [
     text: "Logistical Friction",
     desc: "Managing long sales cycles due to cross-border documentation and payment logistics.",
     icon: <Activity className="w-8 h-8 text-white" />,
+  },
+  {
+    id: "07",
+    text: "Global Brand Elevation",
+    desc: "Promoting builder brands globally, taking projects to major international hubs like New York and the USA to build elite brand recognition.",
+    icon: <Megaphone className="w-8 h-8 text-white" />,
   },
 ];
 
@@ -216,6 +223,25 @@ const trustFeatures = [
         <circle cx="9" cy="7" r="4"></circle>
         <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
         <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
+      </svg>
+    ),
+  },
+  {
+    id: "brand",
+    title: "Brand Building",
+    desc: "We promote your brand globally — when you list on our platform, we take your projects to international markets like New York and the USA, building elite brand recognition for your business.",
+    image:
+      "https://images.unsplash.com/photo-1493612276216-ee3925520721?q=80&w=1000&auto=format&fit=crop",
+    icon: (
+      <svg
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        strokeWidth="2"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      >
+        <path d="M22 12h-4l-3 9L9 3l-3 9H2"></path>
       </svg>
     ),
   },
