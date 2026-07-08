@@ -81,7 +81,7 @@ const serviceProviderChallenges = [
     {
         id: "03",
         text: "End-to-End Support",
-        desc: "Complete support across legal, financial, advisory and operational needs â€” from discovery to investment completion. We connect investors to real estate & equity, builders to global capital, and service providers to compliance & advisory needs.",
+        desc: "Complete support across legal, financial, advisory and operational needs — from discovery to investment completion. We connect investors to real estate & equity, builders to global capital, and service providers to compliance & advisory needs.",
         icon: <Target className="w-8 h-8 text-white" />,
     },
     {
@@ -193,14 +193,14 @@ export default function ServiceProviderHome() {
                     aria-label="Previous image"
                     className="absolute left-5 top-1/2 -translate-y-1/2 z-10 bg-white/10 backdrop-blur-md border border-white/20 rounded-full w-11 h-11 flex items-center justify-center cursor-pointer text-white hover:bg-white/25 transition-colors"
                 >
-                    â®
+                    ❮
                 </button>
                 <button
                     onClick={() => setHeroIndex((prev) => (prev + 1) % heroSlides.length)}
                     aria-label="Next image"
                     className="absolute right-5 top-1/2 -translate-y-1/2 z-10 bg-white/10 backdrop-blur-md border border-white/20 rounded-full w-11 h-11 flex items-center justify-center cursor-pointer text-white hover:bg-white/25 transition-colors"
                 >
-                    â¯
+                    ❯
                 </button>
 
                 <div className="container relative z-[2]">
@@ -272,15 +272,15 @@ export default function ServiceProviderHome() {
                                 </h5>
                                 <ul className="text-slate-600 text-xs md:text-sm leading-relaxed space-y-2 list-none p-0 m-0">
                                     <li className="flex items-start gap-2">
-                                        <span className="text-[#D48035] font-bold">â€¢</span>
+                                        <span className="text-[#D48035] font-bold">•</span>
                                         <span><strong>Lack of Trust & Transparency:</strong> Remote property selection is plagued by unverified details and lacks institutional due diligence.</span>
                                     </li>
                                     <li className="flex items-start gap-2">
-                                        <span className="text-[#D48035] font-bold">â€¢</span>
+                                        <span className="text-[#D48035] font-bold">•</span>
                                         <span><strong>Compliance & Taxation Hurdles:</strong> Navigating FEMA regulations, PAN/TAN setups, and complex TDS or repatriation compliance.</span>
                                     </li>
                                     <li className="flex items-start gap-2">
-                                        <span className="text-[#D48035] font-bold">â€¢</span>
+                                        <span className="text-[#D48035] font-bold">•</span>
                                         <span><strong>Distance Management:</strong> Managing properties, renting out, or resolving legal disputes from overseas without a trusted local interface.</span>
                                     </li>
                                 </ul>
@@ -549,7 +549,7 @@ export default function ServiceProviderHome() {
                             {
                                 num: "03",
                                 title: "Remote Property Management",
-                                desc: "Managing a property from overseasâ€”including tenant management, maintenance, documentation, legal assistance, and dispute resolutionâ€”is difficult without a reliable local partner.",
+                                desc: "Managing a property from overseas—including tenant management, maintenance, documentation, legal assistance, and dispute resolution—is difficult without a reliable local partner.",
                                 orderClass: "order-3 md:order-5"
                             },
                             {

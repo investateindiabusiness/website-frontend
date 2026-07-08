@@ -73,7 +73,7 @@ export default function TestimonialsSection() {
           onMouseEnter={() => setIsHovered(true)}
           onMouseLeave={() => setIsHovered(false)}
         >
-          {/* Left Arrow â€” beside cards */}
+          {/* Left Arrow — beside cards */}
           <button 
             onClick={handlePrev}
             className="absolute left-0 top-1/2 -translate-y-1/2 z-20 w-12 h-12 rounded-full border border-gray-200 bg-white flex items-center justify-center text-gray-500 hover:text-[var(--color-accent,#D48035)] hover:border-[var(--color-accent,#D48035)] hover:shadow-lg transition-all duration-300 transform hover:-translate-x-1 hidden md:flex"
@@ -81,7 +81,7 @@ export default function TestimonialsSection() {
             <ChevronLeft className="w-6 h-6" />
           </button>
 
-          {/* Right Arrow â€” beside cards */}
+          {/* Right Arrow — beside cards */}
           <button 
             onClick={handleNext}
             className="absolute right-0 top-1/2 -translate-y-1/2 z-20 w-12 h-12 rounded-full border border-gray-200 bg-white flex items-center justify-center text-gray-500 hover:text-[var(--color-accent,#D48035)] hover:border-[var(--color-accent,#D48035)] hover:shadow-lg transition-all duration-300 transform hover:translate-x-1 hidden md:flex"
@@ -122,7 +122,7 @@ export default function TestimonialsSection() {
             </motion.div>
           </div>
 
-          {/* Mobile arrows + Dots â€” bottom center */}
+          {/* Mobile arrows + Dots — bottom center */}
           <div className="flex justify-center items-center gap-4 mt-8 z-20">
             <button 
               onClick={handlePrev}

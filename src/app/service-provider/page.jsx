@@ -234,14 +234,14 @@ export default function ServiceProviderHome() {
           aria-label="Previous image"
           className="absolute left-5 top-1/2 -translate-y-1/2 z-10 bg-white/10 backdrop-blur-md border border-white/20 rounded-full w-11 h-11 flex items-center justify-center cursor-pointer text-white hover:bg-white/25 transition-colors"
         >
-          â®
+          ❮
         </button>
         <button
           onClick={() => setHeroIndex((prev) => (prev + 1) % heroSlides.length)}
           aria-label="Next image"
           className="absolute right-5 top-1/2 -translate-y-1/2 z-10 bg-white/10 backdrop-blur-md border border-white/20 rounded-full w-11 h-11 flex items-center justify-center cursor-pointer text-white hover:bg-white/25 transition-colors"
         >
-          â¯
+          ❯
         </button>
 
         <div className="container relative z-[2]">
@@ -398,7 +398,7 @@ export default function ServiceProviderHome() {
                     onClick={prevBenefits}
                     className="w-10 h-10 rounded-full border border-slate-200 bg-white hover:bg-slate-100 flex items-center justify-center cursor-pointer transition-colors"
                   >
-                    â®
+                    ❮
                   </button>
                   <div className="text-xs text-slate-500 font-bold">
                     {benefitsPage + 1} / {totalBenefitsPages}
@@ -407,7 +407,7 @@ export default function ServiceProviderHome() {
                     onClick={nextBenefits}
                     className="w-10 h-10 rounded-full border border-slate-200 bg-white hover:bg-slate-100 flex items-center justify-center cursor-pointer transition-colors"
                   >
-                    â¯
+                    ❯
                   </button>
                 </div>
               </div>
@@ -476,7 +476,7 @@ export default function ServiceProviderHome() {
                         .scrollBy({ left: -150, behavior: "smooth" })
                     }
                   >
-                    â®
+                    ❮
                   </button>
                   <button
                     className="tabs-nav-btn next"
@@ -487,7 +487,7 @@ export default function ServiceProviderHome() {
                         .scrollBy({ left: 150, behavior: "smooth" })
                     }
                   >
-                    â¯
+                    ❯
                   </button>
                 </div>
               </div>

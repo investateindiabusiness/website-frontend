@@ -363,7 +363,7 @@ export default function BuilderHome() {
             transition: "background 0.2s",
           }}
         >
-          â®
+          ❮
         </button>
         <button
           onClick={() => setHeroIndex((prev) => (prev + 1) % heroSlides.length)}
@@ -389,7 +389,7 @@ export default function BuilderHome() {
             transition: "background 0.2s",
           }}
         >
-          â¯
+          ❯
         </button>
 
         {/* Dot indicators */}
@@ -613,7 +613,7 @@ export default function BuilderHome() {
                       (e.currentTarget.style.background = "#f5f5f5")
                     }
                   >
-                    â®
+                    ❮
                   </button>
                   <div
                     style={{
@@ -646,7 +646,7 @@ export default function BuilderHome() {
                       (e.currentTarget.style.background = "#f5f5f5")
                     }
                   >
-                    â¯
+                    ❯
                   </button>
                 </div>
               </div>
@@ -744,7 +744,7 @@ export default function BuilderHome() {
                         .scrollBy({ left: -150, behavior: "smooth" })
                     }
                   >
-                    â®
+                    ❮
                   </button>
                   <button
                     className="tabs-nav-btn next"
@@ -755,7 +755,7 @@ export default function BuilderHome() {
                         .scrollBy({ left: 150, behavior: "smooth" })
                     }
                   >
-                    â¯
+                    ❯
                   </button>
                 </div>
               </div>
@@ -877,7 +877,7 @@ export default function BuilderHome() {
         <div className="container text-center">
           <div className="cta-minimal-badge mb-6" style={{ borderColor: 'rgba(255,255,255,0.2)' }}>
             <span className="cta-badge-text text-white">GET STARTED TODAY</span>
-            <div className="cta-badge-star text-[#D48035]">â˜…</div>
+            <div className="cta-badge-star text-[#D48035]">★</div>
           </div>
           <h2 className="cta-minimal-title mb-6 text-white">
             Ready to Expand Your <span className="text-[#D48035]">Reach?</span>
@@ -891,7 +891,7 @@ export default function BuilderHome() {
               onClick={() => handleAuthClick("register", "builder")}
               className="cta-minimal-btn bg-[#D48035] hover:bg-[#b06725] text-white border-none shadow-xl"
             >
-              Apply as Builder <span className="ml-2">â†’</span>
+              Apply as Builder <span className="ml-2">→</span>
             </button>
           </div>
         </div>

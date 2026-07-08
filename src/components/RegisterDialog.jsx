@@ -542,7 +542,7 @@ const RegisterDialog = ({ isOpen, onOpenChange, onLoginClick, initialData = {} }
                   </p>
                 </div>
 
-                {/* Free Trial Info Card â€” only shown on new registration */}
+                {/* Free Trial Info Card — only shown on new registration */}
                 {!isUpdateMode && launchConfig && (
                   <div className="mx-auto max-w-xs bg-gradient-to-br from-[#0b264f] to-[#1a4b8c] text-white rounded-2xl p-5 shadow-xl space-y-4">
                     {/* Premium Badge */}
@@ -617,11 +617,11 @@ const RegisterDialog = ({ isOpen, onOpenChange, onLoginClick, initialData = {} }
                       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                         <div className="space-y-2">
                           <Label className="text-[10px] font-black text-gray-900 uppercase tracking-widest ml-1">Password</Label>
-                          <Input type="password" autoComplete="new-password" required value={authData.password} onChange={(e) => setAuthData({ ...authData, password: e.target.value })} className="h-11 px-6 bg-gray-50 border-gray-200 focus:bg-white focus:ring-[6px] focus:ring-orange-500/5 focus:border-orange-500 transition-all duration-300 rounded-2xl text-sm font-bold placeholder:text-gray-300" placeholder="â€¢â€¢â€¢â€¢â€¢â€¢â€¢â€¢" />
+                          <Input type="password" autoComplete="new-password" required value={authData.password} onChange={(e) => setAuthData({ ...authData, password: e.target.value })} className="h-11 px-6 bg-gray-50 border-gray-200 focus:bg-white focus:ring-[6px] focus:ring-orange-500/5 focus:border-orange-500 transition-all duration-300 rounded-2xl text-sm font-bold placeholder:text-gray-300" placeholder="••••••••" />
                         </div>
                         <div className="space-y-2">
                           <Label className="text-[10px] font-black text-gray-900 uppercase tracking-widest ml-1">Confirm Password</Label>
-                          <Input type="password" autoComplete="new-password" required value={authData.confirmPassword} onChange={(e) => setAuthData({ ...authData, confirmPassword: e.target.value })} className="h-11 px-6 bg-gray-50 border-gray-200 focus:bg-white focus:ring-[6px] focus:ring-orange-500/5 focus:border-orange-500 transition-all duration-300 rounded-2xl text-sm font-bold placeholder:text-gray-300" placeholder="â€¢â€¢â€¢â€¢â€¢â€¢â€¢â€¢" />
+                          <Input type="password" autoComplete="new-password" required value={authData.confirmPassword} onChange={(e) => setAuthData({ ...authData, confirmPassword: e.target.value })} className="h-11 px-6 bg-gray-50 border-gray-200 focus:bg-white focus:ring-[6px] focus:ring-orange-500/5 focus:border-orange-500 transition-all duration-300 rounded-2xl text-sm font-bold placeholder:text-gray-300" placeholder="••••••••" />
                         </div>
                       </div>
                       <Button 

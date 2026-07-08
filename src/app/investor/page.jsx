@@ -28,9 +28,9 @@ const heroSlides = [
     {
         image: '/images/image copy 18.png',
         tag: 'End-to-End NRI Wealth Management',
-        title: 'Beyond Investment â€”',
+        title: 'Beyond Investment —',
         highlight: 'Complete NRI Asset Protection',
-        subtitle: 'From real estate investment to legal support, rental management, tax planning, succession advisory, and structured exit plans â€” all in one trusted ecosystem.'
+        subtitle: 'From real estate investment to legal support, rental management, tax planning, succession advisory, and structured exit plans — all in one trusted ecosystem.'
     },
     {
         image: 'https://images.unsplash.com/photo-1600585154340-be6161a56a0c?q=80&w=2070&auto=format&fit=crop',
@@ -45,7 +45,7 @@ const contentDataForSection2 = [
     {
         id: "01",
         title: "Investment Opportunities",
-        text: "Curated, pre-verified real estate projects with standardized RERA disclosures and performance tracking â€” so you invest based on merit, not marketing. We also offer rental income management, ROI tracking, resale support, and structured exit planning for every stage of your investment.",
+        text: "Curated, pre-verified real estate projects with standardized RERA disclosures and performance tracking — so you invest based on merit, not marketing. We also offer rental income management, ROI tracking, resale support, and structured exit planning for every stage of your investment.",
         image: "/images/media1.png"
     },
     {
@@ -63,7 +63,7 @@ const contentDataForSection2 = [
     // {
     //     id: "04",
     //     title: "Rental & Estate Management",
-    //     text: "End-to-end rental income management, tenant vetting, maintenance coordination, and succession planning â€” protecting your wealth across generations.",
+    //     text: "End-to-end rental income management, tenant vetting, maintenance coordination, and succession planning — protecting your wealth across generations.",
     //     image: "https://images.unsplash.com/photo-1560520653-9e0e4c89df11?q=80&w=1000&auto=format&fit=crop"
     // }
 ];
@@ -321,7 +321,7 @@ export default function Index() {
                         justifyContent: 'center', cursor: 'pointer', color: '#fff', fontSize: '1.1rem',
                         transition: 'background 0.2s'
                     }}
-                >â®</button>
+                >❮</button>
                 <button
                     onClick={() => setHeroIndex((prev) => (prev + 1) % totalSlides)}
                     aria-label="Next image"
@@ -333,7 +333,7 @@ export default function Index() {
                         justifyContent: 'center', cursor: 'pointer', color: '#fff', fontSize: '1.1rem',
                         transition: 'background 0.2s'
                     }}
-                >â¯</button>
+                >❯</button>
 
                 {/* Dot indicators */}
                 <div style={{ position: 'absolute', bottom: '1.5rem', left: '50%', transform: 'translateX(-50%)', zIndex: 20, display: 'flex', gap: '0.5rem' }}>
@@ -410,7 +410,7 @@ export default function Index() {
                 <div className="container">
                     <div className="section-heading">
                         <h2 className="section-title">Our <span className='text-highlight'>End-to-End Platform</span></h2>
-                        <p className="section-subtitle">Beyond investment discovery â€” a comprehensive ecosystem protecting, managing and growing your Indian wealth from wherever you are in the world.</p>
+                        <p className="section-subtitle">Beyond investment discovery — a comprehensive ecosystem protecting, managing and growing your Indian wealth from wherever you are in the world.</p>
                     </div>
 
                     <div className="horizontal-accordion-container">
@@ -430,7 +430,7 @@ export default function Index() {
                                     <div className="accordion-details">
                                         <p className="accordion-text">{item.text}</p>
                                         {/* <button className="accordion-learn-more">
-                                            Learn More <span>â†—</span>
+                                            Learn More <span>↗</span>
                                         </button> */}
                                     </div>
                                 </div>
@@ -464,7 +464,7 @@ export default function Index() {
                                 <p className="infra-card-desc">{challenge.desc}</p>
                                 {challenge.opportunity && (
                                     <p style={{ fontSize: '0.78rem', color: '#C88A58', marginTop: '0.6rem', fontWeight: 600, lineHeight: 1.4 }}>
-                                        âœ¦ {challenge.opportunity}
+                                        ✦ {challenge.opportunity}
                                     </p>
                                 )}
                             </div>
@@ -552,7 +552,7 @@ export default function Index() {
                                         onMouseEnter={(e) => e.currentTarget.style.background = '#e5e5e5'}
                                         onMouseLeave={(e) => e.currentTarget.style.background = '#f5f5f5'}
                                     >
-                                        â®
+                                        ❮
                                     </button>
                                     <div style={{ fontSize: '0.9rem', fontWeight: 600, color: '#888' }}>
                                         {benefitsPage + 1} / {totalBenefitsPages}
@@ -575,7 +575,7 @@ export default function Index() {
                                         onMouseEnter={(e) => e.currentTarget.style.background = '#e5e5e5'}
                                         onMouseLeave={(e) => e.currentTarget.style.background = '#f5f5f5'}
                                     >
-                                        â¯
+                                        ❯
                                     </button>
                                 </div>
                             </div>
@@ -637,8 +637,8 @@ export default function Index() {
                                     ))}
                                 </div>
                                 <div className="dashboard-tabs-nav md:hidden">
-                                    <button className="tabs-nav-btn prev" onClick={() => document.getElementById('dashboard-tabs-row').scrollBy({ left: -150, behavior: 'smooth' })}>â®</button>
-                                    <button className="tabs-nav-btn next" onClick={() => document.getElementById('dashboard-tabs-row').scrollBy({ left: 150, behavior: 'smooth' })}>â¯</button>
+                                    <button className="tabs-nav-btn prev" onClick={() => document.getElementById('dashboard-tabs-row').scrollBy({ left: -150, behavior: 'smooth' })}>❮</button>
+                                    <button className="tabs-nav-btn next" onClick={() => document.getElementById('dashboard-tabs-row').scrollBy({ left: 150, behavior: 'smooth' })}>❯</button>
                                 </div>
                             </div>
                             <div className="dashboard-display-window">
@@ -817,7 +817,7 @@ export default function Index() {
                 <div className="container text-center">
                     <div className="cta-minimal-badge mb-6" style={{ borderColor: 'rgba(255,255,255,0.2)' }}>
                         <span className="cta-badge-text text-white">GET STARTED TODAY</span>
-                        <div className="cta-badge-star text-[#D48035]">â˜…</div>
+                        <div className="cta-badge-star text-[#D48035]">★</div>
                     </div>
                     <h2 className="cta-minimal-title mb-6 text-white">
                         Initialize Your <span className="text-[#D48035]">Strategic Journey</span>
@@ -827,7 +827,7 @@ export default function Index() {
                     </p>
                     <div className="flex justify-center">
                         <button onClick={() => handleAuthClick('register', 'investor')} className="cta-minimal-btn bg-[#D48035] hover:bg-[#b06725] text-white border-none shadow-xl">
-                            Register Your Interest <span className="ml-2">â†’</span>
+                            Register Your Interest <span className="ml-2">→</span>
                         </button>
                     </div>
                 </div>

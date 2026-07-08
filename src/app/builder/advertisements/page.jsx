@@ -152,7 +152,7 @@ export default function BuilderAdvertisements() {
       const res = await fetchMyCoupons();
       setMyCoupons(res?.data || []);
     } catch (err) {
-      // Silently ignore â€” coupons are an optional feature.
+      // Silently ignore — coupons are an optional feature.
       // A "Failed to fetch" is expected when the backend is not yet ready.
       setMyCoupons([]);
     }
@@ -686,14 +686,14 @@ export default function BuilderAdvertisements() {
                             onClick={prevMonth}
                             className="p-1.5 hover:bg-slate-100 rounded-lg text-slate-600 transition-colors border border-slate-200 shadow-sm"
                           >
-                            â®
+                            ❮
                           </button>
                           <button
                             type="button"
                             onClick={nextMonth}
                             className="p-1.5 hover:bg-slate-100 rounded-lg text-slate-600 transition-colors border border-slate-200 shadow-sm"
                           >
-                            â¯
+                            ❯
                           </button>
                         </div>
                       </div>
@@ -759,18 +759,18 @@ export default function BuilderAdvertisements() {
                 </CardContent>
               </Card>
 
-              {/* Live Cost Preview Card â€” investor-style free range */}
+              {/* Live Cost Preview Card — investor-style free range */}
               {rangeStart && (
                 <Card className={`border rounded-2xl p-4 shadow-sm animate-in fade-in slide-in-from-bottom-2 duration-200 ${rangeEnd ? 'border-[#0b264f] bg-[#0b264f]/5' : 'border-blue-200 bg-blue-50/50'}`}>
                   <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
                     <div>
                       <h4 className="text-xs font-bold text-[#0b264f] uppercase tracking-wide">
-                        {rangeEnd ? 'Selected Campaign Window' : 'Select an End Dateâ€¦'}
+                        {rangeEnd ? 'Selected Campaign Window' : 'Select an End Date…'}
                       </h4>
                       <p className="text-sm font-bold text-slate-800 mt-1">
                         {formatDate(rangeStart)}
                         {(rangeEnd || hoverDate) && (
-                          <> â†’ {formatDate(rangeEnd || hoverDate)}</>
+                          <> → {formatDate(rangeEnd || hoverDate)}</>
                         )}
                       </p>
                       {selectionDays > 0 && (
@@ -800,7 +800,7 @@ export default function BuilderAdvertisements() {
                             onClick={handleOpenBookingModal}
                             className="bg-[#0b264f] hover:bg-[#0a1f3f] text-white rounded-xl shadow-md font-semibold px-5"
                           >
-                            Book Now â†’
+                            Book Now →
                           </Button>
                         </div>
                       ) : (
@@ -939,7 +939,7 @@ export default function BuilderAdvertisements() {
                   <CardTitle className="text-xl font-bold">{paymentClientSecret ? 'Complete Payment' : 'Campaign Details'}</CardTitle>
                   <CardDescription className="text-xs text-blue-100/80 mt-1">Book slot for: {selectedZone?.name}</CardDescription>
                 </div>
-                <button onClick={handleCloseBookingModal} className="text-white/80 hover:text-white text-xl">âœ•</button>
+                <button onClick={handleCloseBookingModal} className="text-white/80 hover:text-white text-xl">✕</button>
               </div>
             </CardHeader>
             {paymentClientSecret ? (
@@ -1144,7 +1144,7 @@ export default function BuilderAdvertisements() {
                   <CardTitle className="text-xl font-bold">Rectify Ad Campaign</CardTitle>
                   <CardDescription className="text-xs text-amber-50/80 mt-1">Review feedback and fix issues below</CardDescription>
                 </div>
-                <button onClick={handleCloseRectifyModal} className="text-white/80 hover:text-white text-xl">âœ•</button>
+                <button onClick={handleCloseRectifyModal} className="text-white/80 hover:text-white text-xl">✕</button>
               </div>
             </CardHeader>
             <form onSubmit={handleRectifySubmit}>

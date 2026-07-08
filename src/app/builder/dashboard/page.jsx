@@ -1,4 +1,4 @@
-﻿"use client";
+"use client";
 
 import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
@@ -113,7 +113,7 @@ export default function BuilderDashboard() {
               </div>
             </div>
 
-            {/* Stat Pills â€” 2x2 grid on mobile */}
+            {/* Stat Pills — 2x2 grid on mobile */}
             <div className="grid grid-cols-2 gap-2 sm:gap-3">
               {[
                 { label: 'Total Revenue', value: '$0 Cr', icon: Wallet, color: 'text-emerald-300' },
@@ -126,7 +126,7 @@ export default function BuilderDashboard() {
                     <stat.icon className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
                   </div>
                   <div className="mt-2 sm:mt-3">
-                    <p className="text-lg sm:text-xl font-bold">{isLoading ? 'â€”' : stat.value}</p>
+                    <p className="text-lg sm:text-xl font-bold">{isLoading ? '—' : stat.value}</p>
                     <p className="text-[9px] sm:text-[10px] text-blue-200 uppercase tracking-wider opacity-80 leading-tight">{stat.label}</p>
                   </div>
                 </div>
@@ -144,7 +144,7 @@ export default function BuilderDashboard() {
           </div>
         </div>
 
-        {/* Charts + Summary â€” stacks on mobile */}
+        {/* Charts + Summary — stacks on mobile */}
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 sm:gap-6">
           <div className="lg:col-span-2 bg-white rounded-2xl sm:rounded-3xl p-4 sm:p-6 shadow-sm border border-gray-100">
             <h3 className="font-bold text-gray-900 text-base sm:text-lg flex items-center mb-4 sm:mb-6">
@@ -189,13 +189,13 @@ export default function BuilderDashboard() {
                   <item.icon className={`w-4 h-4 ${item.color}`} />
                   <span className="text-xs sm:text-sm font-semibold text-gray-700">{item.label}</span>
                 </div>
-                <span className={`text-base sm:text-lg font-extrabold ${item.color}`}>{isLoading ? 'â€”' : item.value}</span>
+                <span className={`text-base sm:text-lg font-extrabold ${item.color}`}>{isLoading ? '—' : item.value}</span>
               </div>
             ))}
           </div>
         </div>
 
-        {/* Projects â€” Card layout on mobile, Table on desktop */}
+        {/* Projects — Card layout on mobile, Table on desktop */}
         <div>
           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 sm:gap-4 mb-4 sm:mb-5">
             <h2 className="text-lg sm:text-xl font-bold text-gray-900">Your Projects</h2>
@@ -203,7 +203,7 @@ export default function BuilderDashboard() {
               <Search className="text-gray-400 w-4 h-4 shrink-0" />
               <input
                 type="text"
-                placeholder="Search projectsâ€¦"
+                placeholder="Search projects…"
                 className="flex-grow outline-none text-gray-700 bg-transparent text-sm"
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
@@ -214,7 +214,7 @@ export default function BuilderDashboard() {
           {isLoading ? (
             <div className="flex flex-col items-center justify-center py-20">
               <Loader2 className="w-10 h-10 text-orange-500 animate-spin mb-4" />
-              <p className="text-gray-500 font-medium">Loading your projectsâ€¦</p>
+              <p className="text-gray-500 font-medium">Loading your projects…</p>
             </div>
           ) : filteredProjects.length === 0 ? (
             <div className="flex flex-col items-center justify-center py-20 bg-white rounded-3xl shadow-sm border border-gray-100 text-center">
@@ -252,7 +252,7 @@ export default function BuilderDashboard() {
                         </div>
                         <div className="flex items-center gap-1 text-xs text-gray-500 mt-1">
                           <MapPin className="w-3 h-3 text-orange-500 shrink-0" />
-                          <span className="truncate">{project.projectLocation || 'â€”'}</span>
+                          <span className="truncate">{project.projectLocation || '—'}</span>
                         </div>
                         <div className="flex items-center justify-between mt-2">
                           <span className="text-xs text-gray-400">{project.projectType || 'Residential'} Â· {project.totalUnits || 0} Units</span>
@@ -306,14 +306,14 @@ export default function BuilderDashboard() {
                                 </div>
                                 <div>
                                   <p className="text-sm font-bold text-gray-900 capitalize">{project.projectName}</p>
-                                  <p className="text-xs text-gray-400">ID: {project.id?.slice(0, 8)}â€¦</p>
+                                  <p className="text-xs text-gray-400">ID: {project.id?.slice(0, 8)}…</p>
                                 </div>
                               </div>
                             </td>
                             <td className="px-6 py-4">
                               <div className="flex items-center gap-1.5 text-sm text-gray-600">
                                 <MapPin className="w-3.5 h-3.5 text-orange-500 shrink-0" />
-                                {project.projectLocation || 'â€”'}
+                                {project.projectLocation || '—'}
                               </div>
                             </td>
                             <td className="px-6 py-4">
@@ -343,7 +343,7 @@ export default function BuilderDashboard() {
                 {totalPages > 1 && (
                   <div className="bg-gray-50 border-t border-gray-200 px-6 py-4 flex flex-col sm:flex-row items-center justify-between gap-3">
                     <p className="text-xs text-gray-500 font-semibold">
-                      Showing {((currentPage - 1) * ITEMS_PER_PAGE) + 1}â€“{Math.min(currentPage * ITEMS_PER_PAGE, filteredProjects.length)} of {filteredProjects.length}
+                      Showing {((currentPage - 1) * ITEMS_PER_PAGE) + 1}–{Math.min(currentPage * ITEMS_PER_PAGE, filteredProjects.length)} of {filteredProjects.length}
                     </p>
                     <div className="flex items-center gap-1.5">
                       <Button onClick={() => setCurrentPage(p => Math.max(1, p - 1))} disabled={currentPage === 1}

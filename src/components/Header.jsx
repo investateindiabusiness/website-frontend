@@ -108,7 +108,7 @@ const HeaderContent = ({ transparent = false }) => {
 
   const displayUser = isDashboardArea ? user : null;
 
-  // Primary nav links â€” always visible in navbar
+  // Primary nav links — always visible in navbar
   const getNavLinks = () => {
     if (!displayUser) {
       return [
@@ -153,7 +153,7 @@ const HeaderContent = ({ transparent = false }) => {
     }
   };
 
-  // Secondary admin links â€” shown in "More" dropdown only
+  // Secondary admin links — shown in "More" dropdown only
   const adminMoreLinks = [];
 
   const navLinks = getNavLinks();

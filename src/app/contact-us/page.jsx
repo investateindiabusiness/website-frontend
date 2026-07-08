@@ -119,7 +119,7 @@ export default function ContactUs() {
               <div className="flex flex-col items-start mb-6">
                 <span className="text-xs uppercase tracking-widest text-[#0b264f] font-bold mb-1">QUICK CONTACT</span>
                 <div className="flex flex-col items-center justify-center w-24">
-                  <span className="text-[#0b264f] text-[10px] leading-none mb-1">â˜…</span>
+                  <span className="text-[#0b264f] text-[10px] leading-none mb-1">★</span>
                   <div className="w-full h-[1px] bg-[#0b264f]"></div>
                 </div>
               </div>
@@ -180,7 +180,7 @@ export default function ContactUs() {
               <div className="flex flex-col items-start mb-6">
                 <span className="text-xs uppercase tracking-widest text-[#0b264f] font-bold mb-1">LET'S CONNECT</span>
                 <div className="flex flex-col items-center justify-center w-24">
-                  <span className="text-[#0b264f] text-[10px] leading-none mb-1">â˜…</span>
+                  <span className="text-[#0b264f] text-[10px] leading-none mb-1">★</span>
                   <div className="w-full h-[1px] bg-[#0b264f]"></div>
                 </div>
               </div>
