@@ -116,7 +116,7 @@ const HeaderContent = ({ transparent = false }) => {
         { label: 'Global Investor', path: '/investor' },
         { label: 'Builder', path: '/builder' },
         { label: 'Service Provider', path: '/service-provider' },
-        { label: 'Capital Access', path: '/equity-raising' },
+        { label: 'Capital Facilitation', path: '/equity-raising' },
         // { label: 'About Us', path: '/about-us' },
         { label: 'Gallery', path: '/gallery' },
       ];

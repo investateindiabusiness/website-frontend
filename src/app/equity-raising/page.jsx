@@ -154,24 +154,24 @@ export default function EquityRaisingPage() {
         </div>
         <div className="container mx-auto px-4 max-w-4xl text-center relative z-10">
           <motion.div {...fadeUp()}>
-            <span className="inline-block px-4 py-1.5 rounded-full text-xs font-bold uppercase tracking-widest text-[#D48035] border border-[#D48035]/30 bg-[#D48035]/10 mb-6">
+            <span className="inline-block px-4 py-1.5 rounded-full text-sm font-bold uppercase tracking-widest text-[#D48035] border border-[#D48035]/30 bg-[#D48035]/10 mb-6">
               Investate India · Capital Program
             </span>
-            <h1 className="text-4xl md:text-6xl font-bold text-white mb-6 leading-tight">
-              Capital Access<br />
+            <h1 className="text-5xl md:text-7xl font-bold text-white mb-6 leading-tight">
+              Capital Facilitation<br />
               <span className="text-[#D48035]">For Growing Businesses</span>
             </h1>
-            <p className="text-gray-400 text-lg md:text-xl max-w-2xl mx-auto mb-3 leading-relaxed">
+            <p className="text-gray-400 text-xl md:text-2xl max-w-2xl mx-auto mb-4 leading-relaxed">
               If your business needs capital to grow, we connect you with serious investors - structured properly, secured clearly, and on terms that make sense for your timeline.
             </p>
-            <p className="text-gray-500 text-lg max-w-xl mx-auto mb-10">
+            <p className="text-gray-500 text-lg md:text-xl max-w-xl mx-auto mb-10">
               No upfront EMIs. No monthly interest. Just a clear agreement between you and an investor who believes in what you are building.
             </p>
             <div className="flex flex-wrap gap-4 justify-center">
-              <a href="#how-it-works" className="bg-[#D48035] hover:bg-[#B45309] text-white font-bold px-8 py-4 rounded-full shadow-lg transition-all hover:scale-105 text-sm uppercase tracking-wider">
+              <a href="#how-it-works" className="bg-[#D48035] hover:bg-[#B45309] text-white font-bold px-8 py-4 rounded-full shadow-lg transition-all hover:scale-105 text-base uppercase tracking-wider">
                 How It Works
               </a>
-              <a href="#connect" className="border border-white/20 hover:border-[#D48035]/60 text-white font-semibold px-8 py-4 rounded-full transition-all text-sm uppercase tracking-wider">
+              <a href="#connect" className="border border-white/20 hover:border-[#D48035]/60 text-white font-semibold px-8 py-4 rounded-full transition-all text-base uppercase tracking-wider">
                 Talk to Us
               </a>
             </div>
@@ -183,11 +183,11 @@ export default function EquityRaisingPage() {
       <section className="py-20 bg-white" id="what-is-this">
         <div className="container mx-auto px-4 max-w-5xl">
           <motion.div {...fadeUp()} className="text-center mb-14">
-            <span className="inline-block bg-orange-50 text-[#D48035] text-xs font-bold px-3 py-1 rounded-full border border-orange-200 mb-4">
+            <span className="inline-block bg-orange-50 text-[#D48035] text-sm font-bold px-3 py-1 rounded-full border border-orange-200 mb-4">
               Understanding the Program
             </span>
-            <h2 className="text-3xl md:text-4xl font-bold text-[#111] mb-4">What Is Capital Access?</h2>
-            <p className="text-gray-500 text-lg max-w-3xl mx-auto leading-relaxed">
+            <h2 className="text-4xl md:text-5xl font-bold text-[#111] mb-4">What Is Capital Facilitation?</h2>
+            <p className="text-gray-500 text-xl max-w-3xl mx-auto leading-relaxed">
               Think of it this way - your business needs capital. You could go to a bank, but banks charge interest from day one and expect monthly repayments whether your project is done or not.
             </p>
           </motion.div>
@@ -197,9 +197,9 @@ export default function EquityRaisingPage() {
                 <div className="w-10 h-10 rounded-xl bg-red-50 flex items-center justify-center">
                   <Building2 className="w-5 h-5 text-red-400" />
                 </div>
-                <h3 className="font-bold text-lg text-[#111]">The Bank Route</h3>
+                <h3 className="font-bold text-xl text-[#111]">The Bank Route</h3>
               </div>
-              <ul className="space-y-3 text-gray-600 text-base leading-relaxed">
+              <ul className="space-y-3 text-gray-600 text-lg leading-relaxed">
                 <li className="flex gap-2.5"><span className="text-red-400 mt-1">x</span> Fixed interest from the first month</li>
                 <li className="flex gap-2.5"><span className="text-red-400 mt-1">x</span> Monthly EMI regardless of where your project stands</li>
                 <li className="flex gap-2.5"><span className="text-red-400 mt-1">x</span> Rigid terms, limited flexibility</li>
@@ -211,18 +211,18 @@ export default function EquityRaisingPage() {
                 <div className="w-10 h-10 rounded-xl bg-[#D48035]/10 flex items-center justify-center">
                   <Handshake className="w-5 h-5 text-[#D48035]" />
                 </div>
-                <h3 className="font-bold text-lg text-[#111]">The Equity Route</h3>
+                <h3 className="font-bold text-xl text-[#111]">The Equity Route</h3>
               </div>
-              <ul className="space-y-3 text-gray-600 text-base leading-relaxed">
-                <li className="flex gap-2.5"><CheckCircle className="w-4 h-4 text-[#D48035] shrink-0 mt-1" /> Investor puts in the capital you need</li>
-                <li className="flex gap-2.5"><CheckCircle className="w-4 h-4 text-[#D48035] shrink-0 mt-1" /> You provide collateral, just like with a bank</li>
-                <li className="flex gap-2.5"><CheckCircle className="w-4 h-4 text-[#D48035] shrink-0 mt-1" /> No monthly payments - repayment starts after your agreed timeline</li>
-                <li className="flex gap-2.5"><CheckCircle className="w-4 h-4 text-[#D48035] shrink-0 mt-1" /> Terms are discussed and agreed upon - not imposed</li>
+              <ul className="space-y-3 text-gray-600 text-lg leading-relaxed">
+                <li className="flex gap-2.5"><CheckCircle className="w-5 h-5 text-[#D48035] shrink-0 mt-1" /> Investor puts in the capital you need</li>
+                <li className="flex gap-2.5"><CheckCircle className="w-5 h-5 text-[#D48035] shrink-0 mt-1" /> You provide collateral, just like with a bank</li>
+                <li className="flex gap-2.5"><CheckCircle className="w-5 h-5 text-[#D48035] shrink-0 mt-1" /> No monthly payments - repayment starts after your agreed timeline</li>
+                <li className="flex gap-2.5"><CheckCircle className="w-5 h-5 text-[#D48035] shrink-0 mt-1" /> Terms are discussed and agreed upon - not imposed</li>
               </ul>
             </motion.div>
           </div>
           <motion.div {...fadeUp(0.3)} className="mt-10 bg-[#111] rounded-2xl p-8 text-center">
-            <p className="text-white text-lg leading-relaxed max-w-2xl mx-auto">
+            <p className="text-white text-xl leading-relaxed max-w-2xl mx-auto">
               In simple terms - if your project completes in three years, you and the investor agree that repayment happens at that point. You focus on building. They wait for the returns. Both sides benefit, with a proper legal agreement protecting everyone.
             </p>
           </motion.div>
@@ -233,11 +233,11 @@ export default function EquityRaisingPage() {
       <section className="py-20 bg-gray-50" id="how-it-works">
         <div className="container mx-auto px-4 max-w-5xl">
           <motion.div {...fadeUp()} className="text-center mb-14">
-            <span className="inline-block bg-orange-50 text-[#D48035] text-xs font-bold px-3 py-1 rounded-full border border-orange-200 mb-4">
+            <span className="inline-block bg-orange-50 text-[#D48035] text-sm font-bold px-3 py-1 rounded-full border border-orange-200 mb-4">
               The Process
             </span>
-            <h2 className="text-3xl md:text-4xl font-bold text-[#111] mb-4">How It Works</h2>
-            <p className="text-gray-500 text-lg max-w-2xl mx-auto">
+            <h2 className="text-4xl md:text-5xl font-bold text-[#111] mb-4">How It Works</h2>
+            <p className="text-gray-500 text-xl max-w-2xl mx-auto">
               We have kept the process straightforward. You do not need to figure out the entire journey on your own - our team walks you through it.
             </p>
           </motion.div>
@@ -251,8 +251,8 @@ export default function EquityRaisingPage() {
                       {IconComp && <IconComp className="w-6 h-6 text-[#D48035]" />}
                     </div>
                     <div>
-                      <h3 className="font-bold text-[1.1rem] text-[#111] mb-2">{step.title}</h3>
-                      <p className="text-gray-500 text-base leading-relaxed">{step.desc}</p>
+                      <h3 className="font-bold text-xl text-[#111] mb-2">{step.title}</h3>
+                      <p className="text-gray-500 text-lg leading-relaxed">{step.desc}</p>
                     </div>
                   </div>
                 </motion.div>
@@ -266,11 +266,11 @@ export default function EquityRaisingPage() {
       <section className="py-20 bg-white" id="security">
         <div className="container mx-auto px-4 max-w-5xl">
           <motion.div {...fadeUp()} className="text-center mb-14">
-            <span className="inline-block bg-orange-50 text-[#D48035] text-xs font-bold px-3 py-1 rounded-full border border-orange-200 mb-4">
+            <span className="inline-block bg-orange-50 text-[#D48035] text-sm font-bold px-3 py-1 rounded-full border border-orange-200 mb-4">
               Security & Agreements
             </span>
-            <h2 className="text-3xl md:text-4xl font-bold text-[#111] mb-4">What Protects Everyone</h2>
-            <p className="text-gray-500 text-lg max-w-2xl mx-auto">
+            <h2 className="text-4xl md:text-5xl font-bold text-[#111] mb-4">What Protects Everyone</h2>
+            <p className="text-gray-500 text-xl max-w-2xl mx-auto">
               This is not a handshake deal. Every investment goes through proper legal structuring and independent checks.
             </p>
           </motion.div>
@@ -283,8 +283,8 @@ export default function EquityRaisingPage() {
                     {IconComp && <IconComp className="w-6 h-6 text-[#D48035]" />}
                   </div>
                   <div>
-                    <h3 className="font-bold text-lg text-[#111] mb-2">{point.title}</h3>
-                    <p className="text-gray-500 text-base leading-relaxed">{point.desc}</p>
+                    <h3 className="font-bold text-xl text-[#111] mb-2">{point.title}</h3>
+                    <p className="text-gray-500 text-lg leading-relaxed">{point.desc}</p>
                   </div>
                 </motion.div>
               );
@@ -292,10 +292,10 @@ export default function EquityRaisingPage() {
           </div>
           <motion.div {...fadeUp(0.4)} className="mt-10 rounded-2xl overflow-hidden border border-[#D48035]/20">
             <div className="bg-[#D48035] px-8 py-5">
-              <h3 className="text-white font-bold text-lg">One thing we always say</h3>
+              <h3 className="text-white font-bold text-xl">One thing we always say</h3>
             </div>
             <div className="bg-[#D48035]/5 px-8 py-6">
-              <p className="text-gray-700 text-lg leading-relaxed">
+              <p className="text-gray-700 text-xl leading-relaxed">
                 We do not encourage anyone to put money into a deal they have not fully understood. Before any agreement is signed, you will know exactly what is expected of you, what you are getting, and what happens on both sides if things go differently than planned. Transparency is not optional here - it is the foundation.
               </p>
             </div>
@@ -307,25 +307,25 @@ export default function EquityRaisingPage() {
       <section className="py-20" style={{ background: "linear-gradient(135deg, #111 0%, #1e1e1e 100%)" }} id="proposal">
         <div className="container mx-auto px-4 max-w-4xl">
           <motion.div {...fadeUp()} className="text-center mb-12">
-            <span className="inline-block bg-[#D48035]/10 text-[#D48035] text-xs font-bold px-3 py-1 rounded-full border border-[#D48035]/30 mb-4">
+            <span className="inline-block bg-[#D48035]/10 text-[#D48035] text-sm font-bold px-3 py-1 rounded-full border border-[#D48035]/30 mb-4">
               Getting Started
             </span>
-            <h2 className="text-3xl md:text-4xl font-bold text-white mb-4">What You Will Need to Share</h2>
-            <p className="text-gray-400 text-lg max-w-2xl mx-auto">
+            <h2 className="text-4xl md:text-5xl font-bold text-white mb-4">What You Will Need to Share</h2>
+            <p className="text-gray-400 text-xl max-w-2xl mx-auto">
               To evaluate your proposal, our team and potential investors will need some basic information. There is no exact template - but here is what typically matters.
             </p>
           </motion.div>
           <motion.div {...fadeUp(0.15)} className="bg-white/5 border border-white/10 rounded-2xl p-8 md:p-10 max-w-3xl mx-auto">
             <div className="grid md:grid-cols-2 gap-x-8 gap-y-5 px-2 md:px-4">
               {proposalItems.map((item, idx) => (
-                <div key={idx} className="flex items-start gap-3.5 text-gray-300 text-base leading-relaxed">
+                <div key={idx} className="flex items-start gap-3.5 text-gray-300 text-lg leading-relaxed">
                   <CheckCircle className="w-5 h-5 text-[#D48035] shrink-0 mt-0.5" />
                   <span>{item}</span>
                 </div>
               ))}
             </div>
             <div className="mt-8 pt-8 border-t border-white/10">
-              <p className="text-gray-400 text-base text-center">
+              <p className="text-gray-400 text-lg text-center">
                 Do not worry if you do not have everything ready. <span className="text-[#D48035] font-semibold">Reach out first</span> - our team will tell you exactly what you need.
               </p>
             </div>
@@ -337,22 +337,22 @@ export default function EquityRaisingPage() {
       <section className="py-20 bg-gray-50" id="faq">
         <div className="container mx-auto px-4 max-w-3xl">
           <motion.div {...fadeUp()} className="text-center mb-12">
-            <span className="inline-block bg-orange-50 text-[#D48035] text-xs font-bold px-3 py-1 rounded-full border border-orange-200 mb-4">
+            <span className="inline-block bg-orange-50 text-[#D48035] text-sm font-bold px-3 py-1 rounded-full border border-orange-200 mb-4">
               Common Questions
             </span>
-            <h2 className="text-3xl md:text-4xl font-bold text-[#111] mb-4">Things People Usually Ask</h2>
+            <h2 className="text-4xl md:text-5xl font-bold text-[#111] mb-4">Things People Usually Ask</h2>
           </motion.div>
           <div className="space-y-3">
             {faqs.map((faq, idx) => (
               <motion.div key={idx} {...fadeUp(idx * 0.07)} className="bg-white rounded-xl border border-gray-100 shadow-sm overflow-hidden">
                 <button onClick={() => setOpenFaq(openFaq === idx ? null : idx)} className="w-full flex items-center justify-between px-6 py-5 text-left gap-4">
-                  <span className="font-semibold text-[#111] text-base leading-snug">{faq.q}</span>
+                  <span className="font-semibold text-[#111] text-lg leading-snug">{faq.q}</span>
                   {openFaq === idx
                     ? <ChevronUp className="w-5 h-5 text-[#D48035] shrink-0" />
                     : <ChevronDown className="w-5 h-5 text-gray-400 shrink-0" />}
                 </button>
                 {openFaq === idx && (
-                  <div className="px-6 pb-5 text-gray-500 text-base leading-relaxed border-t border-gray-50 pt-4">
+                  <div className="px-6 pb-5 text-gray-500 text-lg leading-relaxed border-t border-gray-50 pt-4">
                     {faq.a}
                   </div>
                 )}
@@ -366,64 +366,64 @@ export default function EquityRaisingPage() {
       <section className="py-20 bg-white" id="connect">
         <div className="container mx-auto px-4 max-w-5xl">
           <motion.div {...fadeUp()} className="text-center mb-12">
-            <span className="inline-block bg-orange-50 text-[#D48035] text-xs font-bold px-3 py-1 rounded-full border border-orange-200 mb-4">
+            <span className="inline-block bg-orange-50 text-[#D48035] text-sm font-bold px-3 py-1 rounded-full border border-orange-200 mb-4">
               Let us Talk
             </span>
-            <h2 className="text-3xl md:text-4xl font-bold text-[#111] mb-4">Interested? Start Here.</h2>
-            <p className="text-gray-500 text-lg max-w-2xl mx-auto">
+            <h2 className="text-4xl md:text-5xl font-bold text-[#111] mb-4">Interested? Start Here.</h2>
+            <p className="text-gray-500 text-xl max-w-2xl mx-auto">
               If you think your business is a good fit, reach out. There is no commitment at this stage - just a conversation to see if it makes sense.
             </p>
           </motion.div>
           <div className="grid md:grid-cols-2 gap-8 items-start">
             <motion.div {...fadeUp(0.1)} className="space-y-5">
               <div className="bg-gray-50 rounded-2xl p-7 border border-gray-100">
-                <h3 className="font-bold text-[1.1rem] text-[#111] mb-5">Get in Touch</h3>
+                <h3 className="font-bold text-xl text-[#111] mb-5">Get in Touch</h3>
                 <div className="space-y-4">
                   <div className="flex items-start gap-3">
                     <MapPin className="w-5 h-5 text-[#D48035] shrink-0 mt-0.5" />
                     <div>
-                      <p className="font-semibold text-sm text-[#111]">New York, USA</p>
-                      <p className="text-gray-500 text-sm">55 West 47 Street, 4th Floor, New York, NY 10036</p>
+                      <p className="font-semibold text-base text-[#111]">New York, USA</p>
+                      <p className="text-gray-500 text-base">55 West 47 Street, 4th Floor, New York, NY 10036</p>
                     </div>
                   </div>
                   <div className="flex items-start gap-3">
                     <MapPin className="w-5 h-5 text-[#D48035] shrink-0 mt-0.5" />
                     <div>
-                      <p className="font-semibold text-sm text-[#111]">Hyderabad, India</p>
-                      <p className="text-gray-500 text-sm">5th Floor, Sanghi One, Road No 10, Banjara Hills</p>
+                      <p className="font-semibold text-base text-[#111]">Hyderabad, India</p>
+                      <p className="text-gray-500 text-base">5th Floor, Sanghi One, Road No 10, Banjara Hills</p>
                     </div>
                   </div>
                   <div className="flex items-center gap-3">
                     <Mail className="w-5 h-5 text-[#D48035] shrink-0" />
-                    <a href="mailto:info@investateindia.com" className="text-gray-600 text-sm hover:text-[#D48035] transition-colors">info@investateindia.com</a>
+                    <a href="mailto:info@investateindia.com" className="text-gray-600 text-base hover:text-[#D48035] transition-colors">info@investateindia.com</a>
                   </div>
                   <div className="flex items-center gap-3">
                     <Phone className="w-5 h-5 text-[#D48035] shrink-0" />
-                    <a href="tel:+19144731711" className="text-gray-600 text-sm hover:text-[#D48035] transition-colors">+1 914-473-1711</a>
+                    <a href="tel:+19144731711" className="text-gray-600 text-base hover:text-[#D48035] transition-colors">+1 914-473-1711</a>
                   </div>
                 </div>
               </div>
               <div className="bg-[#D48035] rounded-2xl p-7 text-white">
-                <h3 className="font-bold text-lg mb-2">Not Sure If You Qualify?</h3>
-                <p className="text-white/80 text-sm leading-relaxed mb-4">
+                <h3 className="font-bold text-xl mb-2">Not Sure If You Qualify?</h3>
+                <p className="text-white/80 text-base leading-relaxed mb-4">
                   Just reach out with a short description of your business. We will come back to you honestly - even if this program is not the right fit right now.
                 </p>
-                <a href="/contact-us" className="inline-flex items-center gap-2 bg-white text-[#D48035] font-bold px-5 py-2.5 rounded-full text-sm hover:bg-orange-50 transition-colors">
+                <a href="/contact-us" className="inline-flex items-center gap-2 bg-white text-[#D48035] font-bold px-5 py-2.5 rounded-full text-base hover:bg-orange-50 transition-colors">
                   Contact Us <ArrowRight className="w-4 h-4" />
                 </a>
               </div>
             </motion.div>
             <motion.div {...fadeUp(0.2)}>
               <div className="bg-gray-50 rounded-2xl p-8 border border-gray-100 shadow-sm">
-                <h3 className="font-bold text-[1.1rem] text-[#111] mb-2">Submit a Quick Inquiry</h3>
-                <p className="text-gray-500 text-sm mb-6">We will review it and get back to you within 2 business days.</p>
+                <h3 className="font-bold text-xl text-[#111] mb-2">Submit a Quick Inquiry</h3>
+                <p className="text-gray-500 text-base mb-6">We will review it and get back to you within 2 business days.</p>
                 <form onSubmit={(e) => { e.preventDefault(); window.location.href = "/contact-us"; }} className="space-y-4">
-                  <input type="text" placeholder="Your Name" required className="w-full px-4 py-3 rounded-xl border border-gray-200 text-sm focus:outline-none focus:border-[#D48035] bg-white" />
-                  <input type="email" placeholder="Email Address" required className="w-full px-4 py-3 rounded-xl border border-gray-200 text-sm focus:outline-none focus:border-[#D48035] bg-white" />
-                  <input type="text" placeholder="Company / Business Name" required className="w-full px-4 py-3 rounded-xl border border-gray-200 text-sm focus:outline-none focus:border-[#D48035] bg-white" />
-                  <input type="text" placeholder="Capital Requirement (approximate)" className="w-full px-4 py-3 rounded-xl border border-gray-200 text-sm focus:outline-none focus:border-[#D48035] bg-white" />
-                  <textarea rows={3} placeholder="Briefly describe your business and what you are looking for..." className="w-full px-4 py-3 rounded-xl border border-gray-200 text-sm focus:outline-none focus:border-[#D48035] bg-white resize-none" />
-                  <button type="submit" className="w-full bg-[#D48035] hover:bg-[#B45309] text-white font-bold py-3.5 rounded-xl transition-all hover:scale-[1.02] text-sm uppercase tracking-wider">
+                  <input type="text" placeholder="Your Name" required className="w-full px-4 py-3 rounded-xl border border-gray-200 text-base focus:outline-none focus:border-[#D48035] bg-white" />
+                  <input type="email" placeholder="Email Address" required className="w-full px-4 py-3 rounded-xl border border-gray-200 text-base focus:outline-none focus:border-[#D48035] bg-white" />
+                  <input type="text" placeholder="Company / Business Name" required className="w-full px-4 py-3 rounded-xl border border-gray-200 text-base focus:outline-none focus:border-[#D48035] bg-white" />
+                  <input type="text" placeholder="Capital Requirement (approximate)" className="w-full px-4 py-3 rounded-xl border border-gray-200 text-base focus:outline-none focus:border-[#D48035] bg-white" />
+                  <textarea rows={3} placeholder="Briefly describe your business and what you are looking for..." className="w-full px-4 py-3 rounded-xl border border-gray-200 text-base focus:outline-none focus:border-[#D48035] bg-white resize-none" />
+                  <button type="submit" className="w-full bg-[#D48035] hover:bg-[#B45309] text-white font-bold py-3.5 rounded-xl transition-all hover:scale-[1.02] text-base uppercase tracking-wider">
                     Send Inquiry
                   </button>
                 </form>
@@ -438,4 +438,3 @@ export default function EquityRaisingPage() {
     </>
   );
 }
-
