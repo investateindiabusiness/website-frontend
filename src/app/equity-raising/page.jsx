@@ -158,7 +158,7 @@ export default function EquityRaisingPage() {
               Investate India · Capital Program
             </span>
             <h1 className="text-4xl md:text-6xl font-bold text-white mb-6 leading-tight">
-              Equity Raising<br />
+              Capital Access<br />
               <span className="text-[#D48035]">For Growing Businesses</span>
             </h1>
             <p className="text-gray-400 text-lg md:text-xl max-w-2xl mx-auto mb-3 leading-relaxed">
@@ -186,7 +186,7 @@ export default function EquityRaisingPage() {
             <span className="inline-block bg-orange-50 text-[#D48035] text-xs font-bold px-3 py-1 rounded-full border border-orange-200 mb-4">
               Understanding the Program
             </span>
-            <h2 className="text-3xl md:text-4xl font-bold text-[#111] mb-4">What Is Equity Raising?</h2>
+            <h2 className="text-3xl md:text-4xl font-bold text-[#111] mb-4">What Is Capital Access?</h2>
             <p className="text-gray-500 text-lg max-w-3xl mx-auto leading-relaxed">
               Think of it this way - your business needs capital. You could go to a bank, but banks charge interest from day one and expect monthly repayments whether your project is done or not.
             </p>

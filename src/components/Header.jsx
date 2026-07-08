@@ -1,4 +1,4 @@
-﻿"use client";
+"use client";
 
 import React, { useState, useEffect, useRef, Suspense } from 'react';
 import Link from 'next/link';
@@ -113,10 +113,10 @@ const HeaderContent = ({ transparent = false }) => {
     if (!displayUser) {
       return [
         { label: 'Home', path: '/' },
-        { label: 'Investor', path: '/investor' },
+        { label: 'Global Investor', path: '/investor' },
         { label: 'Builder', path: '/builder' },
         { label: 'Service Provider', path: '/service-provider' },
-        { label: 'Equity Raising', path: '/equity-raising' },
+        { label: 'Capital Access', path: '/equity-raising' },
         // { label: 'About Us', path: '/about-us' },
         { label: 'Gallery', path: '/gallery' },
       ];

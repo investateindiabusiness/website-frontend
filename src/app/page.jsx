@@ -230,8 +230,6 @@ export default function ServiceProviderHome() {
                                     Talk to Us
                                 </button>
                             </div>
-
-<<<<<<< HEAD
                             {/* Responsive Ad Banner: inline on small, fixed to right on md+ */}
                             <div className="mt-8 w-full max-w-lg md:hidden">
                                 <AdBanner zoneId="zone5" variant="default" forceRole="service-provider" />
@@ -239,9 +237,6 @@ export default function ServiceProviderHome() {
                             <div className="hidden md:block absolute right-0 top-1/2 -translate-y-1/2 translate-y-16 w-full max-w-lg z-[25]">
                                 <AdBanner zoneId="zone5" variant="default" forceRole="service-provider" />
                             </div>
-=======
-                            {/* Slide-out Ad Panel — rendered once, floats on right edge */}
->>>>>>> 59337006b8053f4765054a374e5d19129306e7d7
                         </div>
                     </motion.div>
                 </AnimatePresence>
