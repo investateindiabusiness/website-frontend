@@ -92,7 +92,7 @@ function MembershipPaymentForm({ amount, paymentId, onSuccess }) {
         className="w-full bg-gradient-to-r from-orange-500 to-orange-600 hover:from-orange-600 hover:to-orange-700 text-white font-bold py-3.5 rounded-2xl text-base shadow-lg shadow-orange-500/20 flex items-center justify-center gap-2 disabled:opacity-60 disabled:cursor-not-allowed transition-all duration-200"
       >
         {isProcessing ? (
-          <><Loader2 className="w-5 h-5 animate-spin" /> Processingâ€¦</>
+          <><Loader2 className="w-5 h-5 animate-spin" /> Processing…</>
         ) : (
           <><CreditCard className="w-5 h-5" /> Pay ${amount} USD</>
         )}
@@ -200,7 +200,7 @@ export default function MembershipPage() {
   const handleSuccess = async () => {
     setSuccess(true);
     try { await refreshUser?.(); } catch { }
-    toast({ title: 'âœ… Membership Activated', description: 'Your annual membership is now active.' });
+    toast({ title: '✅ Membership Activated', description: 'Your annual membership is now active.' });
   };
 
   const handleContinue = () => {

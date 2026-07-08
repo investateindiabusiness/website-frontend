@@ -137,7 +137,7 @@ export default function ServiceProviderAdvertisements() {
         ...ZONE_META[z.id],
         ...z,
         name: z.name || ZONE_META[z.id]?.name || z.id,
-        cost: z.cost ?? ZONE_META[z.id]?.cost ?? 'â€”',
+        cost: z.cost ?? ZONE_META[z.id]?.cost ?? '—',
         campaignDuration: z.campaignDuration ?? ZONE_META[z.id]?.campaignDuration ?? 1,
       }));
       setZones(enriched);
@@ -670,14 +670,14 @@ export default function ServiceProviderAdvertisements() {
                             onClick={prevMonth}
                             className="p-1.5 hover:bg-slate-100 rounded-lg text-slate-600 transition-colors border border-slate-200 shadow-sm"
                           >
-                            â®
+                            ❮
                           </button>
                           <button
                             type="button"
                             onClick={nextMonth}
                             className="p-1.5 hover:bg-slate-100 rounded-lg text-slate-600 transition-colors border border-slate-200 shadow-sm"
                           >
-                            â¯
+                            ❯
                           </button>
                         </div>
                       </div>
@@ -921,7 +921,7 @@ export default function ServiceProviderAdvertisements() {
                   <CardTitle className="text-xl font-bold">{paymentClientSecret ? 'Complete Payment' : 'Campaign Details'}</CardTitle>
                   <CardDescription className="text-xs text-slate-100/80 mt-1">Book slot for: {selectedZone?.name}</CardDescription>
                 </div>
-                <button onClick={handleCloseBookingModal} className="text-white/80 hover:text-white text-xl">âœ•</button>
+                <button onClick={handleCloseBookingModal} className="text-white/80 hover:text-white text-xl">✕</button>
               </div>
             </CardHeader>
             {paymentClientSecret ? (
@@ -1031,7 +1031,7 @@ export default function ServiceProviderAdvertisements() {
                               <CheckCircle className="w-4 h-4 text-emerald-600 flex-shrink-0" />
                               <span className="truncate">{imageFile.name}</span>
                             </span>
-                            <button type="button" onClick={handleRemoveImage} className="text-slate-400 hover:text-red-500 font-bold ml-2 text-sm transition-colors">âœ•</button>
+                            <button type="button" onClick={handleRemoveImage} className="text-slate-400 hover:text-red-500 font-bold ml-2 text-sm transition-colors">✕</button>
                           </div>
                           <div className="relative rounded-2xl overflow-hidden bg-slate-50 border border-slate-200/80 aspect-[16/9] max-h-56 flex items-center justify-center p-2">
                             <img
@@ -1080,7 +1080,7 @@ export default function ServiceProviderAdvertisements() {
                               <CheckCircle className="w-4 h-4 text-emerald-600 flex-shrink-0" />
                               <span className="truncate">{videoFile.name}</span>
                             </span>
-                            <button type="button" onClick={handleRemoveVideo} className="text-slate-400 hover:text-red-500 font-bold ml-2 text-sm transition-colors">âœ•</button>
+                            <button type="button" onClick={handleRemoveVideo} className="text-slate-400 hover:text-red-500 font-bold ml-2 text-sm transition-colors">✕</button>
                           </div>
                           <div className="relative rounded-2xl overflow-hidden bg-slate-50 border border-slate-200/80 aspect-[16/9] max-h-56 flex items-center justify-center p-2">
                             <video
@@ -1144,7 +1144,7 @@ export default function ServiceProviderAdvertisements() {
                   <CardTitle className="text-xl font-bold">Rectify Ad Campaign</CardTitle>
                   <CardDescription className="text-xs text-amber-50/80 mt-1">Review feedback and fix issues below</CardDescription>
                 </div>
-                <button onClick={handleCloseRectifyModal} className="text-white/80 hover:text-white text-xl">âœ•</button>
+                <button onClick={handleCloseRectifyModal} className="text-white/80 hover:text-white text-xl">✕</button>
               </div>
             </CardHeader>
             <form onSubmit={handleRectifySubmit}>
@@ -1164,7 +1164,7 @@ export default function ServiceProviderAdvertisements() {
                       <div className="relative w-full rounded-xl overflow-hidden border border-slate-200 bg-slate-50 aspect-[16/9] max-h-40 flex items-center justify-center p-2">
                         <img src={rectifyImagePreview} alt="Corrected Ad" className="w-full h-full object-contain rounded-lg" />
                       </div>
-                      <button type="button" onClick={() => { setRectifyImageFile(null); setRectifyImagePreview(''); setRectifyAdContent(prev => ({ ...prev, imageUrl: '' })); }} className="text-xs text-red-500 hover:underline font-semibold">âœ• Remove image</button>
+                      <button type="button" onClick={() => { setRectifyImageFile(null); setRectifyImagePreview(''); setRectifyAdContent(prev => ({ ...prev, imageUrl: '' })); }} className="text-xs text-red-500 hover:underline font-semibold">✕ Remove image</button>
                     </div>
                   ) : (
                     <div className="relative border-2 border-dashed border-amber-200 hover:border-amber-400 rounded-2xl p-5 flex flex-col items-center justify-center min-h-[100px] cursor-pointer group transition-all">
@@ -1184,7 +1184,7 @@ export default function ServiceProviderAdvertisements() {
                   {rectifyVideoPreview ? (
                     <div className="space-y-2">
                       <video src={rectifyVideoPreview} controls className="w-full rounded-xl border border-slate-200 max-h-36" />
-                      <button type="button" onClick={() => { setRectifyVideoFile(null); setRectifyVideoPreview(''); setRectifyAdContent(prev => ({ ...prev, videoUrl: '' })); }} className="text-xs text-red-500 hover:underline font-semibold">âœ• Remove video</button>
+                      <button type="button" onClick={() => { setRectifyVideoFile(null); setRectifyVideoPreview(''); setRectifyAdContent(prev => ({ ...prev, videoUrl: '' })); }} className="text-xs text-red-500 hover:underline font-semibold">✕ Remove video</button>
                     </div>
                   ) : (
                     <div className="relative border-2 border-dashed border-slate-200 hover:border-amber-300 rounded-2xl p-5 flex flex-col items-center justify-center min-h-[80px] cursor-pointer group transition-all">

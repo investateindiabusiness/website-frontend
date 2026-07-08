@@ -280,7 +280,7 @@ export default function AdminSidebar({ children }) {
           </IconButton>
           <img src="/logo-small-white.png" alt="Logo" style={{ height: 36, objectFit: 'contain' }} />
           <Box sx={{ ml: 'auto', display: 'flex', alignItems: 'center', gap: 1 }}>
-            {/* Profile Dropdown â€” mobile */}
+            {/* Profile Dropdown — mobile */}
             <div ref={profileDropdownRefMobile} style={{ position: 'relative' }}>
               <button
                 onClick={() => setProfileDropdownOpen(p => !p)}
