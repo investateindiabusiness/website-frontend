@@ -113,7 +113,9 @@ export default function AdminAdvertisements() {
     try {
       setLoadingZones(true);
       const data = await adminFetchZones();
-      const zoneList = (data.data || []).filter((z) => z.status === 'active');
+      const zoneList = (data.data || [])
+        .map((z) => ({ ...z, status: z.status || 'active' }))
+        .filter((z) => z.status === 'active');
       setZones(zoneList);
       if (zoneList.length > 0 && !selectedZone) {
         handleSelectZone(zoneList[0]);

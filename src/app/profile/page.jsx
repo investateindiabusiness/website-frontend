@@ -15,7 +15,7 @@ import {
 export default function ProfilePage() {
   const { user, refreshUser, loading } = useAuth();
   const router = useRouter();
-  
+
   const [isEditing, setIsEditing] = useState(false);
   const [saving, setSaving] = useState(false);
   const [form, setForm] = useState({
@@ -87,7 +87,7 @@ export default function ProfilePage() {
         {/* Profile Header Card */}
         <div className="bg-[#0f172a] rounded-3xl border border-slate-800 p-8 text-white relative overflow-hidden shadow-2xl mb-8">
           <div className="absolute top-0 right-0 w-64 h-64 bg-orange-500/10 rounded-full blur-3xl pointer-events-none" />
-          
+
           <div className="flex flex-col md:flex-row items-center gap-6 relative z-10">
             <div className="w-24 h-24 rounded-full bg-gradient-to-tr from-[#D48035] to-orange-500 flex items-center justify-center text-white text-3xl font-extrabold shadow-lg shadow-orange-500/20">
               {(user.name || user.email || 'U')[0].toUpperCase()}
@@ -100,7 +100,7 @@ export default function ProfilePage() {
                 </span>
               </div>
               <p className="text-slate-400 text-sm mt-1">{user.email}</p>
-              
+
               {/* Onboarding / verification badges */}
               <div className="flex flex-wrap gap-2 mt-4 justify-center md:justify-start">
                 {user.isVerified && (
@@ -130,7 +130,7 @@ export default function ProfilePage() {
                 <User className="w-4 h-4 text-[#D48035]" /> Profile Details
               </h2>
               {!isEditing && (
-                <Button 
+                <Button
                   onClick={() => setIsEditing(true)}
                   variant="outline"
                   className="text-xs h-8 rounded-lg border-slate-200 hover:bg-slate-50"
@@ -188,7 +188,7 @@ export default function ProfilePage() {
 
               {isEditing && (
                 <div className="flex justify-end gap-2 pt-2 border-t border-slate-100">
-                  <Button 
+                  <Button
                     type="button"
                     variant="outline"
                     onClick={() => {
@@ -203,7 +203,7 @@ export default function ProfilePage() {
                   >
                     Cancel
                   </Button>
-                  <Button 
+                  <Button
                     type="submit"
                     disabled={saving}
                     className="bg-[#D48035] hover:bg-[#B45309] text-white text-xs rounded-xl flex items-center gap-1.5"
@@ -235,27 +235,29 @@ export default function ProfilePage() {
                     ) : (
                       <>
                         <span className="w-2.5 h-2.5 rounded-full bg-orange-500" />
-                        <span className="text-sm font-bold text-orange-600 capitalize">Trial / Expired</span>
+                        <span className="text-sm font-bold text-orange-600 capitalize">Free update for 1 yr</span>
                       </>
                     )}
                   </div>
                 </div>
 
-                {user.membershipExpiry && (
-                  <div className="flex items-center gap-3 px-1 text-sm text-slate-600">
-                    <Calendar className="w-4 h-4 text-slate-400" />
-                    <div>
-                      <p className="text-xs text-slate-400 font-bold">Expiration Date</p>
-                      <p className="font-semibold text-slate-700 mt-0.5">
-                        {new Date(user.membershipExpiry).toLocaleDateString('en-US', {
-                          month: 'long',
-                          day: 'numeric',
-                          year: 'numeric'
-                        })}
-                      </p>
-                    </div>
+                <div className="flex items-center gap-3 px-1 text-sm text-slate-600">
+                  <Calendar className="w-4 h-4 text-slate-400" />
+                  <div>
+                    <p className="text-xs text-slate-400 font-bold">Expiration Date</p>
+                    <p className="font-semibold text-slate-700 mt-0.5">
+                      {user.membershipExpiry ? new Date(user.membershipExpiry).toLocaleDateString('en-US', {
+                        month: 'long',
+                        day: 'numeric',
+                        year: 'numeric'
+                      }) : new Date('2027-07-13').toLocaleDateString('en-US', {
+                        month: 'long',
+                        day: 'numeric',
+                        year: 'numeric'
+                      })}
+                    </p>
                   </div>
-                )}
+                </div>
               </div>
             </div>
 

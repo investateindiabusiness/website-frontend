@@ -15,6 +15,7 @@ import { useAuth } from '@/hooks/AuthContext';
 import { fetchServiceProviderStats } from '@/api';
 import { toast } from '@/hooks/use-toast';
 
+
 const ANALYTICS_DATA = [
   { name: 'Jan', spent: 0 },
   { name: 'Feb', spent: 0 },
@@ -128,9 +129,11 @@ export default function ServiceProviderDashboard() {
         </div>
       </div>
 
-      <div className="container mx-auto px-3 sm:px-4 md:px-6 -mt-12 relative z-10 space-y-6 sm:space-y-8">
-        {/* Stat Cards */}
-        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-3 sm:gap-4">
+      <div className="container mx-auto px-4 sm:px-6 -mt-12 sm:-mt-16 relative z-20 space-y-6">
+
+
+        {/* Stats Grid */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-4">
           {statCards.map((s, i) => (
             <motion.div
               key={i}

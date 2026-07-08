@@ -233,10 +233,8 @@ export default function AdBanner({ zoneId, variant = 'default', forceRole }) {
               e.stopPropagation();
               setShowLoginModal(true);
             }
-          } else if (ad.type === 'image') {
-            if (ad.adContent?.targetUrl) {
-              window.open(ad.adContent.targetUrl, '_blank');
-            }
+          } else if (ad.type === 'campaign') {
+            handleAdClick(ad.adContent?.targetUrl);
           }
         }}
       >
@@ -389,8 +387,8 @@ export default function AdBanner({ zoneId, variant = 'default', forceRole }) {
     const spotlightFallback = (
       <>
         <div
-          className="relative w-full max-w-5xl mx-auto rounded-2xl overflow-hidden shadow-lg"
-          style={{ height: 340 }}
+          className="relative w-full rounded-2xl overflow-hidden shadow-lg"
+          style={{ height: 460 }}
         >
           <img
             src="https://images.unsplash.com/photo-1560518883-ce09059eeffa?w=1200&q=80"
@@ -399,16 +397,28 @@ export default function AdBanner({ zoneId, variant = 'default', forceRole }) {
           />
           <div
             className="absolute inset-0"
-            style={{ background: 'linear-gradient(to right, rgba(0,0,0,0.75) 0%, rgba(0,0,0,0.40) 55%, rgba(0,0,0,0.08) 100%)' }}
+            style={{ background: 'linear-gradient(to bottom, rgba(0,0,0,0.2) 0%, rgba(0,0,0,0.75) 100%)' }}
           />
-          <div className="absolute top-4 right-4 flex items-center gap-1.5 bg-black/55 backdrop-blur-sm text-white text-[10px] font-bold tracking-widest px-3 py-1.5 rounded-full border border-white/20 uppercase pointer-events-none">
+          {/* <div className="absolute top-4 right-4 flex items-center gap-1.5 bg-black/55 backdrop-blur-sm text-white text-[10px] font-bold tracking-widest px-3 py-1.5 rounded-full border border-white/20 uppercase pointer-events-none">
             SPONSORED <ExternalLink className="w-2.5 h-2.5 opacity-70" />
-          </div>
-          <div className="absolute inset-y-0 left-0 flex flex-col justify-center px-10 md:px-14 max-w-xl z-10">
-            <h2 className="text-white font-extrabold text-3xl md:text-4xl leading-tight mb-5 drop-shadow-xl">
-              Advertise your project here!
+          </div> */}
+          <div className="absolute inset-x-0 bottom-0 flex flex-col items-start justify-end px-8 pb-10 z-10">
+            <span className="text-orange-400 text-xs font-black uppercase tracking-widest mb-2">Premium Placement</span>
+            <h2 className="text-white font-extrabold text-2xl leading-tight mb-4 drop-shadow-xl max-w-xs">
+              Showcase your project to 10,000+ investors
             </h2>
-            {renderViewMoreButton("inline-flex items-center gap-2 bg-orange-500 hover:bg-orange-600 text-white font-bold text-sm px-6 py-3 rounded-lg shadow-lg transition-all duration-200 w-fit", ExternalLink)}
+            <button
+              onClick={() => {
+                if (user && user.role) {
+                  handleBookAdClick();
+                } else {
+                  window.location.href = '/login';
+                }
+              }}
+              className="inline-flex items-center gap-2 bg-orange-500 hover:bg-orange-400 text-white font-bold text-sm px-6 py-3 rounded-xl shadow-lg transition-all duration-200 hover:scale-105 active:scale-95"
+            >
+              Add Yours <ExternalLink className="w-4 h-4" />
+            </button>
           </div>
         </div>
         {portal}
@@ -421,8 +431,8 @@ export default function AdBanner({ zoneId, variant = 'default', forceRole }) {
     return (
       <>
         <div
-          className="relative w-full max-w-6xl mx-auto rounded-3xl overflow-hidden cursor-pointer group shadow-lg hover:shadow-xl transition-shadow duration-300"
-          style={{ height: 380 }}
+          className="relative w-full rounded-2xl overflow-hidden cursor-pointer group shadow-lg hover:shadow-xl transition-shadow duration-300"
+          style={{ height: 460 }}
           onClick={() => handleAdClick(targetUrl)}
           role={targetUrl ? 'link' : undefined}
           aria-label={text || 'Sponsored advertisement'}
@@ -463,7 +473,7 @@ export default function AdBanner({ zoneId, variant = 'default', forceRole }) {
 
           {/* Sponsored pill — top right */}
           <div className="absolute top-3 right-3 z-20 flex items-center gap-1 bg-black/50 backdrop-blur-sm px-3 py-1 rounded-full text-[10px] font-bold text-white/80 uppercase tracking-widest pointer-events-none">
-            <span>Sponsored</span>
+            {/* <span>Sponsored</span> */}
             {targetUrl && <ExternalLink className="w-2.5 h-2.5 opacity-60" />}
           </div>
         </div>
@@ -492,7 +502,7 @@ export default function AdBanner({ zoneId, variant = 'default', forceRole }) {
         <div
           className="w-full relative group rounded-2xl overflow-hidden cursor-pointer shadow-lg hover:shadow-xl transition-all duration-300 border border-white/10"
           style={{ height: zone.height, minHeight: 80 }}
-          onClick={() => targetUrl && window.open(targetUrl, '_blank', 'noopener,noreferrer')}
+          onClick={() => handleAdClick(targetUrl)}
           role={targetUrl ? 'link' : undefined}
           aria-label={text || 'Sponsored advertisement'}
         >
@@ -597,7 +607,7 @@ export default function AdBanner({ zoneId, variant = 'default', forceRole }) {
       <div
         className="w-full mx-auto relative group rounded-2xl shadow-sm hover:shadow-md hover:scale-[1.005] active:scale-[0.998] transition-all duration-300 cursor-pointer select-none border border-slate-200/60 dark:border-slate-700/60"
         style={{ maxWidth: zone.width }}
-        onClick={() => targetUrl && window.open(targetUrl, '_blank', 'noopener,noreferrer')}
+        onClick={() => handleAdClick(targetUrl)}
         role={targetUrl ? 'link' : undefined}
         aria-label={text || 'Sponsored advertisement'}
       >

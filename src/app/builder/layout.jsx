@@ -20,7 +20,7 @@ export default function BuilderLayout({ children }) {
       const isPublicPage = BUILDER_PUBLIC_PATHS.some(p => pathname === p || pathname.startsWith(p + '/login') || pathname.startsWith(p + '/register'));
       if (!auth.user && !isPublicPage) {
         router.push('/builder/login');
-      } else if (auth.user && auth.user.role !== 'builder') {
+      } else if (auth.user && auth.user.role !== 'builder' && !isPublicPage) {
         toast({ title: "Access Denied", description: "You need a builder account to access this area.", variant: "destructive" });
         router.push('/');
       }

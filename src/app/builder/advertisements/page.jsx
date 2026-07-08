@@ -1,4 +1,4 @@
-﻿"use client";
+"use client";
 
 import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
@@ -164,7 +164,6 @@ export default function BuilderAdvertisements() {
       const data = await fetchAdZones();
       const enriched = (data.data || [])
         .filter((z) => !z.allowedBookers || z.allowedBookers.includes('builder'))
-        .filter((z) => ['zone2', 'zone3', 'zone4'].includes(z.id))
         .map((z) => ({
           ...z,
           name: z.name || z.id,

@@ -19,7 +19,7 @@ export default function ServiceProviderLayout({ children }) {
       const isPublicPage = SP_PUBLIC_PATHS.some(p => pathname === p || pathname === p + '/login' || pathname === p + '/register');
       if (!user && !isPublicPage) {
         router.push('/service-provider/login');
-      } else if (user && user.role !== 'serviceProvider') {
+      } else if (user && user.role !== 'serviceProvider' && !isPublicPage) {
         toast({ title: "Access Denied", description: "You need a Service Provider account to access this area.", variant: "destructive" });
         router.push('/');
       }

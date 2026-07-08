@@ -123,10 +123,10 @@ export default function InvestorProjects() {
                 </CardContent>
               </Card>
 
-              {/* Inject Zone 4 ad after every 5th project card */}
+              {/* Inject Zone 3 ad after every 5th project card */}
               {(index + 1) % 5 === 0 && (
                 <div className="col-span-full flex justify-center py-2">
-                  <AdBanner zoneId="zone4" />
+                  <AdBanner zoneId="zone3" />
                 </div>
               )}
             </React.Fragment>

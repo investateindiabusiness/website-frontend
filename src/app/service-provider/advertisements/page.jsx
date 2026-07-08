@@ -1,4 +1,4 @@
-﻿"use client";
+"use client";
 
 import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
@@ -132,7 +132,6 @@ export default function ServiceProviderAdvertisements() {
       setLoadingZones(true);
       const data = await fetchAdZones();
       const enriched = (data.data || [])
-        .filter((z) => !z.allowedBookers || z.allowedBookers.includes('serviceProvider'))
         .map((z) => ({
         ...ZONE_META[z.id],
         ...z,

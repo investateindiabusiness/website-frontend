@@ -43,6 +43,9 @@ export default function AdminKycVerificationsPage() {
   const [searchInput, setSearchInput] = useState('');
   const [filteredRows, setFilteredRows] = useState([]);
 
+  const [page, setPage] = useState(0);
+  const [rowsPerPage, setRowsPerPage] = useState(20);
+
   const fetchSubmissions = useCallback(async () => {
     if (!user) return;
     setLoading(true);
@@ -85,6 +88,7 @@ export default function AdminKycVerificationsPage() {
   // Search filtering in-memory
   useEffect(() => {
     const q = searchInput.trim().toLowerCase();
+    setPage(0); // reset page on search
     if (!q) {
       setFilteredRows(rows);
     } else {
@@ -176,6 +180,9 @@ export default function AdminKycVerificationsPage() {
     }
   ];
 
+  // Manual pagination for in-memory filtered rows
+  const paginatedRows = filteredRows.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage);
+
   return (
     <div className="flex-grow container mx-auto px-4 py-8">
       <Box sx={{ mb: 4, display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: 2 }}>
@@ -198,12 +205,12 @@ export default function AdminKycVerificationsPage() {
 
       <AppDataGrid
         columns={COLUMNS}
-        rows={filteredRows}
+        rows={paginatedRows}
         total={filteredRows.length}
-        page={0}
-        rowsPerPage={100}
-        onPageChange={() => {}}
-        onRowsPerPageChange={() => {}}
+        page={page}
+        rowsPerPage={rowsPerPage}
+        onPageChange={(p) => setPage(p)}
+        onRowsPerPageChange={(s) => { setRowsPerPage(s); setPage(0); }}
         loading={loading}
         searchValue={searchInput}
         onSearchChange={setSearchInput}
