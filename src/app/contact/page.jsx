@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import React, { useEffect, useState } from 'react';
 import Header from '@/components/Header';
@@ -69,7 +69,7 @@ export default function ContactUs() {
                       <div className="bg-white/10 p-3 rounded-lg text-orange-400"><Mail className="w-6 h-6" /></div>
                       <div>
                         <p className="text-xs text-blue-200 uppercase font-semibold mb-1">Email Us</p>
-                        <a href="mailto:investateindia.business@gmail.com" className="text-[14px] min-[375px]:text-base md:text-lg font-medium hover:text-orange-400 transition-colors whitespace-nowrap">
+                        <a href="mailto:investateindia.business@gmail.com" className="text-[14px] min-[375px]:text-base md:text-lg font-medium hover:text-orange-400 transition-colors">
                           investateindia.business@gmail.com
                         </a>
                       </div>
@@ -77,8 +77,10 @@ export default function ContactUs() {
                     <div className="flex items-start gap-4">
                       <div className="bg-white/10 p-3 rounded-lg text-orange-400"><MapPin className="w-6 h-6" /></div>
                       <div>
-                        <p className="text-xs text-blue-200 uppercase font-semibold mb-1">Head Office</p>
-                        <p className="text-lg font-medium leading-snug">Hyderabad, India <br /> New York, USA</p>
+                        <p className="text-xs text-blue-200 uppercase font-semibold mb-1">Call Us</p>
+                        <a href="tel:+914048293000" className="text-[14px] min-[375px]:text-base md:text-lg font-medium hover:text-orange-400 transition-colors">
+                          +91 40 4829 3000
+                        </a>
                       </div>
                     </div>
                   </div>
@@ -121,6 +123,63 @@ export default function ContactUs() {
           </div>
         </div>
       </section>
+
+      {/* Office Locations Section */}
+      <section className="py-24 bg-[#FEFEFE] dark:bg-[#111] border-t border-gray-100 dark:border-slate-800 relative z-20">
+        <div className="container mx-auto px-4 max-w-6xl">
+          <div className="text-center mb-16">
+            {/* <span className="text-xs uppercase tracking-widest text-[#0b264f] dark:text-orange-400 font-bold mb-2 block">Our Offices</span> */}
+            <h2 className="text-3xl md:text-5xl font-extrabold text-[#0b264f] dark:text-white mb-4">Global Office Locations</h2>
+            <p className="text-gray-500 dark:text-slate-400 max-w-xl mx-auto text-sm md:text-base">
+              Visit our offices or connect with our regional teams across the globe for specialized assistance.
+            </p>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+            {[
+              {
+                title: "Corporate Office (India)",
+                address: "Jubilee Hills, Road No. 36, Hyderabad, Telangana 500033, India",
+                phone: "+91 40 4829 3000",
+                email: "india.office@investateindia.com",
+              },
+              {
+                title: "United States Office",
+                address: "Valentine Mark Corporation, 55 West 47 Street Suite 425, New York, NY 10036, USA",
+                phone: "+1 212 901 3290",
+                email: "usa.office@investateindia.com",
+              },
+              {
+                title: "United Kingdom Office",
+                address: "Valentine Mark Ltd, 128 City Road, London, EC1V 2NX, United Kingdom",
+                phone: "+44 20 7946 0958",
+                email: "uk.office@investateindia.com",
+              },
+              {
+                title: "Middle East Office (UAE)",
+                address: "Valentine Mark DMCC, Marina Plaza, Level 29, Dubai Marina, Dubai, UAE",
+                phone: "+971 4 563 9200",
+                email: "uae.office@investateindia.com",
+              }
+            ].map((loc, i) => (
+              <div key={i} className="bg-white dark:bg-slate-900 rounded-2xl p-6 border border-gray-100 dark:border-slate-800 shadow-sm hover:shadow-md transition-all flex flex-col justify-between">
+                <div>
+                  <div className="w-10 h-10 rounded-full bg-orange-50 dark:bg-slate-800 flex items-center justify-center text-orange-500 mb-6">
+                    <MapPin className="w-5 h-5" />
+                  </div>
+                  <h3 className="text-lg font-bold text-[#0b264f] dark:text-white mb-3">{loc.title}</h3>
+                  <p className="text-gray-500 dark:text-slate-400 text-sm leading-relaxed mb-6">{loc.address}</p>
+                </div>
+                <div className="pt-4 border-t border-gray-50 dark:border-slate-800 text-xs text-gray-400 space-y-1">
+                  <div><span className="font-semibold text-gray-500 dark:text-slate-400">Phone:</span> {loc.phone}</div>
+                  <div><span className="font-semibold text-gray-500 dark:text-slate-400">Email:</span> {loc.email}</div>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
       <Footer />
     </div>
   );

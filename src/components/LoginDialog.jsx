@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
@@ -102,10 +102,21 @@ const LoginDialog = ({ isOpen, onOpenChange, onSwitchToRegister, initialData = {
         try {
           const fbAuth = getAuth(app);
           await signInWithEmailAndPassword(fbAuth, formData.email, formData.password).catch(() => {
-            // Firebase sign-in may fail for non-email users or wrong project — that's OK.
+            // Firebase sign-in may fail for non-email users or wrong project â€” that's OK.
             // The backend session token will be used as fallback.
           });
         } catch (_) { /* non-blocking */ }
+      }
+
+      // Check if user came from an ad "Book this Space" click
+      const pendingRedirect = sessionStorage.getItem('postLoginRedirect');
+      if (pendingRedirect === '/advertisements') {
+        sessionStorage.removeItem('postLoginRedirect');
+        const role = userData.role;
+        if (role === 'admin') return router.push('/admin/advertisements');
+        if (role === 'investor') return router.push('/investor/advertisements');
+        if (role === 'serviceProvider') return router.push('/service-provider/advertisements');
+        return router.push('/builder/advertisements');
       }
 
       if (userData.role === 'admin') router.push('/admin/dashboard');
@@ -498,7 +509,7 @@ const LoginDialog = ({ isOpen, onOpenChange, onSwitchToRegister, initialData = {
                       <Label htmlFor="password" className="text-[10px] font-black text-gray-900 uppercase tracking-widest ml-1">Password</Label>
                       <button type="button" onClick={handleForgotPassword} className="text-[9px] font-black text-orange-600 uppercase tracking-widest hover:underline">Forgot?</button>
                     </div>
-                    <Input id="password" type="password" autoComplete="new-password" placeholder="••••••••" value={formData.password} onChange={(e) => { setFormData({ ...formData, password: e.target.value }); setError(null); }} required className="h-11 px-6 bg-gray-50 border-gray-200 focus:bg-white focus:ring-[6px] focus:ring-orange-500/5 focus:border-orange-500 transition-all duration-300 rounded-2xl text-sm font-bold placeholder:text-gray-300" />
+                    <Input id="password" type="password" autoComplete="new-password" placeholder="â€¢â€¢â€¢â€¢â€¢â€¢â€¢â€¢" value={formData.password} onChange={(e) => { setFormData({ ...formData, password: e.target.value }); setError(null); }} required className="h-11 px-6 bg-gray-50 border-gray-200 focus:bg-white focus:ring-[6px] focus:ring-orange-500/5 focus:border-orange-500 transition-all duration-300 rounded-2xl text-sm font-bold placeholder:text-gray-300" />
                   </div>
                 </div>
 

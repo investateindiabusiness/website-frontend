@@ -42,11 +42,11 @@ import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/com
 
 // Zone display metadata
 const ZONE_META = {
-  zone1: { name: 'Builder Dashboard Leaderboard', cost: 63, campaignDuration: 7 },
-  zone2: { name: 'Investor Dashboard Leaderboard', cost: 70, campaignDuration: 7 },
-  zone3: { name: 'Project Search Results Inline Ad', cost: 70, campaignDuration: 7 },
-  zone4: { name: 'Investor Project Details', cost: 70, campaignDuration: 7 },
-  zone5: { name: 'Landing Page Hero Spotlight', cost: 70, campaignDuration: 7 },
+  zone1: { name: 'Home Page Spotlight', cost: 63, campaignDuration: 1 },
+  zone2: { name: 'Public Investor Page Spotlight', cost: 70, campaignDuration: 1 },
+  zone3: { name: 'Project Search Results Inline Ad', cost: 70, campaignDuration: 1 },
+  zone4: { name: 'Investor Project Details', cost: 70, campaignDuration: 1 },
+  zone5: { name: 'Landing Page Hero Spotlight', cost: 70, campaignDuration: 1 },
 };
 
 const stripePromise = loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY || 'pk_test_placeholder');
@@ -137,8 +137,8 @@ export default function ServiceProviderAdvertisements() {
         ...ZONE_META[z.id],
         ...z,
         name: z.name || ZONE_META[z.id]?.name || z.id,
-        cost: z.cost ?? ZONE_META[z.id]?.cost ?? '—',
-        campaignDuration: z.campaignDuration ?? ZONE_META[z.id]?.campaignDuration ?? '—',
+        cost: z.cost ?? ZONE_META[z.id]?.cost ?? 'â€”',
+        campaignDuration: z.campaignDuration ?? ZONE_META[z.id]?.campaignDuration ?? 1,
       }));
       setZones(enriched);
       if (enriched.length > 0) {
@@ -206,7 +206,7 @@ export default function ServiceProviderAdvertisements() {
     if (dateString < currentDate) return null;
 
     if (selectedZone) {
-      const duration = selectedZone.campaignDuration || 7;
+      const duration = selectedZone.campaignDuration || 1;
       const start = new Date(dateString);
       const end = new Date(start);
       end.setDate(end.getDate() + duration - 1);
@@ -594,7 +594,7 @@ export default function ServiceProviderAdvertisements() {
                             {zone.name}
                           </span>
                           <span className="text-xs font-semibold text-orange-500">
-                            ${zone.cost} / {zone.campaignDuration} days
+                            ${zone.cost} / day
                           </span>
                         </div>
                       </button>
@@ -617,7 +617,7 @@ export default function ServiceProviderAdvertisements() {
                       </div>
                       <div className="space-y-1">
                         <span className="text-[10px] text-slate-400 uppercase font-semibold flex items-center"><Clock className="w-3.5 h-3.5 mr-0.5 text-blue-600" /> Duration</span>
-                        <p className="text-base font-bold text-slate-800">{selectedZone.campaignDuration} Days</p>
+                        <p className="text-base font-bold text-slate-800">Per Day</p>
                       </div>
                     </div>
 
@@ -670,14 +670,14 @@ export default function ServiceProviderAdvertisements() {
                             onClick={prevMonth}
                             className="p-1.5 hover:bg-slate-100 rounded-lg text-slate-600 transition-colors border border-slate-200 shadow-sm"
                           >
-                            ❮
+                            â®
                           </button>
                           <button
                             type="button"
                             onClick={nextMonth}
                             className="p-1.5 hover:bg-slate-100 rounded-lg text-slate-600 transition-colors border border-slate-200 shadow-sm"
                           >
-                            ❯
+                            â¯
                           </button>
                         </div>
                       </div>
@@ -921,7 +921,7 @@ export default function ServiceProviderAdvertisements() {
                   <CardTitle className="text-xl font-bold">{paymentClientSecret ? 'Complete Payment' : 'Campaign Details'}</CardTitle>
                   <CardDescription className="text-xs text-slate-100/80 mt-1">Book slot for: {selectedZone?.name}</CardDescription>
                 </div>
-                <button onClick={handleCloseBookingModal} className="text-white/80 hover:text-white text-xl">✕</button>
+                <button onClick={handleCloseBookingModal} className="text-white/80 hover:text-white text-xl">âœ•</button>
               </div>
             </CardHeader>
             {paymentClientSecret ? (
@@ -1031,7 +1031,7 @@ export default function ServiceProviderAdvertisements() {
                               <CheckCircle className="w-4 h-4 text-emerald-600 flex-shrink-0" />
                               <span className="truncate">{imageFile.name}</span>
                             </span>
-                            <button type="button" onClick={handleRemoveImage} className="text-slate-400 hover:text-red-500 font-bold ml-2 text-sm transition-colors">✕</button>
+                            <button type="button" onClick={handleRemoveImage} className="text-slate-400 hover:text-red-500 font-bold ml-2 text-sm transition-colors">âœ•</button>
                           </div>
                           <div className="relative rounded-2xl overflow-hidden bg-slate-50 border border-slate-200/80 aspect-[16/9] max-h-56 flex items-center justify-center p-2">
                             <img
@@ -1080,7 +1080,7 @@ export default function ServiceProviderAdvertisements() {
                               <CheckCircle className="w-4 h-4 text-emerald-600 flex-shrink-0" />
                               <span className="truncate">{videoFile.name}</span>
                             </span>
-                            <button type="button" onClick={handleRemoveVideo} className="text-slate-400 hover:text-red-500 font-bold ml-2 text-sm transition-colors">✕</button>
+                            <button type="button" onClick={handleRemoveVideo} className="text-slate-400 hover:text-red-500 font-bold ml-2 text-sm transition-colors">âœ•</button>
                           </div>
                           <div className="relative rounded-2xl overflow-hidden bg-slate-50 border border-slate-200/80 aspect-[16/9] max-h-56 flex items-center justify-center p-2">
                             <video
@@ -1144,7 +1144,7 @@ export default function ServiceProviderAdvertisements() {
                   <CardTitle className="text-xl font-bold">Rectify Ad Campaign</CardTitle>
                   <CardDescription className="text-xs text-amber-50/80 mt-1">Review feedback and fix issues below</CardDescription>
                 </div>
-                <button onClick={handleCloseRectifyModal} className="text-white/80 hover:text-white text-xl">✕</button>
+                <button onClick={handleCloseRectifyModal} className="text-white/80 hover:text-white text-xl">âœ•</button>
               </div>
             </CardHeader>
             <form onSubmit={handleRectifySubmit}>
@@ -1164,7 +1164,7 @@ export default function ServiceProviderAdvertisements() {
                       <div className="relative w-full rounded-xl overflow-hidden border border-slate-200 bg-slate-50 aspect-[16/9] max-h-40 flex items-center justify-center p-2">
                         <img src={rectifyImagePreview} alt="Corrected Ad" className="w-full h-full object-contain rounded-lg" />
                       </div>
-                      <button type="button" onClick={() => { setRectifyImageFile(null); setRectifyImagePreview(''); setRectifyAdContent(prev => ({ ...prev, imageUrl: '' })); }} className="text-xs text-red-500 hover:underline font-semibold">✕ Remove image</button>
+                      <button type="button" onClick={() => { setRectifyImageFile(null); setRectifyImagePreview(''); setRectifyAdContent(prev => ({ ...prev, imageUrl: '' })); }} className="text-xs text-red-500 hover:underline font-semibold">âœ• Remove image</button>
                     </div>
                   ) : (
                     <div className="relative border-2 border-dashed border-amber-200 hover:border-amber-400 rounded-2xl p-5 flex flex-col items-center justify-center min-h-[100px] cursor-pointer group transition-all">
@@ -1184,7 +1184,7 @@ export default function ServiceProviderAdvertisements() {
                   {rectifyVideoPreview ? (
                     <div className="space-y-2">
                       <video src={rectifyVideoPreview} controls className="w-full rounded-xl border border-slate-200 max-h-36" />
-                      <button type="button" onClick={() => { setRectifyVideoFile(null); setRectifyVideoPreview(''); setRectifyAdContent(prev => ({ ...prev, videoUrl: '' })); }} className="text-xs text-red-500 hover:underline font-semibold">✕ Remove video</button>
+                      <button type="button" onClick={() => { setRectifyVideoFile(null); setRectifyVideoPreview(''); setRectifyAdContent(prev => ({ ...prev, videoUrl: '' })); }} className="text-xs text-red-500 hover:underline font-semibold">âœ• Remove video</button>
                     </div>
                   ) : (
                     <div className="relative border-2 border-dashed border-slate-200 hover:border-amber-300 rounded-2xl p-5 flex flex-col items-center justify-center min-h-[80px] cursor-pointer group transition-all">

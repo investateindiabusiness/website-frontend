@@ -1,10 +1,11 @@
-"use client";
+﻿"use client";
 
 import React, { useState, useEffect } from 'react';
-import { fetchActiveAd, fetchMyBookings } from '@/api';
+import { createPortal } from 'react-dom';
+import { fetchActiveAd } from '@/api';
 import { useAuth } from '@/hooks/AuthContext';
 import { getSocket, joinZone, leaveZone } from '@/utils/socket';
-import { ExternalLink, Loader2, TrendingUp, CheckCircle, Building2, MapPin, PlusCircle } from 'lucide-react';
+import { ExternalLink, Loader2, TrendingUp, CheckCircle, Building2, MapPin, PlusCircle, X, User, HardHat, Wrench, ChevronRight } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 
 // Zone pixel dimensions from the API spec
@@ -20,16 +21,20 @@ const ZONE_CONFIG = {
  * AdBanner
  *
  * Props:
- *  zoneId   — required, e.g. "zone2"
- *  variant  — "default"   → floating card with max-width (works everywhere)
- *             "hero"      → flush full-width strip inside a dark hero section
- *             "spotlight" → large prominent banner section below the hero,
+ *  zoneId   â€” required, e.g. "zone2"
+ *  variant  â€” "default"   â†’ floating card with max-width (works everywhere)
+ *             "hero"      â†’ flush full-width strip inside a dark hero section
+ *             "spotlight" â†’ large prominent banner section below the hero,
  *                           styled like the home page's zone5 placement
  */
-export default function AdBanner({ zoneId, variant = 'default' }) {
-  const [ad, setAd]           = useState(null);
+export default function AdBanner({ zoneId, variant = 'default', forceRole }) {
+  const [ad, setAd] = useState(null);
   const [loading, setLoading] = useState(true);
-  const { user }              = useAuth();
+  const [showLoginModal, setShowLoginModal] = useState(false);
+  const [mounted, setMounted] = useState(false);
+  const { user } = useAuth();
+
+  useEffect(() => { setMounted(true); }, []);
 
   useEffect(() => {
     let active = true;
@@ -45,7 +50,7 @@ export default function AdBanner({ zoneId, variant = 'default' }) {
         if (active) setLoading(false);
       }
     };
-    
+
     loadAd();
     joinZone(zoneId);
 
@@ -59,7 +64,7 @@ export default function AdBanner({ zoneId, variant = 'default' }) {
 
     socket.on('activeAdUpdated', handleAdUpdate);
 
-    return () => { 
+    return () => {
       active = false;
       leaveZone(zoneId);
       socket.off('activeAdUpdated', handleAdUpdate);
@@ -68,13 +73,193 @@ export default function AdBanner({ zoneId, variant = 'default' }) {
 
   const zone = ZONE_CONFIG[zoneId] || { width: 728, height: 90 };
 
-  // Determine booking url based on role
+  // Role-specific advertisement URLs
+  const AD_PATHS = {
+    admin: '/admin/advertisements',
+    investor: '/investor/advertisements',
+    serviceProvider: '/service-provider/advertisements',
+    builder: '/builder/advertisements',
+  };
+
   const getBookingUrl = () => {
-    if (!user) return '/builder/advertisements';
-    if (user.role === 'admin') return '/admin/advertisements';
-    if (user.role === 'investor') return '/investor/advertisements';
-    if (user.role === 'serviceProvider') return '/service-provider/advertisements';
-    return '/builder/advertisements';
+    if (!user) return null; // Unauthenticated: handled by handleBookAdClick
+    return AD_PATHS[user.role] || '/builder/advertisements';
+  };
+
+  // Called when unauthenticated user clicks "Book this Space"
+  const handleBookAdClick = () => {
+    if (user && user.role) {
+      // Already logged in â€” go directly to ads page
+      window.location.href = AD_PATHS[user.role] || '/builder/advertisements';
+      return;
+    }
+    
+    if (forceRole) {
+      sessionStorage.setItem('postLoginRedirect', '/advertisements');
+      window.location.href = `/${forceRole}/login`;
+      return;
+    }
+
+    setShowLoginModal(true);
+  };
+
+  const handleRoleSelect = (role) => {
+    sessionStorage.setItem('postLoginRedirect', '/advertisements');
+    window.location.href = `/${role}/login`;
+  };
+
+  const renderViewMoreButton = (buttonClass, icon, customText) => {
+    const Icon = icon || ExternalLink;
+    const btnText = customText || 'View More';
+    
+    const clickHandler = () => {
+      if (user && user.role) {
+        handleBookAdClick();
+      } else if (forceRole) {
+        handleRoleSelect(forceRole);
+      }
+    };
+
+    const btn = (
+      <button
+        className={`${buttonClass} cursor-pointer`}
+        onClick={(user && user.role) || forceRole ? clickHandler : undefined}
+      >
+        {btnText} <Icon className="w-4 h-4" />
+      </button>
+    );
+
+    if ((user && user.role) || forceRole) {
+      return btn;
+    }
+
+    return (
+      <button
+        className={`${buttonClass} cursor-pointer`}
+        onClick={(e) => { e.preventDefault(); e.stopPropagation(); setShowLoginModal(true); }}
+      >
+        {btnText} <Icon className="w-4 h-4" />
+      </button>
+    );
+  };
+
+  /* â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+     ROLE SELECTION MODAL â€” rendered via portal so it
+     always lives at document.body regardless of variant
+  â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
+  const modalContent = (
+    <div
+      className="fixed inset-0 z-[9999] flex items-center justify-center"
+      onClick={() => setShowLoginModal(false)}
+    >
+      <div className="absolute inset-0 bg-black/60 backdrop-blur-sm" />
+      <div
+        className="relative bg-white rounded-3xl shadow-2xl w-full max-w-sm mx-4 overflow-hidden"
+        onClick={(e) => e.stopPropagation()}
+        style={{ animation: 'adBannerSlideUp 0.25s ease' }}
+      >
+        {/* Header */}
+        <div className="bg-gradient-to-r from-[#0b264f] to-[#1a4b8c] px-6 py-5 text-white relative">
+          <button
+            onClick={() => setShowLoginModal(false)}
+            className="absolute top-4 right-4 p-1.5 rounded-full bg-white/15 hover:bg-white/25 transition-colors"
+          >
+            <X className="w-4 h-4" />
+          </button>
+          <h2 className="text-lg font-extrabold mb-1">Login to Continue</h2>
+          <p className="text-sm text-white/70">Select your role to log in</p>
+        </div>
+
+        {/* Role options */}
+        <div className="p-4 flex flex-col gap-3">
+          {[
+            { role: 'investor',         label: 'Investor Login',         sub: 'Discover & invest in properties', Icon: User,    bg: 'bg-blue-100',   ic: 'text-blue-700'   },
+            { role: 'builder',          label: 'Builder Login',          sub: 'Showcase your projects',          Icon: HardHat, bg: 'bg-green-100',  ic: 'text-green-700'  },
+            { role: 'service-provider', label: 'Service Provider Login', sub: 'Offer your services',             Icon: Wrench,  bg: 'bg-purple-100', ic: 'text-purple-700' },
+          ].map(({ role, label, sub, Icon, bg, ic }) => (
+            <button
+              key={role}
+              onClick={() => handleRoleSelect(role)}
+              className="w-full flex items-center gap-4 px-5 py-4 rounded-2xl border-2 border-gray-100 hover:border-orange-400 hover:bg-orange-50 transition-all group text-left"
+            >
+              <div className={`w-10 h-10 rounded-xl ${bg} flex items-center justify-center flex-shrink-0 group-hover:bg-orange-100 transition-colors`}>
+                <Icon className={`w-5 h-5 ${ic} group-hover:text-orange-600`} />
+              </div>
+              <div className="flex-1">
+                <p className="font-bold text-gray-800 text-sm">{label}</p>
+                <p className="text-xs text-gray-500">{sub}</p>
+              </div>
+              <ChevronRight className="w-4 h-4 text-gray-400 group-hover:text-orange-500 transition-colors" />
+            </button>
+          ))}
+        </div>
+
+        <p className="text-center text-xs text-gray-400 pb-4">
+          Already have an account?{' '}
+          <button onClick={() => setShowLoginModal(false)} className="text-orange-500 font-semibold hover:underline">Close</button>
+        </p>
+      </div>
+
+      <style>{`
+        @keyframes adBannerSlideUp {
+          from { opacity: 0; transform: translateY(24px) scale(0.97); }
+          to   { opacity: 1; transform: translateY(0) scale(1); }
+        }
+      `}</style>
+    </div>
+  );
+
+  // Portal renders modal at document.body so it's always in the DOM
+  const portal = mounted && showLoginModal
+    ? createPortal(modalContent, document.body)
+    : null;
+
+  const renderDefaultAdContent = () => {
+    const defaultBannerInner = (
+      <div
+        className={`w-full rounded-2xl flex flex-col items-center justify-center text-center gap-3 px-6 transition-colors ${ad.type === 'default'
+            ? 'bg-gradient-to-r from-gray-100 to-gray-200 border-2 border-dashed border-gray-300 hover:border-orange-400 hover:bg-orange-50'
+            : 'bg-gradient-to-r from-[#0b264f] to-[#1a4b8c]'
+          }`}
+        style={{ height: zone.height, minHeight: 90 }}
+        onClick={(e) => {
+          if (ad.type === 'default') {
+            if (user && user.role) {
+              e.stopPropagation();
+              handleBookAdClick();
+            } else if (forceRole) {
+              e.stopPropagation();
+              handleRoleSelect(forceRole);
+            }
+          }
+        }}
+      >
+        {ad.type === 'default' ? (
+          <>
+            <p className="text-sm md:text-base font-bold text-gray-700 leading-snug max-w-[85%] flex items-center gap-2">
+              <PlusCircle className="w-5 h-5 text-gray-400" /> View More
+            </p>
+            <span className="text-[10px] uppercase font-bold text-orange-600 tracking-wider flex items-center gap-1">
+              Boost your visibility today
+            </span>
+          </>
+        ) : (
+          <p className="text-sm md:text-base font-bold text-white leading-snug max-w-[85%] text-center line-clamp-2">
+            {ad?.adContent?.text}
+          </p>
+        )}
+      </div>
+    );
+
+    if (ad.type === 'default' && (!user || !user.role) && !forceRole) {
+      return (
+        <div className="w-full cursor-pointer" onClick={(e) => { e.stopPropagation(); setShowLoginModal(true); }}>
+          {defaultBannerInner}
+        </div>
+      );
+    }
+
+    return defaultBannerInner;
   };
 
   const handleAdClick = (targetUrl) => {
@@ -105,10 +290,10 @@ export default function AdBanner({ zoneId, variant = 'default' }) {
     window.location.assign(`/${trimmedUrl}`);
   };
 
-  /* ─────────────────────────────────────────
-     CARD VARIANT — sits inside the property grid
+  /* â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+     CARD VARIANT â€” sits inside the property grid
      Same shape/size as a property listing card
-  ───────────────────────────────────────── */
+  â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
   if (variant === 'card') {
     if (loading) {
       return (
@@ -119,6 +304,7 @@ export default function AdBanner({ zoneId, variant = 'default' }) {
 
     const { imageUrl, targetUrl, text } = ad.adContent;
     return (
+      <>
       <div
         className="group bg-white rounded-[2rem] overflow-hidden shadow-sm hover:shadow-xl transition-all duration-300 border border-gray-200 flex flex-col h-full cursor-pointer"
         onClick={() => handleAdClick(targetUrl)}
@@ -144,7 +330,7 @@ export default function AdBanner({ zoneId, variant = 'default' }) {
               Sponsored
             </span>
           </div>
-          
+
           {/* Bottom Overlay - Yield slot */}
           <div className="absolute bottom-4 left-4 right-4 text-white">
             <span className="text-xs font-bold bg-[#10B981] text-white inline-flex items-center px-2.5 py-1 rounded-md mb-1 shadow-sm">
@@ -185,15 +371,18 @@ export default function AdBanner({ zoneId, variant = 'default' }) {
           </Button>
         </div>
       </div>
+      {portal}
+    </>
     );
   }
 
-  /* ─────────────────────────────────────────
-     SPOTLIGHT VARIANT — standalone big banner
+  /* â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+     SPOTLIGHT VARIANT â€” standalone big banner
      matches the home page hero section feel
-  ───────────────────────────────────────── */
+  â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
   if (variant === 'spotlight') {
-    const SpotlightFallback = () => (
+    const spotlightFallback = (
+      <>
       <div
         className="relative w-full max-w-5xl mx-auto rounded-2xl overflow-hidden shadow-lg"
         style={{ height: 340 }}
@@ -210,24 +399,22 @@ export default function AdBanner({ zoneId, variant = 'default' }) {
         <div className="absolute top-4 right-4 flex items-center gap-1.5 bg-black/55 backdrop-blur-sm text-white text-[10px] font-bold tracking-widest px-3 py-1.5 rounded-full border border-white/20 uppercase pointer-events-none">
           SPONSORED <ExternalLink className="w-2.5 h-2.5 opacity-70" />
         </div>
-        <div className="absolute inset-y-0 left-0 flex flex-col justify-center px-10 md:px-14 max-w-xl">
+        <div className="absolute inset-y-0 left-0 flex flex-col justify-center px-10 md:px-14 max-w-xl z-10">
           <h2 className="text-white font-extrabold text-3xl md:text-4xl leading-tight mb-5 drop-shadow-xl">
-            Invest in premium real estate today!
+            Advertise your project here!
           </h2>
-          <a
-            href="/properties"
-            className="inline-flex items-center gap-2 bg-orange-500 hover:bg-orange-600 text-white font-bold text-sm px-6 py-3 rounded-lg shadow-lg transition-all duration-200 w-fit"
-          >
-            Learn More <ExternalLink className="w-4 h-4" />
-          </a>
+          {renderViewMoreButton("inline-flex items-center gap-2 bg-orange-500 hover:bg-orange-600 text-white font-bold text-sm px-6 py-3 rounded-lg shadow-lg transition-all duration-200 w-fit", ExternalLink)}
         </div>
       </div>
+      {portal}
+    </>
     );
-    if (loading) return <SpotlightFallback />;
-    if (!ad?.adContent || (!ad.adContent.imageUrl && !ad.adContent.text)) return <SpotlightFallback />;
+    if (loading) return spotlightFallback;
+    if (!ad?.adContent || (!ad.adContent.imageUrl && !ad.adContent.text)) return spotlightFallback;
 
     const { imageUrl, targetUrl, text } = ad.adContent;
     return (
+      <>
       <div
         className="relative w-full max-w-6xl mx-auto rounded-3xl overflow-hidden cursor-pointer group shadow-lg hover:shadow-xl transition-shadow duration-300"
         style={{ height: 380 }}
@@ -249,7 +436,7 @@ export default function AdBanner({ zoneId, variant = 'default' }) {
           <div className="absolute inset-0 bg-gradient-to-r from-[#0b264f] to-[#1a4b8c]" />
         )}
 
-        {/* Text overlay — bottom-left */}
+        {/* Text overlay â€” bottom-left */}
         <div className="absolute inset-y-0 left-0 flex flex-col justify-center px-8 md:px-12 max-w-xl z-10">
           {text && (
             <p className="text-white text-xl md:text-3xl font-extrabold leading-tight drop-shadow-xl line-clamp-3">
@@ -264,29 +451,31 @@ export default function AdBanner({ zoneId, variant = 'default' }) {
               onClick={(e) => e.stopPropagation()}
               className="mt-4 self-start inline-flex items-center gap-2 bg-orange-500 hover:bg-orange-600 text-white text-sm font-bold px-5 py-2 rounded-lg transition-colors shadow-md"
             >
-              Learn More <ExternalLink className="w-4 h-4" />
+              View More <ExternalLink className="w-4 h-4" />
             </a>
           )}
         </div>
 
-        {/* Sponsored pill — top right */}
+        {/* Sponsored pill â€” top right */}
         <div className="absolute top-3 right-3 z-20 flex items-center gap-1 bg-black/50 backdrop-blur-sm px-3 py-1 rounded-full text-[10px] font-bold text-white/80 uppercase tracking-widest pointer-events-none">
           <span>Sponsored</span>
           {targetUrl && <ExternalLink className="w-2.5 h-2.5 opacity-60" />}
         </div>
       </div>
+      {portal}
+    </>
     );
   }
 
-  /* ─────────────────────────────────────────
-     HERO VARIANT — flush strip inside a hero
-  ───────────────────────────────────────── */
+  /* â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+     HERO VARIANT â€” flush strip inside a hero
+  â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
   if (variant === 'hero') {
     if (loading) {
       return (
         <div className="w-full h-[90px] animate-pulse bg-white/10 rounded-2xl flex items-center justify-center">
           <Loader2 className="w-4 h-4 text-white/40 animate-spin mr-2" />
-          <span className="text-xs text-white/40 font-medium">Loading sponsor…</span>
+          <span className="text-xs text-white/40 font-medium">Loading sponsorâ€¦</span>
         </div>
       );
     }
@@ -294,6 +483,7 @@ export default function AdBanner({ zoneId, variant = 'default' }) {
 
     const { imageUrl, targetUrl, text } = ad.adContent;
     return (
+      <>
       <div
         className="w-full relative group rounded-2xl overflow-hidden cursor-pointer shadow-lg hover:shadow-xl transition-all duration-300 border border-white/10"
         style={{ height: zone.height, minHeight: 80 }}
@@ -325,14 +515,43 @@ export default function AdBanner({ zoneId, variant = 'default' }) {
           </div>
         )}
       </div>
+      {portal}
+    </>
     );
   }
 
-  /* ─────────────────────────────────────────
-     DEFAULT VARIANT — floating card
-  ───────────────────────────────────────── */
-  /* Static fallback banner — shown when loading OR when no API ad is available */
-  const StaticFallbackBanner = () => (
+  /* â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+     CTA-ONLY VARIANT
+  â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
+  if (variant === 'cta-only') {
+    const targetUrl = ad?.adContent?.targetUrl || null;
+    const primaryButtonText = ad?.adContent?.text ? 'View Offer' : 'View More';
+    const secondaryButtonText = forceRole === 'investor' ? 'Add Now' : 'Add your advertisement';
+    
+    return (
+      <>
+        <div className="flex flex-wrap gap-4">
+          {targetUrl && (
+            <button
+              onClick={() => handleAdClick(targetUrl)}
+              className="btn bg-white hover:bg-gray-100 text-[#0b264f] px-8 py-3 rounded-full font-bold shadow-lg transition-transform hover:scale-105 active:scale-95 inline-flex items-center gap-2"
+            >
+              {primaryButtonText} <ExternalLink className="w-4 h-4" />
+            </button>
+          )}
+          {renderViewMoreButton("btn bg-[#D48035] hover:bg-[#B45309] border-none text-white px-8 py-3 rounded-full font-bold shadow-lg transition-transform hover:scale-105 active:scale-95 inline-flex items-center gap-2", PlusCircle, secondaryButtonText)}
+        </div>
+        {portal}
+      </>
+    );
+  }
+
+
+  /* â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+     DEFAULT VARIANT â€” floating card
+  â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
+  /* Static fallback banner â€” shown when loading OR when no API ad is available */
+  const staticFallbackBanner = (
     <div
       className="relative w-full mx-auto rounded-2xl overflow-hidden shadow-md"
       style={{ maxWidth: '100%', height: 180 }}
@@ -343,93 +562,63 @@ export default function AdBanner({ zoneId, variant = 'default' }) {
         alt="Real estate banner"
         className="absolute inset-0 w-full h-full object-cover"
       />
-      {/* Dark gradient left→right */}
+      {/* Dark gradient leftâ†’right */}
       <div
         className="absolute inset-0"
         style={{ background: 'linear-gradient(to right, rgba(11,38,79,0.9) 0%, rgba(26,75,140,0.8) 50%, rgba(26,75,140,0.4) 100%)' }}
       />
-      {/* ADVERTISE badge — top right */}
+      {/* ADVERTISE badge â€” top right */}
       <div className="absolute top-3 right-3 flex items-center gap-1.5 bg-white/10 backdrop-blur-sm text-white text-[10px] font-bold tracking-widest px-3 py-1.5 rounded-full border border-white/20 uppercase pointer-events-none">
         Advertise Here
       </div>
       {/* Text + CTA */}
-      <div className="absolute inset-0 flex flex-col justify-center px-8 max-w-lg">
+      <div className="absolute inset-0 flex flex-col justify-center px-8 max-w-lg z-10">
         <h2 className="text-white font-extrabold text-2xl md:text-3xl leading-tight mb-4 drop-shadow-lg">
           Showcase your projects here
         </h2>
-        <a
-          href={getBookingUrl()}
-          className="inline-flex items-center gap-2 bg-orange-500 hover:bg-orange-600 active:bg-orange-700 text-white font-bold text-sm px-5 py-2.5 rounded-lg shadow-lg transition-all duration-200 w-fit"
-        >
-          Book this Space <PlusCircle className="w-4 h-4" />
-        </a>
+        {renderViewMoreButton("inline-flex items-center gap-2 bg-orange-500 hover:bg-orange-600 active:bg-orange-700 text-white font-bold text-sm px-5 py-2.5 rounded-lg shadow-lg transition-all duration-200 w-fit", PlusCircle)}
       </div>
     </div>
   );
 
-  if (loading) return <StaticFallbackBanner />;
-  if (!ad?.adContent || (!ad.adContent.imageUrl && !ad.adContent.text)) return <StaticFallbackBanner />;
+  if (loading) return staticFallbackBanner;
+  if (!ad?.adContent || (!ad.adContent.imageUrl && !ad.adContent.text)) return staticFallbackBanner;
 
   const { imageUrl, targetUrl, text } = ad.adContent;
   // Padding-bottom trick for bulletproof aspect ratio
   const paddingBottom = `${((zone.height / zone.width) * 100).toFixed(4)}%`;
 
   return (
-    <div
-      className="w-full mx-auto relative group rounded-2xl shadow-sm hover:shadow-md hover:scale-[1.005] active:scale-[0.998] transition-all duration-300 cursor-pointer select-none border border-slate-200/60 dark:border-slate-700/60"
-      style={{ maxWidth: zone.width }}
-      onClick={() => targetUrl && window.open(targetUrl, '_blank', 'noopener,noreferrer')}
-      role={targetUrl ? 'link' : undefined}
-      aria-label={text || 'Sponsored advertisement'}
-    >
-      <div className="absolute top-2 right-2 z-20 flex items-center gap-1 bg-white/90 dark:bg-slate-900/90 backdrop-blur-sm px-2 py-0.5 rounded-full border border-slate-200/60 text-[9px] font-bold text-slate-500 uppercase tracking-widest pointer-events-none shadow-sm">
-        <span>Sponsored</span>
-        {targetUrl && <ExternalLink className="w-2.5 h-2.5 opacity-60 group-hover:opacity-100 transition-opacity" />}
+    <>
+      <div
+        className="w-full mx-auto relative group rounded-2xl shadow-sm hover:shadow-md hover:scale-[1.005] active:scale-[0.998] transition-all duration-300 cursor-pointer select-none border border-slate-200/60 dark:border-slate-700/60"
+        style={{ maxWidth: zone.width }}
+        onClick={() => targetUrl && window.open(targetUrl, '_blank', 'noopener,noreferrer')}
+        role={targetUrl ? 'link' : undefined}
+        aria-label={text || 'Sponsored advertisement'}
+      >
+        <div className="absolute top-2 right-2 z-20 flex items-center gap-1 bg-white/90 dark:bg-slate-900/90 backdrop-blur-sm px-2 py-0.5 rounded-full border border-slate-200/60 text-[9px] font-bold text-slate-500 uppercase tracking-widest pointer-events-none shadow-sm">
+          <span>Sponsored</span>
+          {targetUrl && <ExternalLink className="w-2.5 h-2.5 opacity-60 group-hover:opacity-100 transition-opacity" />}
+        </div>
+        {imageUrl ? (
+          <div className="relative w-full rounded-2xl overflow-hidden bg-slate-900" style={{ paddingBottom }}>
+            <img
+              src={imageUrl}
+              alt={text || 'Advertisement'}
+              className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
+            />
+            {text && (
+              <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/70 via-black/30 to-transparent px-4 py-3 text-white text-xs md:text-sm font-medium line-clamp-1 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                {text}
+              </div>
+            )}
+          </div>
+        ) : (
+          renderDefaultAdContent()
+        )}
       </div>
-      {imageUrl ? (
-        <div className="relative w-full rounded-2xl overflow-hidden bg-slate-900" style={{ paddingBottom }}>
-          <img
-            src={imageUrl}
-            alt={text || 'Advertisement'}
-            className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
-          />
-          {text && (
-            <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/70 via-black/30 to-transparent px-4 py-3 text-white text-xs md:text-sm font-medium line-clamp-1 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-              {text}
-            </div>
-          )}
-        </div>
-      ) : (
-        <div
-          className={`w-full rounded-2xl flex flex-col items-center justify-center text-center gap-3 px-6 transition-colors ${
-            ad.type === 'default'
-              ? 'bg-gradient-to-r from-gray-100 to-gray-200 border-2 border-dashed border-gray-300 hover:border-orange-400 hover:bg-orange-50'
-              : 'bg-gradient-to-r from-[#0b264f] to-[#1a4b8c]'
-          }`}
-          style={{ height: zone.height, minHeight: 90 }}
-          onClick={(e) => {
-            if (ad.type === 'default') {
-              e.stopPropagation();
-              window.location.href = getBookingUrl();
-            }
-          }}
-        >
-          {ad.type === 'default' ? (
-            <>
-              <p className="text-sm md:text-base font-bold text-gray-700 leading-snug max-w-[85%] flex items-center gap-2">
-                <PlusCircle className="w-5 h-5 text-gray-400" /> Book this Ad Space
-              </p>
-              <span className="text-[10px] uppercase font-bold text-orange-600 tracking-wider flex items-center gap-1">
-                Boost your visibility today
-              </span>
-            </>
-          ) : (
-            <p className="text-sm md:text-base font-bold text-white leading-snug max-w-[85%] text-center line-clamp-2">
-              {text}
-            </p>
-          )}
-        </div>
-      )}
-    </div>
+      {portal}
+    </>
   );
 }

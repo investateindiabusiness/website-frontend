@@ -1,10 +1,11 @@
-"use client";
+﻿"use client";
 
 import React, { useState, useEffect, useRef } from "react";
 import { useRouter } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
 import AwardsSection from "@/components/AwardsSection";
 import TestimonialsSection from "@/components/TestimonialsSection";
+import DeepakProfileSection from "@/components/DeepakProfileSection";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import {
@@ -80,12 +81,6 @@ const serviceProviderChallenges = [
   },
   {
     id: "03",
-    text: "Marketing Efficiencies",
-    desc: "Sifting out casual inquiries to focus on serious business entities with specific legal/financial needs.",
-    icon: <Target className="w-8 h-8 text-white" />,
-  },
-  {
-    id: "04",
     text: "Regulatory Compliance",
     desc: "Ensuring cross-border transactions, RERA rules, and tax compliances are professionally certified.",
     icon: <Scale className="w-8 h-8 text-white" />,
@@ -119,13 +114,41 @@ const stepImages = [
   "https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?q=80&w=1000&auto=format&fit=crop",
   "https://images.unsplash.com/photo-1507537297725-24a1c029d3ca?q=80&w=1000&auto=format&fit=crop",
   "https://images.unsplash.com/photo-1551836022-d5d88e9218df?q=80&w=1000&auto=format&fit=crop",
-  "https://images.unsplash.com/photo-1557200134-90327ee9fafa?q=80&w=1000&auto=format&fit=crop",
+  "https://images.unsplash.com/photo-1556761175-5973dc0f32e7?q=80&w=1000&auto=format&fit=crop",
+];
+
+const faqsList = [
+  {
+    question: "Who can register as a Service Provider?",
+    answer: "Professionals and companies offering real-estate related services."
+  },
+  {
+    question: "How do I receive enquiries?",
+    answer: "Through your registered profile."
+  },
+  {
+    question: "Can I manage my profile?",
+    answer: "Yes, anytime."
+  },
+  {
+    question: "What services can I offer?",
+    answer: "Legal, financial, valuation, marketing and related services."
+  },
+  {
+    question: "How do clients contact me?",
+    answer: "Using the platform contact options."
+  }
 ];
 
 export default function ServiceProviderHome() {
   const router = useRouter();
   const [activeStepIndex, setActiveStepIndex] = useState(0);
+  const [activeFaq, setActiveFaq] = useState(null);
+  const toggleFaq = (index) => {
+    setActiveFaq(activeFaq === index ? null : index);
+  };
   const [heroIndex, setHeroIndex] = useState(0);
+  const [isHeroPaused, setIsHeroPaused] = useState(false);
   const [benefitsPage, setBenefitsPage] = useState(0);
   const benefitsPerPage = 2;
   const totalBenefitsPages = Math.ceil(
@@ -151,11 +174,12 @@ export default function ServiceProviderHome() {
   };
 
   useEffect(() => {
+    if (isHeroPaused) return;
     const timer = setInterval(() => {
       setHeroIndex((prev) => (prev + 1) % heroSlides.length);
-    }, 6000);
+    }, 8000);
     return () => clearInterval(timer);
-  }, []);
+  }, [isHeroPaused]);
 
   const activeStepData = serviceProviderSteps[activeStepIndex];
 
@@ -163,8 +187,11 @@ export default function ServiceProviderHome() {
     <div className="theme-builder w-full bg-[var(--color-light-bg)] overflow-x-hidden">
       <Header transparent={true} />
 
-      {/* HERO SECTION */}
-      <section className="fullscreen-section hero-section">
+      <section
+        className="fullscreen-section hero-section"
+        onMouseEnter={() => setIsHeroPaused(true)}
+        onMouseLeave={() => setIsHeroPaused(false)}
+      >
         <AnimatePresence mode="sync">
           <picture
             key={heroIndex}
@@ -207,14 +234,14 @@ export default function ServiceProviderHome() {
           aria-label="Previous image"
           className="absolute left-5 top-1/2 -translate-y-1/2 z-10 bg-white/10 backdrop-blur-md border border-white/20 rounded-full w-11 h-11 flex items-center justify-center cursor-pointer text-white hover:bg-white/25 transition-colors"
         >
-          ❮
+          â®
         </button>
         <button
           onClick={() => setHeroIndex((prev) => (prev + 1) % heroSlides.length)}
           aria-label="Next image"
           className="absolute right-5 top-1/2 -translate-y-1/2 z-10 bg-white/10 backdrop-blur-md border border-white/20 rounded-full w-11 h-11 flex items-center justify-center cursor-pointer text-white hover:bg-white/25 transition-colors"
         >
-          ❯
+          â¯
         </button>
 
         <div className="container relative z-[2]">
@@ -371,7 +398,7 @@ export default function ServiceProviderHome() {
                     onClick={prevBenefits}
                     className="w-10 h-10 rounded-full border border-slate-200 bg-white hover:bg-slate-100 flex items-center justify-center cursor-pointer transition-colors"
                   >
-                    ❮
+                    â®
                   </button>
                   <div className="text-xs text-slate-500 font-bold">
                     {benefitsPage + 1} / {totalBenefitsPages}
@@ -380,7 +407,7 @@ export default function ServiceProviderHome() {
                     onClick={nextBenefits}
                     className="w-10 h-10 rounded-full border border-slate-200 bg-white hover:bg-slate-100 flex items-center justify-center cursor-pointer transition-colors"
                   >
-                    ❯
+                    â¯
                   </button>
                 </div>
               </div>
@@ -449,7 +476,7 @@ export default function ServiceProviderHome() {
                         .scrollBy({ left: -150, behavior: "smooth" })
                     }
                   >
-                    ❮
+                    â®
                   </button>
                   <button
                     className="tabs-nav-btn next"
@@ -460,7 +487,7 @@ export default function ServiceProviderHome() {
                         .scrollBy({ left: 150, behavior: "smooth" })
                     }
                   >
-                    ❯
+                    â¯
                   </button>
                 </div>
               </div>
@@ -487,7 +514,43 @@ export default function ServiceProviderHome() {
         </div>
       </section>
 
-      <TestimonialsSection />
+      <section className="faq-premium-section section-theme" id="faq">
+        <div className="container">
+          <div className="faq-header-full text-center mb-16">
+            <h2 className="faq-premium-title">Frequently Asked <span className="text-highlight">Questions</span></h2>
+            <p className="faq-premium-subtitle mx-auto">
+              Get clear answers to the most common questions about offering your services on Investate India.
+            </p>
+          </div>
+          <div className="faq-premium-grid justify-center">
+            <div className="faq-accordion-column w-full max-w-[800px]">
+              {faqsList.map((faq, index) => (
+                <div
+                  className={`faq-accordion-item ${activeFaq === index ? "active" : ""}`}
+                  key={index}
+                  onClick={() => toggleFaq(index)}
+                >
+                  <div className="faq-accordion-header">
+                    <h4 className="faq-accordion-question">{faq.question}</h4>
+                    <div className="faq-accordion-arrow">
+                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                        <polyline points="18 15 12 9 6 15"></polyline>
+                      </svg>
+                    </div>
+                  </div>
+                  {activeFaq === index && (
+                    <div className="faq-accordion-content">
+                      <p>{faq.answer}</p>
+                    </div>
+                  )}
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <DeepakProfileSection pageType="serviceProvider" />
 
       {/* CONTACT SECTION */}
       <section

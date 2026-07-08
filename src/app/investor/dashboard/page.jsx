@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
@@ -7,7 +7,7 @@ import {
   Building2, MapPin, Search, TrendingUp, Shield, CheckCircle,
   Loader2, MessageSquare, ArrowRight, Filter, Inbox
 } from 'lucide-react';
-import AdBanner from '@/components/AdBanner';
+
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { useAuth } from '@/hooks/AuthContext';
@@ -127,7 +127,7 @@ export default function InvestorDashboard() {
             <Search className="absolute left-3 sm:left-4 top-1/2 -translate-y-1/2 w-4 h-4 sm:w-5 sm:h-5 text-gray-400" />
             <input
               type="text"
-              placeholder="Search projects, builders, locations…"
+              placeholder="Search projects, builders, locationsâ€¦"
               className="w-full pl-10 sm:pl-12 pr-4 py-3 outline-none text-gray-700 placeholder-gray-400 font-medium bg-gray-50 rounded-xl sm:rounded-2xl text-sm"
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
@@ -138,12 +138,7 @@ export default function InvestorDashboard() {
           </Button>
         </div>
 
-        {/* Ad Banner */}
-        <div className="flex justify-center">
-          <div className="w-full max-w-lg">
-            <AdBanner zoneId="zone2" variant="card" />
-          </div>
-        </div>
+        {/* Ad Banner Removed as per requirements */}
 
         {/* Location Pills */}
         <div>
@@ -172,7 +167,7 @@ export default function InvestorDashboard() {
         {loadingProjects ? (
           <div className="flex flex-col items-center justify-center py-20">
             <Loader2 className="w-10 h-10 text-orange-500 animate-spin mb-4" />
-            <p className="text-gray-500 font-medium">Loading verified projects…</p>
+            <p className="text-gray-500 font-medium">Loading verified projectsâ€¦</p>
           </div>
         ) : filteredProperties.length === 0 ? (
           <div className="flex flex-col items-center justify-center py-20 bg-white rounded-3xl border border-gray-100 shadow-sm">

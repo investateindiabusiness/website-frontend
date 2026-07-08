@@ -111,6 +111,13 @@ function InvestorLoginContent() {
         } catch (_) { /* non-blocking */ }
       }
 
+      // Check for post-login redirect (e.g. coming from ad "Book this Space" click)
+      const pendingRedirect = sessionStorage.getItem('postLoginRedirect');
+      if (pendingRedirect === '/advertisements') {
+        sessionStorage.removeItem('postLoginRedirect');
+        return router.push('/investor/advertisements');
+      }
+
       router.push('/dashboard');
 
     } catch (err) {
@@ -357,7 +364,7 @@ function InvestorLoginContent() {
                   <button type="button" onClick={handleForgotPassword} className="text-[9px] font-black text-orange-600 uppercase tracking-widest hover:underline">Forgot?</button>
                 </div>
                 <div className="relative">
-                  <Input id="password" type={showPassword ? 'text' : 'password'} autoComplete="new-password" placeholder="••••••••" value={formData.password} onChange={(e) => { setFormData({ ...formData, password: e.target.value }); setError(null); }} required className="h-11 px-6 pr-12 bg-gray-50 border-gray-200 focus:bg-white focus:ring-[6px] focus:ring-orange-500/5 focus:border-orange-500 transition-all duration-300 rounded-2xl text-sm font-bold placeholder:text-gray-300" />
+                  <Input id="password" type={showPassword ? 'text' : 'password'} autoComplete="new-password" placeholder="â€¢â€¢â€¢â€¢â€¢â€¢â€¢â€¢" value={formData.password} onChange={(e) => { setFormData({ ...formData, password: e.target.value }); setError(null); }} required className="h-11 px-6 pr-12 bg-gray-50 border-gray-200 focus:bg-white focus:ring-[6px] focus:ring-orange-500/5 focus:border-orange-500 transition-all duration-300 rounded-2xl text-sm font-bold placeholder:text-gray-300" />
                   <button type="button" onClick={() => setShowPassword(prev => !prev)} className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-700 transition-colors" tabIndex={-1}>
                     {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
                   </button>

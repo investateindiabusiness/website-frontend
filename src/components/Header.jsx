@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import React, { useState, useEffect, useRef, Suspense } from 'react';
 import Link from 'next/link';
@@ -108,7 +108,7 @@ const HeaderContent = ({ transparent = false }) => {
 
   const displayUser = isDashboardArea ? user : null;
 
-  // Primary nav links — always visible in navbar
+  // Primary nav links â€” always visible in navbar
   const getNavLinks = () => {
     if (!displayUser) {
       return [
@@ -116,6 +116,7 @@ const HeaderContent = ({ transparent = false }) => {
         { label: 'Investor', path: '/investor' },
         { label: 'Builder', path: '/builder' },
         { label: 'Service Provider', path: '/service-provider' },
+        { label: 'Equity Raising', path: '/equity-raising' },
         // { label: 'About Us', path: '/about-us' },
         { label: 'Gallery', path: '/gallery' },
       ];
@@ -152,7 +153,7 @@ const HeaderContent = ({ transparent = false }) => {
     }
   };
 
-  // Secondary admin links — shown in "More" dropdown only
+  // Secondary admin links â€” shown in "More" dropdown only
   const adminMoreLinks = [];
 
   const navLinks = getNavLinks();

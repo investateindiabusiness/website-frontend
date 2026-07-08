@@ -205,8 +205,13 @@ h4,
 .hero-section {
     position: relative;
     width: 100vw;
+<<<<<<< HEAD
+    height: 75vh;
+    min-height: 450px;
+=======
     height: 85vh;
     min-height: 600px;
+>>>>>>> 5627b10a2105b23a802352e1ccd8df8ffd4e1612
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -217,6 +222,8 @@ h4,
     margin-top: 4rem;
 }
 
+<<<<<<< HEAD
+=======
 /* --- LAYER 1: The Image (Mirrored) --- */
 /* 1. The Container */
 .hero-section {
@@ -233,6 +240,7 @@ h4,
     margin-top: 4rem;
 }
 
+>>>>>>> 5627b10a2105b23a802352e1ccd8df8ffd4e1612
 /* 2. The Layers (Image & Gradient) */
 /* Layer 1 (Bottom): Placeholder Layer (Removed Background Image) */
 .hero-section::before {
@@ -3941,8 +3949,13 @@ h4,
     display: flex !important;
     flex-direction: row !important;
     gap: 60px;
+<<<<<<< HEAD
+    align-items: center;
+    /* Changed from flex-start to center to align the side image in the middle */
+=======
     align-items: flex-start;
     /* Changed from stretch to flex-start */
+>>>>>>> 5627b10a2105b23a802352e1ccd8df8ffd4e1612
     width: 100%;
     max-width: 1200px;
     margin: 0 auto;
@@ -4172,12 +4185,20 @@ h4,
 
 .trust-cards-side {
     flex: 1;
+<<<<<<< HEAD
     display: flex;
+=======
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+>>>>>>> 5627b10a2105b23a802352e1ccd8df8ffd4e1612
     gap: 30px;
 }
 
 .trust-feature-card {
+<<<<<<< HEAD
     flex: 1;
+=======
+>>>>>>> 5627b10a2105b23a802352e1ccd8df8ffd4e1612
     display: flex;
     flex-direction: column;
     gap: 20px;
@@ -4249,7 +4270,11 @@ h4,
 
 .trust-feature-image {
     width: 100%;
+<<<<<<< HEAD
     aspect-ratio: 16 / 10;
+=======
+    aspect-ratio: 2.2 / 1;
+>>>>>>> 5627b10a2105b23a802352e1ccd8df8ffd4e1612
     border-radius: 4px;
     overflow: hidden;
     margin-bottom: 5px;
@@ -4294,17 +4319,34 @@ h4,
     }
 
     .trust-cards-side {
+<<<<<<< HEAD
         flex-wrap: wrap;
     }
 
     .trust-feature-card {
         flex: 0 0 calc(50% - 15px);
+=======
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .trust-feature-card {
+        flex: none;
+>>>>>>> 5627b10a2105b23a802352e1ccd8df8ffd4e1612
     }
 }
 
 @media (max-width: 600px) {
+<<<<<<< HEAD
     .trust-feature-card {
         flex: 0 0 100%;
+=======
+    .trust-cards-side {
+        grid-template-columns: 1fr;
+    }
+
+    .trust-feature-card {
+        flex: none;
+>>>>>>> 5627b10a2105b23a802352e1ccd8df8ffd4e1612
     }
 }
 

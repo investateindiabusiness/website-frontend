@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import React, { useEffect, useState } from 'react';
 import Header from '@/components/Header';
@@ -119,7 +119,7 @@ export default function ContactUs() {
               <div className="flex flex-col items-start mb-6">
                 <span className="text-xs uppercase tracking-widest text-[#0b264f] font-bold mb-1">QUICK CONTACT</span>
                 <div className="flex flex-col items-center justify-center w-24">
-                  <span className="text-[#0b264f] text-[10px] leading-none mb-1">★</span>
+                  <span className="text-[#0b264f] text-[10px] leading-none mb-1">â˜…</span>
                   <div className="w-full h-[1px] bg-[#0b264f]"></div>
                 </div>
               </div>
@@ -137,29 +137,32 @@ export default function ContactUs() {
               <div className="space-y-8">
                 <div className="flex items-start gap-6">
                   <div className="text-orange-400 mt-1 flex-shrink-0">
-                    <Globe className="w-12 h-12 stroke-[1.25]" />
+                    <Mail className="w-12 h-12 stroke-[1.25]" />
                   </div>
                   <div className="border-l-2 border-orange-400/30 pl-6">
-                    <h3 className="text-xl font-bold text-[#0b264f] mb-2">Location</h3>
-                    <p className="text-gray-500 leading-relaxed">
-                      Corporate Office: Hyderabad, India <br />
-                      Valentine Mark Corporation
-                      55 West 47 Street Suite 425 New York, NY 10036 USA
-                    </p>
+                    <h3 className="text-xl font-bold text-[#0b264f] mb-2">Email Us</h3>
+                    <p className="text-gray-500 mb-1 text-sm">For partnerships & general inquiries:</p>
+                    <a
+                      href="mailto:investateindia.business@gmail.com"
+                      className="text-gray-700 font-semibold hover:text-orange-500 transition-colors duration-200"
+                    >
+                      investateindia.business@gmail.com
+                    </a>
                   </div>
                 </div>
 
                 <div className="flex items-start gap-6 pt-6 border-t border-gray-100">
                   <div className="text-orange-400 mt-1 flex-shrink-0">
-                    <Mail className="w-12 h-12 stroke-[1.25]" />
+                    <Phone className="w-12 h-12 stroke-[1.25]" />
                   </div>
                   <div className="border-l-2 border-orange-400/30 pl-6">
-                    <h3 className="text-xl font-bold text-[#0b264f] mb-2">Email Us</h3>
+                    <h3 className="text-xl font-bold text-[#0b264f] mb-2">Call Us</h3>
+                    <p className="text-gray-500 mb-1 text-sm">Speak with our relationships manager:</p>
                     <a
-                      href="mailto:investateindia.business@gmail.com"
-                      className="text-gray-500 hover:text-orange-500 transition-colors duration-200"
+                      href="tel:+914048293000"
+                      className="text-gray-700 font-semibold hover:text-orange-500 transition-colors duration-200"
                     >
-                      investateindia.business@gmail.com
+                      +91 40 4829 3000
                     </a>
                   </div>
                 </div>
@@ -177,7 +180,7 @@ export default function ContactUs() {
               <div className="flex flex-col items-start mb-6">
                 <span className="text-xs uppercase tracking-widest text-[#0b264f] font-bold mb-1">LET'S CONNECT</span>
                 <div className="flex flex-col items-center justify-center w-24">
-                  <span className="text-[#0b264f] text-[10px] leading-none mb-1">★</span>
+                  <span className="text-[#0b264f] text-[10px] leading-none mb-1">â˜…</span>
                   <div className="w-full h-[1px] bg-[#0b264f]"></div>
                 </div>
               </div>
@@ -282,6 +285,62 @@ export default function ContactUs() {
               )}
             </motion.div>
 
+          </div>
+        </div>
+      </section>
+
+      {/* Office Locations Section */}
+      <section className="py-24 bg-[#FEFEFE] dark:bg-[#111] border-t border-gray-100 dark:border-slate-800 relative z-20">
+        <div className="container mx-auto px-4 max-w-6xl">
+          <div className="text-center mb-16">
+            {/* <span className="text-xs uppercase tracking-widest text-[#0b264f] dark:text-orange-400 font-bold mb-2 block">Our Offices</span> */}
+            <h2 className="text-3xl md:text-5xl font-extrabold text-[#0b264f] dark:text-white mb-4">Global Office Locations</h2>
+            <p className="text-gray-500 dark:text-slate-400 max-w-xl mx-auto text-sm md:text-base">
+              Visit our offices or connect with our regional teams across the globe for specialized assistance.
+            </p>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+            {[
+              {
+                title: "Corporate Office (India)",
+                address: "Jubilee Hills, Road No. 36, Hyderabad, Telangana 500033, India",
+                phone: "+91 40 4829 3000",
+                email: "india.office@investateindia.com",
+              },
+              {
+                title: "United States Office",
+                address: "Valentine Mark Corporation, 55 West 47 Street Suite 425, New York, NY 10036, USA",
+                phone: "+1 212 901 3290",
+                email: "usa.office@investateindia.com",
+              },
+              {
+                title: "United Kingdom Office",
+                address: "Valentine Mark Ltd, 128 City Road, London, EC1V 2NX, United Kingdom",
+                phone: "+44 20 7946 0958",
+                email: "uk.office@investateindia.com",
+              },
+              {
+                title: "Middle East Office (UAE)",
+                address: "Valentine Mark DMCC, Marina Plaza, Level 29, Dubai Marina, Dubai, UAE",
+                phone: "+971 4 563 9200",
+                email: "uae.office@investateindia.com",
+              }
+            ].map((loc, i) => (
+              <div key={i} className="bg-white dark:bg-slate-900 rounded-2xl p-6 border border-gray-100 dark:border-slate-800 shadow-sm hover:shadow-md transition-all flex flex-col justify-between">
+                <div>
+                  <div className="w-10 h-10 rounded-full bg-orange-50 dark:bg-slate-800 flex items-center justify-center text-orange-500 mb-6">
+                    <MapPin className="w-5 h-5" />
+                  </div>
+                  <h3 className="text-lg font-bold text-[#0b264f] dark:text-white mb-3">{loc.title}</h3>
+                  <p className="text-gray-500 dark:text-slate-400 text-sm leading-relaxed mb-6">{loc.address}</p>
+                </div>
+                <div className="pt-4 border-t border-gray-50 dark:border-slate-800 text-xs text-gray-400 space-y-1">
+                  <div><span className="font-semibold text-gray-500 dark:text-slate-400">Phone:</span> {loc.phone}</div>
+                  <div><span className="font-semibold text-gray-500 dark:text-slate-400">Email:</span> {loc.email}</div>
+                </div>
+              </div>
+            ))}
           </div>
         </div>
       </section>

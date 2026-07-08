@@ -1,9 +1,10 @@
-"use client";
+﻿"use client";
 
 import React, { useState, useEffect, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import AwardsSection from "@/components/AwardsSection";
 import TestimonialsSection from "@/components/TestimonialsSection";
+import DeepakProfileSection from "@/components/DeepakProfileSection";
 import {
   Globe,
   Search,
@@ -18,7 +19,7 @@ import Footer from "@/components/Footer";
 const heroSlides = [
   {
     image:
-      "https://images.unsplash.com/photo-1504307651254-35680f356dfd?q=80&w=2066&auto=format&fit=crop",
+      "/images/image (1).png",
     tag: "Institutional Capital Access",
     title: "Direct Connectivity to",
     highlight: "High-Net-Worth NRI Capital",
@@ -27,7 +28,7 @@ const heroSlides = [
   },
   {
     image:
-      "/images/builder.png",
+      "/images/image copy 19.png",
     tag: "Global Reach & Trust",
     title: "Elevate Your Brand with",
     highlight: "Verified Institutional Credibility",
@@ -220,10 +221,38 @@ const trustFeatures = [
   },
 ];
 
+const faqsList = [
+  {
+    question: "How do I list a project?",
+    answer: "Register as a Builder and submit project details for review."
+  },
+  {
+    question: "Can I edit my listing?",
+    answer: "Yes, until or after review where permitted."
+  },
+  {
+    question: "How do I know approval status?",
+    answer: "Track it in your dashboard."
+  },
+  {
+    question: "Can I upload multiple projects?",
+    answer: "Yes."
+  },
+  {
+    question: "Why was my project rejected?",
+    answer: "Review comments and resubmit after corrections."
+  }
+];
+
 export default function BuilderHome() {
   const router = useRouter();
   const [activeStepIndex, setActiveStepIndex] = useState(0);
   const [heroIndex, setHeroIndex] = useState(0);
+  const [activeFaq, setActiveFaq] = useState(null);
+  const toggleFaq = (index) => {
+    setActiveFaq(activeFaq === index ? null : index);
+  };
+  const [isHeroPaused, setIsHeroPaused] = useState(false);
   const [hoveredBuilderCard, setHoveredBuilderCard] = useState(null);
   const [builderChallengePage, setBuilderChallengePage] = useState(0);
   const builderChallengesScrollRef = useRef(null);
@@ -255,11 +284,12 @@ export default function BuilderHome() {
   };
 
   useEffect(() => {
+    if (isHeroPaused) return;
     const timer = setInterval(() => {
       setHeroIndex((prev) => (prev + 1) % heroSlides.length);
-    }, 6000);
+    }, 8000);
     return () => clearInterval(timer);
-  }, []);
+  }, [isHeroPaused]);
 
   const activeStepData = builderSteps[activeStepIndex];
 
@@ -267,8 +297,11 @@ export default function BuilderHome() {
     <div className="theme-builder w-full bg-[var(--color-light-bg)] overflow-x-hidden">
       <Header transparent={true} />
 
-      {/* HERO SECTION */}
-      <section className="fullscreen-section hero-section">
+      <section
+        className="fullscreen-section hero-section"
+        onMouseEnter={() => setIsHeroPaused(true)}
+        onMouseLeave={() => setIsHeroPaused(false)}
+      >
         <AnimatePresence mode="sync">
           <picture
             key={heroIndex}
@@ -330,7 +363,7 @@ export default function BuilderHome() {
             transition: "background 0.2s",
           }}
         >
-          ❮
+          â®
         </button>
         <button
           onClick={() => setHeroIndex((prev) => (prev + 1) % heroSlides.length)}
@@ -356,7 +389,7 @@ export default function BuilderHome() {
             transition: "background 0.2s",
           }}
         >
-          ❯
+          â¯
         </button>
 
         {/* Dot indicators */}
@@ -424,9 +457,9 @@ export default function BuilderHome() {
         </div>
       </section>
 
-      {/* ── Infrastructure-style Marquee Section ── */}
+      {/* â”€â”€ Infrastructure-style Marquee Section â”€â”€ */}
       <section id="challenges" className="infra-section py-20 bg-[#f8f8f8]">
-        {/* ── Develite-style Header ── */}
+        {/* â”€â”€ Develite-style Header â”€â”€ */}
         <div className="infra-section-header">
           <h2 className="infra-title text-[#1a1a1a]">
             Overcoming{" "}
@@ -440,7 +473,7 @@ export default function BuilderHome() {
           prevent visionary developers from reaching the global Indian diaspora.
         </p>
 
-        {/* ── Infinite Marquee with Original White Cards ── */}
+        {/* â”€â”€ Infinite Marquee with Original White Cards â”€â”€ */}
         <div className="infra-marquee-wrapper">
           <div className="infra-marquee-track">
             {/* Render twice for seamless loop */}
@@ -580,7 +613,7 @@ export default function BuilderHome() {
                       (e.currentTarget.style.background = "#f5f5f5")
                     }
                   >
-                    ❮
+                    â®
                   </button>
                   <div
                     style={{
@@ -613,7 +646,7 @@ export default function BuilderHome() {
                       (e.currentTarget.style.background = "#f5f5f5")
                     }
                   >
-                    ❯
+                    â¯
                   </button>
                 </div>
               </div>
@@ -640,7 +673,7 @@ export default function BuilderHome() {
                 }}
               >
                 <img
-                  src="/images/overlap_optimized.jpg"
+                  src="/images/image copy 11.png"
                   alt="Modern Cityscape"
                   width={800}
                   height={600}
@@ -711,7 +744,7 @@ export default function BuilderHome() {
                         .scrollBy({ left: -150, behavior: "smooth" })
                     }
                   >
-                    ❮
+                    â®
                   </button>
                   <button
                     className="tabs-nav-btn next"
@@ -722,7 +755,7 @@ export default function BuilderHome() {
                         .scrollBy({ left: 150, behavior: "smooth" })
                     }
                   >
-                    ❯
+                    â¯
                   </button>
                 </div>
               </div>
@@ -748,8 +781,6 @@ export default function BuilderHome() {
           </div>
         </div>
       </section>
-
-      <TestimonialsSection />
 
       <section className="fullscreen-section section-theme" id="trust">
         <div className="container">
@@ -803,12 +834,50 @@ export default function BuilderHome() {
         </div>
       </section>
 
+      <section className="faq-premium-section section-theme" id="faq">
+        <div className="container">
+          <div className="faq-header-full text-center mb-16">
+            <h2 className="faq-premium-title">Frequently Asked <span className="text-highlight">Questions</span></h2>
+            <p className="faq-premium-subtitle mx-auto">
+              Get clear answers to the most common questions about listing on Investate India and how we connect you with verified NRI investors.
+            </p>
+          </div>
+          <div className="faq-premium-grid justify-center">
+            <div className="faq-accordion-column w-full max-w-[800px]">
+              {faqsList.map((faq, index) => (
+                <div
+                  className={`faq-accordion-item ${activeFaq === index ? "active" : ""}`}
+                  key={index}
+                  onClick={() => toggleFaq(index)}
+                >
+                  <div className="faq-accordion-header">
+                    <h4 className="faq-accordion-question">{faq.question}</h4>
+                    <div className="faq-accordion-arrow">
+                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                        <polyline points="18 15 12 9 6 15"></polyline>
+                      </svg>
+                    </div>
+                  </div>
+                  {activeFaq === index && (
+                    <div className="faq-accordion-content">
+                      <p>{faq.answer}</p>
+                    </div>
+                  )}
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <DeepakProfileSection pageType="builder" />
+
       {/* CONTACT SECTION */}
       <section className="fullscreen-section py-20 text-white text-center" id="contact" style={{ backgroundColor: '#1a1a1a' }}>
         <div className="container text-center">
           <div className="cta-minimal-badge mb-6" style={{ borderColor: 'rgba(255,255,255,0.2)' }}>
             <span className="cta-badge-text text-white">GET STARTED TODAY</span>
-            <div className="cta-badge-star text-[#D48035]">★</div>
+            <div className="cta-badge-star text-[#D48035]">â˜…</div>
           </div>
           <h2 className="cta-minimal-title mb-6 text-white">
             Ready to Expand Your <span className="text-[#D48035]">Reach?</span>
@@ -822,7 +891,7 @@ export default function BuilderHome() {
               onClick={() => handleAuthClick("register", "builder")}
               className="cta-minimal-btn bg-[#D48035] hover:bg-[#b06725] text-white border-none shadow-xl"
             >
-              Apply as Builder <span className="ml-2">→</span>
+              Apply as Builder <span className="ml-2">â†’</span>
             </button>
           </div>
         </div>

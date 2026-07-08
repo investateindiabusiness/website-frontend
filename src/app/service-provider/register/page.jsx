@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import React, { useState, useEffect, Suspense } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
@@ -196,6 +196,7 @@ function ServiceProviderRegisterContent() {
     try {
       setLoading(true);
       const response = await registerStep1({ email: authData.email, password: authData.password, role: 'serviceProvider' });
+
       setUserId(response.uid);
       setStep(2);
       toast({ title: "Account Created", description: "Please complete profile registration details." });
@@ -438,7 +439,7 @@ function ServiceProviderRegisterContent() {
                             required
                             value={authData.password}
                             onChange={e => setAuthData({ ...authData, password: e.target.value })}
-                            placeholder="••••••••"
+                            placeholder="â€¢â€¢â€¢â€¢â€¢â€¢â€¢â€¢"
                             className="h-11 px-6 pr-12 bg-gray-50 border-gray-200 focus:bg-white focus:ring-[6px] focus:ring-orange-500/5 focus:border-orange-500 transition-all duration-300 rounded-2xl text-sm font-bold placeholder:text-gray-300 w-full"
                           />
                           <button type="button" onClick={() => setShowPassword(prev => !prev)} className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-700 transition-colors" tabIndex={-1}>
@@ -455,7 +456,7 @@ function ServiceProviderRegisterContent() {
                             required
                             value={authData.confirmPassword}
                             onChange={e => setAuthData({ ...authData, confirmPassword: e.target.value })}
-                            placeholder="••••••••"
+                            placeholder="â€¢â€¢â€¢â€¢â€¢â€¢â€¢â€¢"
                             className="h-11 px-6 pr-12 bg-gray-50 border-gray-200 focus:bg-white focus:ring-[6px] focus:ring-orange-500/5 focus:border-orange-500 transition-all duration-300 rounded-2xl text-sm font-bold placeholder:text-gray-300 w-full"
                           />
                           <button type="button" onClick={() => setShowConfirmPassword(prev => !prev)} className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-700 transition-colors" tabIndex={-1}>

@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import React, { useState, useEffect, useRef } from 'react';
 import { useRouter } from 'next/navigation';
@@ -7,6 +7,7 @@ import Header from '@/components/Header';
 import Footer from '@/components/Footer';
 import AwardsSection from '@/components/AwardsSection';
 import TestimonialsSection from '@/components/TestimonialsSection';
+import DeepakProfileSection from '@/components/DeepakProfileSection';
 import dynamic from 'next/dynamic';
 import Image from 'next/image';
 import AdBanner from '@/components/AdBanner';
@@ -18,18 +19,18 @@ import { Loader2, Search, Users, FileText, Gavel, ShieldCheck, Globe } from 'luc
 
 const heroSlides = [
     {
-        image: 'https://images.unsplash.com/photo-1613490493576-7fde63acd811?q=80&w=2071&auto=format&fit=crop',
+        image: '/images/image copy 14.png',
         tag: 'India\'s Most Trusted NRI Platform',
         title: 'You Built Your Future Abroad.',
         highlight: 'We Protect & Grow Your Wealth in India.',
         subtitle: "We don't just help NRIs invest in India. We help them protect, manage, and grow their wealth with absolute confidence."
     },
     {
-        image: '/images/image copy 2.png',
+        image: '/images/image copy 18.png',
         tag: 'End-to-End NRI Wealth Management',
-        title: 'Beyond Investment —',
+        title: 'Beyond Investment â€”',
         highlight: 'Complete NRI Asset Protection',
-        subtitle: 'From real estate investment to legal support, rental management, tax planning and succession advisory — all in one trusted ecosystem.'
+        subtitle: 'From real estate investment to legal support, rental management, tax planning, succession advisory, and structured exit plans â€” all in one trusted ecosystem.'
     },
     {
         image: 'https://images.unsplash.com/photo-1600585154340-be6161a56a0c?q=80&w=2070&auto=format&fit=crop',
@@ -44,7 +45,7 @@ const contentDataForSection2 = [
     {
         id: "01",
         title: "Investment Opportunities",
-        text: "Curated, pre-verified real estate projects with standardized RERA disclosures and performance tracking — so you invest based on merit, not marketing.",
+        text: "Curated, pre-verified real estate projects with standardized RERA disclosures and performance tracking â€” so you invest based on merit, not marketing. We also offer rental income management, ROI tracking, resale support, and structured exit planning for every stage of your investment.",
         image: "/images/media1.png"
     },
     {
@@ -62,7 +63,7 @@ const contentDataForSection2 = [
     // {
     //     id: "04",
     //     title: "Rental & Estate Management",
-    //     text: "End-to-end rental income management, tenant vetting, maintenance coordination, and succession planning — protecting your wealth across generations.",
+    //     text: "End-to-end rental income management, tenant vetting, maintenance coordination, and succession planning â€” protecting your wealth across generations.",
     //     image: "https://images.unsplash.com/photo-1560520653-9e0e4c89df11?q=80&w=1000&auto=format&fit=crop"
     // }
 ];
@@ -161,20 +162,24 @@ const teamMembers = [
 
 const faqsList = [
     {
-        question: "Is Investate India a broker?",
-        answer: "No. We are a discovery and facilitation platform. We provide structured information and verify builder credentials to ensure transparent connections."
+        question: "How do I invest?",
+        answer: "Browse verified projects, review details, and submit your investment interest."
     },
     {
-        question: "Is there a registration fee?",
-        answer: "Registration is currently free for NRI investors. We prioritize transparency and will inform you well in advance of any future service fees."
+        question: "Can I track investments?",
+        answer: "Yes, from your dashboard."
     },
     {
-        question: "How do you verify builders?",
-        answer: "We assess RERA compliance, financial health, past delivery records, and market reputation through a rigorous multi-step process."
+        question: "Are projects verified?",
+        answer: "Yes, listed projects undergo platform review."
     },
     {
-        question: "Which cities do you cover?",
-        answer: "We focus on major metros: Bangalore, Mumbai, Delhi-NCR, and Hyderabad, with plans to expand to quality Tier-2 developments."
+        question: "Can I contact the builder?",
+        answer: "Yes, through the platform."
+    },
+    {
+        question: "What investment types are available?",
+        answer: "Eligible equity-based real estate opportunities."
     }
 ];
 
@@ -225,8 +230,9 @@ export default function Index() {
 
     useEffect(() => {
         if (isHeroPaused) return;
+        const totalSlides = heroSlides.length + 1;
         const timer = setInterval(() => {
-            setHeroIndex((prev) => (prev + 1) % heroSlides.length);
+            setHeroIndex((prev) => (prev + 1) % totalSlides);
         }, 8000);
         return () => clearInterval(timer);
     }, [isHeroPaused]);
@@ -252,6 +258,8 @@ export default function Index() {
     };
 
     const activeStepData = investorSteps[activeStepIndex];
+    const totalSlides = heroSlides.length + 1;
+    const isAdSlide = heroIndex === heroSlides.length;
 
     const handleAuthClick = (action, role) => {
         if (action === 'login') {
@@ -271,52 +279,65 @@ export default function Index() {
                 onMouseLeave={() => setIsHeroPaused(false)}
             >
                 <AnimatePresence mode="sync">
-                    <picture key={heroIndex} className="absolute inset-0 w-full h-full z-0">
-                        <source media="(max-width: 768px)" srcSet={heroSlides[heroIndex].image.replace('.png', '_mobile.jpg')} />
+                    {isAdSlide ? (
                         <motion.img
-                            src={heroSlides[heroIndex].image}
-                            alt="Hero background"
+                            key="ad-bg"
+                            src="https://images.unsplash.com/photo-1560518883-ce09059eeffa?w=1200&q=80"
+                            alt="Advertisement background"
                             className="absolute inset-0 w-full h-full object-cover z-0 hero-split-image"
                             initial={{ opacity: 0 }}
                             animate={{ opacity: 1 }}
                             exit={{ opacity: 0 }}
                             transition={{ duration: 1.2, ease: 'easeInOut' }}
-                            loading="eager"
-                            fetchPriority="high"
                         />
-                    </picture>
+                    ) : (
+                        <picture key={heroIndex} className="absolute inset-0 w-full h-full z-0">
+                            <source media="(max-width: 768px)" srcSet={heroSlides[heroIndex].image.replace('.png', '_mobile.jpg')} />
+                            <motion.img
+                                src={heroSlides[heroIndex].image}
+                                alt="Hero background"
+                                className="absolute inset-0 w-full h-full object-cover z-0 hero-split-image"
+                                initial={{ opacity: 0 }}
+                                animate={{ opacity: 1 }}
+                                exit={{ opacity: 0 }}
+                                transition={{ duration: 1.2, ease: 'easeInOut' }}
+                                loading="eager"
+                                fetchPriority="high"
+                            />
+                        </picture>
+                    )}
                 </AnimatePresence>
                 <div className="absolute inset-0 z-[1] hero-split-overlay" />
 
                 {/* Prev / Next buttons */}
                 <button
-                    onClick={() => setHeroIndex((prev) => (prev - 1 + heroSlides.length) % heroSlides.length)}
+                    onClick={() => setHeroIndex((prev) => (prev - 1 + totalSlides) % totalSlides)}
                     aria-label="Previous image"
                     style={{
                         position: 'absolute', left: '1.25rem', top: '50%', transform: 'translateY(-50%)',
-                        zIndex: 10, background: 'rgba(255,255,255,0.15)', backdropFilter: 'blur(6px)',
+                        zIndex: 20, background: 'rgba(255,255,255,0.15)', backdropFilter: 'blur(6px)',
                         border: '1px solid rgba(255,255,255,0.3)', borderRadius: '50%',
                         width: '2.75rem', height: '2.75rem', display: 'flex', alignItems: 'center',
                         justifyContent: 'center', cursor: 'pointer', color: '#fff', fontSize: '1.1rem',
                         transition: 'background 0.2s'
                     }}
-                >❮</button>
+                >â®</button>
                 <button
-                    onClick={() => setHeroIndex((prev) => (prev + 1) % heroSlides.length)}
+                    onClick={() => setHeroIndex((prev) => (prev + 1) % totalSlides)}
                     aria-label="Next image"
                     style={{
                         position: 'absolute', right: '1.25rem', top: '50%', transform: 'translateY(-50%)',
-                        zIndex: 10, background: 'rgba(255,255,255,0.15)', backdropFilter: 'blur(6px)',
+                        zIndex: 20, background: 'rgba(255,255,255,0.15)', backdropFilter: 'blur(6px)',
                         border: '1px solid rgba(255,255,255,0.3)', borderRadius: '50%',
                         width: '2.75rem', height: '2.75rem', display: 'flex', alignItems: 'center',
                         justifyContent: 'center', cursor: 'pointer', color: '#fff', fontSize: '1.1rem',
                         transition: 'background 0.2s'
                     }}
-                >❯</button>
+                >â¯</button>
 
                 {/* Dot indicators */}
-                <div style={{ position: 'absolute', bottom: '1.5rem', left: '50%', transform: 'translateX(-50%)', zIndex: 10, display: 'flex', gap: '0.5rem' }}>
-                    {heroSlides.map((_, i) => (
+                <div style={{ position: 'absolute', bottom: '1.5rem', left: '50%', transform: 'translateX(-50%)', zIndex: 20, display: 'flex', gap: '0.5rem' }}>
+                    {Array.from({ length: totalSlides }).map((_, i) => (
                         <button
                             key={i}
                             onClick={() => setHeroIndex(i)}
@@ -333,16 +354,37 @@ export default function Index() {
                     ))}
                 </div>
 
-                <div className="container relative z-[2]">
-                    <div className="hero-content">
-                        <AnimatePresence mode="wait">
-                            <motion.div
-                                key={heroIndex}
-                                initial={{ opacity: 0, y: 20 }}
-                                animate={{ opacity: 1, y: 0 }}
-                                exit={{ opacity: 0, y: -20 }}
-                                transition={{ duration: 0.6, ease: "easeOut" }}
-                            >
+                <AnimatePresence mode="wait">
+                    {isAdSlide ? (
+                        <motion.div
+                            key="ad-slide-content"
+                            className="absolute inset-0 z-[2] flex flex-col justify-center px-10 md:px-20"
+                            initial={{ opacity: 0, y: 20 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            exit={{ opacity: 0, y: -20 }}
+                            transition={{ duration: 0.6, ease: 'easeOut' }}
+                        >
+                            <div className="container relative h-full flex flex-col justify-center">
+                                <span className="inline-block text-xs font-bold uppercase tracking-widest bg-orange-500/80 text-white px-3 py-1.5 rounded-full mb-5 w-fit">
+                                    Sponsored
+                                </span>
+                                <h1 className="hero-headline drop-shadow-xl text-white">Advertise Your<br /><span className="text-orange-400">Project Here!</span></h1>
+                                <p className="hero-subheadline max-w-lg text-white/90">Reach thousands of global NRI investors. Get your property or service featured on Investate India.</p>
+                                <div className="hero-cta-group flex gap-4 mt-4">
+                                    <AdBanner zoneId="zone2" variant="cta-only" forceRole="investor" />
+                                </div>
+                            </div>
+                        </motion.div>
+                    ) : (
+                        <motion.div
+                            key={`slide-${heroIndex}`}
+                            className="absolute inset-0 z-[2] container flex flex-col justify-center"
+                            initial={{ opacity: 0, y: 20 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            exit={{ opacity: 0, y: -20 }}
+                            transition={{ duration: 0.6, ease: 'easeOut' }}
+                        >
+                            <div className="hero-content">
                                 <span className="hero-tag">{heroSlides[heroIndex].tag}</span>
                                 <h1 className="hero-headline">
                                     {heroSlides[heroIndex].title} <br />
@@ -351,23 +393,24 @@ export default function Index() {
                                 <p className="hero-subheadline">
                                     {heroSlides[heroIndex].subtitle}
                                 </p>
-                            </motion.div>
-                        </AnimatePresence>
-                        <div className="hero-cta-group">
-                            <button onClick={() => handleAuthClick('register', 'investor')} className="btn btn-primary">
-                                Explore Opportunities
-                            </button>
-                        </div>
-                    </div>
-                </div>
+                                <div className="hero-cta-group">
+                                    <button onClick={() => handleAuthClick('register', 'investor')} className="btn btn-primary">
+                                        Explore Opportunities
+                                    </button>
+                                </div>
+                            </div>
+                        </motion.div>
+                    )}
+                </AnimatePresence>
             </section>
+
 
 
             <section className="fullscreen-section section-light" id="about">
                 <div className="container">
                     <div className="section-heading">
                         <h2 className="section-title">Our <span className='text-highlight'>End-to-End Platform</span></h2>
-                        <p className="section-subtitle">Beyond investment discovery — a comprehensive ecosystem protecting, managing and growing your Indian wealth from wherever you are in the world.</p>
+                        <p className="section-subtitle">Beyond investment discovery â€” a comprehensive ecosystem protecting, managing and growing your Indian wealth from wherever you are in the world.</p>
                     </div>
 
                     <div className="horizontal-accordion-container">
@@ -387,7 +430,7 @@ export default function Index() {
                                     <div className="accordion-details">
                                         <p className="accordion-text">{item.text}</p>
                                         {/* <button className="accordion-learn-more">
-                                            Learn More <span>↗</span>
+                                            Learn More <span>â†—</span>
                                         </button> */}
                                     </div>
                                 </div>
@@ -397,7 +440,7 @@ export default function Index() {
                 </div>
             </section>
 
-            {/* ── NRI Challenges Marquee Section ── */}
+            {/* â”€â”€ NRI Challenges Marquee Section â”€â”€ */}
             <section id="challenges" className="infra-section py-20 bg-[#f8f8f8]">
                 <div className="infra-section-header">
                     <h2 className="infra-title text-[#1a1a1a]">
@@ -409,7 +452,7 @@ export default function Index() {
                     Distance creates far more than an investment gap. NRIs face complex legal, financial, operational and safety challenges in protecting their Indian assets. We address every one of them.
                 </p>
 
-                {/* ── Infinite Marquee ── */}
+                {/* â”€â”€ Infinite Marquee â”€â”€ */}
                 <div className="infra-marquee-wrapper">
                     <div className="infra-marquee-track">
                         {[...challengesList, ...challengesList].map((challenge, i) => (
@@ -421,7 +464,7 @@ export default function Index() {
                                 <p className="infra-card-desc">{challenge.desc}</p>
                                 {challenge.opportunity && (
                                     <p style={{ fontSize: '0.78rem', color: '#C88A58', marginTop: '0.6rem', fontWeight: 600, lineHeight: 1.4 }}>
-                                        ✦ {challenge.opportunity}
+                                        âœ¦ {challenge.opportunity}
                                     </p>
                                 )}
                             </div>
@@ -509,7 +552,7 @@ export default function Index() {
                                         onMouseEnter={(e) => e.currentTarget.style.background = '#e5e5e5'}
                                         onMouseLeave={(e) => e.currentTarget.style.background = '#f5f5f5'}
                                     >
-                                        ❮
+                                        â®
                                     </button>
                                     <div style={{ fontSize: '0.9rem', fontWeight: 600, color: '#888' }}>
                                         {benefitsPage + 1} / {totalBenefitsPages}
@@ -532,7 +575,7 @@ export default function Index() {
                                         onMouseEnter={(e) => e.currentTarget.style.background = '#e5e5e5'}
                                         onMouseLeave={(e) => e.currentTarget.style.background = '#f5f5f5'}
                                     >
-                                        ❯
+                                        â¯
                                     </button>
                                 </div>
                             </div>
@@ -594,8 +637,8 @@ export default function Index() {
                                     ))}
                                 </div>
                                 <div className="dashboard-tabs-nav md:hidden">
-                                    <button className="tabs-nav-btn prev" onClick={() => document.getElementById('dashboard-tabs-row').scrollBy({ left: -150, behavior: 'smooth' })}>❮</button>
-                                    <button className="tabs-nav-btn next" onClick={() => document.getElementById('dashboard-tabs-row').scrollBy({ left: 150, behavior: 'smooth' })}>❯</button>
+                                    <button className="tabs-nav-btn prev" onClick={() => document.getElementById('dashboard-tabs-row').scrollBy({ left: -150, behavior: 'smooth' })}>â®</button>
+                                    <button className="tabs-nav-btn next" onClick={() => document.getElementById('dashboard-tabs-row').scrollBy({ left: 150, behavior: 'smooth' })}>â¯</button>
                                 </div>
                             </div>
                             <div className="dashboard-display-window">
@@ -614,8 +657,6 @@ export default function Index() {
                     </div>
                 </div>
             </section>
-
-            <TestimonialsSection />
 
             <section
                 className="fullscreen-section section-light relative overflow-hidden"
@@ -654,22 +695,18 @@ export default function Index() {
                 </div>
             </section>
 
-            <section className="team-section-integrated section-theme" id="team">
-                <div className="team-integrated-wrapper">
-                    <div className="team-text-banner">
-                        <div className="team-text-content-inner">
-                            <h2 className="team-main-title">Meet the Team Behind <span className="text-highlight">Your Trust</span></h2>
-                            <p className="team-main-desc">
-                                <strong>Built on transparency. Driven by experience.</strong><br />
-                                Investate India is led by Deepak Kavadia, Pankaj Gupta, and Atish Agarwal.
-                            </p>
-                            {/* <div className="team-nav-arrows-inline">
-                                <button className="team-nav-btn prev"><span>❮</span></button>
-                                <button className="team-nav-btn next"><span>❯</span></button>
-                            </div> */}
-                        </div>
+            <section className="team-section-integrated section-theme py-16" id="team">
+                <div className="container mx-auto px-4 max-w-6xl">
+                    <div className="text-center mb-12">
+                        <h2 className="text-3xl md:text-4xl font-bold mb-4">
+                            Meet the Team Behind <span className="text-highlight">Your Trust</span>
+                        </h2>
+                        <p className="text-slate-600 dark:text-slate-300 max-w-2xl mx-auto text-sm md:text-base leading-relaxed">
+                            <strong>Built on transparency. Driven by experience.</strong><br />
+                            Investate India is led by Deepak Kavadia, Pankaj Gupta, and Atish Agarwal.
+                        </p>
                     </div>
-                    <div className="team-cards-scroll-area" id="team-cards-row">
+                    <div className="flex flex-wrap justify-center gap-8">
                         {teamMembers.map((member, index) => (
                             <div className="team-card-premium" key={index}>
                                 <div className="team-card-image">
@@ -681,30 +718,6 @@ export default function Index() {
                                 </div>
                             </div>
                         ))}
-                    </div>
-
-                    {/* Team navigation arrows for mobile */}
-                    <div className="flex justify-center gap-4 mt-6 md:hidden">
-                        <button
-                            onClick={() => document.getElementById('team-cards-row').scrollBy({ left: -320, behavior: 'smooth' })}
-                            className="nav-arrow-btn"
-                            style={{
-                                width: '3rem', height: '3rem', borderRadius: '50%',
-                                border: '1.5px solid rgba(0,0,0,0.1)', background: '#fff',
-                                color: '#333', fontSize: '1.1rem', display: 'flex', alignItems: 'center', justifyContent: 'center',
-                                boxShadow: '0 4px 12px rgba(0,0,0,0.06)'
-                            }}
-                        >❮</button>
-                        <button
-                            onClick={() => document.getElementById('team-cards-row').scrollBy({ left: 320, behavior: 'smooth' })}
-                            className="nav-arrow-btn"
-                            style={{
-                                width: '3rem', height: '3rem', borderRadius: '50%',
-                                border: '1.5px solid rgba(0,0,0,0.1)', background: '#fff',
-                                color: '#333', fontSize: '1.1rem', display: 'flex', alignItems: 'center', justifyContent: 'center',
-                                boxShadow: '0 4px 12px rgba(0,0,0,0.06)'
-                            }}
-                        >❯</button>
                     </div>
                 </div>
             </section>
@@ -798,11 +811,13 @@ export default function Index() {
                 </div>
             </section>
 
+            <DeepakProfileSection pageType="investor" />
+
             <section className="fullscreen-section py-20 text-white text-center" id="contact" style={{ backgroundColor: '#1a1a1a' }}>
                 <div className="container text-center">
                     <div className="cta-minimal-badge mb-6" style={{ borderColor: 'rgba(255,255,255,0.2)' }}>
                         <span className="cta-badge-text text-white">GET STARTED TODAY</span>
-                        <div className="cta-badge-star text-[#D48035]">★</div>
+                        <div className="cta-badge-star text-[#D48035]">â˜…</div>
                     </div>
                     <h2 className="cta-minimal-title mb-6 text-white">
                         Initialize Your <span className="text-[#D48035]">Strategic Journey</span>
@@ -812,7 +827,7 @@ export default function Index() {
                     </p>
                     <div className="flex justify-center">
                         <button onClick={() => handleAuthClick('register', 'investor')} className="cta-minimal-btn bg-[#D48035] hover:bg-[#b06725] text-white border-none shadow-xl">
-                            Register Your Interest <span className="ml-2">→</span>
+                            Register Your Interest <span className="ml-2">â†’</span>
                         </button>
                     </div>
                 </div>
