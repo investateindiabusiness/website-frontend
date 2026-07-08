@@ -24,7 +24,7 @@ import {
 
 const heroSlides = [
     {
-        image: "/images/image copy 6.png",
+        image: "/images/image copy 10.png",
         tag: "Global Investment Gateway",
         title: "INVESTATE INDIA",
         highlight: "Gateway to Indian Opportunities",
