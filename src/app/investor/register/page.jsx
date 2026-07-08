@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import React, { useState, useEffect, Suspense } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
@@ -411,11 +411,7 @@ function InvestorRegisterContent() {
               </div>
               <div className="flex flex-col">
                 <p className="text-[10px] font-black text-white uppercase tracking-widest">Trusted Community</p>
-<<<<<<< HEAD
                 <p className="text-[9px] font-bold text-gray-400 uppercase tracking-tighter">Join 2,500+ Active Professionals</p>
-=======
-                <p className="text-[9px] font-bold text-gray-400 uppercase tracking-tighter">Join our growing NRI investor community</p>
->>>>>>> 5627b10a2105b23a802352e1ccd8df8ffd4e1612
               </div>
             </div>
             <p className="text-[10px] text-gray-300 font-medium leading-tight max-w-[280px]">
@@ -478,7 +474,7 @@ function InvestorRegisterContent() {
                       <div className="space-y-2">
                         <Label className="text-[10px] font-black text-gray-900 uppercase tracking-widest ml-1">Password</Label>
                         <div className="relative">
-                          <Input type={showPassword ? 'text' : 'password'} autoComplete="new-password" required value={authData.password} onChange={(e) => setAuthData({ ...authData, password: e.target.value })} className="h-11 px-6 pr-12 bg-gray-50 border-gray-200 focus:bg-white focus:ring-[6px] focus:ring-orange-500/5 focus:border-orange-500 transition-all duration-300 rounded-2xl text-sm font-bold placeholder:text-gray-300" placeholder="••••••••" />
+                          <Input type={showPassword ? 'text' : 'password'} autoComplete="new-password" required value={authData.password} onChange={(e) => setAuthData({ ...authData, password: e.target.value })} className="h-11 px-6 pr-12 bg-gray-50 border-gray-200 focus:bg-white focus:ring-[6px] focus:ring-orange-500/5 focus:border-orange-500 transition-all duration-300 rounded-2xl text-sm font-bold placeholder:text-gray-300" placeholder="â€¢â€¢â€¢â€¢â€¢â€¢â€¢â€¢" />
                           <button type="button" onClick={() => setShowPassword(prev => !prev)} className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-700 transition-colors" tabIndex={-1}>
                             {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
                           </button>
@@ -487,7 +483,7 @@ function InvestorRegisterContent() {
                       <div className="space-y-2">
                         <Label className="text-[10px] font-black text-gray-900 uppercase tracking-widest ml-1">Confirm Password</Label>
                         <div className="relative">
-                          <Input type={showConfirmPassword ? 'text' : 'password'} autoComplete="new-password" required value={authData.confirmPassword} onChange={(e) => setAuthData({ ...authData, confirmPassword: e.target.value })} className="h-11 px-6 pr-12 bg-gray-50 border-gray-200 focus:bg-white focus:ring-[6px] focus:ring-orange-500/5 focus:border-orange-500 transition-all duration-300 rounded-2xl text-sm font-bold placeholder:text-gray-300" placeholder="••••••••" />
+                          <Input type={showConfirmPassword ? 'text' : 'password'} autoComplete="new-password" required value={authData.confirmPassword} onChange={(e) => setAuthData({ ...authData, confirmPassword: e.target.value })} className="h-11 px-6 pr-12 bg-gray-50 border-gray-200 focus:bg-white focus:ring-[6px] focus:ring-orange-500/5 focus:border-orange-500 transition-all duration-300 rounded-2xl text-sm font-bold placeholder:text-gray-300" placeholder="â€¢â€¢â€¢â€¢â€¢â€¢â€¢â€¢" />
                           <button type="button" onClick={() => setShowConfirmPassword(prev => !prev)} className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-700 transition-colors" tabIndex={-1}>
                             {showConfirmPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
                           </button>

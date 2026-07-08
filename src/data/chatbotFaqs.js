@@ -167,6 +167,46 @@ export const chatbotFaqGroups = {
       },
     ],
   },
+  serviceProvider: {
+    label: 'Service Provider Support',
+    intro: 'After login, I can help service providers with profile, support, and enquiry questions.',
+    faqs: [
+      {
+        question: 'Why is KYC verification mandatory?',
+        answer: 'KYC verification helps confirm user identity and supports a secure, transparent, and trusted investment environment for everyone using the platform.',
+      },
+      {
+        question: 'Who can register as a Service Provider?',
+        answer: 'Professionals and companies offering real-estate related services can register as service providers.',
+      },
+      {
+        question: 'How do I receive enquiries?',
+        answer: 'You can receive enquiries through your registered profile and service provider dashboard.',
+      },
+      {
+        question: 'Can I manage my profile?',
+        answer: 'Yes. You can manage and update your profile information from your account whenever needed.',
+      },
+    ],
+  },
+  nri: {
+    label: 'NRI Investor Support',
+    intro: 'I can help NRIs protect their assets, manage returns, and understand cross-border investment concerns.',
+    faqs: [
+      {
+        question: 'What are the biggest concerns for NRIs investing in India?',
+        answer: 'The biggest concerns usually include currency devaluation, low net returns, asset safety, legal disputes, rental income loss, tax planning, inheritance issues, and maintenance challenges.',
+      },
+      {
+        question: 'How can I protect my property while living abroad?',
+        answer: 'Investate India helps connect investors with verified developers, legal advisors, and service providers so assets can be monitored and managed more effectively from overseas.',
+      },
+      {
+        question: 'How do I deal with legal system delays or misuse?',
+        answer: 'Property disputes and misuse of the legal system can be difficult for NRIs to manage remotely. Investate India can connect you with legal professionals for guidance and support.',
+      },
+    ],
+  },
 };
 
 export const fallbackQuestion = 'My question is not listed';

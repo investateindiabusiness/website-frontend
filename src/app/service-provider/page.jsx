@@ -1,14 +1,11 @@
-"use client";
+﻿"use client";
 
 import React, { useState, useEffect, useRef } from "react";
 import { useRouter } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
 import AwardsSection from "@/components/AwardsSection";
 import TestimonialsSection from "@/components/TestimonialsSection";
-<<<<<<< HEAD
 import DeepakProfileSection from "@/components/DeepakProfileSection";
-=======
->>>>>>> 5627b10a2105b23a802352e1ccd8df8ffd4e1612
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import {
@@ -25,20 +22,12 @@ import {
 const heroSlides = [
   {
     image:
-<<<<<<< HEAD
       "https://images.unsplash.com/photo-1600880292203-757bb62b4baf?q=80&w=2070&auto=format&fit=crop",
-=======
-      "/images/image copy 11.png",
->>>>>>> 5627b10a2105b23a802352e1ccd8df8ffd4e1612
     tag: "Institutional Partner Growth",
     title: "Present Your Services to",
     highlight: "Premium Builders & HNW NRI Investors",
     subtitle:
-<<<<<<< HEAD
       "The ultimate ecosystem for verified Indian real estate lawyers, chartered accountants, architects, and advisors to expand their reach to top-tier builders and global NRI buyers.",
-=======
-      "The ultimate ecosystem for verified professionals—including brokers, agents, lawyers, chartered accountants, financial experts, architects, and property consultants—to connect with premium builders and global NRI buyers.",
->>>>>>> 5627b10a2105b23a802352e1ccd8df8ffd4e1612
   },
   {
     image: "/images/challenge_intermediaries.png",
@@ -46,11 +35,7 @@ const heroSlides = [
     title: "Accelerate Client Acquisition with",
     highlight: "Verified Professional Credibility",
     subtitle:
-<<<<<<< HEAD
       "Position your business in a transparency-first marketplace. Build lasting relationships with active builders and sophisticated NRI investors seeking expert execution.",
-=======
-      "Position your business in a transparency-first marketplace. Build lasting relationships with active builders and sophisticated NRI investors seeking expert legal, financial, brokerage, design, and management execution.",
->>>>>>> 5627b10a2105b23a802352e1ccd8df8ffd4e1612
   },
 ];
 
@@ -96,15 +81,6 @@ const serviceProviderChallenges = [
   },
   {
     id: "03",
-<<<<<<< HEAD
-=======
-    text: "Marketing Efficiencies",
-    desc: "Sifting out casual inquiries to focus on serious business entities with specific legal/financial needs.",
-    icon: <Target className="w-8 h-8 text-white" />,
-  },
-  {
-    id: "04",
->>>>>>> 5627b10a2105b23a802352e1ccd8df8ffd4e1612
     text: "Regulatory Compliance",
     desc: "Ensuring cross-border transactions, RERA rules, and tax compliances are professionally certified.",
     icon: <Scale className="w-8 h-8 text-white" />,
@@ -138,7 +114,6 @@ const stepImages = [
   "https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?q=80&w=1000&auto=format&fit=crop",
   "https://images.unsplash.com/photo-1507537297725-24a1c029d3ca?q=80&w=1000&auto=format&fit=crop",
   "https://images.unsplash.com/photo-1551836022-d5d88e9218df?q=80&w=1000&auto=format&fit=crop",
-<<<<<<< HEAD
   "https://images.unsplash.com/photo-1556761175-5973dc0f32e7?q=80&w=1000&auto=format&fit=crop",
 ];
 
@@ -163,24 +138,17 @@ const faqsList = [
     question: "How do clients contact me?",
     answer: "Using the platform contact options."
   }
-=======
-  "https://images.unsplash.com/photo-1557200134-90327ee9fafa?q=80&w=1000&auto=format&fit=crop",
->>>>>>> 5627b10a2105b23a802352e1ccd8df8ffd4e1612
 ];
 
 export default function ServiceProviderHome() {
   const router = useRouter();
   const [activeStepIndex, setActiveStepIndex] = useState(0);
-<<<<<<< HEAD
   const [activeFaq, setActiveFaq] = useState(null);
   const toggleFaq = (index) => {
     setActiveFaq(activeFaq === index ? null : index);
   };
   const [heroIndex, setHeroIndex] = useState(0);
   const [isHeroPaused, setIsHeroPaused] = useState(false);
-=======
-  const [heroIndex, setHeroIndex] = useState(0);
->>>>>>> 5627b10a2105b23a802352e1ccd8df8ffd4e1612
   const [benefitsPage, setBenefitsPage] = useState(0);
   const benefitsPerPage = 2;
   const totalBenefitsPages = Math.ceil(
@@ -206,20 +174,12 @@ export default function ServiceProviderHome() {
   };
 
   useEffect(() => {
-<<<<<<< HEAD
     if (isHeroPaused) return;
     const timer = setInterval(() => {
       setHeroIndex((prev) => (prev + 1) % heroSlides.length);
     }, 8000);
     return () => clearInterval(timer);
   }, [isHeroPaused]);
-=======
-    const timer = setInterval(() => {
-      setHeroIndex((prev) => (prev + 1) % heroSlides.length);
-    }, 6000);
-    return () => clearInterval(timer);
-  }, []);
->>>>>>> 5627b10a2105b23a802352e1ccd8df8ffd4e1612
 
   const activeStepData = serviceProviderSteps[activeStepIndex];
 
@@ -227,16 +187,11 @@ export default function ServiceProviderHome() {
     <div className="theme-builder w-full bg-[var(--color-light-bg)] overflow-x-hidden">
       <Header transparent={true} />
 
-<<<<<<< HEAD
       <section
         className="fullscreen-section hero-section"
         onMouseEnter={() => setIsHeroPaused(true)}
         onMouseLeave={() => setIsHeroPaused(false)}
       >
-=======
-      {/* HERO SECTION */}
-      <section className="fullscreen-section hero-section">
->>>>>>> 5627b10a2105b23a802352e1ccd8df8ffd4e1612
         <AnimatePresence mode="sync">
           <picture
             key={heroIndex}
@@ -279,14 +234,14 @@ export default function ServiceProviderHome() {
           aria-label="Previous image"
           className="absolute left-5 top-1/2 -translate-y-1/2 z-10 bg-white/10 backdrop-blur-md border border-white/20 rounded-full w-11 h-11 flex items-center justify-center cursor-pointer text-white hover:bg-white/25 transition-colors"
         >
-          ❮
+          â®
         </button>
         <button
           onClick={() => setHeroIndex((prev) => (prev + 1) % heroSlides.length)}
           aria-label="Next image"
           className="absolute right-5 top-1/2 -translate-y-1/2 z-10 bg-white/10 backdrop-blur-md border border-white/20 rounded-full w-11 h-11 flex items-center justify-center cursor-pointer text-white hover:bg-white/25 transition-colors"
         >
-          ❯
+          â¯
         </button>
 
         <div className="container relative z-[2]">
@@ -443,7 +398,7 @@ export default function ServiceProviderHome() {
                     onClick={prevBenefits}
                     className="w-10 h-10 rounded-full border border-slate-200 bg-white hover:bg-slate-100 flex items-center justify-center cursor-pointer transition-colors"
                   >
-                    ❮
+                    â®
                   </button>
                   <div className="text-xs text-slate-500 font-bold">
                     {benefitsPage + 1} / {totalBenefitsPages}
@@ -452,7 +407,7 @@ export default function ServiceProviderHome() {
                     onClick={nextBenefits}
                     className="w-10 h-10 rounded-full border border-slate-200 bg-white hover:bg-slate-100 flex items-center justify-center cursor-pointer transition-colors"
                   >
-                    ❯
+                    â¯
                   </button>
                 </div>
               </div>
@@ -521,7 +476,7 @@ export default function ServiceProviderHome() {
                         .scrollBy({ left: -150, behavior: "smooth" })
                     }
                   >
-                    ❮
+                    â®
                   </button>
                   <button
                     className="tabs-nav-btn next"
@@ -532,7 +487,7 @@ export default function ServiceProviderHome() {
                         .scrollBy({ left: 150, behavior: "smooth" })
                     }
                   >
-                    ❯
+                    â¯
                   </button>
                 </div>
               </div>
@@ -559,7 +514,6 @@ export default function ServiceProviderHome() {
         </div>
       </section>
 
-<<<<<<< HEAD
       <section className="faq-premium-section section-theme" id="faq">
         <div className="container">
           <div className="faq-header-full text-center mb-16">
@@ -597,9 +551,6 @@ export default function ServiceProviderHome() {
       </section>
 
       <DeepakProfileSection pageType="serviceProvider" />
-=======
-      <TestimonialsSection />
->>>>>>> 5627b10a2105b23a802352e1ccd8df8ffd4e1612
 
       {/* CONTACT SECTION */}
       <section

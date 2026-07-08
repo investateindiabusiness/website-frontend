@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from 'react';
+﻿import React, { useState, useEffect, useCallback } from 'react';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
 import { Card, CardContent } from '@/components/ui/card';
@@ -55,12 +55,12 @@ const AdminProjects = () => {
   }, [user, loadProjects]);
 
   // ==========================================
-  // 🐛 DEBUG CONSOLE LOGGER
+  // ðŸ› DEBUG CONSOLE LOGGER
   // ==========================================
   useEffect(() => {
     if (viewProjectData) {
       console.log("\n=============================================");
-      console.log("🔎 DEBUG: VIEW PROJECT DATA OPENED");
+      console.log("ðŸ”Ž DEBUG: VIEW PROJECT DATA OPENED");
       console.log("=============================================");
       console.log("1. Full Project Object:", viewProjectData);
       console.log("2. Base projectImages:", viewProjectData.projectImages);
@@ -256,7 +256,7 @@ const AdminProjects = () => {
   });
 
   // ==========================================
-  // 🐛 DYNAMIC EXTRACTION WITH FALLBACKS
+  // ðŸ› DYNAMIC EXTRACTION WITH FALLBACKS
   // ==========================================
   let displayImages = viewProjectData?.projectImages || [];
   let displayDocs = viewProjectData?.projectDocuments || [];

@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import React, { useState, useEffect } from 'react';
 import { createPortal } from 'react-dom';
@@ -21,10 +21,10 @@ const ZONE_CONFIG = {
  * AdBanner
  *
  * Props:
- *  zoneId   — required, e.g. "zone2"
- *  variant  — "default"   → floating card with max-width (works everywhere)
- *             "hero"      → flush full-width strip inside a dark hero section
- *             "spotlight" → large prominent banner section below the hero,
+ *  zoneId   â€” required, e.g. "zone2"
+ *  variant  â€” "default"   â†’ floating card with max-width (works everywhere)
+ *             "hero"      â†’ flush full-width strip inside a dark hero section
+ *             "spotlight" â†’ large prominent banner section below the hero,
  *                           styled like the home page's zone5 placement
  */
 export default function AdBanner({ zoneId, variant = 'default', forceRole }) {
@@ -88,7 +88,7 @@ export default function AdBanner({ zoneId, variant = 'default', forceRole }) {
   // Called when unauthenticated user clicks "Book this Space"
   const handleBookAdClick = () => {
     if (user && user.role) {
-      // Already logged in — go directly to ads page
+      // Already logged in â€” go directly to ads page
       window.location.href = AD_PATHS[user.role] || '/builder/advertisements';
       return;
     }
@@ -142,10 +142,10 @@ export default function AdBanner({ zoneId, variant = 'default', forceRole }) {
     );
   };
 
-  /* ─────────────────────────────────────────
-     ROLE SELECTION MODAL — rendered via portal so it
+  /* â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+     ROLE SELECTION MODAL â€” rendered via portal so it
      always lives at document.body regardless of variant
-  ───────────────────────────────────────── */
+  â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
   const modalContent = (
     <div
       className="fixed inset-0 z-[9999] flex items-center justify-center"
@@ -289,10 +289,10 @@ export default function AdBanner({ zoneId, variant = 'default', forceRole }) {
     window.location.assign(`/${trimmedUrl}`);
   };
 
-  /* ─────────────────────────────────────────
-     CARD VARIANT — sits inside the property grid
+  /* â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+     CARD VARIANT â€” sits inside the property grid
      Same shape/size as a property listing card
-  ───────────────────────────────────────── */
+  â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
   if (variant === 'card') {
     if (loading) {
       return (
@@ -374,10 +374,10 @@ export default function AdBanner({ zoneId, variant = 'default', forceRole }) {
     );
   }
 
-  /* ─────────────────────────────────────────
-     SPOTLIGHT VARIANT — standalone big banner
+  /* â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+     SPOTLIGHT VARIANT â€” standalone big banner
      matches the home page hero section feel
-  ───────────────────────────────────────── */
+  â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
   if (variant === 'spotlight') {
     const spotlightFallback = (
       <>
@@ -465,15 +465,15 @@ export default function AdBanner({ zoneId, variant = 'default', forceRole }) {
     );
   }
 
-  /* ─────────────────────────────────────────
-     HERO VARIANT — flush strip inside a hero
-  ───────────────────────────────────────── */
+  /* â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+     HERO VARIANT â€” flush strip inside a hero
+  â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
   if (variant === 'hero') {
     if (loading) {
       return (
         <div className="w-full h-[90px] animate-pulse bg-white/10 rounded-2xl flex items-center justify-center">
           <Loader2 className="w-4 h-4 text-white/40 animate-spin mr-2" />
-          <span className="text-xs text-white/40 font-medium">Loading sponsor…</span>
+          <span className="text-xs text-white/40 font-medium">Loading sponsorâ€¦</span>
         </div>
       );
     }
@@ -520,7 +520,7 @@ export default function AdBanner({ zoneId, variant = 'default', forceRole }) {
 
   /* ─────────────────────────────────────────
      CTA-ONLY VARIANT
-  ───────────────────────────────────────── */
+  â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
   if (variant === 'cta-only') {
     const targetUrl = ad?.adContent?.targetUrl || null;
     const primaryButtonText = ad?.adContent?.text ? 'View Offer' : 'View More';
@@ -545,10 +545,10 @@ export default function AdBanner({ zoneId, variant = 'default', forceRole }) {
   }
 
 
-  /* ─────────────────────────────────────────
-     DEFAULT VARIANT — floating card
-  ───────────────────────────────────────── */
-  /* Static fallback banner — shown when loading OR when no API ad is available */
+  /* â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+     DEFAULT VARIANT â€” floating card
+  â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
+  /* Static fallback banner â€” shown when loading OR when no API ad is available */
   const staticFallbackBanner = (
     <div
       className="relative w-full mx-auto rounded-2xl overflow-hidden shadow-md"
@@ -560,12 +560,12 @@ export default function AdBanner({ zoneId, variant = 'default', forceRole }) {
         alt="Real estate banner"
         className="absolute inset-0 w-full h-full object-cover"
       />
-      {/* Dark gradient left→right */}
+      {/* Dark gradient leftâ†’right */}
       <div
         className="absolute inset-0"
         style={{ background: 'linear-gradient(to right, rgba(11,38,79,0.9) 0%, rgba(26,75,140,0.8) 50%, rgba(26,75,140,0.4) 100%)' }}
       />
-      {/* ADVERTISE badge — top right */}
+      {/* ADVERTISE badge â€” top right */}
       <div className="absolute top-3 right-3 flex items-center gap-1.5 bg-white/10 backdrop-blur-sm text-white text-[10px] font-bold tracking-widest px-3 py-1.5 rounded-full border border-white/20 uppercase pointer-events-none">
         Advertise Here
       </div>
