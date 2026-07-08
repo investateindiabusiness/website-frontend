@@ -1,4 +1,4 @@
-﻿"use client";
+"use client";
 
 import React, { useState, useEffect, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
@@ -181,7 +181,7 @@ const trustFeatures = [
     title: "Global Reach",
     desc: "Gain immediate visibility among a concentrated pool of Non-Resident Indians seeking properties.",
     image:
-      "https://images.unsplash.com/photo-1569336415962-a4bd9f69cd83?q=80&w=1000&auto=format&fit=crop" /* Stylized global network with glowing golden/orange connections */,
+      "https://images.unsplash.com/photo-1451187580459-43490279c0fa?q=80&w=1000&auto=format&fit=crop",
     icon: (
       <svg
         viewBox="0 0 24 24"

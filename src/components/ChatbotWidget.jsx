@@ -570,35 +570,35 @@ export default function ChatbotWidget() {
         {showAppIcons && (
           <>
             <div className="relative group">
-              <button
-                type="button"
-                onClick={() => setShowAppDownloadModal(true)}
-                className="flex h-14 w-14 items-center justify-center rounded-full bg-slate-900 border border-slate-800 text-white shadow-xl shadow-black/10 transition duration-300 hover:bg-slate-800 hover:scale-110 hover:border-orange-500"
+              <a
+                href="#"
+                onClick={(e) => e.preventDefault()}
+                className="flex h-14 w-14 items-center justify-center rounded-full bg-[#C7742F] border border-transparent text-white shadow-xl shadow-orange-950/20 transition duration-300 hover:bg-[#B45309] hover:scale-110"
                 aria-label="Get Android App"
               >
                 <svg className="h-6 w-6" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                  <path d="M3.25098 2.32764C3.0768 2.50854 2.97852 2.78453 2.97852 3.12591V20.8741C2.97852 21.2155 3.0768 21.4915 3.25098 21.6724L3.31305 21.7291L13.1118 11.9304V11.8105L3.31305 2.01172L3.25098 2.32764Z" fill="#EA4335" />
-                  <path d="M16.3776 15.2016L13.1113 11.9353V11.8153L16.3789 8.54898L16.4526 8.59102L20.3204 10.79C21.4227 11.417 21.4227 12.4363 20.3204 13.0633L16.4526 15.2623L16.3776 15.2016Z" fill="#FBBC05" />
-                  <path d="M13.2305 11.8754L3.3125 21.7933C3.65586 22.1557 4.21857 22.1977 4.8711 21.8267L16.3778 15.2818L13.2305 11.8754Z" fill="#34A853" />
-                  <path d="M13.2305 11.8754L16.3778 8.469L4.8711 1.92408C4.21857 1.55305 3.65586 1.59509 3.3125 1.9575L13.2305 11.8754Z" fill="#4285F4" />
+                  <path d="M3.25098 2.32764C3.0768 2.50854 2.97852 2.78453 2.97852 3.12591V20.8741C2.97852 21.2155 3.0768 21.4915 3.25098 21.6724L3.31305 21.7291L13.1118 11.9304V11.8105L3.31305 2.01172L3.25098 2.32764Z" fill="white" fillOpacity="0.8" />
+                  <path d="M16.3776 15.2016L13.1113 11.9353V11.8153L16.3789 8.54898L16.4526 8.59102L20.3204 10.79C21.4227 11.417 21.4227 12.4363 20.3204 13.0633L16.4526 15.2623L16.3776 15.2016Z" fill="white" fillOpacity="1" />
+                  <path d="M13.2305 11.8754L3.3125 21.7933C3.65586 22.1557 4.21857 22.1977 4.8711 21.8267L16.3778 15.2818L13.2305 11.8754Z" fill="white" fillOpacity="0.6" />
+                  <path d="M13.2305 11.8754L16.3778 8.469L4.8711 1.92408C4.21857 1.55305 3.65586 1.59509 3.3125 1.9575L13.2305 11.8754Z" fill="white" fillOpacity="0.9" />
                 </svg>
-              </button>
+              </a>
               <span className="absolute bottom-18 right-0 scale-0 group-hover:scale-100 transition-all duration-200 bg-slate-900 text-white text-[11px] font-bold px-2.5 py-1.5 rounded-lg whitespace-nowrap shadow-lg border border-slate-800">
                 Get it on Google Play
               </span>
             </div>
 
             <div className="relative group">
-              <button
-                type="button"
-                onClick={() => setShowAppDownloadModal(true)}
-                className="flex h-14 w-14 items-center justify-center rounded-full bg-slate-900 border border-slate-800 text-white shadow-xl shadow-black/10 transition duration-300 hover:bg-slate-800 hover:scale-110 hover:border-orange-500"
+              <a
+                href="#"
+                onClick={(e) => e.preventDefault()}
+                className="flex h-14 w-14 items-center justify-center rounded-full bg-[#C7742F] border border-transparent text-white shadow-xl shadow-orange-950/20 transition duration-300 hover:bg-[#B45309] hover:scale-110"
                 aria-label="Get iOS App"
               >
                 <svg className="h-6 w-6 text-white" viewBox="0 0 24 24" fill="currentColor">
                   <path d="M18.71 19.5c-.83 1.24-1.71 2.45-3.05 2.47-1.34.03-1.77-.79-3.29-.79-1.53 0-2 .77-3.27.82-1.31.05-2.3-1.32-3.14-2.53C4.25 17 2.94 12.45 4.7 9.39c.87-1.52 2.43-2.48 4.12-2.51 1.28-.02 2.5.87 3.29.87.78 0 2.26-1.07 3.81-.91.65.03 2.47.26 3.64 1.98-.09.06-2.17 1.28-2.15 3.81.03 3.02 2.65 4.03 2.68 4.04-.03.07-.42 1.44-1.38 2.83M15.97 4.17c.66-.81 1.11-1.93.99-3.06-.96.04-2.13.64-2.82 1.45-.6.69-1.12 1.84-.98 2.94.1.08.2.12.3.12.87 0 1.95-.57 2.51-1.45z"/>
                 </svg>
-              </button>
+              </a>
               <span className="absolute bottom-18 right-0 scale-0 group-hover:scale-100 transition-all duration-200 bg-slate-900 text-white text-[11px] font-bold px-2.5 py-1.5 rounded-lg whitespace-nowrap shadow-lg border border-slate-800">
                 Download on App Store
               </span>

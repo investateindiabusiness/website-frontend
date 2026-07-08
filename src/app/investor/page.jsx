@@ -367,7 +367,7 @@ export default function Index() {
                             <div className="mt-8 w-full max-w-lg md:hidden">
                                 <AdBanner zoneId="zone5" variant="default" forceRole="investor" />
                             </div>
-                            <div className="hidden md:block absolute right-[-300px] top-1/2 -translate-y-1/2 translate-y-16 w-full max-w-lg z-[25]">
+                            <div className="hidden md:block absolute right-0 top-1/2 -translate-y-1/2 translate-y-16 w-full max-w-lg z-[25]">
                                 <AdBanner zoneId="zone5" variant="default" forceRole="investor" />
                             </div>
                         </div>
