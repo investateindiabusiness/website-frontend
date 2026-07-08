@@ -1,4 +1,4 @@
-﻿"use client";
+"use client";
 
 import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
@@ -509,8 +509,8 @@ const RegisterDialog = ({ isOpen, onOpenChange, onLoginClick, initialData = {} }
                   ))}
                 </div>
                 <div className="flex flex-col">
-                  <p className="text-[10px] font-black text-gray-900 uppercase tracking-widest">Trusted Community</p>
-                  <p className="text-[9px] font-bold text-gray-400 uppercase tracking-tighter">Join 2,500+ Active Professionals</p>
+                  <p className="text-[10px] font-black text-gray-900 uppercase tracking-widest">Trusted Ecosystem</p>
+                  <p className="text-[9px] font-bold text-gray-400 uppercase tracking-tighter">Join Verified Members</p>
                 </div>
               </div>
               <p className="text-[10px] text-gray-500 font-medium leading-tight max-w-[240px]">

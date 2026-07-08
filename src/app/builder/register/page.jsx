@@ -1,4 +1,4 @@
-﻿"use client";
+"use client";
 
 import React, { useState, useEffect, Suspense } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
@@ -396,8 +396,8 @@ function BuilderRegisterContent() {
                 ))}
               </div>
               <div className="flex flex-col">
-                <p className="text-[10px] font-black text-white uppercase tracking-widest">Trusted Community</p>
-                <p className="text-[9px] font-bold text-gray-400 uppercase tracking-tighter">Join 2,500+ Active Professionals</p>
+                <p className="text-[10px] font-black text-white uppercase tracking-widest">Developer Network</p>
+                <p className="text-[9px] font-bold text-gray-400 uppercase tracking-tighter">Connect with NRI Investors</p>
               </div>
             </div>
             <p className="text-[10px] text-gray-300 font-medium leading-tight max-w-[280px]">
