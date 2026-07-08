@@ -26,7 +26,7 @@ const OrangeTag = ({ children }) => (
 );
 
 const Bullet = ({ children, light }) => (
-  <li className={`flex items-start gap-2.5 text-sm leading-relaxed list-none ${light ? 'text-gray-300' : 'text-gray-600'}`}>
+  <li className={`flex items-start gap-2.5 text-[1.05rem] leading-relaxed list-none ${light ? 'text-gray-300' : 'text-gray-600'}`}>
     <CheckCircle className={`w-4 h-4 shrink-0 mt-0.5 text-[#D48035]`} />
     <span>{children}</span>
   </li>
@@ -34,7 +34,7 @@ const Bullet = ({ children, light }) => (
 
 export default function EquityRaisingPage() {
   return (
-    <div className="min-h-screen bg-white text-gray-800 flex flex-col">
+    <div className="theme-builder min-h-screen bg-white text-gray-800 flex flex-col" style={{ fontFamily: "'Inter', sans-serif" }}>
       <Header />
 
       {/* ── HERO ── */}
@@ -51,7 +51,7 @@ export default function EquityRaisingPage() {
         <div className="container mx-auto px-4 max-w-5xl text-center relative z-10 py-24">
           <motion.div {...fadeUp()}>
             <span className="inline-block px-4 py-1.5 rounded-full text-xs font-bold uppercase tracking-widest text-[#D48035] border border-[#D48035]/30 bg-[#D48035]/10 mb-5">
-              Investate India & VTMC Partnership
+              Investate India Capital Platform
             </span>
             <h1 className="text-4xl md:text-6xl font-bold text-white mb-4 leading-tight">
               $1 Billion India<br />
@@ -94,31 +94,31 @@ export default function EquityRaisingPage() {
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
             <motion.div {...fadeUp(0.1)} className="space-y-6">
               <SectionTitle>Global Investment Gateway to India</SectionTitle>
-              <p className="text-gray-600 text-sm md:text-base leading-relaxed">
+              <p className="responsive-paragraph text-gray-600 mb-6">
                 Investate India is a technology-enabled investment platform designed to facilitate participation in Indian investment opportunities through a curated ecosystem of investors, opportunity providers, and professional service partners.
               </p>
-              <p className="text-gray-600 text-sm md:text-base leading-relaxed">
-                By partnering with Valentine Mark Corporation (VTMC), a U.S. publicly listed company (OTC) specializing in global trade, finance, and investment structuring, we bridge global institutional capital with India's growth sectors.
+              <p className="responsive-paragraph text-gray-600 mb-6">
+                Through our structured cross-border network, specializing in global finance and investment structuring, we bridge global institutional capital with India's growth sectors.
               </p>
-              <div className="flex flex-col sm:flex-row gap-6 pt-4">
-                <div className="flex items-start gap-3">
+              <div className="flex flex-col gap-4 pt-4">
+                <Card className="flex items-center gap-4 px-5 py-3">
                   <div className="w-10 h-10 rounded-xl bg-orange-50 flex items-center justify-center shrink-0">
                     <Compass className="w-5 h-5 text-[#D48035]" />
                   </div>
-                  <div>
-                    <h4 className="font-bold text-[#111] text-sm">Our Mission</h4>
-                    <p className="text-xs text-gray-500 mt-1">To simplify and secure investments into India through technology, transparency, and trusted partnerships.</p>
+                  <div className="space-y-0.5">
+                    <h4 className="font-bold text-[#111] text-lg leading-tight">Our Mission</h4>
+                    <p className="text-[1.05rem] text-gray-500 leading-normal">To simplify and secure investments into India through technology, transparency, and trusted partnerships.</p>
                   </div>
-                </div>
-                <div className="flex items-start gap-3">
+                </Card>
+                <Card className="flex items-center gap-4 px-5 py-3">
                   <div className="w-10 h-10 rounded-xl bg-orange-50 flex items-center justify-center shrink-0">
                     <Award className="w-5 h-5 text-[#D48035]" />
                   </div>
-                  <div>
-                    <h4 className="font-bold text-[#111] text-sm">Our Vision</h4>
-                    <p className="text-xs text-gray-500 mt-1">To become the most trusted global gateway for investments into India.</p>
+                  <div className="space-y-0.5">
+                    <h4 className="font-bold text-[#111] text-lg leading-tight">Our Vision</h4>
+                    <p className="text-[1.05rem] text-gray-500 leading-normal">To become the most trusted global gateway for investments into India.</p>
                   </div>
-                </div>
+                </Card>
               </div>
             </motion.div>
             <motion.div {...fadeUp(0.2)} className="bg-[#F8F8F8] border border-gray-100 rounded-3xl p-8 space-y-6">
@@ -132,11 +132,13 @@ export default function EquityRaisingPage() {
                   "Professional Services Integration",
                   "Investor Enablement",
                   "Legal & Financial Enablement",
-                  "End-to-End Investment Support"
+                  "End-to-End Investment Support",
+                  "Import & Export Services",
+                  "NRI Services"
                 ].map((cap, idx) => (
-                  <div key={idx} className="flex items-center gap-2.5 bg-white px-4 py-2.5 rounded-xl border border-gray-100 shadow-sm">
+                  <div key={idx} className="flex items-center gap-2.5 bg-white px-4 py-1.5 rounded-xl border border-gray-100 shadow-sm">
                     <div className="w-1.5 h-1.5 rounded-full bg-[#D48035] shrink-0" />
-                    <span className="text-xs font-semibold text-gray-700">{cap}</span>
+                    <span className="text-[1.05rem] font-semibold text-gray-700">{cap}</span>
                   </div>
                 ))}
               </div>
@@ -145,12 +147,12 @@ export default function EquityRaisingPage() {
         </div>
       </section>
 
-      {/* ── INVESTMENT THESIS (VTMC) ── */}
+      {/* ── INVESTMENT THESIS ── */}
       <section className="py-24 bg-[#F8F8F8]">
         <div className="container mx-auto px-4 max-w-6xl">
           <motion.div {...fadeUp()} className="text-center mb-14">
             <SectionTitle>Bridging Global Capital with India's Growth</SectionTitle>
-            <p className="text-gray-500 max-w-2xl mx-auto">India presents a significant opportunity driven by rapid growth and strong demand for structured capital.</p>
+            <p className="section-subtitle max-w-2xl mx-auto">India presents a significant opportunity driven by rapid growth and strong demand for structured capital.</p>
           </motion.div>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
             <motion.div {...fadeUp(0.1)}>
@@ -165,7 +167,7 @@ export default function EquityRaisingPage() {
             </motion.div>
             <motion.div {...fadeUp(0.2)}>
               <Card className="h-full">
-                <h3 className="text-lg font-bold text-[#111] mb-4 flex items-center gap-2"><Briefcase className="w-5 h-5 text-[#D48035]" /> VTMC Platform Delivers</h3>
+                <h3 className="text-lg font-bold text-[#111] mb-4 flex items-center gap-2"><Briefcase className="w-5 h-5 text-[#D48035]" /> Our Platform Delivers</h3>
                 <ul className="space-y-3">
                   <Bullet>Access to global institutional and HNW diaspora capital</Bullet>
                   <Bullet>Structured, risk-mitigated, asset-backed investments</Bullet>
@@ -203,7 +205,7 @@ export default function EquityRaisingPage() {
                   {pillar.icon}
                 </div>
                 <h3 className="text-lg font-bold text-[#111] mb-2">{pillar.title}</h3>
-                <p className="text-gray-500 text-sm leading-relaxed">{pillar.desc}</p>
+                <p className="text-gray-500 text-[1.05rem] leading-relaxed">{pillar.desc}</p>
               </motion.div>
             ))}
           </div>
@@ -215,7 +217,7 @@ export default function EquityRaisingPage() {
         <div className="container mx-auto px-4 max-w-6xl">
           <motion.div {...fadeUp()} className="text-center mb-16">
             <SectionTitle light>The Platform Ecosystem</SectionTitle>
-            <p className="text-gray-400 max-w-2xl mx-auto">Connecting stakeholders through structured channels to simplify and secure cross-border investments.</p>
+            <p className="section-subtitle text-gray-400 max-w-2xl mx-auto" style={{ color: '#9ca3af' }}>Connecting stakeholders through structured channels to simplify and secure cross-border investments.</p>
           </motion.div>
 
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 items-stretch">
@@ -224,7 +226,7 @@ export default function EquityRaisingPage() {
               <div>
                 <span className="text-xs uppercase tracking-widest text-[#D48035] font-bold block mb-4">Connect</span>
                 <h3 className="text-xl font-bold mb-4">Sourcing & Advisory Channels</h3>
-                <p className="text-gray-400 text-sm leading-relaxed mb-6">Bringing together the key players to kickstart investment opportunities and scale developer funding corridors.</p>
+                <p className="text-gray-400 text-[1.05rem] leading-relaxed mb-6">Bringing together the key players to kickstart investment opportunities and scale developer funding corridors.</p>
               </div>
               <div className="space-y-3">
                 {["Service Partners", "Developers", "Capital Seekers"].map((item, idx) => (
@@ -241,7 +243,7 @@ export default function EquityRaisingPage() {
               <div>
                 <span className="text-xs uppercase tracking-widest text-[#D48035] font-bold block mb-4">Invest</span>
                 <h3 className="text-xl font-bold mb-4">Curated Asset Classes</h3>
-                <p className="text-gray-400 text-sm leading-relaxed mb-6">Select from verified debt, mezzanine, and equity opportunities designed for downside protection and structured returns.</p>
+                <p className="text-gray-400 text-[1.05rem] leading-relaxed mb-6">Select from verified debt, mezzanine, and equity opportunities designed for downside protection and structured returns.</p>
               </div>
               <div className="space-y-3">
                 {["Alternate Investments", "Equity Options", "Real Estate Opportunities"].map((item, idx) => (
@@ -258,7 +260,7 @@ export default function EquityRaisingPage() {
               <div>
                 <span className="text-xs uppercase tracking-widest text-[#D48035] font-bold block mb-4">Support</span>
                 <h3 className="text-xl font-bold mb-4">Compliance & Enablement</h3>
-                <p className="text-gray-400 text-sm leading-relaxed mb-6">Providing investor protection through dedicated relationship support, auditing, and structured legal frameworks.</p>
+                <p className="text-gray-400 text-[1.05rem] leading-relaxed mb-6">Providing investor protection through dedicated relationship support, auditing, and structured legal frameworks.</p>
               </div>
               <div className="space-y-3">
                 {["Legal Support", "Financial Enablement", "Advisory Services"].map((item, idx) => (
@@ -278,7 +280,7 @@ export default function EquityRaisingPage() {
         <div className="container mx-auto px-4 max-w-6xl">
           <motion.div {...fadeUp()} className="text-center mb-14">
             <SectionTitle>Capital + Structuring + Exit Platform Model</SectionTitle>
-            <p className="text-gray-500 max-w-xl mx-auto">VTMC integrates three key components into a unified investment platform.</p>
+            <p className="section-subtitle max-w-xl mx-auto">Our platform integrates three key components into a unified investment model.</p>
           </motion.div>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12">
             {[
@@ -290,7 +292,7 @@ export default function EquityRaisingPage() {
                 <Card className="h-full text-center">
                   <div className="w-12 h-12 rounded-xl bg-orange-50 flex items-center justify-center mx-auto mb-4">{item.icon}</div>
                   <h3 className="text-base font-bold text-[#111] mb-2">{item.title}</h3>
-                  <p className="text-gray-500 text-sm leading-relaxed">{item.desc}</p>
+                  <p className="text-gray-500 text-[1.05rem] leading-relaxed">{item.desc}</p>
                 </Card>
               </motion.div>
             ))}
@@ -329,7 +331,7 @@ export default function EquityRaisingPage() {
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
             <motion.div {...fadeUp(0.1)} className="space-y-6">
               <SectionTitle>Why Now?</SectionTitle>
-              <p className="text-gray-600 text-sm md:text-base leading-relaxed">
+              <p className="responsive-paragraph text-gray-600">
                 India is experiencing a massive wave of digital adoption, regulatory transparency (post-RERA), and rising NRI wealth. The intersection of these trends creates significant demand for trusted investment gateways.
               </p>
               <div className="space-y-4">
@@ -341,8 +343,8 @@ export default function EquityRaisingPage() {
                   <div key={i} className="flex gap-3">
                     <CheckCircle className="w-5 h-5 text-[#D48035] shrink-0 mt-0.5" />
                     <div>
-                      <h4 className="font-bold text-[#111] text-sm">{item.title}</h4>
-                      <p className="text-xs text-gray-500 mt-0.5">{item.desc}</p>
+                      <h4 className="font-bold text-[#111] text-lg">{item.title}</h4>
+                      <p className="text-[1.05rem] text-gray-500 mt-1">{item.desc}</p>
                     </div>
                   </div>
                 ))}
@@ -433,7 +435,7 @@ export default function EquityRaisingPage() {
               <motion.div key={i} {...fadeUp(i * 0.1)} className="bg-white/5 border border-white/10 rounded-2xl p-7">
                 <div className="mb-4">{item.icon}</div>
                 <h3 className="text-base font-bold mb-4">{item.title}</h3>
-                {item.desc ? <p className="text-gray-400 text-sm leading-relaxed">{item.desc}</p> : (
+                {item.desc ? <p className="text-gray-400 text-[1.05rem] leading-relaxed">{item.desc}</p> : (
                   <ul className="space-y-2">
                     {item.points.map((p, pi) => <Bullet key={pi} light>{p}</Bullet>)}
                   </ul>
@@ -465,7 +467,7 @@ export default function EquityRaisingPage() {
         <div className="container mx-auto px-4 max-w-6xl">
           <motion.div {...fadeUp()} className="text-center mb-14">
             <SectionTitle>NRI Exit & Demand Engine</SectionTitle>
-            <p className="text-gray-500 max-w-xl mx-auto">Direct access to 32M+ global Indian diaspora - VTMC's most powerful competitive advantage.</p>
+            <p className="section-subtitle max-w-xl mx-auto">Direct access to 32M+ global Indian diaspora - our platform's most powerful competitive advantage.</p>
           </motion.div>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-10">
             <motion.div {...fadeUp(0.1)}>
@@ -514,7 +516,7 @@ export default function EquityRaisingPage() {
                 <div key={i} className="bg-white rounded-xl border border-gray-100 shadow-sm p-5">
                   <div className="text-xs font-bold text-[#D48035] uppercase tracking-wide mb-1">{item.period}</div>
                   <div className="text-sm font-bold text-[#111] mb-2">{item.label}</div>
-                  <p className="text-xs text-gray-500 leading-relaxed">{item.desc}</p>
+                  <p className="text-[0.95rem] text-gray-500 leading-relaxed">{item.desc}</p>
                 </div>
               ))}
             </div>
@@ -525,12 +527,12 @@ export default function EquityRaisingPage() {
         </div>
       </section>
 
-      {/* ── LEADERSHIP (INVESTATE + VTMC) ── */}
+      {/* ── LEADERSHIP (INVESTATE) ── */}
       <section className="py-24 bg-[#F8F8F8]">
         <div className="container mx-auto px-4 max-w-6xl">
           <motion.div {...fadeUp()} className="text-center mb-16">
             <SectionTitle>Meet the Leadership</SectionTitle>
-            <p className="text-gray-500 max-w-2xl mx-auto">Connecting global capital access, diaspora connectivity, and structured investment expertise.</p>
+            <p className="section-subtitle max-w-2xl mx-auto">Connecting global capital access, diaspora connectivity, and structured investment expertise.</p>
           </motion.div>
 
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
@@ -561,7 +563,7 @@ export default function EquityRaisingPage() {
                   </div>
                   <h3 className="text-lg font-bold text-[#111]">{leader.name}</h3>
                   <p className="text-[#D48035] text-xs font-semibold mt-1">{leader.role}</p>
-                  <p className="text-gray-500 text-xs mt-4 leading-relaxed text-left">{leader.desc}</p>
+                  <p className="text-gray-500 text-[0.95rem] mt-4 leading-relaxed text-left">{leader.desc}</p>
                 </div>
                 <div className="bg-gray-50 px-6 py-4 border-t border-gray-100">
                   <p className="text-[11px] text-gray-400 uppercase tracking-widest text-center">Investate Executive Leadership</p>
@@ -577,11 +579,11 @@ export default function EquityRaisingPage() {
         <div className="container mx-auto px-4 max-w-6xl">
           <motion.div {...fadeUp()} className="text-center mb-14">
             <SectionTitle>Why Partner with Us?</SectionTitle>
-            <p className="text-gray-500 max-w-xl mx-auto">Investate India & VTMC is not just a fund - it is a cross-border investment and exit platform combining capital, structuring, and liquidity.</p>
+            <p className="section-subtitle max-w-xl mx-auto">Investate India is not just a fund - it is a cross-border investment and exit platform combining capital, structuring, and liquidity.</p>
           </motion.div>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5 mb-10">
             {[
-              { title: "Access to Global Capital", desc: "Tap into VTMC's institutional and NRI investor network spanning USA, UK, UAE, and beyond." },
+              { title: "Access to Global Capital", desc: "Tap into our global institutional and NRI investor network spanning USA, UK, UAE, and beyond." },
               { title: "Flexible Deal Structuring", desc: "Secured debt, mezzanine, or equity - we design the right structure for your project." },
               { title: "Faster Execution", desc: "Streamlined due diligence and investor matching to accelerate time-to-capital." },
               { title: "Transparent Governance", desc: "Standardized disclosures, milestone tracking, and independent audits at every stage." },
@@ -591,14 +593,14 @@ export default function EquityRaisingPage() {
               <motion.div key={i} {...fadeUp(i * 0.07)}>
                 <Card className="h-full hover:shadow-md transition-shadow">
                   <h3 className="text-base font-bold text-[#111] mb-2">{item.title}</h3>
-                  <p className="text-sm text-gray-500 leading-relaxed">{item.desc}</p>
+                  <p className="text-gray-500 text-[1.05rem] leading-relaxed">{item.desc}</p>
                 </Card>
               </motion.div>
             ))}
           </div>
           <motion.div {...fadeUp(0.2)} className="bg-[#1a1a1a] rounded-2xl p-8 text-center text-white">
             <p className="text-xl font-bold mb-2">Capital + Distribution + <span className="text-[#D48035]">Liquidity</span></p>
-            <p className="text-gray-400 text-sm">VTMC's unique position as the only platform combining global capital deployment, structured finance, and a built-in exit platform.</p>
+            <p className="text-gray-400 text-sm">Our unique position as a platform combining global capital deployment, structured finance, and a built-in exit model.</p>
           </motion.div>
         </div>
       </section>
@@ -638,83 +640,6 @@ export default function EquityRaisingPage() {
         </div>
       </section>
 
-      {/* ── CONTACT ── */}
-      <section className="py-24 bg-[#1a1a1a] text-white" id="contact">
-        <div className="container mx-auto px-4 max-w-6xl">
-          <motion.div {...fadeUp()} className="text-center mb-14">
-            <SectionTitle light>Building the Future of India with Global Capital</SectionTitle>
-            <p className="text-gray-400 max-w-xl mx-auto">VTMC & Investate partners with credible businesses to create secure, scalable, and high-value investment opportunities.</p>
-          </motion.div>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-
-            {/* US Office */}
-            <motion.div {...fadeUp(0.1)} className="bg-white/5 border border-white/10 rounded-2xl p-8">
-              <div className="flex items-center gap-3 mb-5">
-                <span className="text-xs uppercase tracking-wider font-bold text-[#D48035] border border-[#D48035]/30 bg-[#D48035]/15 px-2.5 py-1 rounded">US</span>
-                <h3 className="text-lg font-bold">United States Office</h3>
-              </div>
-              <div className="space-y-4 text-sm text-gray-300">
-                <div className="flex items-start gap-3">
-                  <MapPin className="w-4 h-4 text-[#D48035] shrink-0 mt-0.5" />
-                  <p>55 West 47 Street, 4th Floor<br />New York, NY 10036, USA</p>
-                </div>
-                <div className="flex items-center gap-3">
-                  <Globe className="w-4 h-4 text-[#D48035] shrink-0" />
-                  <a href="https://vtmc.us" target="_blank" rel="noopener noreferrer" className="hover:text-[#D48035] transition-colors">vtmc.us</a>
-                </div>
-                <div className="flex items-center gap-3">
-                  <Mail className="w-4 h-4 text-[#D48035] shrink-0" />
-                  <a href="mailto:vtmc2016@gmail.com" className="hover:text-[#D48035] transition-colors">vtmc2016@gmail.com</a>
-                </div>
-                <div className="flex items-start gap-3">
-                  <Phone className="w-4 h-4 text-[#D48035] shrink-0 mt-0.5" />
-                  <div>
-                    <a href="tel:+19144731711" className="block hover:text-[#D48035] transition-colors">+1 914-473-1711</a>
-                    <a href="tel:+12125756104" className="block hover:text-[#D48035] transition-colors">+1-212-575-6104</a>
-                  </div>
-                </div>
-              </div>
-            </motion.div>
-
-            {/* India Mumbai Office */}
-            <motion.div {...fadeUp(0.2)} className="bg-white/5 border border-white/10 rounded-2xl p-8">
-              <div className="flex items-center gap-3 mb-5">
-                <span className="text-xs uppercase tracking-wider font-bold text-[#D48035] border border-[#D48035]/30 bg-[#D48035]/15 px-2.5 py-1 rounded">IN</span>
-                <h3 className="text-lg font-bold">Mumbai Office</h3>
-              </div>
-              <div className="space-y-4 text-sm text-gray-300">
-                <div className="flex items-start gap-3">
-                  <MapPin className="w-4 h-4 text-[#D48035] shrink-0 mt-0.5" />
-                  <p>1401 Panchratna Building,<br />Opera House, Mumbai, India</p>
-                </div>
-                <div className="flex items-center gap-3">
-                  <Phone className="w-4 h-4 text-[#D48035] shrink-0" />
-                  <a href="tel:+919137835008" className="hover:text-[#D48035] transition-colors">+91-9137835008</a>
-                </div>
-              </div>
-            </motion.div>
-
-            {/* India Hyderabad Office */}
-            <motion.div {...fadeUp(0.3)} className="bg-white/5 border border-white/10 rounded-2xl p-8">
-              <div className="flex items-center gap-3 mb-5">
-                <span className="text-xs uppercase tracking-wider font-bold text-[#D48035] border border-[#D48035]/30 bg-[#D48035]/15 px-2.5 py-1 rounded">IN</span>
-                <h3 className="text-lg font-bold">Hyderabad Corporate</h3>
-              </div>
-              <div className="space-y-4 text-sm text-gray-300">
-                <div className="flex items-start gap-3">
-                  <MapPin className="w-4 h-4 text-[#D48035] shrink-0 mt-0.5" />
-                  <p>5th Floor, Sanghi One, Road no 10,<br />Banjara Hills, Hyderabad, TG.</p>
-                </div>
-                <div className="flex items-center gap-3">
-                  <Globe className="w-4 h-4 text-[#D48035] shrink-0" />
-                  <a href="https://www.investateindia.com" target="_blank" rel="noopener noreferrer" className="hover:text-[#D48035] transition-colors">investateindia.com</a>
-                </div>
-              </div>
-            </motion.div>
-
-          </div>
-        </div>
-      </section>
 
       <Footer />
     </div>

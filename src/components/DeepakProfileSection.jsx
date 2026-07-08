@@ -74,24 +74,26 @@ export default function DeepakProfileSection({ pageType = "default" }) {
       <div className="container mx-auto px-4 max-w-7xl">
         <div className="bg-[#FAFBFD] dark:bg-[#1a1a1a] rounded-[2rem] border border-gray-100 dark:border-gray-800 shadow-xl overflow-hidden flex flex-col md:flex-row">
           
-          {/* Left panel - Dark profile card */}
-          <div className="w-full md:w-1/3 bg-[#141416] p-6 md:p-8 flex flex-col items-center justify-center text-center">
-            <div className="relative mb-4">
-              <div className="w-28 h-28 md:w-32 md:h-32 rounded-full overflow-hidden border-2 border-[#D48035] p-1 bg-gradient-to-tr from-[#D48035] to-amber-500">
-                <img 
-                  src="/deepak.png" 
-                  alt="Deepak Kavadia" 
-                  className="w-full h-full object-cover rounded-full"
-                />
-              </div>
+          {/* Left panel - Full-length cover photo with text underneath */}
+          <div className="w-full md:w-1/3 flex flex-col bg-slate-50/50 dark:bg-black/20 border-b md:border-b-0 md:border-r border-gray-100 dark:border-gray-800/80 overflow-hidden">
+            {/* Photo on top */}
+            <div className="w-full h-[290px] md:h-[350px] relative overflow-hidden flex-shrink-0">
+              <img 
+                src="/deepak.png" 
+                alt="Deepak Kavadia" 
+                className="w-full h-full object-cover transition-transform duration-700 hover:scale-105"
+              />
             </div>
             
-            <h3 className="text-2xl font-bold text-white tracking-wide mb-1">
-              Deepak Kavadia
-            </h3>
-            <p className="text-[#D48035] text-sm font-semibold tracking-wider uppercase">
-              CEO & Chairman
-            </p>
+            {/* Text details underneath */}
+            <div className="p-5 flex flex-col items-center justify-center text-center flex-grow bg-[#FAFBFD] dark:bg-[#1a1a1a]">
+              <h3 className="text-xl font-bold text-[#111] dark:text-white tracking-wide mb-1">
+                Deepak Kavadia
+              </h3>
+              <p className="text-[#D48035] text-xs font-semibold tracking-wider uppercase">
+                CEO & Chairman
+              </p>
+            </div>
           </div>
 
           {/* Right panel - Content */}

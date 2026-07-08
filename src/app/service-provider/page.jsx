@@ -1,4 +1,4 @@
-﻿"use client";
+"use client";
 
 import React, { useState, useEffect, useRef } from "react";
 import { useRouter } from "next/navigation";
@@ -22,12 +22,12 @@ import {
 const heroSlides = [
   {
     image:
-      "https://images.unsplash.com/photo-1600880292203-757bb62b4baf?q=80&w=2070&auto=format&fit=crop",
+      "/images/image copy 20.png",
     tag: "Institutional Partner Growth",
     title: "Present Your Services to",
     highlight: "Premium Builders & HNW NRI Investors",
     subtitle:
-      "The ultimate ecosystem for verified Indian real estate lawyers, chartered accountants, architects, and advisors to expand their reach to top-tier builders and global NRI buyers.",
+      "The ultimate ecosystem for verified real estate agents, brokers, lawyers, chartered accountants, tax consultants, and property service professionals to expand their reach to top-tier builders and global NRI buyers.",
   },
   {
     image: "/images/challenge_intermediaries.png",
