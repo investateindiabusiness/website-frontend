@@ -156,21 +156,21 @@ const stepImages = [
 ];
 
 const teamMembers = [
-    { 
-        name: "Deepak Kavadia", 
-        role: "Chief Executive Officer & Co-Founder", 
+    {
+        name: "Deepak Kavadia",
+        role: "Chief Executive Officer & Co-Founder",
         image: "/deepak.png",
         bio: "New York-based entrepreneur and global gemstone authority, Founder of Nice Gems Inc., Nice Jewels Inc., and Prestige Developers LLC, and Founder & Chairman of the NRI Federation, bringing a strong global perspective and trusted connect for NRI investors."
     },
-    { 
-        name: "Pankaj Gupta", 
-        role: "Co-Founder", 
+    {
+        name: "Pankaj Gupta",
+        role: "Co-Founder",
         image: "/pankaj.png",
         bio: "Has built a strong presence in the diamond and jewellery industry and is a recognized name in the Hyderabad real estate market."
     },
-    { 
-        name: "Atish Agarwal", 
-        role: "Co-Founder", 
+    {
+        name: "Atish Agarwal",
+        role: "Co-Founder",
         image: "/atish.png",
         bio: "Brings diversified entrepreneurial experience across textiles, retail, jewellery, and real estate advisory."
     }
@@ -385,7 +385,7 @@ export default function Index() {
                     }}
                 >
                     <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-                        <path d="M15 3h6v18h-6"/><polyline points="10 17 15 12 10 7"/><line x1="15" y1="12" x2="3" y2="12"/>
+                        <path d="M15 3h6v18h-6" /><polyline points="10 17 15 12 10 7" /><line x1="15" y1="12" x2="3" y2="12" />
                     </svg>
                     Login
                 </motion.button>
@@ -751,9 +751,9 @@ export default function Index() {
                                 <div className="team-card-info">
                                     <h4 className="team-card-name">{member.name}</h4>
                                     <p className="team-card-role text-[#D48035] font-semibold text-xs mb-3">{member.role}</p>
-                                    <p className="text-slate-600 dark:text-slate-300 text-xs md:text-sm leading-relaxed">
+                                    {/* <p className="text-slate-600 dark:text-slate-300 text-xs md:text-sm leading-relaxed">
                                         {member.bio}
-                                    </p>
+                                    </p> */}
                                 </div>
                             </div>
                         ))}

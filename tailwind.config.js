@@ -8,6 +8,13 @@ module.exports = {
   ],
   theme: {
     extend: {
+      // ── Font Families ─────────────────────────────────────────
+      fontFamily: {
+        heading: ['Inter', 'Manrope', 'system-ui', '-apple-system', 'sans-serif'],
+        body:    ['Inter', 'Manrope', 'system-ui', '-apple-system', 'sans-serif'],
+        sans:    ['Inter', 'Manrope', 'system-ui', '-apple-system', 'sans-serif'],
+      },
+      // ── Colors ────────────────────────────────────────────────
       colors: {
         border: "hsl(var(--border))",
         input: "hsl(var(--input))",
@@ -48,6 +55,18 @@ module.exports = {
           3: "hsl(var(--chart-3))",
           4: "hsl(var(--chart-4))",
           5: "hsl(var(--chart-5))",
+        },
+        // ── Brand tokens (use instead of bg-[var(--color-accent)]) ──
+        brand: {
+          orange: "#D48035",
+          "orange-hover": "#B45309",
+          "orange-light": "#FFF7ED",
+          "orange-tag": "#FFB068",
+          navy: "#1F2937",
+          beige: "#E6E1DE",
+          linen: "#E1DCD7",
+          "light-bg": "#F8F8F8",
+          footer: "#1A1A1C",
         },
       },
       borderRadius: {

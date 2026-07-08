@@ -12,15 +12,135 @@ const isProtectedRoute = (path) => {
   return isAdminRoute || isBuilderRoute || isInvestorRoute || isServiceProviderRoute;
 };
 
-export const apiRequest = async (endpoint, options = {}) => {
+// ---------------------------------------------------------------------------
+// Token refresh infrastructure
+// ---------------------------------------------------------------------------
+
+/**
+ * Decode the exp claim from a JWT without verifying the signature.
+ * Returns the expiry as a Unix timestamp (ms), or 0 on failure.
+ */
+const getTokenExpiry = (token) => {
+  try {
+    const payload = JSON.parse(atob(token.split('.')[1]));
+    return (payload.exp || 0) * 1000; // convert to ms
+  } catch {
+    return 0;
+  }
+};
+
+/**
+ * Singleton refresh lock. While a refresh is in-flight, all concurrent
+ * API calls will await this promise rather than each kicking off their own.
+ */
+let _refreshPromise = null;
+
+/**
+ * Exchange a Firebase refresh token for a fresh ID token.
+ * Stores the new token + expiry back into sessionStorage.
+ * Returns the new idToken string, or null if the refresh fails.
+ */
+const silentRefresh = async (currentSession) => {
+  if (!currentSession?.refreshToken) return null;
+
+  // Reuse an in-flight refresh rather than sending duplicate requests
+  if (_refreshPromise) return _refreshPromise;
+
+  _refreshPromise = (async () => {
+    try {
+      const response = await fetch(`${API_BASE_URL}/api/auth/refresh-token`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ refreshToken: currentSession.refreshToken }),
+      });
+
+      if (!response.ok) return null;
+
+      const data = await response.json();
+      if (!data.idToken) return null;
+
+      // Persist the refreshed token back to storage
+      const newExpiry = Date.now() + (data.expiresIn || 3600) * 1000;
+      const updated = {
+        ...currentSession,
+        token: data.idToken,
+        refreshToken: data.refreshToken || currentSession.refreshToken,
+        expiresAt: newExpiry,
+      };
+      if (typeof window !== 'undefined') {
+        sessionStorage.setItem('user_session', JSON.stringify(updated));
+      }
+      return data.idToken;
+    } catch {
+      return null;
+    } finally {
+      _refreshPromise = null;
+    }
+  })();
+
+  return _refreshPromise;
+};
+
+/**
+ * Redirect the user to the appropriate login page, preserving role context.
+ */
+const redirectToLogin = (role, reason = 'session_expired') => {
+  if (typeof window === 'undefined') return;
+  sessionStorage.removeItem('user_session');
+  const currentPath = window.location.pathname;
+  if (!isProtectedRoute(currentPath)) return;
+
+  if (role === 'admin') {
+    window.location.href = `/admin/login?${reason}=true`;
+  } else if (role === 'builder') {
+    window.location.href = `/builder/login?${reason}=true`;
+  } else if (role === 'serviceProvider') {
+    window.location.href = `/service-provider/login?${reason}=true`;
+  } else {
+    window.location.href = `/investor/login?${reason}=true`;
+  }
+};
+
+// ---------------------------------------------------------------------------
+// Core API request helper
+// ---------------------------------------------------------------------------
+
+export const apiRequest = async (endpoint, options = {}, _isRetry = false) => {
   let session = null;
   if (typeof window !== 'undefined') {
     try {
       session = JSON.parse(sessionStorage.getItem('user_session'));
     } catch (e) {
-      console.warn("Failed to parse user session:", e);
+      console.warn('Failed to parse user session:', e);
     }
   }
+
+  // ── Proactive refresh ─────────────────────────────────────────────────────
+  // If the token is within 5 minutes of expiry (or already expired) and this
+  // is NOT itself an auth/refresh call, try to refresh before the request.
+  const isAuthEndpoint =
+    endpoint.includes('/login') ||
+    endpoint.includes('/google-sync') ||
+    endpoint.includes('/admin-login') ||
+    endpoint.includes('/refresh-token');
+
+  if (!isAuthEndpoint && !_isRetry && session?.token && session?.expiresAt) {
+    const fiveMinutes = 5 * 60 * 1000;
+    if (Date.now() >= session.expiresAt - fiveMinutes) {
+      const newToken = await silentRefresh(session);
+      if (newToken) {
+        // Re-read session after refresh so the request uses the fresh token
+        try {
+          session = JSON.parse(sessionStorage.getItem('user_session'));
+        } catch { /* ignore */ }
+      } else if (Date.now() >= session.expiresAt) {
+        // Token is already expired and refresh failed — bail out now
+        redirectToLogin(session?.role);
+        return Promise.reject('Session expired');
+      }
+    }
+  }
+  // ──────────────────────────────────────────────────────────────────────────
 
   const headers = {
     'Content-Type': 'application/json',
@@ -50,37 +170,17 @@ export const apiRequest = async (endpoint, options = {}) => {
     const data = await response.json();
 
     if (response.status === 401) {
-      const isAuthRequest = endpoint.includes('/login') || endpoint.includes('/google-sync') || endpoint.includes('/admin-login');
-      if (!isAuthRequest) {
-        const savedSession = typeof window !== 'undefined' ? sessionStorage.getItem('user_session') : null;
-        let role = 'investor';
-        if (savedSession) {
-          try {
-            const parsedSession = JSON.parse(savedSession);
-            if (parsedSession && parsedSession.role) {
-              role = parsedSession.role;
-            }
-          } catch (e) {
-            console.error("Error parsing user session in API interceptor:", e);
+      if (!isAuthEndpoint) {
+        // ── Reactive refresh ────────────────────────────────────────────────
+        // The server rejected the token. Attempt one silent refresh and retry.
+        if (!_isRetry && session?.refreshToken) {
+          const newToken = await silentRefresh(session);
+          if (newToken) {
+            return apiRequest(endpoint, options, true); // retry once
           }
         }
-        if (typeof window !== 'undefined') {
-          sessionStorage.removeItem('user_session');
-        }
-
-        const currentPath = typeof window !== 'undefined' ? window.location.pathname : '';
-        if (isProtectedRoute(currentPath)) {
-          if (role === 'admin') {
-            window.location.href = '/admin/login?session_expired=true';
-          } else if (role === 'builder') {
-            window.location.href = '/builder/login?session_expired=true';
-          } else if (role === 'serviceProvider') {
-            window.location.href = '/service-provider/login?session_expired=true';
-          } else {
-            window.location.href = '/investor/login?session_expired=true';
-          }
-        }
-
+        // ────────────────────────────────────────────────────────────────────
+        redirectToLogin(session?.role);
         return Promise.reject('Session expired');
       } else {
         return Promise.reject({ message: data.message || 'Authentication failed', ...data });
@@ -88,19 +188,17 @@ export const apiRequest = async (endpoint, options = {}) => {
     }
 
     if (!response.ok) {
-      // --- THE FIX IS HERE ---
       // If the backend sent ANY custom error flag, return the whole object to the component
       if (data.error) {
         return Promise.reject(data);
       }
-
-      // Otherwise, reject with a plain object containing the message to avoid Next.js dev overlay
+      // Otherwise, reject with a plain object containing the message
       return Promise.reject({ message: data.message || 'Something went wrong', ...data });
     }
 
     return data;
   } catch (error) {
-    console.warn("API Request Error:", error);
+    console.warn('API Request Error:', error);
     throw error;
   }
 };
