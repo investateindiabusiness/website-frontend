@@ -1,4 +1,4 @@
-﻿"use client";
+"use client";
 
 import React, { useState, useEffect } from 'react';
 import { createPortal } from 'react-dom';
@@ -14,7 +14,7 @@ const ZONE_CONFIG = {
   zone2: { width: 728, height: 90 },
   zone3: { width: 300, height: 250 },
   zone4: { width: 728, height: 90 },
-  zone5: { width: 970, height: 250 },
+  zone5: { width: 970, height: 150 },
 };
 
 /**
@@ -95,7 +95,7 @@ export default function AdBanner({ zoneId, variant = 'default', forceRole }) {
 
     if (forceRole) {
       sessionStorage.setItem('postLoginRedirect', '/advertisements');
-      window.location.href = `/${forceRole}/login`;
+      window.location.href = `/login?role=${forceRole}`;
       return;
     }
 
@@ -104,7 +104,7 @@ export default function AdBanner({ zoneId, variant = 'default', forceRole }) {
 
   const handleRoleSelect = (role) => {
     sessionStorage.setItem('postLoginRedirect', '/advertisements');
-    window.location.href = `/${role}/login`;
+    window.location.href = `/login?role=${role}`;
   };
 
   const renderViewMoreButton = (buttonClass, icon, customText) => {
@@ -229,6 +229,13 @@ export default function AdBanner({ zoneId, variant = 'default', forceRole }) {
             } else if (forceRole) {
               e.stopPropagation();
               handleRoleSelect(forceRole);
+            } else {
+              e.stopPropagation();
+              setShowLoginModal(true);
+            }
+          } else if (ad.type === 'image') {
+            if (ad.adContent?.targetUrl) {
+              window.open(ad.adContent.targetUrl, '_blank');
             }
           }
         }}
@@ -548,11 +555,10 @@ export default function AdBanner({ zoneId, variant = 'default', forceRole }) {
   /* â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
      DEFAULT VARIANT — floating card
   â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
-  /* Static fallback banner — shown when loading OR when no API ad is available */
   const staticFallbackBanner = (
     <div
       className="relative w-full mx-auto rounded-2xl overflow-hidden shadow-md"
-      style={{ maxWidth: '100%', height: 180 }}
+      style={{ maxWidth: '100%', height: zone.height }}
     >
       {/* Background image */}
       <img
@@ -566,15 +572,15 @@ export default function AdBanner({ zoneId, variant = 'default', forceRole }) {
         style={{ background: 'linear-gradient(to right, rgba(11,38,79,0.9) 0%, rgba(26,75,140,0.8) 50%, rgba(26,75,140,0.4) 100%)' }}
       />
       {/* ADVERTISE badge — top right */}
-      <div className="absolute top-3 right-3 flex items-center gap-1.5 bg-white/10 backdrop-blur-sm text-white text-[10px] font-bold tracking-widest px-3 py-1.5 rounded-full border border-white/20 uppercase pointer-events-none">
+      <div className="absolute top-3 right-3 flex items-center gap-1.5 bg-white/10 backdrop-blur-sm text-white text-[9px] font-bold tracking-widest px-2.5 py-1 rounded-full border border-white/20 uppercase pointer-events-none">
         Advertise Here
       </div>
       {/* Text + CTA */}
-      <div className="absolute inset-0 flex flex-col justify-center px-8 max-w-lg z-10">
-        <h2 className="text-white font-extrabold text-2xl md:text-3xl leading-tight mb-4 drop-shadow-lg">
+      <div className={`absolute inset-0 flex justify-center px-6 md:px-8 z-10 ${zone.height <= 100 ? 'flex-row items-center justify-between gap-4' : 'flex-col items-start'}`}>
+        <h2 className={`text-white font-extrabold leading-tight drop-shadow-lg ${zone.height <= 100 ? 'text-base md:text-lg mb-0' : 'text-xl md:text-2xl mb-3'}`}>
           Showcase your projects here
         </h2>
-        {renderViewMoreButton("inline-flex items-center gap-2 bg-orange-500 hover:bg-orange-600 active:bg-orange-700 text-white font-bold text-sm px-5 py-2.5 rounded-lg shadow-lg transition-all duration-200 w-fit", PlusCircle)}
+        {renderViewMoreButton("inline-flex items-center gap-2 bg-orange-500 hover:bg-orange-600 active:bg-orange-700 text-white font-bold text-xs md:text-sm px-4 py-2 rounded-lg shadow-lg transition-all duration-200 w-fit shrink-0", PlusCircle)}
       </div>
     </div>
   );

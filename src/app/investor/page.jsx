@@ -1,4 +1,4 @@
-﻿"use client";
+"use client";
 
 import React, { useState, useEffect, useRef } from 'react';
 import { useRouter } from 'next/navigation';
@@ -230,9 +230,8 @@ export default function Index() {
 
     useEffect(() => {
         if (isHeroPaused) return;
-        const totalSlides = heroSlides.length + 1;
         const timer = setInterval(() => {
-            setHeroIndex((prev) => (prev + 1) % totalSlides);
+            setHeroIndex((prev) => (prev + 1) % heroSlides.length);
         }, 8000);
         return () => clearInterval(timer);
     }, [isHeroPaused]);
@@ -258,8 +257,7 @@ export default function Index() {
     };
 
     const activeStepData = investorSteps[activeStepIndex];
-    const totalSlides = heroSlides.length + 1;
-    const isAdSlide = heroIndex === heroSlides.length;
+    const totalSlides = heroSlides.length;
 
     const handleAuthClick = (action, role) => {
         if (action === 'login') {
@@ -279,33 +277,20 @@ export default function Index() {
                 onMouseLeave={() => setIsHeroPaused(false)}
             >
                 <AnimatePresence mode="sync">
-                    {isAdSlide ? (
+                    <picture key={heroIndex} className="absolute inset-0 w-full h-full z-0">
+                        <source media="(max-width: 768px)" srcSet={heroSlides[heroIndex].image.replace("w=2070", "w=600&q=70")} />
                         <motion.img
-                            key="ad-bg"
-                            src="https://images.unsplash.com/photo-1560518883-ce09059eeffa?w=1200&q=80"
-                            alt="Advertisement background"
+                            src={heroSlides[heroIndex].image.replace("w=2070", "w=1200&q=75")}
+                            alt="Hero background"
                             className="absolute inset-0 w-full h-full object-cover z-0 hero-split-image"
                             initial={{ opacity: 0 }}
                             animate={{ opacity: 1 }}
                             exit={{ opacity: 0 }}
-                            transition={{ duration: 1.2, ease: 'easeInOut' }}
+                            transition={{ duration: 1.2, ease: "easeInOut" }}
+                            loading="eager"
+                            fetchPriority="high"
                         />
-                    ) : (
-                        <picture key={heroIndex} className="absolute inset-0 w-full h-full z-0">
-                            <source media="(max-width: 768px)" srcSet={heroSlides[heroIndex].image.replace('.png', '_mobile.jpg')} />
-                            <motion.img
-                                src={heroSlides[heroIndex].image}
-                                alt="Hero background"
-                                className="absolute inset-0 w-full h-full object-cover z-0 hero-split-image"
-                                initial={{ opacity: 0 }}
-                                animate={{ opacity: 1 }}
-                                exit={{ opacity: 0 }}
-                                transition={{ duration: 1.2, ease: 'easeInOut' }}
-                                loading="eager"
-                                fetchPriority="high"
-                            />
-                        </picture>
-                    )}
+                    </picture>
                 </AnimatePresence>
                 <div className="absolute inset-0 z-[1] hero-split-overlay" />
 
@@ -355,52 +340,38 @@ export default function Index() {
                 </div>
 
                 <AnimatePresence mode="wait">
-                    {isAdSlide ? (
-                        <motion.div
-                            key="ad-slide-content"
-                            className="absolute inset-0 z-[2] flex flex-col justify-center px-10 md:px-20"
-                            initial={{ opacity: 0, y: 20 }}
-                            animate={{ opacity: 1, y: 0 }}
-                            exit={{ opacity: 0, y: -20 }}
-                            transition={{ duration: 0.6, ease: 'easeOut' }}
-                        >
-                            <div className="container relative h-full flex flex-col justify-center">
-                                <span className="inline-block text-xs font-bold uppercase tracking-widest bg-orange-500/80 text-white px-3 py-1.5 rounded-full mb-5 w-fit">
-                                    Sponsored
-                                </span>
-                                <h1 className="hero-headline drop-shadow-xl text-white">Advertise Your<br /><span className="text-orange-400">Project Here!</span></h1>
-                                <p className="hero-subheadline max-w-lg text-white/90">Reach thousands of global NRI investors. Get your property or service featured on Investate India.</p>
-                                <div className="hero-cta-group flex gap-4 mt-4">
-                                    <AdBanner zoneId="zone2" variant="cta-only" forceRole="investor" />
-                                </div>
+                    <motion.div
+                        key={`slide-${heroIndex}`}
+                        className="absolute inset-0 z-[2] container flex flex-col justify-center"
+                        initial={{ opacity: 0, y: 20 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        exit={{ opacity: 0, y: -20 }}
+                        transition={{ duration: 0.6, ease: 'easeOut' }}
+                    >
+                        <div className="hero-content">
+                            <span className="hero-tag">{heroSlides[heroIndex].tag}</span>
+                            <h1 className="hero-headline">
+                                {heroSlides[heroIndex].title} <br />
+                                <span className="text-accent">{heroSlides[heroIndex].highlight}</span>
+                            </h1>
+                            <p className="hero-subheadline">
+                                {heroSlides[heroIndex].subtitle}
+                            </p>
+                            <div className="hero-cta-group">
+                                <button onClick={() => handleAuthClick('register', 'investor')} className="btn btn-primary">
+                                    Explore Opportunities
+                                </button>
                             </div>
-                        </motion.div>
-                    ) : (
-                        <motion.div
-                            key={`slide-${heroIndex}`}
-                            className="absolute inset-0 z-[2] container flex flex-col justify-center"
-                            initial={{ opacity: 0, y: 20 }}
-                            animate={{ opacity: 1, y: 0 }}
-                            exit={{ opacity: 0, y: -20 }}
-                            transition={{ duration: 0.6, ease: 'easeOut' }}
-                        >
-                            <div className="hero-content">
-                                <span className="hero-tag">{heroSlides[heroIndex].tag}</span>
-                                <h1 className="hero-headline">
-                                    {heroSlides[heroIndex].title} <br />
-                                    <span className="text-accent">{heroSlides[heroIndex].highlight}</span>
-                                </h1>
-                                <p className="hero-subheadline">
-                                    {heroSlides[heroIndex].subtitle}
-                                </p>
-                                <div className="hero-cta-group">
-                                    <button onClick={() => handleAuthClick('register', 'investor')} className="btn btn-primary">
-                                        Explore Opportunities
-                                    </button>
-                                </div>
+
+                            {/* Responsive Ad Banner: inline on small, fixed to right on md+ (matches service-provider) */}
+                            <div className="mt-8 w-full max-w-lg md:hidden">
+                                <AdBanner zoneId="zone5" variant="default" forceRole="investor" />
                             </div>
-                        </motion.div>
-                    )}
+                            <div className="hidden md:block absolute right-[-300px] top-1/2 -translate-y-1/2 translate-y-16 w-full max-w-lg z-[25]">
+                                <AdBanner zoneId="zone5" variant="default" forceRole="investor" />
+                            </div>
+                        </div>
+                    </motion.div>
                 </AnimatePresence>
             </section>
 
