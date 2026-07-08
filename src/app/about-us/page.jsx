@@ -315,16 +315,14 @@ export default function AboutUs() {
                     <img src="/deepak.png" alt="Deepak Kavadia" className="w-full h-full object-cover" />
                   </div>
                   <h3 className="font-bold text-2xl text-white mb-1">Deepak Kavadia</h3>
-                  <p className="text-orange-400 text-xs font-bold tracking-widest uppercase mt-2">Partner</p>
+                  <p className="text-orange-400 text-xs font-bold tracking-widest uppercase mt-2">Chief Executive Officer & Co-Founder</p>
                   <p className="text-blue-200 text-sm mt-3">New York, USA</p>
                 </div>
               </div>
               <div className="lg:w-3/5 p-4 md:p-6 flex flex-col justify-center bg-white">
                 <div className="w-12 h-1 bg-[#D48035] mb-6 rounded-full"></div>
                 <p className="text-gray-600 leading-relaxed text-[1.05rem]">
-                  <strong>Deepak,</strong> based in New York, is an entrepreneur, real estate investor, and internationally respected gemstone authority. <br /> <br />
-                  He is the Founder and Chairman of the <strong>NRI Federation</strong>, a global diaspora platform dedicated to strengthening connections between Non-Resident Indians and opportunities in India. <br /> <br />
-                  Deepak brings an important international perspective to Investate India, helping NRI investors engage with Indian opportunities through a trusted global interface.
+                  New York-based entrepreneur and global gemstone authority, Founder of Nice Gems Inc., Nice Jewels Inc., and Prestige Developers LLC, and Founder & Chairman of the NRI Federation, bringing a strong global perspective and trusted connect for NRI investors.
                 </p>
               </div>
             </motion.div>
@@ -343,14 +341,14 @@ export default function AboutUs() {
                       <img src="/pankaj.png" alt="Pankaj Gupta" className="w-full h-full object-cover" />
                     </div>
                     <h3 className="font-bold text-lg text-gray-900 leading-tight">Pankaj <br />Gupta</h3>
-                    <p className="text-white text-xs font-bold tracking-widest uppercase mt-2">Partner</p>
+                    <p className="text-white text-xs font-bold tracking-widest uppercase mt-2">Co-Founder</p>
                   </div>
                   <div className="text-center group">
                     <div className="w-28 h-28 md:w-32 md:h-32 mx-auto rounded-2xl mb-4 overflow-hidden border-4 border-white shadow-md transition-transform duration-300 group-hover:scale-105">
                       <img src="/atish.png" alt="Atish Agarwal" className="w-full h-full object-cover" />
                     </div>
                     <h3 className="font-bold text-lg text-gray-900 leading-tight">Atish<br />Agarwal</h3>
-                    <p className="text-white text-xs font-bold tracking-widest uppercase mt-2">Partner</p>
+                    <p className="text-white text-xs font-bold tracking-widest uppercase mt-2">Co-Founder</p>
                   </div>
                 </div>
               </div>

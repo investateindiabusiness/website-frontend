@@ -90,7 +90,7 @@ const serviceProviderSteps = [
     {
         id: "1",
         title: "Deepak Kavadia",
-        text: "CEO & Co-Founder. New York-based entrepreneur and global gemstone authority. Founder of Nice Gems Inc., Nice Jewels Inc., and Prestige Developers LLC.",
+        text: "Chief Executive Officer & Co-Founder. New York-based entrepreneur and global gemstone authority, Founder of Nice Gems Inc., Nice Jewels Inc., and Prestige Developers LLC, and Founder & Chairman of the NRI Federation, bringing a strong global perspective and trusted connect for NRI investors.",
     },
     {
         id: "2",
@@ -494,9 +494,24 @@ export default function ServiceProviderHome() {
                     </div>
                     <div className="flex flex-wrap justify-center gap-8">
                         {[
-                            { name: "Deepak Kavadia", role: "CEO & Founder", image: "/deepak.png" },
-                            { name: "Pankaj Gupta", role: "Co-Founder", image: "/pankaj.png" },
-                            { name: "Atish Agarwal", role: "Co-Founder", image: "/atish.png" }
+                            { 
+                                name: "Deepak Kavadia", 
+                                role: "Chief Executive Officer & Co-Founder", 
+                                image: "/deepak.png",
+                                bio: "New York-based entrepreneur and global gemstone authority, Founder of Nice Gems Inc., Nice Jewels Inc., and Prestige Developers LLC, and Founder & Chairman of the NRI Federation, bringing a strong global perspective and trusted connect for NRI investors."
+                            },
+                            { 
+                                name: "Pankaj Gupta", 
+                                role: "Co-Founder", 
+                                image: "/pankaj.png",
+                                bio: "Has built a strong presence in the diamond and jewellery industry and is a recognized name in the Hyderabad real estate market."
+                            },
+                            { 
+                                name: "Atish Agarwal", 
+                                role: "Co-Founder", 
+                                image: "/atish.png",
+                                bio: "Brings diversified entrepreneurial experience across textiles, retail, jewellery, and real estate advisory."
+                            }
                         ].map((member, index) => (
                             <div className="team-card-premium" key={index}>
                                 <div className="team-card-image">
@@ -504,7 +519,10 @@ export default function ServiceProviderHome() {
                                 </div>
                                 <div className="team-card-info">
                                     <h4 className="team-card-name">{member.name}</h4>
-                                    <p className="team-card-role">{member.role}</p>
+                                    <p className="team-card-role text-[#D48035] font-semibold text-xs mb-3">{member.role}</p>
+                                    <p className="text-slate-600 dark:text-slate-300 text-xs md:text-sm leading-relaxed">
+                                        {member.bio}
+                                    </p>
                                 </div>
                             </div>
                         ))}

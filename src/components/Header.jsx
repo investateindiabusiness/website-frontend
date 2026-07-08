@@ -113,10 +113,10 @@ const HeaderContent = ({ transparent = false }) => {
     if (!displayUser) {
       return [
         { label: 'Home', path: '/' },
-        { label: 'Global Investor', path: '/investor' },
+        { label: 'Real Estate Investor', path: '/investor' },
         { label: 'Builder', path: '/builder' },
         { label: 'Service Provider', path: '/service-provider' },
-        { label: 'Capital Facilitation', path: '/equity-raising' },
+        { label: 'Capital Sourcing', path: '/equity-raising' },
         // { label: 'About Us', path: '/about-us' },
         { label: 'Gallery', path: '/gallery' },
       ];

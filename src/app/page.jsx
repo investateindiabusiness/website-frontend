@@ -8,7 +8,6 @@ import TestimonialsSection from "@/components/TestimonialsSection";
 import DeepakProfileSection from "@/components/DeepakProfileSection";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
-import AdBanner from "@/components/AdBanner";
 import SlideAdPanel from "@/components/SlideAdPanel";
 import {
     ShieldCheck,
@@ -230,13 +229,6 @@ export default function ServiceProviderHome() {
                                     Talk to Us
                                 </button>
                             </div>
-                            {/* Responsive Ad Banner: inline on small, fixed to right on md+ */}
-                            <div className="mt-8 w-full max-w-lg md:hidden">
-                                <AdBanner zoneId="zone5" variant="default" forceRole="service-provider" />
-                            </div>
-                            <div className="hidden md:block absolute right-0 top-1/2 -translate-y-1/2 translate-y-16 w-full max-w-lg z-[25]">
-                                <AdBanner zoneId="zone5" variant="default" forceRole="service-provider" />
-                            </div>
                         </div>
                     </motion.div>
                 </AnimatePresence>
@@ -395,21 +387,21 @@ export default function ServiceProviderHome() {
                             ...serviceProviderChallenges,
                             ...serviceProviderChallenges,
                         ].map((challenge, i) => (
-                                <div
-                                    key={i}
-                                    className="infra-marquee-card bg-white border border-slate-200/80 p-6 rounded-2xl w-80 shrink-0 mx-4 shadow-sm"
-                                >
-                                    <div className="infra-card-icon-wrapper bg-[#D48035] p-3 rounded-xl w-14 h-14 flex items-center justify-center mb-4 text-white">
-                                        {challenge.icon}
-                                    </div>
-                                    <h3 className="infra-card-title text-lg font-bold text-[#1a1a1a] mb-2">
-                                        {challenge.text}
-                                    </h3>
-                                    <p className="infra-card-desc text-xs text-slate-600 leading-relaxed">
-                                        {challenge.desc}
-                                    </p>
+                            <div
+                                key={i}
+                                className="infra-marquee-card bg-white border border-slate-200/80 p-6 rounded-2xl w-80 shrink-0 mx-4 shadow-sm"
+                            >
+                                <div className="infra-card-icon-wrapper bg-[#D48035] p-3 rounded-xl w-14 h-14 flex items-center justify-center mb-4 text-white">
+                                    {challenge.icon}
                                 </div>
-                            ),
+                                <h3 className="infra-card-title text-lg font-bold text-[#1a1a1a] mb-2">
+                                    {challenge.text}
+                                </h3>
+                                <p className="infra-card-desc text-xs text-slate-600 leading-relaxed">
+                                    {challenge.desc}
+                                </p>
+                            </div>
+                        ),
                         )}
                     </div>
                 </div>
@@ -501,7 +493,7 @@ export default function ServiceProviderHome() {
                         </h2>
                         <p className="text-slate-600 dark:text-slate-300 max-w-2xl mx-auto text-sm md:text-base leading-relaxed">
                             <strong>Built on transparency. Driven by experience.</strong><br />
-                            Investate India is led by Deepak Kavadia, Pankaj Gupta, and Atish Agarwal.
+                            Investate India is led by Deepak Kavadia, Pankaj Gupta and Atish Agarwal.
                         </p>
                     </div>
                     <div className="flex flex-wrap justify-center gap-8">
