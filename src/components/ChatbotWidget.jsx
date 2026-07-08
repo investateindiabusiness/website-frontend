@@ -1,80 +1,102 @@
 "use client";
 
-import React, { useEffect, useMemo, useState, useRef } from 'react';
-import { Bot, CheckCircle2, ChevronLeft, Loader2, MessageCircle, Send, X, User } from 'lucide-react';
-import { usePathname, useRouter } from 'next/navigation';
-import { fetchChatbotFaqs, submitContactInquiry } from '@/api';
-import { chatbotFaqGroups, fallbackQuestion } from '@/data/chatbotFaqs';
-import { useAuth } from '@/hooks/AuthContext';
+import React, { useEffect, useMemo, useState, useRef } from "react";
+import {
+  Bot,
+  CheckCircle2,
+  ChevronLeft,
+  Loader2,
+  MessageCircle,
+  Send,
+  X,
+  User,
+} from "lucide-react";
+import { usePathname, useRouter } from "next/navigation";
+import { fetchChatbotFaqs, submitContactInquiry } from "@/api";
+import { chatbotFaqGroups, fallbackQuestion } from "@/data/chatbotFaqs";
+import { useAuth } from "@/hooks/AuthContext";
 
 const initialForm = {
-  name: '',
-  email: '',
-  phone: '',
-  organization: '',
-  preferredContact: 'Any',
-  message: '',
+  name: "",
+  email: "",
+  phone: "",
+  organization: "",
+  preferredContact: "Any",
+  message: "",
 };
 
 const audienceContent = {
   public: {
-    label: 'Company Assistant',
-    intro: 'Hi there! I can answer company and operations questions. How can I help you today?',
-    requestContext: 'Company or purpose of inquiry',
+    label: "Company Assistant",
+    intro:
+      "Hi there! I can answer company and operations questions. How can I help you today?",
+    requestContext: "Company or purpose of inquiry",
   },
   investor: {
-    label: 'Investor Assistant',
-    intro: 'Hello! I am your Investor Support Assistant. I can help with investments, KYC, bookings, payments, and property services. How can I help?',
-    requestContext: 'City, property, booking ID, or issue context',
+    label: "Investor Assistant",
+    intro:
+      "Hello! I am your Investor Support Assistant. I can help with investments, KYC, bookings, payments, and property services. How can I help?",
+    requestContext: "City, property, booking ID, or issue context",
   },
   builder: {
-    label: 'Builder Assistant',
-    intro: 'Hello! I am your Builder Support Assistant. I can help with onboarding, listings, leads, CRM, and technical issues. What do you need help with?',
-    requestContext: 'Company, project, builder ID, or issue context',
+    label: "Builder Assistant",
+    intro:
+      "Hello! I am your Builder Support Assistant. I can help with onboarding, listings, leads, CRM, and technical issues. What do you need help with?",
+    requestContext: "Company, project, builder ID, or issue context",
   },
   serviceProvider: {
-    label: 'Service Provider Assistant',
-    intro: 'Hello! I can help with service provider profiles, enquiries, support, and workflow questions.',
-    requestContext: 'Service category, profile, enquiry, or issue context',
+    label: "Service Provider Assistant",
+    intro:
+      "Hello! I can help with service provider profiles, enquiries, support, and workflow questions.",
+    requestContext: "Service category, profile, enquiry, or issue context",
   },
   nri: {
-    label: 'NRI Investor Assistant',
-    intro: 'Hello! I can help with NRI investment, asset protection, legal, tax, and property management questions.',
-    requestContext: 'Country, city, property, or investment context',
+    label: "NRI Investor Assistant",
+    intro:
+      "Hello! I can help with NRI investment, asset protection, legal, tax, and property management questions.",
+    requestContext: "Country, city, property, or investment context",
   },
   customer: {
-    label: 'Support Assistant',
-    intro: 'Hi! I am here to provide technical support and guidance. How can I assist you?',
-    requestContext: 'Account, issue, or ticket context',
+    label: "Support Assistant",
+    intro:
+      "Hi! I am here to provide technical support and guidance. How can I assist you?",
+    requestContext: "Account, issue, or ticket context",
   },
 };
 
 const roleToAudience = (user) => {
-  if (!user) return 'public';
-  if (user.role === 'builder') return 'builder';
-  if (user.role === 'serviceProvider') return 'serviceProvider';
-  if (user.role === 'investor' && String(user.investorType || user.type || '').toLowerCase() === 'nri') return 'nri';
-  if (user.role === 'investor') return 'investor';
-  return 'customer';
+  if (!user) return "public";
+  if (user.role === "builder") return "builder";
+  if (user.role === "serviceProvider") return "serviceProvider";
+  if (
+    user.role === "investor" &&
+    String(user.investorType || user.type || "").toLowerCase() === "nri"
+  )
+    return "nri";
+  if (user.role === "investor") return "investor";
+  return "customer";
 };
 
 const categoryFallbacks = {
-  public: 'Before Login',
-  investor: 'Investor',
-  builder: 'Builder',
-  serviceProvider: 'Service Provider',
-  nri: 'NRI',
-  customer: 'Support',
+  public: "Before Login",
+  investor: "Investor",
+  builder: "Builder",
+  serviceProvider: "Service Provider",
+  nri: "NRI",
+  customer: "Support",
 };
 
 const getFaqCategory = (faq, audience) => {
   if (faq.category) return faq.category;
-  if (/kyc|verification/i.test(faq.question)) return 'KYC / Workflow';
-  return categoryFallbacks[audience] || 'Support';
+  if (/kyc|verification/i.test(faq.question)) return "KYC / Workflow";
+  return categoryFallbacks[audience] || "Support";
 };
 
 const isDuplicatePublicFallback = (faq, audience) => {
-  return audience === 'public' && faq.question === 'What if my question is not listed?';
+  return (
+    audience === "public" &&
+    faq.question === "What if my question is not listed?"
+  );
 };
 
 export default function ChatbotWidget() {
@@ -82,28 +104,27 @@ export default function ChatbotWidget() {
   const pathname = usePathname();
   const router = useRouter();
   const [open, setOpen] = useState(false);
-
-  // Chat state
   const [chatHistory, setChatHistory] = useState([]);
-  const chatEndRef = useRef(null);
-
   const [showRequestForm, setShowRequestForm] = useState(false);
   const [form, setForm] = useState(initialForm);
-  const [status, setStatus] = useState({ type: 'idle', message: '' });
-  const [faqStatus, setFaqStatus] = useState('idle');
+  const [status, setStatus] = useState({ type: "idle", message: "" });
+  const [faqStatus, setFaqStatus] = useState("idle");
   const [remoteFaqs, setRemoteFaqs] = useState([]);
   const [selectedQuestion, setSelectedQuestion] = useState(null);
+  const chatEndRef = useRef(null);
 
   const audience = roleToAudience(user);
   const content = audienceContent[audience] || audienceContent.public;
   const fallbackGroup = chatbotFaqGroups[audience] || chatbotFaqGroups.public;
 
   const faqs = useMemo(() => {
-    const sourceFaqs = remoteFaqs.length > 0 ? remoteFaqs : fallbackGroup.faqs;
-    return sourceFaqs.filter((faq) => !isDuplicatePublicFallback(faq, audience));
-  }, [audience, fallbackGroup.faqs, remoteFaqs]);
+    const sourceFaqs =
+      remoteFaqs.length > 0 ? remoteFaqs : fallbackGroup?.faqs || [];
+    return sourceFaqs.filter(
+      (faq) => !isDuplicatePublicFallback(faq, audience),
+    );
+  }, [audience, fallbackGroup?.faqs, remoteFaqs]);
 
-  // Generate a unique ID for chat messages
   const generateId = () => Math.random().toString(36).substr(2, 9);
 
   const showMainMenu = () => {
@@ -112,29 +133,38 @@ export default function ChatbotWidget() {
       if (!groups[category]) groups[category] = [];
       groups[category].push({
         label: faq.question,
-        action: 'FAQ',
+        action: "FAQ",
         data: faq,
       });
       return groups;
     }, {});
 
-    const optionGroups = Object.entries(groupedOptions).map(([label, options]) => ({
-      label,
-      options,
-    }));
+    const optionGroups = Object.entries(groupedOptions).map(
+      ([label, options]) => ({
+        label,
+        options,
+      }),
+    );
 
     optionGroups.push({
-      label: user ? 'Need More Help' : 'Send A Query',
-      options: [{
-        label: user ? 'Create support ticket' : fallbackQuestion,
-        action: 'CONTACT',
-      }],
+      label: user ? "Need More Help" : "Send A Query",
+      options: [
+        {
+          label: user ? "Create support ticket" : fallbackQuestion,
+          action: "CONTACT",
+        },
+      ],
     });
 
     setChatHistory((current) => [
       ...current,
-      { id: generateId(), sender: 'bot', type: 'text', text: content.intro },
-      { id: generateId(), sender: 'bot', type: 'options', groups: optionGroups },
+      { id: generateId(), sender: "bot", type: "text", text: content.intro },
+      {
+        id: generateId(),
+        sender: "bot",
+        type: "options",
+        groups: optionGroups,
+      },
     ]);
   };
 
@@ -146,18 +176,18 @@ export default function ChatbotWidget() {
       setRemoteFaqs([]);
       setSelectedQuestion(null);
       setShowRequestForm(false);
-      setStatus({ type: 'idle', message: '' });
+      setStatus({ type: "idle", message: "" });
       setChatHistory([]);
 
       try {
         const response = await fetchChatbotFaqs(audience);
         if (!cancelled) {
           setRemoteFaqs(response?.faqs || []);
-          setFaqStatus('ready');
+          setFaqStatus("ready");
         }
       } catch (error) {
         if (!cancelled) {
-          setFaqStatus('fallback');
+          setFaqStatus("fallback");
         }
       }
     }
