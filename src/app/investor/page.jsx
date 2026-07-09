@@ -762,7 +762,7 @@ export default function Index() {
             </section>
 
 
-            <section className="fullscreen-section section-light" id="early-access">
+            {/* <section className="fullscreen-section section-light" id="early-access">
                 <div className="container">
                     <div className="section-heading">
                         <h2 className="section-title">We're Building <span className="text-highlight">Something Different</span></h2>
@@ -800,7 +800,7 @@ export default function Index() {
                         </div>
                     </div>
                 </div>
-            </section>
+            </section> */}
 
             <section className="faq-premium-section section-theme" id="faq">
                 <div className="container">

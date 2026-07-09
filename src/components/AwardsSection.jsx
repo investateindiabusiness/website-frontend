@@ -52,6 +52,7 @@ export default function AwardsSection() {
   const [visibleCards, setVisibleCards] = useState(3);
   const [isHovered, setIsHovered] = useState(false);
   const [transitionEnabled, setTransitionEnabled] = useState(true);
+  const [autoScrollKey, setAutoScrollKey] = useState(0); // bumped to reset timer on manual nav
 
   // Update visible cards based on screen size
   useEffect(() => {
@@ -80,25 +81,27 @@ export default function AwardsSection() {
     }
   }, [transitionEnabled]);
 
-  // Auto-slide mechanism
+  // Auto-slide mechanism (resets when user navigates manually via autoScrollKey)
   useEffect(() => {
     if (isHovered) return;
 
     const interval = setInterval(() => {
       setActiveIndex((prev) => prev + 1);
-    }, 1000); // Auto-slide every 1 seconds
+    }, 1000); // Auto-slide every 3 seconds
 
     return () => clearInterval(interval);
-  }, [isHovered]);
+  }, [isHovered, autoScrollKey]);
 
   const handlePrev = () => {
     if (!transitionEnabled) return;
     setActiveIndex((prev) => prev - 1);
+    setAutoScrollKey((k) => k + 1); // reset auto-scroll timer
   };
 
   const handleNext = () => {
     if (!transitionEnabled) return;
     setActiveIndex((prev) => prev + 1);
+    setAutoScrollKey((k) => k + 1); // reset auto-scroll timer
   };
 
   const handleAnimationComplete = () => {

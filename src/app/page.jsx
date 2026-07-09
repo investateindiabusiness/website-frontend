@@ -110,6 +110,60 @@ const stepImages = [
     "/atish.png",
 ];
 
+function NriChallengeCard({ challenge }) {
+    const [flipped, setFlipped] = useState(false);
+    return (
+        <div
+            onMouseEnter={() => setFlipped(true)}
+            onMouseLeave={() => setFlipped(false)}
+            onClick={() => setFlipped(f => !f)}
+            style={{
+                background: flipped ? '#fdf6ee' : '#ffffff',
+                border: flipped ? '1px solid rgba(212,128,53,0.3)' : '1px solid rgba(226,232,240,0.9)',
+                borderRadius: '1.5rem',
+                padding: '1.75rem',
+                cursor: 'pointer',
+                minHeight: '210px',
+                display: 'flex',
+                flexDirection: 'column',
+                justifyContent: 'space-between',
+                boxShadow: flipped ? '0 4px 16px rgba(212,128,53,0.12)' : '0 1px 4px rgba(0,0,0,0.06)',
+                transition: 'background 0.3s ease, border 0.3s ease, box-shadow 0.3s ease',
+            }}
+        >
+            {flipped ? (
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '0.65rem' }}>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+                        <span style={{ width: 8, height: 8, borderRadius: '50%', background: '#61a534', flexShrink: 0 }} />
+                        <span style={{ fontSize: '10px', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.12em', color: '#61a534' }}>Our Solution</span>
+                    </div>
+                    <h4 style={{ fontSize: '0.9375rem', fontWeight: 700, color: '#D48035', lineHeight: 1.35, margin: 0 }}>
+                        {challenge.title}
+                    </h4>
+                    <p style={{ fontSize: '0.8125rem', color: '#475569', lineHeight: 1.65, margin: 0 }}>
+                        {challenge.solution}
+                    </p>
+                    <span style={{ fontSize: '11px', color: 'rgba(97,165,52,0.55)', alignSelf: 'flex-end', marginTop: '0.5rem' }}>✓ Investate India</span>
+                </div>
+            ) : (
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '0.65rem' }}>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+                        <span style={{ width: 8, height: 8, borderRadius: '50%', background: '#f87171', flexShrink: 0 }} />
+                        <span style={{ fontSize: '10px', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.12em', color: '#f87171' }}>The Challenge</span>
+                    </div>
+                    <h4 style={{ fontSize: '0.9375rem', fontWeight: 700, color: '#1e293b', lineHeight: 1.35, margin: 0 }}>
+                        {challenge.title}
+                    </h4>
+                    <p style={{ fontSize: '0.8125rem', color: '#94a3b8', lineHeight: 1.65, margin: 0 }}>
+                        {challenge.desc}
+                    </p>
+                    <span style={{ fontSize: '11px', color: '#e2e8f0', alignSelf: 'flex-end', marginTop: '0.5rem' }}>Hover to see solution →</span>
+                </div>
+            )}
+        </div>
+    );
+}
+
 export default function ServiceProviderHome() {
     const router = useRouter();
     const [activeStepIndex, setActiveStepIndex] = useState(0);
@@ -308,8 +362,7 @@ export default function ServiceProviderHome() {
                                     <h4 className="text-lg md:text-xl font-bold text-[#1a1a1a] m-0">What Are We</h4>
                                 </div>
                                 <p className="text-slate-600 text-sm md:text-base leading-relaxed">
-                                    Investate India is a technology-enabled investment platform designed to facilitate participation in Indian investment opportunities through a curated ecosystem of investors, opportunity providers and professional service partners.
-                                </p>
+                                    Investate India is a global investment gateway connecting NRIs with verified Indian opportunities through trusted partners, technology, and end-to-end support.                                </p>
                             </div>
 
                             {/* Mission & Vision Side-by-Side */}
@@ -522,53 +575,57 @@ export default function ServiceProviderHome() {
 
                     {/* Centered Heading at the Top */}
                     <div className="text-center mb-16">
-                        {/* <span className="text-[#D48035] text-xs font-bold uppercase tracking-[0.25em] block mb-3">
-                            Investor Hurdles
-                        </span> */}
+                        <span className="text-[#D48035] text-xs font-bold uppercase tracking-[0.25em] block mb-3">
+                            NRI Investor Hurdles
+                        </span>
                         <h2 className="text-3xl md:text-4xl font-bold text-slate-800 dark:text-white leading-tight mb-4">
-                            Key Challenges Faced by NRI Real Estate Investors
+                            Key Challenges & <span className="text-[#D48035]">Our Solutions</span>
                         </h2>
                         <p className="text-slate-600 dark:text-slate-300 max-w-2xl mx-auto text-sm md:text-base leading-relaxed">
-                            Key hurdles Non-Resident Indians (NRIs) face when investing and managing property assets in India from abroad.
+                            We understand the real hurdles NRIs face — and we&apos;ve built dedicated solutions for every one of them.
                         </p>
                     </div>
 
-                    {/* Three-Column Grid of Challenges (Styled as Cards) */}
-                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 max-w-6xl mx-auto text-left mt-12">
+                    {/* Hint text */}
+                    <p className="text-center text-xs text-slate-400 dark:text-slate-500 mb-8 -mt-8 italic">
+                        Hover over a card to see how we solve it
+                    </p>
+
+                    {/* Flip Card Grid */}
+                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 max-w-6xl mx-auto">
                         {[
                             {
                                 title: "Lack of Trust & Transparency",
-                                desc: "Investing from abroad often means relying on limited or unverified information. NRIs face challenges in verifying property authenticity, developer credibility, legal clearances, and project progress without trusted local support."
+                                desc: "Unverified listings, unknown developers, no visibility on project progress.",
+                                solution: "End-to-end verified listings, due diligence reports & real-time project updates — invest with total confidence."
                             },
                             {
-                                title: "Compliance & Taxation Complexity",
-                                desc: "Understanding FEMA regulations, property registration requirements, PAN/TAN, TDS, capital gains tax, and fund repatriation rules can be complex and time-consuming without expert guidance."
+                                title: "Compliance & Taxation",
+                                desc: "FEMA, TDS, capital gains tax, and repatriation rules are complex without expert help.",
+                                solution: "Our legal & tax experts handle every compliance step — from FEMA to penalty-free repatriation."
                             },
                             {
                                 title: "Remote Property Management",
-                                desc: "Managing a property from overseas—including tenant management, maintenance, documentation, legal assistance, and dispute resolution—is difficult without a reliable local partner."
+                                desc: "Tenant issues, maintenance & legal disputes are nearly impossible to manage from abroad.",
+                                solution: "We are your trusted on-ground partner — tenants, maintenance & legal support, handled for you."
                             },
                             {
-                                title: "Limited Access to Verified Opportunities",
-                                desc: "Finding genuine, high-quality investment opportunities with accurate market insights and verified documentation is often a challenge for NRIs."
+                                title: "Limited Verified Opportunities",
+                                desc: "Finding RERA-registered, genuine investment options with accurate data is rare for NRIs.",
+                                solution: "A curated portfolio of RERA-verified properties with in-depth market insights, exclusive to you."
                             },
                             {
                                 title: "Communication & Decision Delays",
-                                desc: "Time zone differences, inconsistent communication, and the need to coordinate with multiple stakeholders can slow down the investment process and create uncertainty."
+                                desc: "Time zones, multiple stakeholders & slow responses stall decisions and create uncertainty.",
+                                solution: "A dedicated NRI relationship manager — one contact, across time zones, always responsive."
                             },
                             {
                                 title: "Currency & Funding Hurdles",
-                                desc: "Fluctuating exchange rates can impact purchase cost and repatriation yields, while securing local financing involves navigating complex NRI-specific home loan criteria."
+                                desc: "Exchange rate swings and complex NRI home loan criteria affect your investment returns.",
+                                solution: "Tailored NRI products + strategic remittance timing to maximise your returns."
                             }
                         ].map((challenge, i) => (
-                            <div key={i} className="bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800 p-8 rounded-3xl shadow-sm hover:shadow-lg hover:scale-[1.02] transition-all duration-300">
-                                <h4 className="text-lg font-bold text-[#D48035] mb-3">
-                                    {challenge.title}
-                                </h4>
-                                <p className="text-slate-600 dark:text-slate-300 text-sm leading-relaxed">
-                                    {challenge.desc}
-                                </p>
-                            </div>
+                            <NriChallengeCard key={i} challenge={challenge} />
                         ))}
                     </div>
 
