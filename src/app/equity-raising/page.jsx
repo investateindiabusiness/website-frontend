@@ -36,14 +36,14 @@ const fadeUp = (delay = 0) => ({
 
 const heroSlides = [
   {
-    image: "/images/hero_modern_cityscape.png",
+    image: "/images/equity.png",
     tag: "Global Sourcing Platform",
     title: "Connecting High-Growth Ventures with",
     highlight: "International Capital Pools",
     subtitle: "A premier gateway matching real estate developers, startups, and enterprises with a global network of institutional and private investors.",
   },
   {
-    image: "/images/hero_tall_blue_skyscraper.png",
+    image: "/images/equity2.png",
     tag: "Institutional Verification",
     title: "Empowering Growth Through",
     highlight: "Structured Capital Sourcing",

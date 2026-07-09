@@ -30,7 +30,7 @@ const heroSlides = [
   },
   {
     image:
-      "/images/image copy 19.png",
+      "/images/buil-hero.png",
     tag: "Global Reach & Trust",
     title: "Elevate Your Brand with",
     highlight: "Verified Institutional Credibility",
@@ -465,34 +465,34 @@ export default function BuilderHome() {
           }
         `}</style>
         <motion.button
-            onClick={() => handleAuthClick('login', 'builder')}
-            aria-label="Builder Login"
-            initial={{ opacity: 0, y: 60, scale: 0.85 }}
-            animate={{ opacity: 1, y: 0, scale: 1 }}
-            transition={{ delay: 0.8, duration: 0.5, type: 'spring', stiffness: 200, damping: 18 }}
-            whileHover={{ scale: 1.07 }}
-            whileTap={{ scale: 0.96 }}
-            style={{
-                position: 'absolute', bottom: '4.5rem', right: '2rem',
-                zIndex: 30,
-                background: '#D48035',
-                borderRadius: '999px',
-                padding: '0.7rem 1.8rem',
-                color: '#fff',
-                fontWeight: 700,
-                fontSize: '0.95rem',
-                letterSpacing: '0.04em',
-                cursor: 'pointer',
-                display: 'flex', alignItems: 'center', gap: '0.5rem',
-                border: '2px solid rgba(255,255,255,0.5)',
-                animation: 'loginPulseRing 2s ease-out infinite',
-                textShadow: '0 1px 3px rgba(0,0,0,0.2)',
-            }}
+          onClick={() => handleAuthClick('login', 'builder')}
+          aria-label="Builder Login"
+          initial={{ opacity: 0, y: 60, scale: 0.85 }}
+          animate={{ opacity: 1, y: 0, scale: 1 }}
+          transition={{ delay: 0.8, duration: 0.5, type: 'spring', stiffness: 200, damping: 18 }}
+          whileHover={{ scale: 1.07 }}
+          whileTap={{ scale: 0.96 }}
+          style={{
+            position: 'absolute', bottom: '4.5rem', right: '2rem',
+            zIndex: 30,
+            background: '#D48035',
+            borderRadius: '999px',
+            padding: '0.7rem 1.8rem',
+            color: '#fff',
+            fontWeight: 700,
+            fontSize: '0.95rem',
+            letterSpacing: '0.04em',
+            cursor: 'pointer',
+            display: 'flex', alignItems: 'center', gap: '0.5rem',
+            border: '2px solid rgba(255,255,255,0.5)',
+            animation: 'loginPulseRing 2s ease-out infinite',
+            textShadow: '0 1px 3px rgba(0,0,0,0.2)',
+          }}
         >
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-                <path d="M15 3h6v18h-6"/><polyline points="10 17 15 12 10 7"/><line x1="15" y1="12" x2="3" y2="12"/>
-            </svg>
-            Login
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+            <path d="M15 3h6v18h-6" /><polyline points="10 17 15 12 10 7" /><line x1="15" y1="12" x2="3" y2="12" />
+          </svg>
+          Login
         </motion.button>
 
         <div className="container relative z-[2]">
