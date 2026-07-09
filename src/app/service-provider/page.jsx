@@ -90,7 +90,7 @@ const serviceProviderSteps = [
   {
     id: "2",
     title: "Admin Review",
-    text: "Our administrative team reviews your profile, certifications, and RERA compliance to activate your membership.",
+    text: "Our administrative team reviews your profile, certifications to activate your membership.",
   },
   {
     id: "3",

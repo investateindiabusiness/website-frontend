@@ -20,6 +20,7 @@ export default function SlideAdPanel({ zoneId = "zone5", forceRole = "service-pr
           transform: `translateX(${isOpen ? "0%" : "calc(100% - 48px)"})`,
           transition: "transform 0.5s cubic-bezier(0.34, 1.56, 0.64, 1)",
           willChange: "transform",
+          pointerEvents: "none",
         }}
       >
         <button
@@ -40,6 +41,7 @@ export default function SlideAdPanel({ zoneId = "zone5", forceRole = "service-pr
             boxShadow: "-6px 4px 24px rgba(0,0,0,0.35)",
             position: "relative",
             padding: "16px 0",
+            pointerEvents: "auto",
           }}
           className="bg-gradient-to-br from-orange-500 to-orange-800"
         >
@@ -93,6 +95,7 @@ export default function SlideAdPanel({ zoneId = "zone5", forceRole = "service-pr
             overflow: "hidden",
             display: "flex",
             flexDirection: "column",
+            pointerEvents: "auto",
           }}
         >
           <div
