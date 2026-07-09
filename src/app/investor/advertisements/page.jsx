@@ -46,14 +46,7 @@ import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/com
 // Initialize Stripe outside component render to avoid recreating Stripe object on every render
 const stripePromise = loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY || 'pk_test_placeholder');
 
-const getDefaultRedirectUrl = () => {
-  if (typeof window !== 'undefined' && window.location?.origin) {
-    return `${window.location.origin}/builder/dashboard`;
-  }
-  return '/builder/dashboard';
-};
 
-const DEFAULT_REDIRECT_URL = getDefaultRedirectUrl();
 
 const formatDate = (dateStr) => {
   if (!dateStr) return '';
@@ -88,7 +81,7 @@ export default function InvestorAdvertisements() {
     imageUrl: '',
     videoUrl: '',
     text: '',
-    targetUrl: DEFAULT_REDIRECT_URL
+    targetUrl: ''
   });
   const [isSubmittingBooking, setIsSubmittingBooking] = useState(false);
   const [paymentClientSecret, setPaymentClientSecret] = useState(null);
@@ -100,7 +93,7 @@ export default function InvestorAdvertisements() {
     imageUrl: '',
     videoUrl: '',
     text: '',
-    targetUrl: DEFAULT_REDIRECT_URL
+    targetUrl: ''
   });
   const [rectifyImageFile, setRectifyImageFile] = useState(null);
   const [rectifyImagePreview, setRectifyImagePreview] = useState('');
@@ -353,7 +346,7 @@ export default function InvestorAdvertisements() {
       imageUrl: booking.adContent?.imageUrl || '',
       videoUrl: booking.adContent?.videoUrl || '',
       text: booking.adContent?.text || '',
-      targetUrl: DEFAULT_REDIRECT_URL
+      targetUrl: booking.adContent?.targetUrl || ''
     });
     // Pre-fill previews if already uploaded URLs exist
     setRectifyImagePreview(booking.adContent?.imageUrl || '');
@@ -421,8 +414,7 @@ export default function InvestorAdvertisements() {
       setIsSubmittingRectify(true);
       await rectifyBooking(rectifyBookingItem.id, {
         adContent: {
-          ...rectifyAdContent,
-          targetUrl: DEFAULT_REDIRECT_URL
+          ...rectifyAdContent
         }
       });
       toast({
@@ -888,8 +880,17 @@ export default function InvestorAdvertisements() {
                     />
                   </div>
 
-                  <div className="rounded-xl border border-emerald-100 bg-emerald-50 px-3 py-2.5 text-sm text-emerald-700">
-                    All ad clicks from this booking will redirect to the builder dashboard.
+                  <div className="space-y-1.5">
+                    <label className="text-xs font-bold text-slate-600 block">Target Redirect URL <span className="text-red-500">*</span></label>
+                    <input
+                      type="url"
+                      required
+                      placeholder="https://yourwebsite.com/your-project"
+                      className="w-full border border-slate-200 rounded-xl px-4 py-2.5 text-sm outline-none focus:border-[#0b264f] text-slate-700 placeholder-slate-400"
+                      value={adContent.targetUrl}
+                      onChange={(e) => setAdContent({ ...adContent, targetUrl: e.target.value })}
+                    />
+                    <p className="text-[11px] text-slate-400">Users who click your ad will be taken to this URL.</p>
                   </div>
 
                   <div className="space-y-1.5">
@@ -995,7 +996,20 @@ export default function InvestorAdvertisements() {
                   )}
                 </div>
                 <div className="rounded-xl border border-amber-100 bg-amber-50 px-3 py-2.5 text-sm text-amber-700">
-                  All corrected ad clicks will redirect to the builder dashboard.
+                  All ad clicks will redirect to your specified URL.
+                </div>
+
+                <div className="space-y-1.5">
+                  <label className="text-xs font-bold text-slate-600 block">Target Redirect URL <span className="text-red-500">*</span></label>
+                  <input
+                    type="url"
+                    required
+                    placeholder="https://yourwebsite.com/your-project"
+                    className="w-full border border-slate-200 rounded-xl px-4 py-2.5 text-sm outline-none focus:border-amber-500 text-slate-700 placeholder-slate-400"
+                    value={rectifyAdContent.targetUrl}
+                    onChange={(e) => setRectifyAdContent({ ...rectifyAdContent, targetUrl: e.target.value })}
+                  />
+                  <p className="text-[11px] text-slate-400">Users who click your ad will be taken to this URL.</p>
                 </div>
 
                 <div className="space-y-1.5">

@@ -164,22 +164,42 @@ export default function ProjectDetail() {
                      <div className="text-left md:text-right mt-4 md:mt-0 flex flex-col items-start md:items-end gap-2">
                         <p className="text-2xl font-bold text-[#0b264f]">{project.sellingPrice}</p>
                         <p className="text-sm text-green-600 font-semibold">{project.currentConstructionStatus}</p>
-                        <Button
-                           size="sm"
-                           onClick={handleCopyUrl}
-                           title="Copy project URL"
-                           className={`gap-1.5 text-xs rounded-full transition-all duration-200 ${
-                              urlCopied
-                                 ? 'bg-green-600 hover:bg-green-700 text-white border-transparent'
-                                 : 'bg-[#0b264f] hover:bg-[#0d3166] text-white border-transparent'
-                           }`}
-                        >
-                           {urlCopied ? (
-                              <><Check className="w-3 h-3" /> Copied!</>
-                           ) : (
-                              <><Link2 className="w-3 h-3" /> Copy Link</>
-                           )}
-                        </Button>
+                        <div className="flex gap-2 mt-2">
+                           <Button
+                              size="sm"
+                              onClick={handleCopyUrl}
+                              title="Copy project URL"
+                              className={`gap-1.5 text-xs rounded-full transition-all duration-200 ${
+                                 urlCopied
+                                    ? 'bg-green-600 hover:bg-green-700 text-white'
+                                    : 'bg-white text-gray-700 border border-gray-300 hover:bg-gray-50'
+                              }`}
+                           >
+                              {urlCopied ? (
+                                 <><Check className="w-3 h-3" /> Copied!</>
+                              ) : (
+                                 <><Link2 className="w-3 h-3" /> Copy Link</>
+                              )}
+                           </Button>
+                           <Button
+                              size="sm"
+                              disabled={isSubmittingLead || hasSubmittedLead}
+                              onClick={(e) => handleInquirySubmit(e)}
+                              className={`gap-1.5 text-xs rounded-full ${
+                                 hasSubmittedLead
+                                    ? 'bg-green-600 hover:bg-green-700 text-white'
+                                    : 'bg-orange-500 hover:bg-orange-600 text-white'
+                              }`}
+                           >
+                              {isSubmittingLead ? (
+                                 <Loader2 className="w-3 h-3 animate-spin" />
+                              ) : hasSubmittedLead ? (
+                                 "Interest Sent"
+                              ) : (
+                                 "I'm Interested"
+                              )}
+                           </Button>
+                        </div>
                      </div>
                   </div>
                   <div className="relative h-[250px] md:h-[400px] rounded-xl overflow-hidden cursor-pointer" onClick={() => setIsGalleryOpen(true)}>

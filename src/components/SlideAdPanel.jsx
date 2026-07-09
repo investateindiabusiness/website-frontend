@@ -161,7 +161,6 @@ export default function SlideAdPanel({ zoneId = "zone5", forceRole = "service-pr
               </p>
             </div>
             <button
-              onClick={() => { window.location.href = loginPath; }}
               style={{
                 flexShrink: 0,
                 color: "white",

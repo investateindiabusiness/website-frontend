@@ -9,6 +9,7 @@ import DeepakProfileSection from "@/components/DeepakProfileSection";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import SlideAdPanel from "@/components/SlideAdPanel";
+
 import {
     ShieldCheck,
     Scale,
@@ -20,6 +21,18 @@ import {
     Target,
     Compass,
     Award,
+    CheckCircle2,
+    ChevronRight,
+    Play,
+    Star,
+    MapPin,
+    Building2,
+    TrendingUp,
+    Shield,
+    Briefcase,
+    Globe,
+    ArrowRight,
+    Zap,
 } from "lucide-react";
 
 const heroSlides = [
@@ -288,7 +301,7 @@ export default function ServiceProviderHome() {
                 </AnimatePresence>
 
                 {/* Slide-out ad panel — peeks from right edge, slides in on click */}
-                <SlideAdPanel zoneId="zone1" forceRole="service-provider" loginPath="/login" />
+                <SlideAdPanel zoneId="zone5" forceRole="service-provider" loginPath="/login" />
             </section>
 
             {/* Executive Summary Section */}

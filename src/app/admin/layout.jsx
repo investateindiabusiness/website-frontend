@@ -5,6 +5,7 @@ import { useRouter, usePathname } from 'next/navigation';
 import { useAuth } from '@/hooks/AuthContext';
 import { toast } from '@/hooks/use-toast';
 import AdminSidebar from '@/components/AdminSidebar';
+import { getSocket } from '@/utils/socket';
 
 export default function AdminLayout({ children }) {
   const { user, loading, logout } = useAuth();
@@ -31,6 +32,26 @@ export default function AdminLayout({ children }) {
       }
     }
   }, [user, loading, router, pathname, logout]);
+
+  useEffect(() => {
+    if (user && user.role === 'admin') {
+      const socket = getSocket();
+      
+      const handleNewLead = (leadData) => {
+        toast({
+          title: "🎯 New Project Lead!",
+          description: `${leadData.investorName} has shown interest in "${leadData.projectName}".`,
+          variant: "default"
+        });
+      };
+
+      socket.on('newLead', handleNewLead);
+      
+      return () => {
+        socket.off('newLead', handleNewLead);
+      };
+    }
+  }, [user]);
 
   if (loading) {
     return (

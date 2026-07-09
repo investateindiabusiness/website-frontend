@@ -6,8 +6,8 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
-import { MapPin, Building2, Search, Filter, Loader2 } from 'lucide-react';
-import { apiRequest } from '@/api';
+import { MapPin, Building2, Search, Filter, Loader2, Heart } from 'lucide-react';
+import { apiRequest, submitProjectLead } from '@/api';
 import { toast } from '@/hooks/use-toast';
 import { parseProjectImages } from '@/utils/imageCompressor';
 import AdBanner from '@/components/AdBanner';
@@ -20,6 +20,26 @@ export default function InvestorProjects() {
   const [stageFilter, setStageFilter] = useState('all');
   const [sortBy, setSortBy] = useState('featured');
   const [loading, setLoading] = useState(true);
+  const [submittingLeads, setSubmittingLeads] = useState({});
+  const [submittedLeads, setSubmittedLeads] = useState({});
+
+  const handleInterest = async (e, projectId) => {
+    e.stopPropagation();
+    try {
+      setSubmittingLeads(prev => ({ ...prev, [projectId]: true }));
+      await submitProjectLead(projectId, { source: 'Investor Projects List' });
+      setSubmittedLeads(prev => ({ ...prev, [projectId]: true }));
+      toast({ title: 'Success', description: 'Your interest has been shared with the admin!' });
+    } catch (error) {
+      toast({ title: 'Notice', description: error.message || 'Already submitted or failed to submit.', variant: 'default' });
+      // If it says "You have already shown interest", mark as submitted
+      if (error.message?.includes('already')) {
+        setSubmittedLeads(prev => ({ ...prev, [projectId]: true }));
+      }
+    } finally {
+      setSubmittingLeads(prev => ({ ...prev, [projectId]: false }));
+    }
+  };
 
   useEffect(() => {
     const loadProjects = async () => {
@@ -119,7 +139,28 @@ export default function InvestorProjects() {
                     <Building2 className="h-4 w-4 mr-1" />
                     {project.builderName}
                   </div>
-                  <Button className="w-full bg-blue-600 hover:bg-blue-700">View Full Details</Button>
+                  <div className="flex items-center gap-3 mt-4">
+                    <Button 
+                      variant="outline"
+                      className="flex-1 border-blue-200 text-blue-700 hover:bg-blue-50"
+                      onClick={(e) => { e.stopPropagation(); router.push(`/project/${project.id}`); }}
+                    >
+                      View Details
+                    </Button>
+                    <Button 
+                      className="flex-1 bg-orange-500 hover:bg-orange-600 text-white"
+                      onClick={(e) => handleInterest(e, project.id)}
+                      disabled={submittingLeads[project.id] || submittedLeads[project.id]}
+                    >
+                      {submittingLeads[project.id] ? (
+                        <Loader2 className="h-4 w-4 animate-spin" />
+                      ) : submittedLeads[project.id] ? (
+                        "Sent"
+                      ) : (
+                        <><Heart className="w-4 h-4 mr-2" /> Interested</>
+                      )}
+                    </Button>
+                  </div>
                 </CardContent>
               </Card>
 

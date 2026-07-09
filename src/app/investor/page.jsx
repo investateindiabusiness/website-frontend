@@ -292,7 +292,7 @@ export default function Index() {
 
     const handleAuthClick = (action, role) => {
         if (action === 'login') {
-            router.push(role === 'builder' ? '/builder/login' : '/investor/login');
+            router.push(`/login?role=${role}`);
         } else {
             router.push(role === 'builder' ? '/builder/register' : '/investor/register');
         }

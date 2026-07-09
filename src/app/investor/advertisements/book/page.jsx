@@ -1,4 +1,4 @@
-﻿"use client";
+"use client";
 
 import React, { useState, useEffect, Suspense } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
@@ -18,14 +18,7 @@ import { compressAdImage } from '@/utils/imageCompressor';
 
 const stripePromise = loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY || 'pk_test_placeholder');
 
-const getDefaultRedirectUrl = () => {
-  if (typeof window !== 'undefined' && window.location?.origin) {
-    return `${window.location.origin}/builder/dashboard`;
-  }
-  return '/builder/dashboard';
-};
 
-const DEFAULT_REDIRECT_URL = getDefaultRedirectUrl();
 
 const formatDate = (dateStr) => {
   if (!dateStr) return '';
@@ -60,7 +53,7 @@ function BookingFormContent() {
     imageUrl: '',
     videoUrl: '',
     text: '',
-    targetUrl: DEFAULT_REDIRECT_URL
+    targetUrl: ''
   });
   
   const [imageFile, setImageFile] = useState(null);
@@ -313,7 +306,6 @@ function BookingFormContent() {
         couponCode: appliedCoupon?.code,
         adContent: {
           ...adContent,
-          targetUrl: DEFAULT_REDIRECT_URL,
           imageUrl: campaignFormat === 'image' ? adContent.imageUrl : '',
           videoUrl: campaignFormat === 'video' ? adContent.videoUrl : ''
         }
@@ -629,10 +621,21 @@ function BookingFormContent() {
               </div>
             )}
 
-            <div className="rounded-2xl border border-emerald-100 bg-emerald-50 px-4 py-3 text-sm text-emerald-700">
-              All ad clicks from this booking will redirect to the builder dashboard.
+            {/* Target URL */}
+            <div className="space-y-2">
+              <label className="text-xs font-bold text-slate-600 block">Target Redirect URL <span className="text-red-500">*</span></label>
+              <input
+                type="url"
+                required
+                placeholder="https://yourwebsite.com/your-project"
+                className="w-full border border-slate-200 rounded-xl px-4 py-3 text-sm outline-none focus:border-[#0b264f] text-slate-700 placeholder-slate-400 shadow-sm transition-all focus:ring-1 focus:ring-[#0b264f]"
+                value={adContent.targetUrl}
+                onChange={(e) => setAdContent({ ...adContent, targetUrl: e.target.value })}
+              />
+              <p className="text-[11px] text-slate-400">Users who click your ad will be taken to this URL.</p>
             </div>
 
+            {/* Caption */}
             <div className="space-y-2">
               <label className="text-xs font-bold text-slate-600 block">Ad Caption / Text <span className="text-red-500">*</span></label>
               <textarea 

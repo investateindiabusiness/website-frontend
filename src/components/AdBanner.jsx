@@ -107,40 +107,6 @@ export default function AdBanner({ zoneId, variant = 'default', forceRole }) {
     window.location.href = `/login?role=${role}`;
   };
 
-  const renderViewMoreButton = (buttonClass, icon, customText) => {
-    const Icon = icon || ExternalLink;
-    const btnText = customText || 'View More';
-
-    const clickHandler = () => {
-      if (user && user.role) {
-        handleBookAdClick();
-      } else if (forceRole) {
-        handleRoleSelect(forceRole);
-      }
-    };
-
-    const btn = (
-      <button
-        className={`${buttonClass} cursor-pointer`}
-        onClick={(user && user.role) || forceRole ? clickHandler : undefined}
-      >
-        {btnText} <Icon className="w-4 h-4" />
-      </button>
-    );
-
-    if ((user && user.role) || forceRole) {
-      return btn;
-    }
-
-    return (
-      <button
-        className={`${buttonClass} cursor-pointer`}
-        onClick={(e) => { e.preventDefault(); e.stopPropagation(); setShowLoginModal(true); }}
-      >
-        {btnText} <Icon className="w-4 h-4" />
-      </button>
-    );
-  };
 
   /* â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
      ROLE SELECTION MODAL — rendered via portal so it
@@ -221,28 +187,9 @@ export default function AdBanner({ zoneId, variant = 'default', forceRole }) {
           : 'bg-gradient-to-r from-[#0b264f] to-[#1a4b8c]'
           }`}
         style={{ height: zone.height, minHeight: 90 }}
-        onClick={(e) => {
-          if (ad.type === 'default') {
-            if (user && user.role) {
-              e.stopPropagation();
-              handleBookAdClick();
-            } else if (forceRole) {
-              e.stopPropagation();
-              handleRoleSelect(forceRole);
-            } else {
-              e.stopPropagation();
-              setShowLoginModal(true);
-            }
-          } else if (ad.type === 'campaign') {
-            handleAdClick(ad.adContent?.targetUrl);
-          }
-        }}
       >
         {ad.type === 'default' ? (
           <>
-            <p className="text-sm md:text-base font-bold text-gray-700 leading-snug max-w-[85%] flex items-center gap-2">
-              <PlusCircle className="w-5 h-5 text-gray-400" /> View More
-            </p>
             <span className="text-[10px] uppercase font-bold text-orange-600 tracking-wider flex items-center gap-1">
               Boost your visibility today
             </span>
@@ -257,7 +204,7 @@ export default function AdBanner({ zoneId, variant = 'default', forceRole }) {
 
     if (ad.type === 'default' && (!user || !user.role) && !forceRole) {
       return (
-        <div className="w-full cursor-pointer" onClick={(e) => { e.stopPropagation(); setShowLoginModal(true); }}>
+        <div className="w-full">
           {defaultBannerInner}
         </div>
       );
@@ -266,33 +213,6 @@ export default function AdBanner({ zoneId, variant = 'default', forceRole }) {
     return defaultBannerInner;
   };
 
-  const handleAdClick = (targetUrl) => {
-    if (!targetUrl) return;
-    const trimmedUrl = targetUrl.trim();
-    if (!trimmedUrl) return;
-
-    if (/^https?:\/\//i.test(trimmedUrl)) {
-      window.open(trimmedUrl, '_blank', 'noopener,noreferrer');
-      return;
-    }
-
-    if (trimmedUrl.startsWith('//')) {
-      window.open(`${window.location.protocol}${trimmedUrl}`, '_blank', 'noopener,noreferrer');
-      return;
-    }
-
-    if (trimmedUrl.startsWith('/')) {
-      window.location.assign(trimmedUrl);
-      return;
-    }
-
-    if (/^[a-z0-9.-]+\.[a-z]{2,}(\/.*)?$/i.test(trimmedUrl)) {
-      window.open(`https://${trimmedUrl}`, '_blank', 'noopener,noreferrer');
-      return;
-    }
-
-    window.location.assign(`/${trimmedUrl}`);
-  };
 
   /* â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
      CARD VARIANT — sits inside the property grid
@@ -310,9 +230,7 @@ export default function AdBanner({ zoneId, variant = 'default', forceRole }) {
     return (
       <>
         <div
-          className="group bg-white rounded-[2rem] overflow-hidden shadow-sm hover:shadow-xl transition-all duration-300 border border-gray-200 flex flex-col h-full cursor-pointer"
-          onClick={() => handleAdClick(targetUrl)}
-          role={targetUrl ? 'link' : undefined}
+          className="group bg-white rounded-[2rem] overflow-hidden shadow-sm hover:shadow-xl transition-all duration-300 border border-gray-200 flex flex-col h-full"
           aria-label={text || 'Sponsored advertisement'}
         >
           <div className="relative aspect-[4/3] overflow-hidden bg-gray-100 flex-shrink-0">
@@ -407,18 +325,7 @@ export default function AdBanner({ zoneId, variant = 'default', forceRole }) {
             <h2 className="text-white font-extrabold text-2xl leading-tight mb-4 drop-shadow-xl max-w-xs">
               Showcase your project to 10,000+ investors
             </h2>
-            <button
-              onClick={() => {
-                if (user && user.role) {
-                  handleBookAdClick();
-                } else {
-                  window.location.href = '/login';
-                }
-              }}
-              className="inline-flex items-center gap-2 bg-orange-500 hover:bg-orange-400 text-white font-bold text-sm px-6 py-3 rounded-xl shadow-lg transition-all duration-200 hover:scale-105 active:scale-95"
-            >
-              Add Yours <ExternalLink className="w-4 h-4" />
-            </button>
+
           </div>
         </div>
         {portal}
@@ -431,10 +338,8 @@ export default function AdBanner({ zoneId, variant = 'default', forceRole }) {
     return (
       <>
         <div
-          className="relative w-full rounded-2xl overflow-hidden cursor-pointer group shadow-lg hover:shadow-xl transition-shadow duration-300"
+          className="relative w-full rounded-2xl overflow-hidden group shadow-lg hover:shadow-xl transition-shadow duration-300"
           style={{ height: 460 }}
-          onClick={() => handleAdClick(targetUrl)}
-          role={targetUrl ? 'link' : undefined}
           aria-label={text || 'Sponsored advertisement'}
         >
           {imageUrl ? (
@@ -457,17 +362,6 @@ export default function AdBanner({ zoneId, variant = 'default', forceRole }) {
               <p className="text-white text-xl md:text-3xl font-extrabold leading-tight drop-shadow-xl line-clamp-3">
                 {text}
               </p>
-            )}
-            {targetUrl && (
-              <a
-                href={targetUrl}
-                target="_blank"
-                rel="noopener noreferrer"
-                onClick={(e) => e.stopPropagation()}
-                className="mt-4 self-start inline-flex items-center gap-2 bg-orange-500 hover:bg-orange-600 text-white text-sm font-bold px-5 py-2 rounded-lg transition-colors shadow-md"
-              >
-                View More <ExternalLink className="w-4 h-4" />
-              </a>
             )}
           </div>
 
@@ -500,10 +394,8 @@ export default function AdBanner({ zoneId, variant = 'default', forceRole }) {
     return (
       <>
         <div
-          className="w-full relative group rounded-2xl overflow-hidden cursor-pointer shadow-lg hover:shadow-xl transition-all duration-300 border border-white/10"
+          className="w-full relative group rounded-2xl overflow-hidden shadow-lg hover:shadow-xl transition-all duration-300 border border-white/10"
           style={{ height: zone.height, minHeight: 80 }}
-          onClick={() => handleAdClick(targetUrl)}
-          role={targetUrl ? 'link' : undefined}
           aria-label={text || 'Sponsored advertisement'}
         >
           {imageUrl ? (
@@ -539,27 +431,13 @@ export default function AdBanner({ zoneId, variant = 'default', forceRole }) {
      CTA-ONLY VARIANT
   â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
   if (variant === 'cta-only') {
-    const targetUrl = ad?.adContent?.targetUrl || null;
-    const primaryButtonText = ad?.adContent?.text ? 'View Offer' : 'View More';
-    const secondaryButtonText = forceRole === 'investor' ? 'Add Now' : 'Add your advertisement';
-
     return (
       <>
-        <div className="flex flex-wrap gap-4">
-          {targetUrl && (
-            <button
-              onClick={() => handleAdClick(targetUrl)}
-              className="btn bg-white hover:bg-gray-100 text-[#0b264f] px-8 py-3 rounded-full font-bold shadow-lg transition-transform hover:scale-105 active:scale-95 inline-flex items-center gap-2"
-            >
-              {primaryButtonText} <ExternalLink className="w-4 h-4" />
-            </button>
-          )}
-          {renderViewMoreButton("btn bg-[#D48035] hover:bg-[#B45309] border-none text-white px-8 py-3 rounded-full font-bold shadow-lg transition-transform hover:scale-105 active:scale-95 inline-flex items-center gap-2", PlusCircle, secondaryButtonText)}
-        </div>
         {portal}
       </>
     );
   }
+
 
 
   /* â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
@@ -590,7 +468,6 @@ export default function AdBanner({ zoneId, variant = 'default', forceRole }) {
         <h2 className={`text-white font-extrabold leading-tight drop-shadow-lg ${zone.height <= 100 ? 'text-base md:text-lg mb-0' : 'text-xl md:text-2xl mb-3'}`}>
           Showcase your projects here
         </h2>
-        {renderViewMoreButton("inline-flex items-center gap-2 bg-orange-500 hover:bg-orange-600 active:bg-orange-700 text-white font-bold text-xs md:text-sm px-4 py-2 rounded-lg shadow-lg transition-all duration-200 w-fit shrink-0", PlusCircle)}
       </div>
     </div>
   );
@@ -605,10 +482,8 @@ export default function AdBanner({ zoneId, variant = 'default', forceRole }) {
   return (
     <>
       <div
-        className="w-full mx-auto relative group rounded-2xl shadow-sm hover:shadow-md hover:scale-[1.005] active:scale-[0.998] transition-all duration-300 cursor-pointer select-none border border-slate-200/60 dark:border-slate-700/60"
+        className="w-full mx-auto relative group rounded-2xl shadow-sm hover:shadow-md transition-all duration-300 select-none border border-slate-200/60 dark:border-slate-700/60"
         style={{ maxWidth: zone.width }}
-        onClick={() => handleAdClick(targetUrl)}
-        role={targetUrl ? 'link' : undefined}
         aria-label={text || 'Sponsored advertisement'}
       >
         <div className="absolute top-2 right-2 z-20 flex items-center gap-1 bg-white/90 dark:bg-slate-900/90 backdrop-blur-sm px-2 py-0.5 rounded-full border border-slate-200/60 text-[9px] font-bold text-slate-500 uppercase tracking-widest pointer-events-none shadow-sm">
