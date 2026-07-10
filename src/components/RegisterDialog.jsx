@@ -13,7 +13,7 @@ import { toast } from '@/hooks/use-toast';
 import { CheckCircle, ChevronRight, Loader2, TrendingUp, Building, UserCheck, FileWarning, ClipboardList, Gift, CalendarCheck2, Crown, Sparkles } from 'lucide-react';
 import { getAuth, signOut } from 'firebase/auth';
 import { app } from '@/firebase';
-import { registerStep1, submitInvestorForm1, submitBuilderForm1, submitServiceProviderForm1, submitRequestedChanges, submitInvestorForm2, submitBuilderForm2, apiRequest } from '@/api';
+import { registerStep1, submitInvestorForm1, submitBuilderForm1, submitServiceProviderForm1, submitRequestedChanges, submitInvestorForm2, submitBuilderForm2, apiRequest, loginRequest, googleSyncRequest } from '@/api';
 import GoogleAuthButton from '@/components/GoogleAuthButton';
 
 const RegisterDialog = ({ isOpen, onOpenChange, onLoginClick, initialData = {} }) => {
@@ -31,7 +31,7 @@ const RegisterDialog = ({ isOpen, onOpenChange, onLoginClick, initialData = {} }
   useEffect(() => {
     apiRequest('/api/auth/launch-config')
       .then(data => { if (data?.success) setLaunchConfig(data); })
-      .catch(() => {}); // non-critical, silently fail
+      .catch(() => { }); // non-critical, silently fail
   }, []);
 
   const [localInitialData, setLocalInitialData] = useState(initialData);
@@ -65,7 +65,7 @@ const RegisterDialog = ({ isOpen, onOpenChange, onLoginClick, initialData = {} }
   const isForm2UpdateMode = isUpdateMode && (currentStatus === 'form2_changes_requested' || hasForm2Requests);
   const isForm1UpdateMode = isUpdateMode && !isForm2UpdateMode;
 
-  const isForm2Mode = localInitialData?.phase === 'FORM2_PENDING' || isForm2UpdateMode;
+  const isForm2Mode = (localInitialData?.phase === 'FORM2_PENDING' || isForm2UpdateMode) && (localInitialData?.userType || userType) !== 'investor';
 
   const prefilledUserData = localInitialData?.userData || {};
 
@@ -280,10 +280,59 @@ const RegisterDialog = ({ isOpen, onOpenChange, onLoginClick, initialData = {} }
         setSubmitted(true);
       } else if (userType === 'investor') {
         await submitInvestorForm1(userId, currentData);
-        setStep(3);
+        // Attempt auto-login so the investor lands directly on the dashboard.
+        let autoLoginSucceeded = false;
+        try {
+          let userData;
+          if (localInitialData?.idToken) {
+            userData = await googleSyncRequest(localInitialData.idToken, 'investor');
+          } else if (authData.email && authData.password) {
+            userData = await loginRequest({ email: authData.email, password: authData.password, role: 'investor' });
+          }
+
+          if (userData && userData.uid) {
+            login(userData);
+            autoLoginSucceeded = true;
+            toast({ title: 'Account Initialized 🎉', description: 'Basic details saved. Routing to dashboard...' });
+            onOpenChange(false);
+            router.push('/dashboard');
+            return;
+          }
+        } catch (loginErr) {
+          console.warn('Auto-login failed after Form 1:', loginErr);
+        }
+
+        if (!autoLoginSucceeded) {
+          toast({ title: 'Details Saved!', description: 'Please sign in to access your dashboard.' });
+          setSubmitted(true);
+        }
       } else if (userType === 'builder') {
         await submitBuilderForm1(userId, currentData);
-        setStep(3);
+        let autoLoginSucceeded = false;
+        try {
+          let userData;
+          if (localInitialData?.idToken) {
+            userData = await googleSyncRequest(localInitialData.idToken, 'builder');
+          } else if (authData.email && authData.password) {
+            userData = await loginRequest({ email: authData.email, password: authData.password, role: 'builder' });
+          }
+
+          if (userData && userData.uid) {
+            login(userData);
+            autoLoginSucceeded = true;
+            toast({ title: 'Account Initialized 🎉', description: 'Basic details saved. Routing to dashboard...' });
+            onOpenChange(false);
+            router.push('/builder/dashboard');
+            return;
+          }
+        } catch (loginErr) {
+          console.warn('Auto-login failed after Form 1:', loginErr);
+        }
+
+        if (!autoLoginSucceeded) {
+          toast({ title: 'Details Saved!', description: 'Please sign in to access your dashboard.' });
+          setSubmitted(true);
+        }
       } else {
         await submitServiceProviderForm1(userId, currentData);
         setSubmitted(true);
@@ -433,16 +482,16 @@ const RegisterDialog = ({ isOpen, onOpenChange, onLoginClick, initialData = {} }
         <DialogDescription className="sr-only">
           {isUpdateMode ? 'Update your builder profile details.' : 'Create an account to join Investate India as an investor or builder.'}
         </DialogDescription>
-        
+
         {/* Vertex Inspired Sidebar - High Key & Airy */}
         <div className="hidden lg:flex lg:w-[40%] relative bg-gray-50 flex-col justify-between p-8 lg:p-10 overflow-hidden transition-all duration-700">
           <div className="absolute inset-0 z-0">
             {/* Minimal overlay for text readability, but keeping image very clear */}
             <div className="absolute inset-0 bg-white/10 z-[1]" />
-            <img 
-              src={content[userType].image} 
-              alt="bg" 
-              className="absolute inset-0 w-full h-full object-cover opacity-[0.6] brightness-110 contrast-105 saturate-[1.1]" 
+            <img
+              src={content[userType].image}
+              alt="bg"
+              className="absolute inset-0 w-full h-full object-cover opacity-[0.6] brightness-110 contrast-105 saturate-[1.1]"
             />
             {/* Subtle Decorative Blobs */}
             <div className="absolute top-[-5%] right-[-5%] w-[40%] h-[20%] bg-orange-200/20 blur-[60px] rounded-full" />
@@ -462,34 +511,34 @@ const RegisterDialog = ({ isOpen, onOpenChange, onLoginClick, initialData = {} }
 
             {/* Repositioned Floating Chips */}
             <div className="relative h-56 mt-4 pointer-events-none">
-               <div className="absolute top-[5%] left-[5%] px-3 py-1.5 bg-gray-900 rounded-full shadow-xl border border-gray-800 flex items-center gap-2 animate-float-slow">
-                  <div className="w-1.5 h-1.5 rounded-full bg-green-400 shadow-[0_0_8px_rgba(74,222,128,0.3)]" />
-                  <span className="text-[8px] font-black text-white uppercase tracking-[0.2em]">Yield Focus</span>
-               </div>
-               <div className="absolute top-[20%] right-[8%] px-3 py-1.5 bg-white rounded-full shadow-xl border border-gray-100 flex items-center gap-2 animate-float">
-                  <div className="w-1.5 h-1.5 rounded-full bg-blue-500 shadow-[0_0_8px_rgba(59,130,246,0.3)]" />
-                  <span className="text-[8px] font-black text-gray-700 uppercase tracking-[0.2em]">Market Pulse</span>
-               </div>
-               <div className="absolute top-[45%] left-[0%] px-3 py-1.5 bg-white/90 backdrop-blur-md rounded-full shadow-xl border border-white/50 flex items-center gap-2 animate-float-sideways">
-                  <div className="w-1.5 h-1.5 rounded-full bg-orange-500 shadow-[0_0_8px_rgba(249,115,22,0.3)]" />
-                  <span className="text-[8px] font-black text-gray-700 uppercase tracking-[0.2em]">Smart Assets</span>
-               </div>
-               <div className="absolute top-[35%] left-[55%] px-3 py-1.5 bg-gray-900 rounded-full shadow-xl border border-gray-800 flex items-center gap-2 animate-float-slow">
-                  <div className="w-1.5 h-1.5 rounded-full bg-purple-400 shadow-[0_0_8px_rgba(192,132,252,0.3)]" />
-                  <span className="text-[8px] font-black text-white uppercase tracking-[0.2em]">Secure Vault</span>
-               </div>
-               <div className="absolute top-[65%] right-[5%] px-3 py-1.5 bg-gray-900 rounded-full shadow-xl border border-gray-800 flex items-center gap-2 animate-float">
-                  <div className="w-1.5 h-1.5 rounded-full bg-red-400 shadow-[0_0_8px_rgba(248,113,113,0.3)]" />
-                  <span className="text-[8px] font-black text-white uppercase tracking-[0.2em]">Verified</span>
-               </div>
-               <div className="absolute top-[85%] left-[15%] px-3 py-1.5 bg-white/95 rounded-full shadow-xl border border-gray-100 flex items-center gap-2 animate-float-slow">
-                  <div className="w-1.5 h-1.5 rounded-full bg-cyan-500 shadow-[0_0_8px_rgba(6,182,212,0.3)]" />
-                  <span className="text-[8px] font-black text-gray-700 uppercase tracking-[0.2em]">Growth Intel</span>
-               </div>
-               <div className="absolute top-[72%] left-[48%] px-3 py-1.5 bg-white rounded-full shadow-xl border border-gray-100 flex items-center gap-2 animate-float-sideways">
-                  <div className="w-1.5 h-1.5 rounded-full bg-yellow-500 shadow-[0_0_8px_rgba(234,179,8,0.3)]" />
-                  <span className="text-[8px] font-black text-gray-700 uppercase tracking-[0.2em]">ROI Optimized</span>
-               </div>
+              <div className="absolute top-[5%] left-[5%] px-3 py-1.5 bg-gray-900 rounded-full shadow-xl border border-gray-800 flex items-center gap-2 animate-float-slow">
+                <div className="w-1.5 h-1.5 rounded-full bg-green-400 shadow-[0_0_8px_rgba(74,222,128,0.3)]" />
+                <span className="text-[8px] font-black text-white uppercase tracking-[0.2em]">Yield Focus</span>
+              </div>
+              <div className="absolute top-[20%] right-[8%] px-3 py-1.5 bg-white rounded-full shadow-xl border border-gray-100 flex items-center gap-2 animate-float">
+                <div className="w-1.5 h-1.5 rounded-full bg-blue-500 shadow-[0_0_8px_rgba(59,130,246,0.3)]" />
+                <span className="text-[8px] font-black text-gray-700 uppercase tracking-[0.2em]">Market Pulse</span>
+              </div>
+              <div className="absolute top-[45%] left-[0%] px-3 py-1.5 bg-white/90 backdrop-blur-md rounded-full shadow-xl border border-white/50 flex items-center gap-2 animate-float-sideways">
+                <div className="w-1.5 h-1.5 rounded-full bg-orange-500 shadow-[0_0_8px_rgba(249,115,22,0.3)]" />
+                <span className="text-[8px] font-black text-gray-700 uppercase tracking-[0.2em]">Smart Assets</span>
+              </div>
+              <div className="absolute top-[35%] left-[55%] px-3 py-1.5 bg-gray-900 rounded-full shadow-xl border border-gray-800 flex items-center gap-2 animate-float-slow">
+                <div className="w-1.5 h-1.5 rounded-full bg-purple-400 shadow-[0_0_8px_rgba(192,132,252,0.3)]" />
+                <span className="text-[8px] font-black text-white uppercase tracking-[0.2em]">Secure Vault</span>
+              </div>
+              <div className="absolute top-[65%] right-[5%] px-3 py-1.5 bg-gray-900 rounded-full shadow-xl border border-gray-800 flex items-center gap-2 animate-float">
+                <div className="w-1.5 h-1.5 rounded-full bg-red-400 shadow-[0_0_8px_rgba(248,113,113,0.3)]" />
+                <span className="text-[8px] font-black text-white uppercase tracking-[0.2em]">Verified</span>
+              </div>
+              <div className="absolute top-[85%] left-[15%] px-3 py-1.5 bg-white/95 rounded-full shadow-xl border border-gray-100 flex items-center gap-2 animate-float-slow">
+                <div className="w-1.5 h-1.5 rounded-full bg-cyan-500 shadow-[0_0_8px_rgba(6,182,212,0.3)]" />
+                <span className="text-[8px] font-black text-gray-700 uppercase tracking-[0.2em]">Growth Intel</span>
+              </div>
+              <div className="absolute top-[72%] left-[48%] px-3 py-1.5 bg-white rounded-full shadow-xl border border-gray-100 flex items-center gap-2 animate-float-sideways">
+                <div className="w-1.5 h-1.5 rounded-full bg-yellow-500 shadow-[0_0_8px_rgba(234,179,8,0.3)]" />
+                <span className="text-[8px] font-black text-gray-700 uppercase tracking-[0.2em]">ROI Optimized</span>
+              </div>
             </div>
 
             {/* Description & Points Commented Out */}
@@ -594,16 +643,16 @@ const RegisterDialog = ({ isOpen, onOpenChange, onLoginClick, initialData = {} }
             ) : (
               <div className="w-full max-w-lg mx-auto">
                 <div className="text-center mb-6">
-                   <h2 className="text-2xl font-black tracking-tight text-gray-900 uppercase">
-                      {step === 1 ? (userType === 'investor' ? "Investor Registration" : "Builder Registration") : step === 2 ? "Basic Details" : "Verification"}
-                   </h2>
-                   <p className="text-gray-400 font-bold mt-1 tracking-wide uppercase text-[9px]">Step 0{step}</p>
+                  <h2 className="text-2xl font-black tracking-tight text-gray-900 uppercase">
+                    {step === 1 ? (userType === 'investor' ? "Investor Registration" : "Builder Registration") : step === 2 ? "Basic Details" : "Verification"}
+                  </h2>
+                  <p className="text-gray-400 font-bold mt-1 tracking-wide uppercase text-[9px]">Step 0{step}</p>
                 </div>
 
                 {step === 1 && (
                   <div className="space-y-6 animate-in slide-in-from-bottom-6 duration-500">
                     <GoogleAuthButton onSuccess={handleGoogleRegisterSuccess} onError={handleGoogleRegisterError} text="Continue with Google" userType={userType} />
-                    
+
                     <div className="relative py-2">
                       <div className="absolute inset-0 flex items-center"><span className="w-full border-t border-gray-100" /></div>
                       <div className="relative flex justify-center text-[9px] font-black uppercase tracking-[0.3em]"><span className="bg-white px-6 text-gray-400">Security Check</span></div>
@@ -624,14 +673,14 @@ const RegisterDialog = ({ isOpen, onOpenChange, onLoginClick, initialData = {} }
                           <Input type="password" autoComplete="new-password" required value={authData.confirmPassword} onChange={(e) => setAuthData({ ...authData, confirmPassword: e.target.value })} className="h-11 px-6 bg-gray-50 border-gray-200 focus:bg-white focus:ring-[6px] focus:ring-orange-500/5 focus:border-orange-500 transition-all duration-300 rounded-2xl text-sm font-bold placeholder:text-gray-300" placeholder="••••••••" />
                         </div>
                       </div>
-                      <Button 
-                        type="submit" 
-                        className="w-full h-12 bg-gray-900 hover:bg-black text-white font-black text-base rounded-[1.25rem] mt-4 shadow-2xl shadow-black/10 transition-all hover:scale-[1.02] active:scale-[0.98]" 
+                      <Button
+                        type="submit"
+                        className="w-full h-12 bg-gray-900 hover:bg-black text-white font-black text-base rounded-[1.25rem] mt-4 shadow-2xl shadow-black/10 transition-all hover:scale-[1.02] active:scale-[0.98]"
                         disabled={loading}
                       >
                         {loading ? <Loader2 className="mr-2 h-6 w-6 animate-spin" /> : <div className="flex items-center justify-center gap-3 text-sm uppercase tracking-wider">Register <ChevronRight className="h-5 w-5" /></div>}
                       </Button>
-                      
+
                       <p className="text-center text-[10px] font-bold text-gray-400 uppercase tracking-widest pt-2">
                         Member? <button type="button" onClick={onLoginClick} className="text-orange-600 hover:text-orange-700 font-black underline underline-offset-4 decoration-2">Sign In</button>
                       </p>
@@ -892,9 +941,9 @@ const RegisterDialog = ({ isOpen, onOpenChange, onLoginClick, initialData = {} }
                       </Label>
                     </div>
 
-                    <Button 
-                      type="submit" 
-                      className="w-full h-14 bg-gray-900 hover:bg-black text-white font-black text-lg rounded-[1.25rem] shadow-2xl shadow-black/10 disabled:bg-gray-200 disabled:shadow-none transition-all hover:scale-[1.02] active:scale-[0.98] mt-6" 
+                    <Button
+                      type="submit"
+                      className="w-full h-14 bg-gray-900 hover:bg-black text-white font-black text-lg rounded-[1.25rem] shadow-2xl shadow-black/10 disabled:bg-gray-200 disabled:shadow-none transition-all hover:scale-[1.02] active:scale-[0.98] mt-6"
                       disabled={loading || !isProfileFormValid()}
                     >
                       {loading ? <Loader2 className="mr-2 h-6 w-6 animate-spin" /> : (isForm1UpdateMode ? 'Update Account' : 'Initialize Verification')}
@@ -923,128 +972,14 @@ const RegisterDialog = ({ isOpen, onOpenChange, onLoginClick, initialData = {} }
                     )}
 
                     {userType === 'investor' && (
-                      <div className="space-y-8">
-                        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                          {(!isForm2UpdateMode) && (
-                            <>
-                              <div><Label className={labelStyle}>Full Name</Label><input readOnly value={prefilledUserData.fullName || ''} className={readOnlyStyle} /></div>
-                              <div><Label className={labelStyle}>Location</Label><input readOnly value={`${prefilledUserData.city || ''}, ${prefilledUserData.state || ''}`} className={readOnlyStyle} /></div>
-                            </>
-                          )}
-
-                          {shouldShowForm2Field('profession') && (
-                            <div><Label className={labelStyle}>Profession *</Label>
-                              <select required className={selectStyle} value={invForm2.profession} onChange={(e) => setInvForm2({ ...invForm2, profession: e.target.value })}>
-                                <option value="">Select</option>
-                                <option value="Salaried (Government)">Salaried (Government)</option>
-                                <option value="Business Owner">Business Owner</option>
-                                <option value="Self-Employed Professional">Self-Employed Professional (CA, Doctor, etc.)</option>
-                                <option value="Entrepreneur / Startup Founder">Entrepreneur / Startup Founder</option>
-                                <option value="Investor / Trader">Investor / Trader</option>
-                                <option value="NRI / Overseas Professional">NRI / Overseas Professional</option>
-                                <option value="Retired">Retired</option>
-                                <option value="Other">Other</option>
-                              </select>
-                            </div>
-                          )}
-                          {shouldShowForm2Field('industryNatureOfWork') && (<div><Label className={labelStyle}>Primary Industry *</Label><Input required value={invForm2.industryNatureOfWork} onChange={(e) => setInvForm2({ ...invForm2, industryNatureOfWork: e.target.value })} className={inputStyle} /></div>)}
-                          {shouldShowForm2Field('yearlyIncome') && (
-                            <div><Label className={labelStyle}>Annual Income *</Label>
-                              <Input required type="text" value={invForm2.yearlyIncome} onChange={(e) => {
-                                const validNumber = e.target.value.replace(/\D/g, '').replace(/^0+/, '');
-                                setInvForm2({ ...invForm2, yearlyIncome: validNumber });
-                              }} className={inputStyle} placeholder="e.g. 1500000" />
-                            </div>
-                          )}
-                          {shouldShowForm2Field('investmentTenure') && (
-                            <div><Label className={labelStyle}>Target Tenure *</Label>
-                              <select required className={selectStyle} value={invForm2.investmentTenure} onChange={(e) => setInvForm2({ ...invForm2, investmentTenure: e.target.value })}>
-                                <option value="">Select Tenure</option>
-                                <option value="1-3 Years">1 - 3 Years</option>
-                                <option value="3-5 Years">3 - 5 Years</option>
-                                <option value="5+ Years">5+ Years</option>
-                              </select>
-                            </div>
-                          )}
-                          {shouldShowForm2Field('expectedReturns') && (<div><Label className={labelStyle}>Return Expectations *</Label><Input required value={invForm2.expectedReturns} onChange={(e) => setInvForm2({ ...invForm2, expectedReturns: e.target.value })} className={inputStyle} placeholder="e.g. 15%" /></div>)}
-                          {shouldShowForm2Field('preferredGoalStategy') && (
-                            <div><Label className={labelStyle}>Primary Strategy *</Label>
-                              <select required className={selectStyle} value={invForm2.preferredGoalStategy} onChange={(e) => setInvForm2({ ...invForm2, preferredGoalStategy: e.target.value })}>
-                                <option value="">Select Strategy</option>
-                                <option value="Buy & Hold">Buy & Hold (Long-term Appreciation)</option>
-                                <option value="Buy & Resell">Buy & Resell (Short-term Gains)</option>
-                                <option value="Buy & Lease">Buy & Lease (Rental Income)</option>
-                                <option value="Mix of Appreciation & Rental">Mix of Appreciation & Rental</option>
-                                <option value="Open to Suggestions">Open to Suggestions</option>
-                              </select>
-                            </div>
-                          )}
-                          {shouldShowForm2Field('preferredProjectType') && (
-                            <div className="md:col-span-2"><Label className={labelStyle}>Portfolio Interest *</Label>
-                              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mt-2 p-5 border border-gray-100 rounded-2xl bg-gray-50/50">
-                                {['Plots / Land', 'Villa', 'Apartments / Flats', 'Commercial Spaces', 'Farm Land / Agri Projects', 'Open to All'].map((type) => (
-                                  <div key={type} className="flex items-center space-x-4">
-                                    <Checkbox id={`proj-${type.replace(/\s+/g, '-')}`} checked={(invForm2.preferredProjectType || []).includes(type)} onCheckedChange={() => handleProjectTypeToggle(type)} className="data-[state=checked]:bg-orange-600 border-gray-300" />
-                                    <Label htmlFor={`proj-${type.replace(/\s+/g, '-')}`} className="text-sm font-bold text-gray-600 cursor-pointer">{type}</Label>
-                                  </div>
-                                ))}
-                              </div>
-                            </div>
-                          )}
-                          {shouldShowForm2Field('investmentPreference') && (
-                            <div className="md:col-span-2"><Label className={labelStyle}>Support Requirement *</Label>
-                              <select required className={selectStyle} value={invForm2.investmentPreference} onChange={(e) => setInvForm2({ ...invForm2, investmentPreference: e.target.value })}>
-                                <option value="">Select Level</option>
-                                <option value="Browse curated investment opportunities on my own">I prefer self-managed browsing</option>
-                                <option value="Get recommendations according to my needs from an executive">I want dedicated advisor assistance</option>
-                              </select>
-                            </div>
-                          )}
-                        </div>
+                      <div className="space-y-8 p-6 text-center text-gray-500 font-bold bg-gray-50 rounded-2xl">
+                        Verification is handled post-login on the dashboard.
                       </div>
                     )}
 
                     {userType === 'builder' && (
-                      <div className="space-y-8">
-                        <div className="grid grid-cols-1 gap-8">
-                          {(!isForm2UpdateMode) && (
-                            <div className="grid grid-cols-1 md:grid-cols-2 gap-6 p-6 bg-gray-50 rounded-[2rem] border border-gray-100">
-                              <div><Label className={labelStyle}>Entity</Label><input readOnly value={prefilledUserData.companyName || ''} className={readOnlyStyle} /></div>
-                              <div><Label className={labelStyle}>Liaison</Label><input readOnly value={prefilledUserData.contactNameAndDesignation || ''} className={readOnlyStyle} /></div>
-                            </div>
-                          )}
-
-                          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                            {shouldShowForm2Field('yearOfIncorporation') && (<div><Label className={labelStyle}>Est. Year *</Label><Input required value={bldForm2.yearOfIncorporation} onChange={(e) => setBldForm2({ ...bldForm2, yearOfIncorporation: e.target.value })} className={inputStyle} placeholder="YYYY" /></div>)}
-                            {shouldShowForm2Field('totalSqftDelivered') && (<div><Label className={labelStyle}>Delivery Volume (Sqft) *</Label><Input required value={bldForm2.totalSqftDelivered} onChange={(e) => setBldForm2({ ...bldForm2, totalSqftDelivered: e.target.value })} className={inputStyle} /></div>)}
-                            {shouldShowForm2Field('promotersOrDirectors') && (<div className="md:col-span-2"><Label className={labelStyle}>Governance (Promoters / Directors) *</Label><Textarea required value={bldForm2.promotersOrDirectors} onChange={(e) => setBldForm2({ ...bldForm2, promotersOrDirectors: e.target.value })} className={textareaStyle} /></div>)}
-                            {shouldShowForm2Field('typeOfProjectsOffered') && (<div><Label className={labelStyle}>Specialization *</Label><Input required value={bldForm2.typeOfProjectsOffered} onChange={(e) => setBldForm2({ ...bldForm2, typeOfProjectsOffered: e.target.value })} className={inputStyle} /></div>)}
-                            {shouldShowForm2Field('experienceWithNriInvestors') && (
-                              <div><Label className={labelStyle}>NRI Client Exposure *</Label>
-                                <select required className={selectStyle} value={bldForm2.experienceWithNriInvestors} onChange={(e) => setBldForm2({ ...bldForm2, experienceWithNriInvestors: e.target.value })}>
-                                  <option value="">Select</option>
-                                  <option value="Yes">Yes</option>
-                                  <option value="No">No</option>
-                                </select>
-                              </div>
-                            )}
-                            {shouldShowForm2Field('majorCompletedProjects') && (<div className="md:col-span-2"><Label className={labelStyle}>Key Portfolio Highlights *</Label><Textarea required value={bldForm2.majorCompletedProjects} onChange={(e) => setBldForm2({ ...bldForm2, majorCompletedProjects: e.target.value })} className={textareaStyle} /></div>)}
-                            {shouldShowForm2Field('companyOverview') && (<div className="md:col-span-2"><Label className={labelStyle}>Corporate Profile *</Label><Textarea required value={bldForm2.companyOverview} onChange={(e) => setBldForm2({ ...bldForm2, companyOverview: e.target.value })} className={textareaStyle} /></div>)}
-                            {shouldShowForm2Field('outstandingDebt') && (
-                              <div><Label className={labelStyle}>Leverage Level *</Label>
-                                <select required className={selectStyle} value={bldForm2.outstandingDebt} onChange={(e) => setBldForm2({ ...bldForm2, outstandingDebt: e.target.value })}>
-                                  <option value="">Select Level</option>
-                                  <option value="High">High</option>
-                                  <option value="Medium">Medium</option>
-                                  <option value="Low">Low</option>
-                                </select>
-                              </div>
-                            )}
-                            {shouldShowForm2Field('declaredLitigationDisputes') && (<div className="md:col-span-2"><Label className={labelStyle}>Disclosure (Litigation / Disputes)</Label><Textarea value={bldForm2.declaredLitigationDisputes || ''} onChange={(e) => setBldForm2({ ...bldForm2, declaredLitigationDisputes: e.target.value })} className={textareaStyle} /></div>)}
-                            {shouldShowForm2Field('financialOfCompany') && (<div className="md:col-span-2"><Label className={labelStyle}>Financial Brief (P&L Highlights) *</Label><Textarea required value={bldForm2.financialOfCompany} onChange={(e) => setBldForm2({ ...bldForm2, financialOfCompany: e.target.value })} className={textareaStyle} /></div>)}
-                            {shouldShowForm2Field('bankingPartners') && (<div className="md:col-span-2"><Label className={labelStyle}>Banking Partners *</Label><Input required value={bldForm2.bankingPartners} onChange={(e) => setBldForm2({ ...bldForm2, bankingPartners: e.target.value })} className={inputStyle} /></div>)}
-                          </div>
-                        </div>
+                      <div className="space-y-8 p-6 text-center text-gray-500 font-bold bg-gray-50 rounded-2xl">
+                        Verification is handled post-login on the dashboard.
                       </div>
                     )}
 
@@ -1058,9 +993,9 @@ const RegisterDialog = ({ isOpen, onOpenChange, onLoginClick, initialData = {} }
                       )
                     })}
 
-                    <Button 
-                      type="submit" 
-                      className="w-full h-16 bg-gray-900 hover:bg-black text-white font-black text-lg rounded-[1.25rem] shadow-2xl shadow-black/10 transition-all hover:scale-[1.02] active:scale-[0.98] mt-8" 
+                    <Button
+                      type="submit"
+                      className="w-full h-16 bg-gray-900 hover:bg-black text-white font-black text-lg rounded-[1.25rem] shadow-2xl shadow-black/10 transition-all hover:scale-[1.02] active:scale-[0.98] mt-8"
                       disabled={loading}
                     >
                       {loading ? <><Loader2 className="mr-2 h-6 w-6 animate-spin" /> Finalizing...</> : <div className="flex items-center justify-center gap-3 text-lg uppercase tracking-wider">Finalize Onboarding <ChevronRight className="h-6 w-6" /></div>}

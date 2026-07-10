@@ -13,7 +13,7 @@ import { toast } from '@/hooks/use-toast';
 import { CheckCircle, ChevronRight, Loader2, FileWarning, ClipboardList, ArrowLeft, Eye, EyeOff } from 'lucide-react';
 import { getAuth } from 'firebase/auth';
 import { app } from '@/firebase';
-import { registerStep1, submitInvestorForm1, submitRequestedChanges, submitInvestorForm2 } from '@/api';
+import { registerStep1, submitInvestorForm1, submitRequestedChanges, submitInvestorForm2, loginRequest, googleSyncRequest } from '@/api';
 import GoogleAuthButton from '@/components/GoogleAuthButton';
 
 function InvestorRegisterContent() {
@@ -248,7 +248,31 @@ function InvestorRegisterContent() {
         setSubmitted(true);
       } else {
         await submitInvestorForm1(userId, investorData);
-        setStep(3);
+        // Direct auto-login and navigation to dashboard
+        let autoLoginSucceeded = false;
+        try {
+          let userData;
+          if (onboardingInitData?.idToken) {
+            userData = await googleSyncRequest(onboardingInitData.idToken, 'investor');
+          } else if (authData.email && authData.password) {
+            userData = await loginRequest({ email: authData.email, password: authData.password, role: 'investor' });
+          }
+
+          if (userData && userData.uid) {
+            login(userData);
+            autoLoginSucceeded = true;
+            toast({ title: 'Account Initialized 🎉', description: 'Basic details saved. Routing to dashboard...' });
+            router.push('/dashboard');
+            return;
+          }
+        } catch (loginErr) {
+          console.warn('Auto-login failed after Form 1:', loginErr);
+        }
+
+        if (!autoLoginSucceeded) {
+          toast({ title: 'Details Saved!', description: 'Please sign in to access your dashboard.' });
+          setSubmitted(true);
+        }
       }
     } catch (error) {
       toast({ title: 'Error', description: error.message || 'Failed to submit.', variant: 'destructive' });
@@ -627,115 +651,7 @@ function InvestorRegisterContent() {
                 </form>
               )}
 
-              {/* Step 3 */}
-              {step === 3 && (
-                <form onSubmit={handleForm2Submit} className="space-y-8 animate-in slide-in-from-bottom-6 duration-500">
-                  {isForm2UpdateMode ? (
-                    <div className="p-4 bg-red-50 border border-red-100 text-red-600 rounded-2xl flex items-center gap-4 font-bold text-sm">
-                      <FileWarning className="w-6 h-6 flex-shrink-0" />
-                      <span>Action Required: Please update the requested fields below.</span>
-                    </div>
-                  ) : (
-                    <div className="p-6 bg-blue-50 border border-blue-100 rounded-2xl flex gap-5">
-                      <div className="w-12 h-12 rounded-2xl bg-blue-100 flex items-center justify-center flex-shrink-0">
-                        <ClipboardList className="w-6 h-6 text-blue-600" />
-                      </div>
-                      <div>
-                        <p className="font-black text-blue-900 text-sm uppercase tracking-wider">Final Step</p>
-                        <p className="text-sm text-blue-700 mt-1 font-medium">Please provide these details to complete your professional profile.</p>
-                      </div>
-                    </div>
-                  )}
-
-                  <div className="space-y-8">
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                      {(!isForm2UpdateMode) && (
-                        <>
-                          <div><Label className={labelStyle}>Full Name</Label><input readOnly value={investorData.fullName || ''} className={readOnlyStyle} /></div>
-                          <div><Label className={labelStyle}>Location</Label><input readOnly value={`${investorData.city || ''}, ${investorData.state || ''}`} className={readOnlyStyle} /></div>
-                        </>
-                      )}
-
-                      {shouldShowForm2Field('profession') && (
-                        <div><Label className={labelStyle}>Profession *</Label>
-                          <select required className={selectStyle} value={invForm2.profession} onChange={(e) => setInvForm2({ ...invForm2, profession: e.target.value })}>
-                            <option value="">Select</option>
-                            <option value="Salaried (Government)">Salaried (Government)</option>
-                            <option value="Business Owner">Business Owner</option>
-                            <option value="Self-Employed Professional">Self-Employed Professional (CA, Doctor, etc.)</option>
-                            <option value="Entrepreneur / Startup Founder">Entrepreneur / Startup Founder</option>
-                            <option value="Investor / Trader">Investor / Trader</option>
-                            <option value="NRI / Overseas Professional">NRI / Overseas Professional</option>
-                            <option value="Retired">Retired</option>
-                            <option value="Other">Other</option>
-                          </select>
-                        </div>
-                      )}
-                      {shouldShowForm2Field('industryNatureOfWork') && (<div><Label className={labelStyle}>Primary Industry *</Label><Input required value={invForm2.industryNatureOfWork} onChange={(e) => setInvForm2({ ...invForm2, industryNatureOfWork: e.target.value })} className={inputStyle} /></div>)}
-                      {shouldShowForm2Field('yearlyIncome') && (
-                        <div><Label className={labelStyle}>Annual Income *</Label>
-                          <Input required type="text" value={invForm2.yearlyIncome} onChange={(e) => {
-                            const validNumber = e.target.value.replace(/\D/g, '').replace(/^0+/, '');
-                            setInvForm2({ ...invForm2, yearlyIncome: validNumber });
-                          }} className={inputStyle} placeholder="e.g. 1500000" />
-                        </div>
-                      )}
-                      {shouldShowForm2Field('investmentTenure') && (
-                        <div><Label className={labelStyle}>Target Tenure *</Label>
-                          <select required className={selectStyle} value={invForm2.investmentTenure} onChange={(e) => setInvForm2({ ...invForm2, investmentTenure: e.target.value })}>
-                            <option value="">Select Tenure</option>
-                            <option value="1-3 Years">1 - 3 Years</option>
-                            <option value="3-5 Years">3 - 5 Years</option>
-                            <option value="5+ Years">5+ Years</option>
-                          </select>
-                        </div>
-                      )}
-                      {shouldShowForm2Field('expectedReturns') && (<div><Label className={labelStyle}>Return Expectations *</Label><Input required value={invForm2.expectedReturns} onChange={(e) => setInvForm2({ ...invForm2, expectedReturns: e.target.value })} className={inputStyle} placeholder="e.g. 15%" /></div>)}
-                      {shouldShowForm2Field('preferredGoalStategy') && (
-                        <div><Label className={labelStyle}>Primary Strategy *</Label>
-                          <select required className={selectStyle} value={invForm2.preferredGoalStategy} onChange={(e) => setInvForm2({ ...invForm2, preferredGoalStategy: e.target.value })}>
-                            <option value="">Select Strategy</option>
-                            <option value="Buy & Hold">Buy & Hold (Long-term Appreciation)</option>
-                            <option value="Buy & Resell">Buy & Resell (Short-term Gains)</option>
-                            <option value="Buy & Lease">Buy & Lease (Rental Income)</option>
-                            <option value="Mix of Appreciation & Rental">Mix of Appreciation & Rental</option>
-                            <option value="Open to Suggestions">Open to Suggestions</option>
-                          </select>
-                        </div>
-                      )}
-                      {shouldShowForm2Field('preferredProjectType') && (
-                        <div className="md:col-span-2"><Label className={labelStyle}>Portfolio Interest *</Label>
-                          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mt-2 p-5 border border-gray-100 rounded-2xl bg-gray-50/50">
-                            {['Plots / Land', 'Villa', 'Apartments / Flats', 'Commercial Spaces', 'Farm Land / Agri Projects', 'Open to All'].map((type) => (
-                              <div key={type} className="flex items-center space-x-4">
-                                <Checkbox id={`proj-${type.replace(/\s+/g, '-')}`} checked={(invForm2.preferredProjectType || []).includes(type)} onCheckedChange={() => handleProjectTypeToggle(type)} className="data-[state=checked]:bg-orange-600 border-gray-300" />
-                                <Label htmlFor={`proj-${type.replace(/\s+/g, '-')}`} className="text-sm font-bold text-gray-600 cursor-pointer">{type}</Label>
-                              </div>
-                            ))}
-                          </div>
-                        </div>
-                      )}
-                      {shouldShowForm2Field('investmentPreference') && (
-                        <div className="md:col-span-2"><Label className={labelStyle}>Support Requirement *</Label>
-                          <select required className={selectStyle} value={invForm2.investmentPreference} onChange={(e) => setInvForm2({ ...invForm2, investmentPreference: e.target.value })}>
-                            <option value="">Select Level</option>
-                            <option value="Browse curated investment opportunities on my own">I prefer self-managed browsing</option>
-                            <option value="Get recommendations according to my needs from an executive">I want dedicated advisor assistance</option>
-                          </select>
-                        </div>
-                      )}
-                    </div>
-                  </div>
-
-                  <Button 
-                    type="submit" 
-                    className="w-full h-16 bg-gray-900 hover:bg-black text-white font-black text-lg rounded-[1.25rem] shadow-2xl shadow-black/10 transition-all hover:scale-[1.02] active:scale-[0.98] mt-8" 
-                    disabled={loading}
-                  >
-                    {loading ? <><Loader2 className="mr-2 h-6 w-6 animate-spin" /> Finalizing...</> : <div className="flex items-center justify-center gap-3 text-lg uppercase tracking-wider font-black">Finalize Onboarding <ChevronRight className="h-6 w-6" /></div>}
-                  </Button>
-                </form>
-              )}
+              {/* Step 3 removed for investors */}
             </div>
           )}
           {/* Mobile App Download Card (Visible on Mobile only) */}

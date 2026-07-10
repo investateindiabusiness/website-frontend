@@ -13,7 +13,7 @@ import { toast } from '@/hooks/use-toast';
 import { CheckCircle, ChevronRight, Loader2, FileWarning, ClipboardList, ArrowLeft, Eye, EyeOff } from 'lucide-react';
 import { getAuth } from 'firebase/auth';
 import { app } from '@/firebase';
-import { registerStep1, submitBuilderForm1, submitRequestedChanges, submitBuilderForm2 } from '@/api';
+import { registerStep1, submitBuilderForm1, submitRequestedChanges, submitBuilderForm2, loginRequest, googleSyncRequest } from '@/api';
 import GoogleAuthButton from '@/components/GoogleAuthButton';
 
 function BuilderRegisterContent() {
@@ -233,7 +233,31 @@ function BuilderRegisterContent() {
         setSubmitted(true);
       } else {
         await submitBuilderForm1(userId, builderData);
-        setStep(3);
+        // Direct auto-login and navigation to dashboard
+        let autoLoginSucceeded = false;
+        try {
+          let userData;
+          if (onboardingInitData?.idToken) {
+            userData = await googleSyncRequest(onboardingInitData.idToken, 'builder');
+          } else if (authData.email && authData.password) {
+            userData = await loginRequest({ email: authData.email, password: authData.password, role: 'builder' });
+          }
+
+          if (userData && userData.uid) {
+            login(userData);
+            autoLoginSucceeded = true;
+            toast({ title: 'Account Initialized 🎉', description: 'Basic details saved. Routing to dashboard...' });
+            router.push('/builder/dashboard');
+            return;
+          }
+        } catch (loginErr) {
+          console.warn('Auto-login failed after Form 1:', loginErr);
+        }
+
+        if (!autoLoginSucceeded) {
+          toast({ title: 'Details Saved!', description: 'Please sign in to access your dashboard.' });
+          setSubmitted(true);
+        }
       }
     } catch (error) {
       toast({ title: 'Error', description: error.message || 'Failed to submit.', variant: 'destructive' });
@@ -603,81 +627,9 @@ function BuilderRegisterContent() {
                     className="w-full h-14 bg-gray-900 hover:bg-black text-white font-black text-lg rounded-[1.25rem] shadow-2xl shadow-black/10 disabled:bg-gray-200 disabled:shadow-none transition-all hover:scale-[1.02] active:scale-[0.98] mt-6" 
                     disabled={loading || !isProfileFormValid()}
                   >
-                    {loading ? <Loader2 className="mr-2 h-6 w-6 animate-spin" /> : (isForm1UpdateMode ? 'Update Account' : 'Initialize Verification')}
+                    {loading ? <Loader2 className="mr-2 h-6 w-6 animate-spin" /> : (isForm1UpdateMode ? 'Update Account' : 'Complete Registration')}
                   </Button>
-                </form>
-              )}
-
-              {/* Step 3 */}
-              {step === 3 && (
-                <form onSubmit={handleForm2Submit} className="space-y-8 animate-in slide-in-from-bottom-6 duration-500">
-                  {isForm2UpdateMode ? (
-                    <div className="p-4 bg-red-50 border border-red-100 text-red-600 rounded-2xl flex items-center gap-4 font-bold text-sm">
-                      <FileWarning className="w-6 h-6 flex-shrink-0" />
-                      <span>Action Required: Please update the requested fields below.</span>
-                    </div>
-                  ) : (
-                    <div className="p-6 bg-blue-50 border border-blue-100 rounded-2xl flex gap-5">
-                      <div className="w-12 h-12 rounded-2xl bg-blue-100 flex items-center justify-center flex-shrink-0">
-                        <ClipboardList className="w-6 h-6 text-blue-600" />
-                      </div>
-                      <div>
-                        <p className="font-black text-blue-900 text-sm uppercase tracking-wider">Final Step</p>
-                        <p className="text-sm text-blue-700 mt-1 font-medium">Please provide these details to complete your builder profile verification.</p>
-                      </div>
-                    </div>
-                  )}
-
-                  <div className="space-y-8">
-                    <div className="grid grid-cols-1 gap-8">
-                      {(!isForm2UpdateMode) && (
-                        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 p-6 bg-gray-50 rounded-[2rem] border border-gray-100">
-                          <div><Label className={labelStyle}>Entity</Label><input readOnly value={builderData.companyName || ''} className={readOnlyStyle} /></div>
-                          <div><Label className={labelStyle}>Liaison</Label><input readOnly value={builderData.contactNameAndDesignation || ''} className={readOnlyStyle} /></div>
-                        </div>
-                      )}
-
-                      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                        {shouldShowForm2Field('yearOfIncorporation') && (<div><Label className={labelStyle}>Est. Year *</Label><Input required value={bldForm2.yearOfIncorporation} onChange={(e) => setBldForm2({ ...bldForm2, yearOfIncorporation: e.target.value })} className={inputStyle} placeholder="YYYY" /></div>)}
-                        {shouldShowForm2Field('totalSqftDelivered') && (<div><Label className={labelStyle}>Delivery Volume (Sqft) *</Label><Input required value={bldForm2.totalSqftDelivered} onChange={(e) => setBldForm2({ ...bldForm2, totalSqftDelivered: e.target.value })} className={inputStyle} /></div>)}
-                        {shouldShowForm2Field('promotersOrDirectors') && (<div className="md:col-span-2"><Label className={labelStyle}>Governance (Promoters / Directors) *</Label><Textarea required value={bldForm2.promotersOrDirectors} onChange={(e) => setBldForm2({ ...bldForm2, promotersOrDirectors: e.target.value })} className={textareaStyle} /></div>)}
-                        {shouldShowForm2Field('typeOfProjectsOffered') && (<div><Label className={labelStyle}>Specialization *</Label><Input required value={bldForm2.typeOfProjectsOffered} onChange={(e) => setBldForm2({ ...bldForm2, typeOfProjectsOffered: e.target.value })} className={inputStyle} /></div>)}
-                        {shouldShowForm2Field('experienceWithNriInvestors') && (
-                          <div><Label className={labelStyle}>NRI Client Exposure *</Label>
-                            <select required className={selectStyle} value={bldForm2.experienceWithNriInvestors} onChange={(e) => setBldForm2({ ...bldForm2, experienceWithNriInvestors: e.target.value })}>
-                              <option value="">Select</option>
-                              <option value="Yes">Yes</option>
-                              <option value="No">No</option>
-                            </select>
-                          </div>
-                        )}
-                        {shouldShowForm2Field('majorCompletedProjects') && (<div className="md:col-span-2"><Label className={labelStyle}>Key Portfolio Highlights *</Label><Textarea required value={bldForm2.majorCompletedProjects} onChange={(e) => setBldForm2({ ...bldForm2, majorCompletedProjects: e.target.value })} className={textareaStyle} /></div>)}
-                        {shouldShowForm2Field('companyOverview') && (<div className="md:col-span-2"><Label className={labelStyle}>Corporate Profile *</Label><Textarea required value={bldForm2.companyOverview} onChange={(e) => setBldForm2({ ...bldForm2, companyOverview: e.target.value })} className={textareaStyle} /></div>)}
-                        {shouldShowForm2Field('outstandingDebt') && (
-                          <div><Label className={labelStyle}>Leverage Level *</Label>
-                            <select required className={selectStyle} value={bldForm2.outstandingDebt} onChange={(e) => setBldForm2({ ...bldForm2, outstandingDebt: e.target.value })}>
-                              <option value="">Select Level</option>
-                              <option value="High">High</option>
-                              <option value="Medium">Medium</option>
-                              <option value="Low">Low</option>
-                            </select>
-                          </div>
-                        )}
-                        {shouldShowForm2Field('declaredLitigationDisputes') && (<div className="md:col-span-2"><Label className={labelStyle}>Disclosure (Litigation / Disputes)</Label><Textarea value={bldForm2.declaredLitigationDisputes || ''} onChange={(e) => setBldForm2({ ...bldForm2, declaredLitigationDisputes: e.target.value })} className={textareaStyle} /></div>)}
-                        {shouldShowForm2Field('financialOfCompany') && (<div className="md:col-span-2"><Label className={labelStyle}>Financial Brief (P&L Highlights) *</Label><Textarea required value={bldForm2.financialOfCompany} onChange={(e) => setBldForm2({ ...bldForm2, financialOfCompany: e.target.value })} className={textareaStyle} /></div>)}
-                        {shouldShowForm2Field('bankingPartners') && (<div className="md:col-span-2"><Label className={labelStyle}>Banking Partners *</Label><Input required value={bldForm2.bankingPartners} onChange={(e) => setBldForm2({ ...bldForm2, bankingPartners: e.target.value })} className={inputStyle} /></div>)}
-                      </div>
-                    </div>
-                  </div>
-
-                  <Button 
-                    type="submit" 
-                    className="w-full h-16 bg-gray-900 hover:bg-black text-white font-black text-lg rounded-[1.25rem] shadow-2xl shadow-black/10 transition-all hover:scale-[1.02] active:scale-[0.98] mt-8" 
-                    disabled={loading}
-                  >
-                    {loading ? <><Loader2 className="mr-2 h-6 w-6 animate-spin" /> Finalizing...</> : <div className="flex items-center justify-center gap-3 text-lg uppercase tracking-wider font-black">Finalize Onboarding <ChevronRight className="h-6 w-6" /></div>}
-                  </Button>
-                </form>
+                        {/* Step 3 removed for builders */}          </form>
               )}
             </div>
           )}
