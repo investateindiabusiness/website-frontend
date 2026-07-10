@@ -21,86 +21,102 @@ import {
 
 const heroSlides = [
   {
-    image:
-      "/images/image copy 20.png",
-    tag: "Institutional Partner Growth",
-    title: "Present Your Services to",
-    highlight: "Premium Builders & HNW NRI Investors",
+    image: "/images/image copy 20.png",
+    tag: "Trusted Professional Ecosystem",
+    title: "Expand Your Services to",
+    highlight: "Global NRIs & Real Estate Networks",
     subtitle:
-      "The ultimate ecosystem for verified real estate agents, brokers, lawyers, chartered accountants, tax consultants, and property service professionals to expand their reach to top-tier builders and global NRI buyers.",
+      "Partner with Investate India to offer legal, financial, property, and advisory services to NRIs, investors, and developers through a trusted platform.",
   },
   {
     image: "/images/challenge_intermediaries.png",
-    tag: "Trust & Governance",
-    title: "Accelerate Client Acquisition with",
-    highlight: "Verified Professional Credibility",
+    tag: "Professional Growth Network",
+    title: "Build Trust Through",
+    highlight: "Verified Service Partnerships",
     subtitle:
-      "Position your business in a transparency-first marketplace. Build lasting relationships with active builders and sophisticated NRI investors seeking expert execution.",
+      "Showcase your expertise, grow your professional reach, and become part of India's global real estate investment ecosystem.",
   },
 ];
-
 const serviceProviderBenefits = [
   {
-    title: "Direct Lead Routing",
-    desc: "Receive targeted inquiries from active builders and NRI investors through a secure, admin-managed pipeline.",
-    image:
-      "https://images.unsplash.com/photo-1557804506-669a67965ba0?q=80&w=2070&auto=format&fit=crop",
+    title: "Global Client Access",
+    desc: "Connect your professional expertise with NRIs, investors, and developers seeking trusted support.",
   },
   {
-    title: "Targeted Ad Campaigns",
-    desc: "Display banner and text ads inside builder and investor dashboard panels for premium visibility.",
-    image:
-      "https://images.unsplash.com/photo-1460925895917-afdab827c52f?q=80&w=2070&auto=format&fit=crop",
+    title: "Verified Partner Identity",
+    desc: "Build stronger credibility by becoming part of a trusted professional ecosystem.",
   },
   {
-    title: "Verified Network Integration",
-    desc: "Become an official partner listed inside our ecosystem, solving distance trust gaps.",
-    image:
-      "https://images.unsplash.com/photo-1522071820081-009f0129c71c?q=80&w=2070&auto=format&fit=crop",
+    title: "Business Visibility",
+    desc: "Showcase your services to relevant audiences through structured platform presence.",
   },
   {
-    title: "Launch Rewards & Credits",
-    desc: "Gain complimentary advertisement credits as an early adopter to boost initial visibility.",
-    image:
-      "https://images.unsplash.com/photo-1579621970795-87facc2f976d?q=80&w=2070&auto=format&fit=crop",
+    title: "Long-Term Partnerships",
+    desc: "Create ongoing relationships across real estate, investment, and advisory requirements.",
   },
 ];
 
+const partnerCategories = [
+  "Real Estate Lawyers",
+  "Chartered Accountants & Tax Advisors",
+  "Compliance & Documentation Consultants",
+  "Real Estate Agents / Channel Partners",
+  "Property Management Companies",
+  "Property Valuation Experts",
+  "Financial Advisors",
+  "Insurance Advisors",
+  "Architects & Design Consultants",
+  "Interior Designers",
+  "Construction Contractors",
+  "Immigration & Relocation Consultants",
+];
 const serviceProviderChallenges = [
   {
     id: "01",
-    text: "Client Fragmentation",
-    desc: "Connecting directly with verified developers or high-intent NRI buyers is highly unstructured.",
+    text: "Limited Global Reach",
+    desc: "Many professionals struggle to connect with genuine NRI clients looking for reliable support in India.",
     icon: <Layers className="w-8 h-8 text-white" />,
   },
   {
     id: "02",
-    text: "Trust Verification",
-    desc: "Overcoming geographical separation requires structured credentials and transparent verification.",
+    text: "Trust Building",
+    desc: "International clients require verified professionals with credibility and transparent service processes.",
     icon: <ShieldCheck className="w-8 h-8 text-white" />,
+  },
+  {
+    id: "03",
+    text: "Client Discovery",
+    desc: "Finding serious investors and property owners through traditional channels can be inefficient.",
+    icon: <Users className="w-8 h-8 text-white" />,
+  },
+  {
+    id: "04",
+    text: "Cross-Border Support",
+    desc: "NRI requirements often involve documentation, compliance, property, and advisory coordination.",
+    icon: <FileText className="w-8 h-8 text-white" />,
   },
 ];
 
 const serviceProviderSteps = [
   {
     id: "1",
-    title: "Apply Online",
-    text: "Create your credentials, choose your service category, and submit your business track record details.",
+    title: "Apply",
+    text: "Create your professional profile, select your service category, and submit your expertise and business details.",
   },
   {
     id: "2",
-    title: "Admin Review",
-    text: "Our administrative team reviews your profile, certifications to activate your membership.",
+    title: "Verify",
+    text: "Our team reviews your credentials, experience, and service background to maintain a trusted partner ecosystem.",
   },
   {
     id: "3",
-    title: "Configure Campaigns",
-    text: "Book slots in targeted advertisement zones (Builder / Investor dashboards) and deploy your campaigns.",
+    title: "Get Listed",
+    text: "Showcase your services inside Investate India and become visible to NRIs, investors, and real estate partners.",
   },
   {
     id: "4",
-    title: "Receive Vetted Leads",
-    text: "Admin reviews client inquiries generated from your banners and routes them directly to your liaison.",
+    title: "Connect",
+    text: "Build valuable relationships by supporting clients with legal, financial, property, and advisory requirements.",
   },
 ];
 
@@ -113,25 +129,35 @@ const stepImages = [
 
 const faqsList = [
   {
-    question: "Who can register as a Service Provider?",
-    answer: "Professionals and companies offering real-estate related services."
+    question: "Who can become an Investate India service partner?",
+    answer:
+      "Professionals including lawyers, chartered accountants, advisors, property experts, designers, contractors, and other real estate support providers can apply to join our network.",
   },
   {
-    question: "How do I receive enquiries?",
-    answer: "Through your registered profile."
+    question: "How does Investate India help service providers?",
+    answer:
+      "We help professionals increase visibility and connect their expertise with NRIs, investors, builders, and clients looking for trusted services.",
   },
   {
-    question: "Can I manage my profile?",
-    answer: "Yes, anytime."
+    question: "How does the verification process work?",
+    answer:
+      "Our team reviews professional details, experience, credentials, and service background before approving partner profiles.",
   },
   {
-    question: "What services can I offer?",
-    answer: "Legal, financial, valuation, marketing and related services."
+    question: "What services can I offer on the platform?",
+    answer:
+      "Partners can offer legal, taxation, compliance, property management, advisory, valuation, design, construction, and other specialized services.",
   },
   {
-    question: "How do clients contact me?",
-    answer: "Using the platform contact options."
-  }
+    question: "How will clients connect with me?",
+    answer:
+      "Interested clients can reach verified service partners through Investate India's structured connection process.",
+  },
+  {
+    question: "Can companies register as service providers?",
+    answer:
+      "Yes. Both individual professionals and companies offering relevant services can become Investate India partners.",
+  },
 ];
 
 export default function ServiceProviderHome() {
@@ -143,7 +169,7 @@ export default function ServiceProviderHome() {
   };
   const [heroIndex, setHeroIndex] = useState(0);
   const [isHeroPaused, setIsHeroPaused] = useState(false);
-
+  const [isPauseButtonHovered, setIsPauseButtonHovered] = useState(false);
 
   const handleAuthClick = (action, role) => {
     if (action === "login") {
@@ -154,12 +180,12 @@ export default function ServiceProviderHome() {
   };
 
   useEffect(() => {
-    if (isHeroPaused) return;
+    if (isHeroPaused || isPauseButtonHovered) return;
     const timer = setInterval(() => {
       setHeroIndex((prev) => (prev + 1) % heroSlides.length);
     }, 8000);
     return () => clearInterval(timer);
-  }, [isHeroPaused]);
+  }, [isHeroPaused, isPauseButtonHovered]);
 
   const activeStepData = serviceProviderSteps[activeStepIndex];
 
@@ -167,11 +193,7 @@ export default function ServiceProviderHome() {
     <div className="theme-builder w-full bg-[var(--color-light-bg)] overflow-x-hidden">
       <Header transparent={true} />
 
-      <section
-        className="fullscreen-section hero-section"
-        onMouseEnter={() => setIsHeroPaused(true)}
-        onMouseLeave={() => setIsHeroPaused(false)}
-      >
+      <section className="fullscreen-section hero-section">
         <AnimatePresence mode="sync">
           <picture
             key={heroIndex}
@@ -200,9 +222,25 @@ export default function ServiceProviderHome() {
             />
           </picture>
         </AnimatePresence>
-        <div
-          className="absolute inset-0 z-[1] hero-split-overlay"
-        />
+        <div className="absolute inset-0 z-[1] hero-split-overlay" />
+
+        <button
+          type="button"
+          onClick={() => setIsHeroPaused((prev) => !prev)}
+          onMouseEnter={() => setIsPauseButtonHovered(true)}
+          onMouseLeave={() => setIsPauseButtonHovered(false)}
+          onFocus={() => setIsPauseButtonHovered(true)}
+          onBlur={() => setIsPauseButtonHovered(false)}
+          aria-label={
+            isHeroPaused ? "Resume auto-rotation" : "Pause auto-rotation"
+          }
+          className="absolute bottom-16 left-1/2 -translate-x-1/2 z-[30] flex min-w-[112px] items-center justify-center gap-2 rounded-full border border-white/40 bg-slate-950/80 px-4 py-3 text-[12px] font-semibold uppercase tracking-[0.3em] text-white shadow-xl shadow-black/35 backdrop-blur-md transition-all duration-200 hover:bg-slate-800/90"
+        >
+          <span className="text-base leading-none">
+            {isHeroPaused ? "▶" : "⏸"}
+          </span>
+          {isHeroPaused ? "Play" : "Pause"}
+        </button>
 
         {/* Prev / Next buttons */}
         <button
@@ -267,11 +305,8 @@ export default function ServiceProviderHome() {
       </section>
 
       {/* Market Challenges Section */}
-      <section
-        id="challenges"
-        className="infra-section py-20 bg-[#f8f8f8]"
-      >
-        <div className="infra-section-header text-center mb-12">
+      <section id="challenges" className="infra-section py-10 bg-[#f8f8f8]">
+        <div className="infra-section-header text-center">
           <h2 className="infra-title text-3xl md:text-4xl font-bold text-[#1a1a1a]">
             Friction in{" "}
             <span className="infra-title-accent text-[#D48035]">
@@ -279,32 +314,99 @@ export default function ServiceProviderHome() {
             </span>
           </h2>
           <p className="infra-subtitle max-w-2xl mx-auto mt-4 text-slate-600">
-            Acquiring premium builder and NRI clients is often unstructured and
-            lacks transparency. We provide professional integration to verify
-            and highlight your capabilities.
+            We provide professional integration to verify and highlight your
+            capabilities.
           </p>
         </div>
 
         <div className="infra-marquee-wrapper">
           <div className="infra-marquee-track">
-            {[...serviceProviderChallenges, ...serviceProviderChallenges, ...serviceProviderChallenges, ...serviceProviderChallenges].map(
-              (challenge, i) => (
-                <div
-                  key={i}
-                  className="infra-marquee-card bg-white border border-slate-200/80 p-6 rounded-2xl w-80 shrink-0 mx-4 shadow-sm"
-                >
-                  <div className="infra-card-icon-wrapper bg-[#D48035] p-3 rounded-xl w-14 h-14 flex items-center justify-center mb-4 text-white">
-                    {challenge.icon}
-                  </div>
-                  <h3 className="infra-card-title text-lg font-bold text-[#1a1a1a] mb-2">
-                    {challenge.text}
-                  </h3>
-                  <p className="infra-card-desc text-xs text-slate-600 leading-relaxed">
-                    {challenge.desc}
-                  </p>
+            {[
+              ...serviceProviderChallenges,
+              ...serviceProviderChallenges,
+              ...serviceProviderChallenges,
+              ...serviceProviderChallenges,
+            ].map((challenge, i) => (
+              <div
+                key={i}
+                className="infra-marquee-card bg-white border border-slate-200/80 p-6 rounded-2xl w-80 shrink-0 mx-4 shadow-sm"
+              >
+                <div className="infra-card-icon-wrapper bg-[#D48035] p-3 rounded-xl w-14 h-14 flex items-center justify-center mb-4 text-white">
+                  {challenge.icon}
                 </div>
-              ),
-            )}
+                <h3 className="infra-card-title text-lg font-bold text-[#1a1a1a] mb-2">
+                  {challenge.text}
+                </h3>
+                <p className="infra-card-desc text-xs text-slate-600 leading-relaxed">
+                  {challenge.desc}
+                </p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      <section className="py-20 bg-white" id="professional-network">
+        <div className="container mx-auto px-4">
+          {/* Header */}
+          <div className="text-center max-w-3xl mx-auto mb-14">
+            <h2
+              className="
+        text-3xl 
+        md:text-4xl 
+        font-bold 
+        text-[#1a1a1a]
+      "
+            >
+              Join Our Trusted <br />
+              <span className="text-[#D48035]">Professional Network</span>
+            </h2>
+
+            <p
+              className="
+        mt-5 
+        text-slate-600 
+        text-base 
+        md:text-lg 
+        leading-relaxed
+      "
+            >
+              Partner with Investate India to support global NRIs, investors,
+              and developers with specialized services throughout their real
+              estate and investment journey.
+            </p>
+          </div>
+
+          {/* Cards */}
+          <div
+            className="
+      grid 
+      grid-cols-1 
+      sm:grid-cols-2 
+      lg:grid-cols-3 
+      xl:grid-cols-4
+      gap-5
+      max-w-6xl
+      mx-auto
+    "
+          >
+            {partnerCategories.map((category, index) => (
+              <div
+                key={index}
+                className="bg-[#f8f8f8] border border-slate-200/80 p-6 rounded-2xl flex flex-col items-center justify-center text-center shadow-sm hover:shadow-lg transition-shadow duration-300"
+              >
+                <h3
+                  className="
+            text-slate-900
+            font-bold
+            text-base
+            leading-snug
+          "
+                >
+                  {category}
+                </h3>
+              </div>
+            ))}
           </div>
         </div>
       </section>
@@ -312,7 +414,7 @@ export default function ServiceProviderHome() {
       {/* Strategic Advantages (Benefits) */}
       <section
         className="fullscreen-section section-theme py-20"
-        style={{ backgroundColor: '#ffffff' }}
+        style={{ backgroundColor: "#ffffff" }}
         id="benefits"
       >
         <div className="container">
@@ -393,13 +495,17 @@ export default function ServiceProviderHome() {
         <div className="container">
           <div className="section-heading">
             <h2 className="section-title">
-              Onboarding & Booking <span className="text-highlight">Workflow</span>
+              Onboarding & Booking{" "}
+              <span className="text-highlight">Workflow</span>
             </h2>
           </div>
           <div className="section-scrollable-body mt-4">
             <div className="dashboard-wrapper">
               <div className="dashboard-sidebar-container mobile-scroll-hint">
-                <div className="dashboard-sidebar" id="service-provider-tabs-row">
+                <div
+                  className="dashboard-sidebar"
+                  id="service-provider-tabs-row"
+                >
                   {serviceProviderSteps.map((step, index) => (
                     <button
                       key={index}
@@ -462,9 +568,12 @@ export default function ServiceProviderHome() {
       <section className="faq-premium-section section-theme" id="faq">
         <div className="container">
           <div className="faq-header-full text-center mb-16">
-            <h2 className="faq-premium-title">Frequently Asked <span className="text-highlight">Questions</span></h2>
+            <h2 className="faq-premium-title">
+              Frequently Asked <span className="text-highlight">Questions</span>
+            </h2>
             <p className="faq-premium-subtitle mx-auto">
-              Get clear answers to the most common questions about offering your services on Investate India.
+              Get clear answers to the most common questions about offering your
+              services on Investate India.
             </p>
           </div>
           <div className="faq-premium-grid">
@@ -478,7 +587,14 @@ export default function ServiceProviderHome() {
                   <div className="faq-accordion-header">
                     <h4 className="faq-accordion-question">{faq.question}</h4>
                     <div className="faq-accordion-arrow">
-                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                      <svg
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        strokeWidth="2.5"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                      >
                         <polyline points="18 15 12 9 6 15"></polyline>
                       </svg>
                     </div>
@@ -507,30 +623,28 @@ export default function ServiceProviderHome() {
         </div>
       </section>
 
-      <DeepakProfileSection pageType="serviceProvider" />
+      {/* <DeepakProfileSection pageType="serviceProvider" /> */}
 
       {/* CONTACT SECTION */}
       <section
         className="fullscreen-section py-20 text-white text-center"
-        style={{ backgroundColor: '#1a1a1a' }}
+        style={{ backgroundColor: "#1a1a1a" }}
         id="contact"
       >
         <div className="container max-w-3xl mx-auto px-4">
           <h2 className="text-3xl md:text-4xl font-bold mb-6">
-            Ready to Market Your Services <br />
-            to India's Elite Developers?
+            Ready to Join India's Global Investment Ecosystem?
           </h2>
           <p className="text-slate-400 mb-8 max-w-xl mx-auto text-sm md:text-base leading-relaxed">
-            Register today to request administrative verification, list your
-            company, and deploy high-visibility campaigns inside active
-            dashboard modules.
+            Partner with Investate India and connect your professional expertise
+            with NRIs, investors, and developers worldwide.
           </p>
           <div className="flex justify-center">
             <button
               onClick={() => handleAuthClick("register", "serviceProvider")}
               className="bg-[#D48035] hover:bg-[#b06725] text-white font-bold px-10 py-4 rounded-full transition-transform hover:scale-105 shadow-xl"
             >
-              Apply as Service Provider Now
+              Apply as Service Partner
             </button>
           </div>
         </div>

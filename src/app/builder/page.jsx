@@ -20,8 +20,7 @@ import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 const heroSlides = [
   {
-    image:
-      "/images/image (2).png",
+    image: "/images/image (2).png",
     tag: "Institutional Capital Access",
     title: "Direct Connectivity to",
     highlight: "High-Net-Worth NRI Capital",
@@ -29,8 +28,7 @@ const heroSlides = [
       "The definitive institutional-grade platform for visionary Indian developers to engage directly with a pre-vetted global network of sophisticated NRI investors.",
   },
   {
-    image:
-      "/images/buil-hero.png",
+    image: "/images/buil-hero.png",
     tag: "Global Reach & Trust",
     title: "Elevate Your Brand with",
     highlight: "Verified Institutional Credibility",
@@ -92,50 +90,50 @@ const builderBenefits = [
 const builderChallenges = [
   {
     id: "01",
-    text: "Global Coordination",
-    desc: "Connecting with genuine NRI buyers across different time zones remains extremely difficult.",
+    text: "Global Investor Reach",
+    desc: "Reaching genuine NRI buyers and investors across international markets requires strong networks and trust.",
     icon: <Globe className="w-8 h-8 text-white" />,
   },
   {
     id: "02",
-    text: "Lead Quality",
-    desc: "Filtering out casual inquiries to focus on serious investors with real buying intent.",
+    text: "Quality Lead Access",
+    desc: "Finding serious investors with genuine interest is challenging through traditional marketing channels.",
     icon: <Search className="w-8 h-8 text-white" />,
   },
   {
     id: "03",
     text: "Distance Trust Gap",
-    desc: "Building trust from thousands of miles away requires verified credentials and transparency.",
+    desc: "Overseas investors need confidence through transparent project information and reliable communication.",
     icon: <ShieldCheck className="w-8 h-8 text-white" />,
   },
   {
     id: "04",
-    text: "Broker Fragmentation",
-    desc: "Overseas broker networks are often unregulated and pass inaccurate project information.",
+    text: "Global Visibility",
+    desc: "Many quality developers lack international exposure despite having strong projects and delivery history.",
     icon: <Users className="w-8 h-8 text-white" />,
   },
   {
     id: "05",
-    text: "Credibility Proof",
-    desc: "Browse pre-verified builders with complete disclosures and verified project timelines. We verify all project credentials, pre-launch proposals, and pre-sale offers to cross-check structure and legitimacy, safeguarding early-stage investor capital.",
+    text: "Project Credibility",
+    desc: "Present your developments with structured information, documentation, and professional investor-ready profiles.",
     icon: <FileText className="w-8 h-8 text-white" />,
   },
   {
     id: "06",
-    text: "Logistical Friction",
-    desc: "Managing long sales cycles due to cross-border documentation and payment logistics.",
+    text: "Cross-Border Process",
+    desc: "Simplify investor communication, documentation coordination, and international engagement workflows.",
     icon: <Activity className="w-8 h-8 text-white" />,
   },
   {
     id: "07",
-    text: "Global Brand Elevation",
-    desc: "Promoting builder brands globally by taking your projects to key NRI corridors like New York, USA, to build international credibility.",
+    text: "Brand Expansion",
+    desc: "Promote your developer brand among global Indian communities and international investment networks.",
     icon: <Award className="w-8 h-8 text-white" />,
   },
   {
     id: "08",
-    text: "We Market, You Build",
-    desc: "When you register with us, we take your project directly to foreign NRI clients — from New York to Dubai — so you save on international marketing while we handle your global outreach at no extra cost.",
+    text: "You Build, We Connect",
+    desc: "Focus on creating quality developments while Investate India helps connect you with global opportunities.",
     icon: <TrendingUp className="w-8 h-8 text-white" />,
   },
 ];
@@ -172,111 +170,66 @@ const stepImages = [
 
 const trustFeatures = [
   {
-    id: "secure",
-    title: "Verified Network",
-    desc: "We ensure both buyers and builders on our platform meet high standards of credibility.",
-    image:
-      "https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?q=80&w=1000&auto=format&fit=crop" /* Professional partnership handshake closing a developer deal */,
-    icon: (
-      <svg
-        viewBox="0 0 24 24"
-        fill="none"
-        stroke="currentColor"
-        strokeWidth="2"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-      >
-        <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
-      </svg>
-    ),
+    id: "global",
+    title: "Global Investor Access",
+    desc: "Present your developments to NRI investors and overseas Indian communities looking for quality opportunities.",
+    image: "/images/global_globe.jpg",
   },
   {
-    id: "disclosure",
-    title: "Global Reach",
-    desc: "Gain immediate visibility among a concentrated pool of Non-Resident Indians seeking properties.",
+    id: "showcase",
+    title: "Premium Project Showcase",
+    desc: "Highlight residential, commercial, villa, and upcoming projects through a professional digital presentation.",
     image:
-      "/images/global_globe.jpg",
-    icon: (
-      <svg
-        viewBox="0 0 24 24"
-        fill="none"
-        stroke="currentColor"
-        strokeWidth="2"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-      >
-        <circle cx="12" cy="12" r="10"></circle>
-        <line x1="2" y1="12" x2="22" y2="12"></line>
-        <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path>
-      </svg>
-    ),
+      "https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?q=80&w=1000&auto=format&fit=crop",
   },
   {
-    id: "support",
-    title: "Dedicated Coordinators",
-    desc: "Our team handles the heavy lifting of communication and scheduling to save you time.",
+    id: "capital",
+    title: "Capital Growth Network",
+    desc: "Explore connections with global investors, strategic partners, and capital opportunities for expansion.",
     image:
-      "https://images.unsplash.com/photo-1600880292203-757bb62b4baf?q=80&w=1000&auto=format&fit=crop" /* Top-tier real estate advisory & coordinators */,
-    icon: (
-      <svg
-        viewBox="0 0 24 24"
-        fill="none"
-        stroke="currentColor"
-        strokeWidth="2"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-      >
-        <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
-        <circle cx="9" cy="7" r="4"></circle>
-        <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
-        <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
-      </svg>
-    ),
+      "https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?q=80&w=1000&auto=format&fit=crop",
   },
   {
-    id: "brand",
-    title: "Global Brand Elevation",
-    desc: "We promote your developer brand globally, showcasing projects directly in key NRI hubs like New York/USA to build international trust.",
+    id: "ecosystem",
+    title: "Complete Support Ecosystem",
+    desc: "Access structured coordination, professional networks, and long-term support beyond project listing.",
     image:
-      "https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?q=80&w=1000&auto=format&fit=crop" /* Modern skyscraper office for corporate branding */,
-    icon: (
-      <svg
-        viewBox="0 0 24 24"
-        fill="none"
-        stroke="currentColor"
-        strokeWidth="2"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-      >
-        <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon>
-      </svg>
-    ),
+      "https://images.unsplash.com/photo-1600880292203-757bb62b4baf?q=80&w=1000&auto=format&fit=crop",
   },
 ];
 
 const faqsList = [
   {
-    question: "How do I list a project?",
-    answer: "Register as a Builder and submit project details for review."
+    question: "Who can register as a Builder?",
+    answer:
+      "Real estate developers with residential, commercial, villa, township, or upcoming projects can apply to showcase opportunities through Investate India.",
   },
   {
-    question: "Can I edit my listing?",
-    answer: "Yes, until or after review where permitted."
+    question: "How does Investate India help builders?",
+    answer:
+      "We help builders expand beyond local markets by creating visibility among global NRIs, investors, and strategic partners.",
   },
   {
-    question: "How do I know approval status?",
-    answer: "Track it in your dashboard."
+    question: "What type of projects can I showcase?",
+    answer:
+      "Builders can showcase ready projects, ongoing developments, new launches, pre-launch opportunities, premium communities, and large-scale developments.",
   },
   {
-    question: "Can I upload multiple projects?",
-    answer: "Yes."
+    question: "How are investor connections managed?",
+    answer:
+      "Investor interest is handled through a structured process to create meaningful connections and reduce unnecessary communication gaps.",
   },
   {
-    question: "Why was my project rejected?",
-    answer: "Review comments and resubmit after corrections."
-  }
+    question: "Can Investate India support capital requirements?",
+    answer:
+      "Yes. Eligible developers can explore capital sourcing opportunities through global investor networks and strategic partnerships.",
+  },
+  {
+    question: "Can I manage multiple projects?",
+    answer:
+      "Yes. Builders can manage multiple developments, update project information, and maintain visibility through their dashboard.",
+  },
 ];
-
 export default function BuilderHome() {
   const router = useRouter();
   const [activeStepIndex, setActiveStepIndex] = useState(0);
@@ -286,6 +239,7 @@ export default function BuilderHome() {
     setActiveFaq(activeFaq === index ? null : index);
   };
   const [isHeroPaused, setIsHeroPaused] = useState(false);
+  const [isPauseButtonHovered, setIsPauseButtonHovered] = useState(false);
   const [hoveredBuilderCard, setHoveredBuilderCard] = useState(null);
   const [builderChallengePage, setBuilderChallengePage] = useState(0);
   const builderChallengesScrollRef = useRef(null);
@@ -317,12 +271,12 @@ export default function BuilderHome() {
   };
 
   useEffect(() => {
-    if (isHeroPaused) return;
+    if (isHeroPaused || isPauseButtonHovered) return;
     const timer = setInterval(() => {
       setHeroIndex((prev) => (prev + 1) % heroSlides.length);
     }, 8000);
     return () => clearInterval(timer);
-  }, [isHeroPaused]);
+  }, [isHeroPaused, isPauseButtonHovered]);
 
   const activeStepData = builderSteps[activeStepIndex];
 
@@ -330,11 +284,7 @@ export default function BuilderHome() {
     <div className="theme-builder w-full bg-[var(--color-light-bg)] overflow-x-hidden">
       <Header transparent={true} />
 
-      <section
-        className="fullscreen-section hero-section"
-        onMouseEnter={() => setIsHeroPaused(true)}
-        onMouseLeave={() => setIsHeroPaused(false)}
-      >
+      <section className="fullscreen-section hero-section">
         <AnimatePresence mode="sync">
           <picture
             key={heroIndex}
@@ -363,9 +313,25 @@ export default function BuilderHome() {
             />
           </picture>
         </AnimatePresence>
-        <div
-          className="absolute inset-0 z-[1] hero-split-overlay"
-        />
+        <div className="absolute inset-0 z-[1] hero-split-overlay" />
+
+        <button
+          type="button"
+          onClick={() => setIsHeroPaused((prev) => !prev)}
+          onMouseEnter={() => setIsPauseButtonHovered(true)}
+          onMouseLeave={() => setIsPauseButtonHovered(false)}
+          onFocus={() => setIsPauseButtonHovered(true)}
+          onBlur={() => setIsPauseButtonHovered(false)}
+          aria-label={
+            isHeroPaused ? "Resume auto-rotation" : "Pause auto-rotation"
+          }
+          className="absolute bottom-16 left-1/2 -translate-x-1/2 z-[30] flex min-w-[112px] items-center justify-center gap-2 rounded-full border border-white/40 bg-slate-950/80 px-4 py-3 text-[12px] font-semibold uppercase tracking-[0.3em] text-white shadow-xl shadow-black/35 backdrop-blur-md transition-all duration-200 hover:bg-slate-800/90"
+        >
+          <span className="text-base leading-none">
+            {isHeroPaused ? "▶" : "⏸"}
+          </span>
+          {isHeroPaused ? "Play" : "Pause"}
+        </button>
 
         {/* Prev / Next buttons */}
         <button
@@ -465,32 +431,53 @@ export default function BuilderHome() {
           }
         `}</style>
         <motion.button
-          onClick={() => handleAuthClick('login', 'builder')}
+          onClick={() => handleAuthClick("login", "builder")}
           aria-label="Builder Login"
           initial={{ opacity: 0, y: 60, scale: 0.85 }}
           animate={{ opacity: 1, y: 0, scale: 1 }}
-          transition={{ delay: 0.8, duration: 0.5, type: 'spring', stiffness: 200, damping: 18 }}
+          transition={{
+            delay: 0.8,
+            duration: 0.5,
+            type: "spring",
+            stiffness: 200,
+            damping: 18,
+          }}
           whileHover={{ scale: 1.07 }}
           whileTap={{ scale: 0.96 }}
           style={{
-            position: 'absolute', bottom: '4.5rem', right: '2rem',
+            position: "absolute",
+            bottom: "4.5rem",
+            right: "2rem",
             zIndex: 30,
-            background: '#D48035',
-            borderRadius: '999px',
-            padding: '0.7rem 1.8rem',
-            color: '#fff',
+            background: "#D48035",
+            borderRadius: "999px",
+            padding: "0.7rem 1.8rem",
+            color: "#fff",
             fontWeight: 700,
-            fontSize: '0.95rem',
-            letterSpacing: '0.04em',
-            cursor: 'pointer',
-            display: 'flex', alignItems: 'center', gap: '0.5rem',
-            border: '2px solid rgba(255,255,255,0.5)',
-            animation: 'loginPulseRing 2s ease-out infinite',
-            textShadow: '0 1px 3px rgba(0,0,0,0.2)',
+            fontSize: "0.95rem",
+            letterSpacing: "0.04em",
+            cursor: "pointer",
+            display: "flex",
+            alignItems: "center",
+            gap: "0.5rem",
+            border: "2px solid rgba(255,255,255,0.5)",
+            animation: "loginPulseRing 2s ease-out infinite",
+            textShadow: "0 1px 3px rgba(0,0,0,0.2)",
           }}
         >
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-            <path d="M15 3h6v18h-6" /><polyline points="10 17 15 12 10 7" /><line x1="15" y1="12" x2="3" y2="12" />
+          <svg
+            width="16"
+            height="16"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="2.5"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+          >
+            <path d="M15 3h6v18h-6" />
+            <polyline points="10 17 15 12 10 7" />
+            <line x1="15" y1="12" x2="3" y2="12" />
           </svg>
           Login
         </motion.button>
@@ -535,252 +522,91 @@ export default function BuilderHome() {
         <div className="infra-section-header">
           <h2 className="infra-title text-[#1a1a1a]">
             Overcoming{" "}
-            <span className="infra-title-accent text-[#D48035]">Market Friction</span>
+            <span className="infra-title-accent text-[#D48035]">
+              Market Friction
+            </span>
           </h2>
         </div>
 
         <p className="infra-subtitle text-slate-600">
           Connecting with international investors requires more than traditional
           marketing. We solve the specific trust and logistical challenges that
-          prevent visionary developers from reaching the global Indian diaspora.
+          prevent visionary developers from reaching the global diaspora.
         </p>
 
         {/* â”€â”€ Infinite Marquee with Original White Cards â”€â”€ */}
         <div className="infra-marquee-wrapper">
           <div className="infra-marquee-track">
             {/* Render twice for seamless loop */}
-            {[...builderChallenges, ...builderChallenges, ...builderChallenges, ...builderChallenges].map(
-              (challenge, i) => (
-                <div key={i} className="infra-marquee-card">
-                  <div className="infra-card-icon-wrapper">
-                    {challenge.icon}
-                  </div>
-                  <h3 className="infra-card-title">{challenge.text}</h3>
-                  <p className="infra-card-desc">{challenge.desc}</p>
-                </div>
-              ),
-            )}
+            {[
+              ...builderChallenges,
+              ...builderChallenges,
+              ...builderChallenges,
+              ...builderChallenges,
+            ].map((challenge, i) => (
+              <div key={i} className="infra-marquee-card">
+                <div className="infra-card-icon-wrapper">{challenge.icon}</div>
+                <h3 className="infra-card-title">{challenge.text}</h3>
+                <p className="infra-card-desc">{challenge.desc}</p>
+              </div>
+            ))}
           </div>
         </div>
       </section>
 
-      <section
-        className="fullscreen-section section-theme"
-        id="benefits"
-        style={{
-          paddingTop: "60px",
-          paddingBottom: "60px",
-          overflow: "hidden",
-        }}
-      >
+      <section className="fullscreen-section section-theme" id="trust">
         <div className="container">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-start">
-            {/* Left Side: Content */}
-            <motion.div
-              className="flex flex-col gap-10"
-              initial={{ x: -60, opacity: 0 }}
-              whileInView={{ x: 0, opacity: 1 }}
-              viewport={{ once: true, amount: 0.2 }}
-              transition={{ duration: 0.8, ease: "easeOut" }}
-            >
-              <div>
-                {/* <div style={{
-                                    display: 'inline-block',
-                                    background: '#FFF0E6',
-                                    color: '#EA580C',
-                                    padding: '4px 12px',
-                                    borderRadius: '4px',
-                                    fontSize: '0.85rem',
-                                    fontWeight: 700,
-                                    marginBottom: '1.5rem',
-                                    borderLeft: '3px solid #EA580C'
-                                }}>
-                                    | Strategic Advantages
-                                </div> */}
-                <h2
-                  className="responsive-heading"
-                  style={{ color: "#111", marginBottom: "1.5rem" }}
-                >
-                  Elevate Your <br />
-                  <span style={{ color: "#D48035" }}>Global Presence</span>
-                </h2>
-                <p
-                  className="responsive-paragraph"
-                  style={{ color: "#555", marginBottom: "2.5rem" }}
-                >
-                  Position your developments within a transparency-first
-                  ecosystem that reinforces your reputation for corporate
-                  governance and delivery excellence.
-                </p>
+          <div className="trust-split-wrapper">
+            <div className="trust-info-side">
+              <h2 className="trust-main-title">
+                Expand Beyond <br />
+                <span className="text-highlight">Traditional Markets</span>
+              </h2>
 
-                <div className="relative min-h-[300px]">
-                  <AnimatePresence mode="wait">
-                    <motion.div
-                      key={benefitsPage}
-                      initial={{ opacity: 0, x: 20 }}
-                      animate={{ opacity: 1, x: 0 }}
-                      exit={{ opacity: 0, x: -20 }}
-                      transition={{ duration: 0.3 }}
-                      className="grid grid-cols-1 md:grid-cols-2 gap-x-12 gap-y-10"
-                    >
-                      {builderBenefits
-                        .slice(
-                          benefitsPage * benefitsPerPage,
-                          (benefitsPage + 1) * benefitsPerPage,
-                        )
-                        .map((benefit, index) => (
-                          <div
-                            key={index}
-                            style={{
-                              borderLeft: "4px solid #D48035",
-                              paddingLeft: "1.25rem",
-                            }}
-                          >
-                            <h4
-                              style={{
-                                fontSize: "1.2rem",
-                                fontWeight: 700,
-                                color: "#111",
-                                marginBottom: "0.6rem",
-                              }}
-                            >
-                              {benefit.title}
-                            </h4>
-                            <p
-                              style={{
-                                fontSize: "1.05rem",
-                                color: "#666",
-                                lineHeight: 1.6,
-                              }}
-                            >
-                              {benefit.desc}
-                            </p>
-                          </div>
-                        ))}
-                    </motion.div>
-                  </AnimatePresence>
+              <p className="trust-main-desc">
+                Investate India helps credible developers increase global
+                visibility, connect with NRI investors, and unlock new growth
+                opportunities.
+              </p>
+              <button
+                onClick={() => handleAuthClick("register", "builder")}
+                className="trust-cta-btn"
+              >
+                <div className="cta-icon-circle">
+                  <svg
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="3"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                  >
+                    <line x1="5" y1="12" x2="19" y2="12"></line>
+                    <polyline points="12 5 19 12 12 19"></polyline>
+                  </svg>
                 </div>
-
-                {/* Pagination Controls */}
-                <div className="benefits-pagination">
-                  <button
-                    onClick={prevBenefits}
-                    style={{
-                      background: "#f5f5f5",
-                      border: "none",
-                      width: "40px",
-                      height: "40px",
-                      borderRadius: "50%",
-                      cursor: "pointer",
-                      display: "flex",
-                      alignItems: "center",
-                      justifyContent: "center",
-                      color: "#333",
-                      transition: "all 0.2s",
-                    }}
-                    onMouseEnter={(e) =>
-                      (e.currentTarget.style.background = "#e5e5e5")
-                    }
-                    onMouseLeave={(e) =>
-                      (e.currentTarget.style.background = "#f5f5f5")
-                    }
-                  >
-                    ❮
-                  </button>
-                  <div
-                    style={{
-                      fontSize: "0.9rem",
-                      fontWeight: 600,
-                      color: "#888",
-                    }}
-                  >
-                    {benefitsPage + 1} / {totalBenefitsPages}
+                <span className="cta-text">Apply as Builder</span>
+              </button>
+            </div>
+            <div className="trust-cards-side">
+              {trustFeatures.map((feature) => (
+                <div className="trust-feature-card" key={feature.id}>
+                  <div className="trust-feature-image">
+                    <img
+                      src={feature.image}
+                      alt={feature.title}
+                      loading="lazy"
+                    />
                   </div>
-                  <button
-                    onClick={nextBenefits}
-                    style={{
-                      background: "#f5f5f5",
-                      border: "none",
-                      width: "40px",
-                      height: "40px",
-                      borderRadius: "50%",
-                      cursor: "pointer",
-                      display: "flex",
-                      alignItems: "center",
-                      justifyContent: "center",
-                      color: "#333",
-                      transition: "all 0.2s",
-                    }}
-                    onMouseEnter={(e) =>
-                      (e.currentTarget.style.background = "#e5e5e5")
-                    }
-                    onMouseLeave={(e) =>
-                      (e.currentTarget.style.background = "#f5f5f5")
-                    }
-                  >
-                    ❯
-                  </button>
+                  <h3 className="trust-feature-title">{feature.title}</h3>
+                  <p className="trust-feature-desc">{feature.desc}</p>
                 </div>
-              </div>
-            </motion.div>
-
-            {/* Right Side: Staggered Images */}
-            <motion.div
-              className="relative h-[350px] md:h-[450px] flex items-center justify-center mt-0 lg:mt-6 sticky top-24"
-              initial={{ x: 60, opacity: 0 }}
-              whileInView={{ x: 0, opacity: 1 }}
-              viewport={{ once: true, amount: 0.2 }}
-              transition={{ duration: 0.8, ease: "easeOut", delay: 0.1 }}
-            >
-              {/* Background Image (Large) */}
-              <div
-                style={{
-                  width: "85%",
-                  height: "85%",
-                  borderRadius: "1.5rem",
-                  overflow: "hidden",
-                  position: "relative",
-                  transform: "translateX(-10%)",
-                  boxShadow: "0 20px 40px rgba(0,0,0,0.1)",
-                }}
-              >
-                <img
-                  src="/images/image copy 21.png"
-                  alt="Modern Cityscape"
-                  width={800}
-                  height={600}
-                  style={{ width: "100%", height: "100%", objectFit: "cover" }}
-                  loading="lazy"
-                />
-              </div>
-              {/* Overlapping Image (Small) */}
-              <div
-                style={{
-                  position: "absolute",
-                  right: "0",
-                  bottom: "5%",
-                  width: "65%",
-                  height: "55%",
-                  borderRadius: "1.5rem",
-                  border: "12px solid #fff",
-                  overflow: "hidden",
-                  boxShadow: "0 30px 60px rgba(0,0,0,0.15)",
-                  zIndex: 10,
-                }}
-              >
-                <img
-                  src="/images/overlap2_optimized.jpg"
-                  alt="Builder Construction"
-                  width={800}
-                  height={600}
-                  style={{ width: "100%", height: "100%", objectFit: "cover" }}
-                  loading="lazy"
-                />
-              </div>
-            </motion.div>
+              ))}
+            </div>
           </div>
         </div>
       </section>
+
       <AwardsSection />
 
       {/* HOW IT WORKS SECTION */}
@@ -854,101 +680,96 @@ export default function BuilderHome() {
         </div>
       </section>
 
-      <section className="fullscreen-section section-theme" id="trust">
-        <div className="container">
-          <div className="trust-split-wrapper">
-            <div className="trust-info-side">
-              <h2 className="trust-main-title">
-                Why Developers <br />
-                <span className="text-highlight">Choose Us</span>
-              </h2>
-              <p className="trust-main-desc">
-                We've built Investate India to solve the specific trust and
-                distance challenges that developers face when connecting with
-                global NRI investors.
-              </p>
-              <button
-                onClick={() => handleAuthClick("register", "builder")}
-                className="trust-cta-btn"
-              >
-                <div className="cta-icon-circle">
-                  <svg
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="currentColor"
-                    strokeWidth="3"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                  >
-                    <line x1="5" y1="12" x2="19" y2="12"></line>
-                    <polyline points="12 5 19 12 12 19"></polyline>
-                  </svg>
-                </div>
-                <span className="cta-text">Apply as Builder</span>
-              </button>
-            </div>
-            <div className="trust-cards-side">
-              {trustFeatures.map((feature) => (
-                <div className="trust-feature-card" key={feature.id}>
-                  <div className="trust-feature-image">
-                    <img
-                      src={feature.image}
-                      alt={feature.title}
-                      loading="lazy"
-                    />
-                  </div>
-                  <h3 className="trust-feature-title">{feature.title}</h3>
-                  <p className="trust-feature-desc">{feature.desc}</p>
-                </div>
-              ))}
-            </div>
-          </div>
-        </div>
-      </section>
-
       <section className="faq-premium-section section-theme" id="faq">
         <div className="container">
           <div className="faq-header-full text-center mb-16">
-            <h2 className="faq-premium-title">Frequently Asked <span className="text-highlight">Questions</span></h2>
+            <h2 className="faq-premium-title">
+              Frequently Asked <span className="text-highlight">Questions</span>
+            </h2>
+
             <p className="faq-premium-subtitle mx-auto">
-              Get clear answers to the most common questions about listing on Investate India and how we connect you with verified NRI investors.
+              Learn how Investate India helps developers expand their reach,
+              showcase projects, and connect with global NRI opportunities.
             </p>
           </div>
-          <div className="faq-premium-grid">
-            <div className="faq-accordion-column">
-              {faqsList.map((faq, index) => (
-                <div
-                  className={`faq-accordion-item ${activeFaq === index ? "active" : ""}`}
-                  key={index}
-                  onClick={() => toggleFaq(index)}
-                >
-                  <div className="faq-accordion-header">
-                    <h4 className="faq-accordion-question">{faq.question}</h4>
-                    <div className="faq-accordion-arrow">
-                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-                        <polyline points="18 15 12 9 6 15"></polyline>
-                      </svg>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-6xl mx-auto">
+            {/* Left FAQs */}
+            <div className="space-y-5">
+              {faqsList
+                .slice(0, Math.ceil(faqsList.length / 2))
+                .map((faq, index) => (
+                  <div
+                    className={`faq-accordion-item ${
+                      activeFaq === index ? "active" : ""
+                    }`}
+                    key={index}
+                    onClick={() => toggleFaq(index)}
+                  >
+                    <div className="faq-accordion-header">
+                      <h4 className="faq-accordion-question">{faq.question}</h4>
+
+                      <div className="faq-accordion-arrow">
+                        <svg
+                          viewBox="0 0 24 24"
+                          fill="none"
+                          stroke="currentColor"
+                          strokeWidth="2.5"
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                        >
+                          <polyline points="18 15 12 9 6 15" />
+                        </svg>
+                      </div>
                     </div>
+
+                    {activeFaq === index && (
+                      <div className="faq-accordion-content">
+                        <p>{faq.answer}</p>
+                      </div>
+                    )}
                   </div>
-                  {activeFaq === index && (
-                    <div className="faq-accordion-content">
-                      <p>{faq.answer}</p>
-                    </div>
-                  )}
-                </div>
-              ))}
+                ))}
             </div>
-            <div className="faq-image-column">
-              <div className="faq-side-image-premium">
-                <img
-                  src="/images/skyscraper_night.png"
-                  alt="Modern Indian Skyscrapers"
-                  loading="lazy"
-                  decoding="async"
-                  width={600}
-                  height={400}
-                />
-              </div>
+
+            {/* Right FAQs */}
+            <div className="space-y-5">
+              {faqsList.slice(Math.ceil(faqsList.length / 2)).map((faq, i) => {
+                const index = i + Math.ceil(faqsList.length / 2);
+
+                return (
+                  <div
+                    className={`faq-accordion-item ${
+                      activeFaq === index ? "active" : ""
+                    }`}
+                    key={index}
+                    onClick={() => toggleFaq(index)}
+                  >
+                    <div className="faq-accordion-header">
+                      <h4 className="faq-accordion-question">{faq.question}</h4>
+
+                      <div className="faq-accordion-arrow">
+                        <svg
+                          viewBox="0 0 24 24"
+                          fill="none"
+                          stroke="currentColor"
+                          strokeWidth="2.5"
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                        >
+                          <polyline points="18 15 12 9 6 15" />
+                        </svg>
+                      </div>
+                    </div>
+
+                    {activeFaq === index && (
+                      <div className="faq-accordion-content">
+                        <p>{faq.answer}</p>
+                      </div>
+                    )}
+                  </div>
+                );
+              })}
             </div>
           </div>
         </div>
@@ -957,9 +778,16 @@ export default function BuilderHome() {
       <DeepakProfileSection pageType="builder" />
 
       {/* CONTACT SECTION */}
-      <section className="fullscreen-section py-20 text-white text-center" id="contact" style={{ backgroundColor: '#1a1a1a' }}>
+      <section
+        className="fullscreen-section py-20 text-white text-center"
+        id="contact"
+        style={{ backgroundColor: "#1a1a1a" }}
+      >
         <div className="container text-center">
-          <div className="cta-minimal-badge mb-6" style={{ borderColor: 'rgba(255,255,255,0.2)' }}>
+          <div
+            className="cta-minimal-badge mb-6"
+            style={{ borderColor: "rgba(255,255,255,0.2)" }}
+          >
             <span className="cta-badge-text text-white">GET STARTED TODAY</span>
             <div className="cta-badge-star text-[#D48035]">★</div>
           </div>
