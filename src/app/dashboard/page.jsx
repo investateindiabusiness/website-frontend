@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
-import { Building2, MapPin, Search, TrendingUp, Shield, CheckCircle, Filter, PieChart as PieChartIcon, BarChart as BarChartIcon, Loader2, MessageSquare } from 'lucide-react';
+import { Building2, MapPin, Search, TrendingUp, Shield, CheckCircle, Filter, PieChart as PieChartIcon, BarChart as BarChartIcon, Loader2, MessageSquare, Lock } from 'lucide-react';
 
 
 import { Button } from '@/components/ui/button';
@@ -107,6 +107,8 @@ export default function InvestorDashboard() {
 
   if (!user) return null;
 
+  const isBlocked = user.kycStatus !== 'approved' || !user.isKycVerified;
+
   return (
     <div className="min-h-screen bg-gray-50 flex flex-col font-sans overflow-x-hidden">
 
@@ -119,8 +121,8 @@ export default function InvestorDashboard() {
           <div className="container mx-auto relative z-10">
             <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
               <div>
-                <Badge className="bg-orange-500/20 text-orange-200 hover:bg-orange-500/30 border-none mb-2 backdrop-blur-sm">
-                  <Shield className="w-3 h-3 mr-1" /> Verified Investor
+                <Badge className={`${isBlocked ? 'bg-amber-500/20 text-amber-200 hover:bg-amber-500/30' : 'bg-orange-500/20 text-orange-200 hover:bg-orange-500/30'} border-none mb-2 backdrop-blur-sm`}>
+                  <Shield className="w-3 h-3 mr-1" /> {isBlocked ? 'Unverified Investor' : 'Verified Investor'}
                 </Badge>
                 <h1 className="text-2xl md:text-3xl lg:text-4xl font-bold mb-1">Welcome, {user?.name || 'Investor'}</h1>
                 <p className="text-blue-100 text-sm md:text-base opacity-90">Manage your portfolio and discover India's top realty.</p>
@@ -152,7 +154,30 @@ export default function InvestorDashboard() {
 
         <div className="container mx-auto px-4 mt-6 md:mt-8 relative z-20 space-y-6 md:space-y-10">
 
-          <div className="bg-white rounded-2xl !mt-0 shadow-lg p-2 flex flex-col sm:flex-row items-center gap-2 max-w-3xl mx-auto border border-gray-100">
+          {isBlocked && (
+            <div className="bg-white/80 backdrop-blur-md border border-amber-200/50 rounded-3xl p-8 sm:p-12 text-center shadow-2xl shadow-amber-900/5 relative overflow-hidden mb-10">
+              <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-amber-400 via-orange-500 to-amber-400"></div>
+              
+              <div className="w-20 h-20 bg-amber-50 rounded-full flex items-center justify-center mx-auto mb-6 shadow-inner">
+                <Lock className="w-10 h-10 text-amber-500" />
+              </div>
+              
+              <h2 className="text-2xl sm:text-3xl font-black text-gray-900 mb-4 tracking-tight">Complete KYC to Unlock Dashboard</h2>
+              <p className="text-gray-500 max-w-lg mx-auto mb-8 leading-relaxed font-medium">
+                Your account is currently restricted. To access premium property listings, high-yield investments, and detailed blueprints, please complete your profile and upload your verification documents.
+              </p>
+              
+              <Button 
+                onClick={() => router.push('/investor/kyc')}
+                className="bg-gray-900 hover:bg-black text-white px-10 py-6 text-base font-black rounded-2xl shadow-xl shadow-black/10 transition-all hover:scale-105 active:scale-95"
+              >
+                Complete KYC Process
+              </Button>
+            </div>
+          )}
+
+          <div className={`transition-all duration-500 ${isBlocked ? 'opacity-30 pointer-events-none select-none blur-sm' : ''}`}>
+            <div className="bg-white rounded-2xl !mt-0 shadow-lg p-2 flex flex-col sm:flex-row items-center gap-2 max-w-3xl mx-auto border border-gray-100">
             <div className="pl-4 hidden sm:block">
               <Search className="text-gray-400 w-5 h-5" />
             </div>
@@ -261,8 +286,8 @@ export default function InvestorDashboard() {
                               {property.price}
                             </td>
                             <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
-                              <Button 
-                                onClick={() => router.push(`/project/${property.id}`)} 
+                              <Button
+                                onClick={() => router.push(`/project/${property.id}`)}
                                 className="bg-[#0b264f] hover:bg-blue-900 text-white rounded-xl text-xs px-4 py-2"
                               >
                                 View Details
@@ -290,15 +315,14 @@ export default function InvestorDashboard() {
                       >
                         Previous
                       </Button>
-                      
+
                       {Array.from({ length: Math.ceil(filteredProperties.length / ITEMS_PER_PAGE) }, (_, i) => i + 1).map((page) => (
                         <Button
                           key={page}
                           onClick={() => setCurrentPage(page)}
                           variant={currentPage === page ? 'default' : 'outline'}
-                          className={`h-9 w-9 p-0 rounded-lg text-xs font-bold ${
-                            currentPage === page ? 'bg-slate-900 text-white hover:bg-slate-800' : 'hover:bg-slate-100 bg-white'
-                          }`}
+                          className={`h-9 w-9 p-0 rounded-lg text-xs font-bold ${currentPage === page ? 'bg-slate-900 text-white hover:bg-slate-800' : 'hover:bg-slate-100 bg-white'
+                            }`}
                         >
                           {page}
                         </Button>
@@ -318,6 +342,7 @@ export default function InvestorDashboard() {
               </div>
             )}
           </div>
+        </div>
         </div>
       </div>
     </div>
