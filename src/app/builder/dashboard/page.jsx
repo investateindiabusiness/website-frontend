@@ -6,7 +6,7 @@ import { motion } from 'framer-motion';
 import {
   Building2, MapPin, Search, Users, TrendingUp, Wallet,
   HardHat, Loader2, Plus, MessageSquare, CheckCircle,
-  Clock, ArrowRight, Inbox
+  Clock, ArrowRight, Inbox, Lock
 } from 'lucide-react';
 import { AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
 
@@ -26,6 +26,9 @@ export default function BuilderDashboard() {
   const [currentPage, setCurrentPage] = useState(1);
   const ITEMS_PER_PAGE = 8;
   const [mounted, setMounted] = useState(false);
+
+  const isBlocked = user?.kycStatus !== 'approved' && !user?.isVerified;
+
   useEffect(() => {
     setMounted(true);
   }, []);
@@ -72,7 +75,7 @@ export default function BuilderDashboard() {
   return (
     <div className="min-h-screen bg-[#f5f6fa] font-sans pb-16 overflow-x-hidden">
       {/* Hero */}
-      <div className="relative bg-gradient-to-br from-[#0b264f] via-[#1a3e7a] to-[#0b264f] text-white px-4 sm:px-6 pt-8 pb-20 sm:pb-24 overflow-hidden">
+      <div className={`relative bg-gradient-to-br from-[#0b264f] via-[#1a3e7a] to-[#0b264f] text-white px-4 sm:px-6 pt-8 pb-20 sm:pb-24 overflow-hidden ${isBlocked ? 'opacity-30 blur-sm pointer-events-none' : ''}`}>
         <div className="absolute inset-0 pointer-events-none overflow-hidden">
           <div className="absolute -top-20 -right-20 w-96 h-96 bg-blue-400/10 rounded-full blur-3xl" />
           <div className="absolute bottom-0 left-1/3 w-64 h-64 bg-indigo-400/10 rounded-full blur-2xl" />
@@ -136,11 +139,32 @@ export default function BuilderDashboard() {
         </div>
       </div>
 
-      <div className="container mx-auto px-3 sm:px-4 md:px-6 -mt-10 relative z-10 space-y-6 sm:space-y-8">
+      <div className="container mx-auto px-3 sm:px-4 md:px-6 -mt-10 relative z-20 space-y-6 sm:space-y-8">
 
+        {isBlocked && (
+          <div className="bg-white/80 backdrop-blur-md border border-amber-200/50 rounded-3xl p-8 sm:p-12 text-center shadow-2xl shadow-amber-900/5 relative overflow-hidden mb-10 mt-10">
+            <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-amber-400 via-orange-500 to-amber-400"></div>
+            
+            <div className="w-20 h-20 bg-amber-50 rounded-full flex items-center justify-center mx-auto mb-6 shadow-inner border border-amber-100">
+              <Lock className="w-10 h-10 text-amber-500" />
+            </div>
+            
+            <h2 className="text-2xl sm:text-3xl font-black text-gray-900 mb-4 tracking-tight">Complete Verification to Unlock Dashboard</h2>
+            <p className="text-gray-500 max-w-lg mx-auto mb-8 leading-relaxed font-medium">
+              Your builder account is currently restricted. To access your dashboard, add projects, and manage leads, please complete your professional profile.
+            </p>
+            
+            <Button 
+              onClick={() => router.push('/builder/verification')}
+              className="bg-gray-900 hover:bg-black text-white px-10 py-6 text-base font-black rounded-2xl shadow-xl shadow-black/10 transition-all hover:scale-105 active:scale-95"
+            >
+              Complete Verification
+            </Button>
+          </div>
+        )}
 
         {/* Charts + Summary — stacks on mobile */}
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 sm:gap-6">
+        <div className={`grid grid-cols-1 lg:grid-cols-3 gap-4 sm:gap-6 transition-all duration-500 ${isBlocked ? 'opacity-30 pointer-events-none select-none blur-sm' : ''}`}>
           <div className="lg:col-span-2 bg-white rounded-2xl sm:rounded-3xl p-4 sm:p-6 shadow-sm border border-gray-100">
             <h3 className="font-bold text-gray-900 text-base sm:text-lg flex items-center mb-4 sm:mb-6">
               <TrendingUp className="w-5 h-5 mr-2 text-[#0b264f]" /> Performance Overview
