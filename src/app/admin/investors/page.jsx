@@ -19,11 +19,18 @@ import { Chip, FormControl, InputLabel, Select, MenuItem, Box, Typography } from
 
 const STANDARD_INVESTOR_KEYS = [
   'uid', 'id', 'email', 'role', 'createdAt', 'updatedAt', 'onboardingStatus', 'isVerified', 'adminRequests', 'password', 'pendingChanges',
-  'fullName', 'contactNumber', 'investorType', 'investmentRangeMin', 'investmentRangeMax', 'address', 'country', 'state', 'city', 'zip', 'termsAccepted',
-  'profession', 'yearlyIncome', 'investmentTenure', 'expectedReturns', 'preferredProjectType', 'investmentPreference',
+  'fullName', 'name', 'contactNumber', 'investorType', 'investmentRangeMin', 'investmentRangeMax', 'address', 'country', 'state', 'city', 'zip', 'termsAccepted',
+  'profession', 'professionOther', 'nationality', 'nationalityOther', 'yearlyIncome', 'investmentTenure', 'expectedReturns', 'preferredProjectType', 'investmentPreference',
+  'preferredGoalStategy', 'industryNatureOfWork',
+  'preferredCategories', 'preferredTypes', 'preferredStages', 'preferredPurposes', 'preferredLocations', 'preferredBudgets',
+  'projectCategories', 'projectTypes', 'projectStages', 'capitalRequirements',
+  'passportNumber', 'kycPassportUrl', 'kycStatus', 'isKycVerified', 'kycSubmittedAt', 'isDuplicatePassport', 'duplicatePassportUsers',
   'companyName', 'yearsOfExperience', 'contactNameAndDesignation', 'contactPersonPhone', 'ongoingProjects', 'projectsCompleted',
+  'contactName', 'contactPersonRole', 'contactPersonRoleOther', 'companyEmail', 'aboutYourself',
   'yearOfIncorporation', 'promotersOrDirectors', 'totalSqftDelivered', 'majorCompletedProjects', 'typeOfProjectsOffered', 'companyOverview',
-  'experienceWithNriInvestors', 'declaredLitigationDisputes', 'financialOfCompany', 'outstandingDebt', 'bankingPartners', 'industryNatureOfWork', 'preferredGoalStategy'
+  'experienceWithNriInvestors', 'declaredLitigationDisputes', 'financialOfCompany', 'outstandingDebt', 'bankingPartners',
+  'isVerified', 'membershipStatus', 'membershipExpiry', 'notifications', 'profileImage', 'referralCode',
+  'projectType', 'projectSubType',
 ];
 
 const FORM1_EDITABLE_FIELDS = [
@@ -71,7 +78,7 @@ export default function AdminInvestors() {
   const { user } = useAuth();
   const [investors, setInvestors] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [filter, setFilter] = useState('all');
+  const [filter, setFilter] = useState('final_review');
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(20);
   const [total, setTotal] = useState(0);
@@ -239,7 +246,7 @@ export default function AdminInvestors() {
             <Typography variant="caption" sx={{ fontWeight: 700, color: '#111827', display: 'block' }}>
               {row.fullName || row.companyName || row.name || 'Unnamed'}
             </Typography>
-            <Typography variant="caption" sx={{ color: '#9ca3af', fontSize: '0.65rem' }}>{row.investorType || 'Individual'}</Typography>
+            <Typography variant="caption" sx={{ color: '#9ca3af', fontSize: '0.65rem' }}>{row.role === 'builder' ? (row.companyName || 'Builder') : (row.investorType || 'Individual Investor')}</Typography>
           </Box>
         </Box>
       )
@@ -249,8 +256,8 @@ export default function AdminInvestors() {
       renderCell: ({ value }) => <Typography variant="caption" noWrap sx={{ color: '#4b5563', maxWidth: 190, display: 'block' }}>{value || '—'}</Typography>
     },
     {
-      field: 'city', headerName: 'Location', width: 150,
-      renderCell: ({ row }) => <Typography variant="caption" sx={{ color: '#4b5563' }}>{row.city ? `${row.city}, ${row.state}` : '—'}</Typography>
+      field: 'createdAt', headerName: 'Registered', width: 140,
+      renderCell: ({ value }) => <Typography variant="caption" sx={{ color: '#6b7280' }}>{value ? new Date(value).toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' }) : '—'}</Typography>
     },
     {
       field: 'onboardingStatus', headerName: 'Status', width: 160,
@@ -296,10 +303,12 @@ export default function AdminInvestors() {
             <FormControl size="small" sx={{ minWidth: 180 }}>
               <InputLabel>Status</InputLabel>
               <Select value={filter} label="Status" onChange={(e) => { setFilter(e.target.value); setPage(0); }}>
-                <MenuItem value="all">All Investors</MenuItem>
-                <MenuItem value="pending">Needs Review</MenuItem>
+                <MenuItem value="pending">Form 1 Review</MenuItem>
+                <MenuItem value="final_review">Final Review</MenuItem>
+                <MenuItem value="all">All Users</MenuItem>
                 <MenuItem value="changes_requested">Awaiting Changes</MenuItem>
                 <MenuItem value="verified">Verified</MenuItem>
+                <MenuItem value="complete">Complete</MenuItem>
               </Select>
             </FormControl>
           }
@@ -343,12 +352,25 @@ export default function AdminInvestors() {
                 <div className="bg-orange-50 p-6 rounded-xl border border-orange-100 shadow-sm">
                   <h4 className="text-lg font-semibold text-orange-900 mb-4 border-b border-orange-200 pb-2">Admin Requested Details</h4>
                   <div className="grid grid-cols-1 gap-y-4 text-sm">
-                    {Object.keys(viewInvestorData).filter(key => !STANDARD_INVESTOR_KEYS.includes(key)).map(key => (
-                      <div key={key}>
-                        <span className="text-orange-700/70 block mb-1 capitalize">{key.replace(/([A-Z])/g, ' $1').trim()}</span>
-                        <span className="font-medium text-orange-950">{viewInvestorData[key]}</span>
-                      </div>
-                    ))}
+                    {Object.keys(viewInvestorData).filter(key => !STANDARD_INVESTOR_KEYS.includes(key)).map(key => {
+                      const val = viewInvestorData[key];
+                      let displayVal = '';
+                      if (val === null || val === undefined) {
+                        displayVal = '—';
+                      } else if (Array.isArray(val)) {
+                        displayVal = val.map(item => typeof item === 'object' ? (item?.label || JSON.stringify(item)) : String(item)).join(', ');
+                      } else if (typeof val === 'object') {
+                        displayVal = val.label || JSON.stringify(val);
+                      } else {
+                        displayVal = String(val);
+                      }
+                      return (
+                        <div key={key}>
+                          <span className="text-orange-700/70 block mb-1 capitalize">{key.replace(/([A-Z])/g, ' $1').trim()}</span>
+                          <span className="font-medium text-orange-950">{displayVal}</span>
+                        </div>
+                      );
+                    })}
                   </div>
                 </div>
               )}
@@ -365,22 +387,71 @@ export default function AdminInvestors() {
                       <div><span className="text-gray-500 block mb-1">Yearly Income Range</span><span className="font-medium">{viewInvestorData.yearlyIncome || '-'}</span></div>
                       <div><span className="text-gray-500 block mb-1">Expected Returns</span><span className="font-medium">{viewInvestorData.expectedReturns || '-'}</span></div>
                       <div><span className="text-gray-500 block mb-1">Preferred Goal / Strategy</span><span className="font-medium">{viewInvestorData.preferredGoalStategy || '-'}</span></div>
-                      <div><span className="text-gray-500 block mb-1">Assistance Preference</span><span className="font-medium">{viewInvestorData.investmentPreference || '-'}</span></div>
+                      <div><span className="text-gray-500 block mb-1">Passport Number</span><span className="font-mono font-medium">{viewInvestorData.passportNumber || '-'}</span></div>
                       <div>
-                        <span className="text-gray-500 block mb-1">Preferred Project Type</span>
-                        <div className="font-medium">
-                          {Array.isArray(viewInvestorData.preferredProjectType) && viewInvestorData.preferredProjectType.length > 0
-                            ? viewInvestorData.preferredProjectType.map((type, index) => <div key={index}>{type}</div>)
-                            : viewInvestorData.preferredProjectType || '-'}
-                        </div>
+                        <span className="text-gray-500 block mb-1">Passport Copy</span>
+                        {viewInvestorData.kycPassportUrl ? (
+                          <a
+                            href={viewInvestorData.kycPassportUrl}
+                            target="_blank"
+                            rel="noreferrer"
+                            className="inline-flex items-center text-blue-600 hover:text-blue-800 font-bold gap-1 mt-1 underline"
+                          >
+                            <Download className="w-4 h-4" /> View Passport Document
+                          </a>
+                        ) : (
+                          <span className="text-gray-400 font-medium">Not Uploaded</span>
+                        )}
                       </div>
+                      {/* Preferred Categories */}
+                      {Array.isArray(viewInvestorData.preferredCategories) && viewInvestorData.preferredCategories.length > 0 && (
+                        <div className="md:col-span-2">
+                          <span className="text-gray-500 block mb-1">Investment Categories</span>
+                          <div className="flex flex-wrap gap-1">{viewInvestorData.preferredCategories.map((c, i) => <span key={i} className="inline-block bg-blue-50 text-blue-700 text-xs font-bold px-2 py-0.5 rounded-full">{c}</span>)}</div>
+                        </div>
+                      )}
+                      {Array.isArray(viewInvestorData.preferredTypes) && viewInvestorData.preferredTypes.length > 0 && (
+                        <div className="md:col-span-2">
+                          <span className="text-gray-500 block mb-1">Investment Types</span>
+                          <div className="flex flex-wrap gap-1">{viewInvestorData.preferredTypes.map((t, i) => <span key={i} className="inline-block bg-indigo-50 text-indigo-700 text-xs font-bold px-2 py-0.5 rounded-full">{t}</span>)}</div>
+                        </div>
+                      )}
+                      {Array.isArray(viewInvestorData.preferredBudgets) && viewInvestorData.preferredBudgets.length > 0 && (
+                        <div>
+                          <span className="text-gray-500 block mb-1">Budget Range</span>
+                          <div className="flex flex-wrap gap-1">{viewInvestorData.preferredBudgets.map((b, i) => <span key={i} className="inline-block bg-green-50 text-green-700 text-xs font-bold px-2 py-0.5 rounded-full">{b}</span>)}</div>
+                        </div>
+                      )}
+                      {Array.isArray(viewInvestorData.preferredLocations) && viewInvestorData.preferredLocations.length > 0 && (
+                        <div>
+                          <span className="text-gray-500 block mb-1">Preferred Locations</span>
+                          <div className="flex flex-wrap gap-1">{viewInvestorData.preferredLocations.map((loc, i) => <span key={i} className="inline-block bg-orange-50 text-orange-700 text-xs font-bold px-2 py-0.5 rounded-full">{typeof loc === 'object' ? loc.label || [loc.city, loc.state, loc.country].filter(Boolean).join(', ') : loc}</span>)}</div>
+                        </div>
+                      )}
                     </>
                   ) : (
                     <>
                       <div><span className="text-gray-500 block mb-1">Year of Incorporation</span><span className="font-medium">{viewInvestorData.yearOfIncorporation || '-'}</span></div>
                       <div><span className="text-gray-500 block mb-1">Total Sqft Delivered</span><span className="font-medium">{viewInvestorData.totalSqftDelivered || '-'}</span></div>
                       <div className="md:col-span-2"><span className="text-gray-500 block mb-1">Promoters / Directors</span><span className="font-medium">{viewInvestorData.promotersOrDirectors || '-'}</span></div>
-                      <div><span className="text-gray-500 block mb-1">Type of Projects</span><span className="font-medium">{viewInvestorData.typeOfProjectsOffered || '-'}</span></div>
+                      {Array.isArray(viewInvestorData.projectCategories) && viewInvestorData.projectCategories.length > 0 && (
+                        <div className="md:col-span-2">
+                          <span className="text-gray-500 block mb-1">Project Categories</span>
+                          <div className="flex flex-wrap gap-1">{viewInvestorData.projectCategories.map((c, i) => <span key={i} className="inline-block bg-blue-50 text-blue-700 text-xs font-bold px-2 py-0.5 rounded-full">{c}</span>)}</div>
+                        </div>
+                      )}
+                      {Array.isArray(viewInvestorData.projectTypes) && viewInvestorData.projectTypes.length > 0 && (
+                        <div className="md:col-span-2">
+                          <span className="text-gray-500 block mb-1">Project Types</span>
+                          <div className="flex flex-wrap gap-1">{viewInvestorData.projectTypes.map((t, i) => <span key={i} className="inline-block bg-indigo-50 text-indigo-700 text-xs font-bold px-2 py-0.5 rounded-full">{t}</span>)}</div>
+                        </div>
+                      )}
+                      {Array.isArray(viewInvestorData.capitalRequirements) && viewInvestorData.capitalRequirements.length > 0 && (
+                        <div className="md:col-span-2">
+                          <span className="text-gray-500 block mb-1">Capital Requirements</span>
+                          <div className="flex flex-wrap gap-1">{viewInvestorData.capitalRequirements.map((r, i) => <span key={i} className="inline-block bg-purple-50 text-purple-700 text-xs font-bold px-2 py-0.5 rounded-full">{r}</span>)}</div>
+                        </div>
+                      )}
                     </>
                   )}
                 </div>

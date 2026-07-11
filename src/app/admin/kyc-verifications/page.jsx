@@ -126,6 +126,54 @@ export default function AdminKycVerificationsPage() {
       renderCell: ({ value }) => <Typography variant="caption" noWrap sx={{ display: 'block', maxWidth: 180, color: '#4b5563' }}>{value || '—'}</Typography>
     },
     {
+      field: 'passportNumber',
+      headerName: 'Passport Number',
+      minWidth: 160,
+      renderCell: ({ row }) => {
+        const num = row.passportNumber || '—';
+        const isDup = row.isDuplicatePassport;
+        const dupUsers = row.duplicatePassportUsers || [];
+
+        return (
+          <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+            <Typography variant="caption" sx={{ fontWeight: 700, color: '#374151', fontFamily: 'monospace' }}>
+              {num}
+            </Typography>
+            {isDup && (
+              <Tooltip
+                title={
+                  <Box sx={{ p: 0.5 }}>
+                    <Typography variant="caption" sx={{ fontWeight: 800, display: 'block', mb: 0.5, color: '#ffc107' }}>
+                      Duplicate Passport Number!
+                    </Typography>
+                    {dupUsers.map(du => (
+                      <Typography key={du.uid} variant="caption" sx={{ display: 'block', fontSize: '0.7rem', color: '#fff' }}>
+                        • {du.name || 'Unnamed'} ({du.email})
+                      </Typography>
+                    ))}
+                  </Box>
+                }
+                arrow
+              >
+                <Chip
+                  label="Duplicate"
+                  size="small"
+                  color="error"
+                  sx={{
+                    height: 18,
+                    fontSize: '9px',
+                    fontWeight: 800,
+                    textTransform: 'uppercase',
+                    cursor: 'help'
+                  }}
+                />
+              </Tooltip>
+            )}
+          </Box>
+        );
+      }
+    },
+    {
       field: 'kycSubmittedAt', headerName: 'Submitted On', width: 160,
       renderCell: ({ value }) => <Typography variant="caption" sx={{ color: '#6b7280' }}>{formatDate(value)}</Typography>
     },

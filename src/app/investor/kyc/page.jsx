@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useAuth } from '@/hooks/AuthContext';
 import { uploadFile, apiRequest, submitInvestorForm2 } from '@/api';
 import { Button } from '@/components/ui/button';
@@ -10,39 +10,33 @@ import { Checkbox } from '@/components/ui/checkbox';
 import { toast } from '@/hooks/use-toast';
 import { 
   Upload, CheckCircle2, 
-  Loader2, FileCheck, ArrowRight, ShieldAlert as AlertIcon, ClipboardList
+  Loader2, FileCheck, ArrowRight, ShieldAlert as AlertIcon, ClipboardList, Plus, X
 } from 'lucide-react';
 import { useRouter } from 'next/navigation';
+import MultiSelect from '@/components/ui/MultiSelect';
+import { Badge } from '@/components/ui/badge';
+
+// Professional global-specific professions
+const DETAILED_PROFESSIONS = [
+  "Technology / IT Professional",
+  "Healthcare / Medical Professional",
+  "Finance / Banking / Investment Specialist",
+  "Business Owner / Entrepreneur",
+  "Corporate Executive / Manager",
+  "Consultant / Advisor",
+  "Engineer / Scientist",
+  "Educator / Researcher",
+  "Self-Employed Professional (CA, Legal, etc.)",
+  "Real Estate / Developer / Construction",
+  "Retired",
+  "Other"
+];
 
 // Income options by profession (in USD ranges)
 const INCOME_OPTIONS_BY_PROFESSION = {
   'NRI / Overseas Professional': [
     '$30,000 - $60,000', '$60,000 - $100,000', '$100,000 - $150,000',
     '$150,000 - $250,000', '$250,000 - $500,000', '$500,000+'
-  ],
-  'Salaried (Government)': [
-    '$5,000 - $15,000', '$15,000 - $30,000', '$30,000 - $60,000',
-    '$60,000 - $100,000', '$100,000+'
-  ],
-  'Salaried (Private)': [
-    '$10,000 - $20,000', '$20,000 - $50,000', '$50,000 - $100,000',
-    '$100,000 - $200,000', '$200,000+'
-  ],
-  'Business Owner': [
-    '$30,000 - $75,000', '$75,000 - $150,000', '$150,000 - $300,000',
-    '$300,000 - $500,000', '$500,000+'
-  ],
-  'Self-Employed Professional': [
-    '$20,000 - $50,000', '$50,000 - $100,000', '$100,000 - $200,000',
-    '$200,000 - $400,000', '$400,000+'
-  ],
-  'Entrepreneur / Startup Founder': [
-    '$20,000 - $60,000', '$60,000 - $120,000', '$120,000 - $250,000',
-    '$250,000 - $500,000', '$500,000+'
-  ],
-  'Investor / Trader': [
-    '$25,000 - $75,000', '$75,000 - $200,000', '$200,000 - $500,000',
-    '$500,000 - $1,000,000', '$1,000,000+'
   ],
   'Retired': [
     '$10,000 - $25,000', '$25,000 - $50,000', '$50,000 - $100,000',
@@ -59,12 +53,64 @@ const DEFAULT_INCOME_OPTIONS = [
   '$150,000 - $300,000', '$300,000+'
 ];
 
+// Dynamic Categories and Types mapping
+const INVESTMENT_CATEGORY_TYPES = {
+  "Residential": [
+    "Apartments", "Villas", "Villaments", "Gated Communities",
+    "Luxury Homes", "Senior Living", "Affordable Housing", "Holiday Homes"
+  ],
+  "Commercial": [
+    "Office Spaces", "Retail Shops", "Commercial Complexes",
+    "Shopping Malls", "Co-working Spaces", "IT Parks"
+  ],
+  "Land & Plots": [
+    "Residential Plots", "Villa Plots", "Farm Plots",
+    "Commercial Plots", "Township Plots"
+  ],
+  "Industrial & Warehousing": [
+    "Warehouses", "Industrial Parks", "Manufacturing Units",
+    "Logistics Parks", "Cold Storage"
+  ],
+  "Agricultural": [
+    "Agricultural Land", "Farm Houses", "Organic Farms", "Plantation Projects"
+  ],
+  "Hospitality": [
+    "Hotels", "Resorts", "Serviced Apartments", "Holiday Projects"
+  ],
+  "Alternative Investments": [
+    "Fractional Ownership", "REIT Opportunities", "Equity Participation", "Joint Ventures"
+  ]
+};
+
+const PREFERRED_INVESTMENT_STAGES = [
+  "Pre-Launch", "New Launch", "Under Construction", "Ready to Move", "Rental Income", "Resale"
+];
+
+const INVESTMENT_PURPOSES = [
+  "Self Use", "Rental Income", "Long-Term Appreciation", "Short-Term Returns", "Portfolio Diversification", "Retirement Planning"
+];
+
+const BUDGET_RANGES = [
+  "₹25L–50L", "₹50L–1Cr", "₹1Cr–2Cr", "₹2Cr–5Cr", "₹5Cr–10Cr", "₹10Cr+"
+];
+
+const NATIONALITIES = [
+  'Indian', 'American', 'British', 'Australian', 'Canadian', 'UAE / Emirati',
+  'Singaporean', 'Malaysian', 'Saudi Arabian', 'Qatari', 'German', 'French', 'Other'
+];
+
 export default function InvestorKycPage() {
   const { user, refreshUser } = useAuth();
   const router = useRouter();
   
   const [file, setFile] = useState(null);
   const [uploading, setUploading] = useState(false);
+
+  const [countries, setCountries] = useState([]);
+  const [states, setStates] = useState([]);
+  const [cities, setCities] = useState([]);
+  const [loadingLocation, setLoadingLocation] = useState(false);
+  const [locInput, setLocInput] = useState({ country: '', state: '', city: '' });
 
   const [invForm2, setInvForm2] = useState({
     profession: '',
@@ -76,21 +122,112 @@ export default function InvestorKycPage() {
     investmentTenure: '',
     expectedReturns: '',
     preferredGoalStategy: '',
-    preferredProjectType: []
+    passportNumber: '',
+    preferredCategories: [],
+    preferredTypes: [],
+    preferredStages: [],
+    preferredPurposes: [],
+    preferredLocations: [],
+    preferredBudgets: []
   });
 
   const kycStatus = user?.kycStatus || 'not_started';
   const isKycVerified = user?.isKycVerified || false;
 
-  const handleProjectTypeToggle = (type) => {
-    const allTypes = ['Plots / Land', 'Villa', 'Apartments / Flats', 'Commercial Spaces', 'Farm Land / Agri Projects'];
-    setInvForm2(prev => {
-      const current = prev.preferredProjectType || [];
-      if (type === 'Open to All') return { ...prev, preferredProjectType: current.includes('Open to All') ? [] : [...allTypes, 'Open to All'] };
-      let newSelection = current.includes(type) ? current.filter(t => t !== type && t !== 'Open to All') : [...current, type];
-      if (allTypes.every(t => newSelection.includes(t))) newSelection.push('Open to All');
-      return { ...prev, preferredProjectType: newSelection };
-    });
+  // Hydrate form if user data exists
+  useEffect(() => {
+    if (user) {
+      setInvForm2(prev => ({
+        ...prev,
+        profession: user.profession || '',
+        nationality: user.nationality || '',
+        industryNatureOfWork: user.industryNatureOfWork || '',
+        yearlyIncome: user.yearlyIncome || '',
+        investmentTenure: user.investmentTenure || '',
+        expectedReturns: user.expectedReturns || '',
+        preferredGoalStategy: user.preferredGoalStategy || '',
+        passportNumber: user.passportNumber || '',
+        preferredCategories: user.preferredCategories || [],
+        preferredTypes: user.preferredTypes || [],
+        preferredStages: user.preferredStages || [],
+        preferredPurposes: user.preferredPurposes || [],
+        preferredLocations: user.preferredLocations || [],
+        preferredBudgets: user.preferredBudgets || []
+      }));
+    }
+  }, [user]);
+
+  // Load locations on mount
+  useEffect(() => {
+    fetch('https://countriesnow.space/api/v0.1/countries/iso')
+      .then(res => res.json())
+      .then(data => { if (!data.error) setCountries(data.data || []); })
+      .catch(console.error);
+  }, []);
+
+  // Fetch States when selected country in Preferred Locations change
+  useEffect(() => {
+    if (locInput.country) {
+      setLoadingLocation(true);
+      fetch('https://countriesnow.space/api/v0.1/countries/states', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ country: locInput.country })
+      })
+        .then(res => res.json())
+        .then(data => { if (!data.error) setStates(data.data.states || []); })
+        .catch(console.error)
+        .finally(() => setLoadingLocation(false));
+    } else {
+      setStates([]);
+    }
+    setLocInput(prev => ({ ...prev, state: '', city: '' }));
+  }, [locInput.country]);
+
+  // Fetch Cities when selected state in Preferred Locations change
+  useEffect(() => {
+    if (locInput.country && locInput.state) {
+      setLoadingLocation(true);
+      fetch('https://countriesnow.space/api/v0.1/countries/state/cities', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ country: locInput.country, state: locInput.state })
+      })
+        .then(res => res.json())
+        .then(data => { if (!data.error) setCities(data.data || []); })
+        .catch(console.error)
+        .finally(() => setLoadingLocation(false));
+    } else {
+      setCities([]);
+    }
+    setLocInput(prev => ({ ...prev, city: '' }));
+  }, [locInput.country, locInput.state]);
+
+  const handleAddLocation = () => {
+    if (!locInput.country) return;
+    const label = [locInput.city, locInput.state, locInput.country].filter(Boolean).join(', ');
+    
+    if (invForm2.preferredLocations.some(loc => loc.label === label)) {
+      return toast({ title: "Duplicate Location", description: "This location is already added." });
+    }
+
+    setInvForm2(prev => ({
+      ...prev,
+      preferredLocations: [...prev.preferredLocations, {
+        country: locInput.country,
+        state: locInput.state,
+        city: locInput.city,
+        label: label
+      }]
+    }));
+    setLocInput({ country: '', state: '', city: '' });
+  };
+
+  const handleRemoveLocation = (labelToRemove) => {
+    setInvForm2(prev => ({
+      ...prev,
+      preferredLocations: prev.preferredLocations.filter(loc => loc.label !== labelToRemove)
+    }));
   };
 
   const handleFileChange = (e) => {
@@ -108,8 +245,14 @@ export default function InvestorKycPage() {
     if (!file) {
       return toast({ title: "No File Selected", description: "Please select your passport scanned copy first.", variant: "destructive" });
     }
-    if (invForm2.preferredProjectType.length === 0) {
-      return toast({ title: "Incomplete Profile", description: "Please select at least one portfolio interest.", variant: "destructive" });
+    if (!invForm2.passportNumber || !invForm2.passportNumber.trim()) {
+      return toast({ title: "Passport Required", description: "Please enter your passport number.", variant: "destructive" });
+    }
+    if (invForm2.preferredCategories.length === 0) {
+      return toast({ title: "Category Required", description: "Please select at least one Investment Category.", variant: "destructive" });
+    }
+    if (invForm2.preferredTypes.length === 0) {
+      return toast({ title: "Type Required", description: "Please select at least one Investment Type.", variant: "destructive" });
     }
 
     // Build submission payload — use "other" typed values if selected
@@ -128,7 +271,7 @@ export default function InvestorKycPage() {
 
       await apiRequest('/api/investors/submit-kyc', {
         method: 'POST',
-        body: JSON.stringify({ kycPassportUrl: uploadRes.url })
+        body: JSON.stringify({ kycPassportUrl: uploadRes.url, passportNumber: invForm2.passportNumber })
       });
 
       toast({ title: "Profile & KYC Submitted", description: "Your final details and passport copy have been sent for verification." });
@@ -145,18 +288,27 @@ export default function InvestorKycPage() {
   const inputStyle = "w-full h-12 bg-gray-50 border-gray-200 rounded-xl px-4 font-semibold text-gray-900 focus:bg-white focus:ring-2 focus:ring-orange-500/20 focus:border-orange-500 transition-all";
   const selectStyle = "w-full h-12 bg-gray-50 border border-gray-200 rounded-xl px-4 font-semibold text-gray-900 focus:bg-white focus:ring-2 focus:ring-orange-500/20 focus:border-orange-500 transition-all outline-none appearance-none";
 
-  const incomeOptions = invForm2.profession && invForm2.profession !== 'Other'
-    ? (INCOME_OPTIONS_BY_PROFESSION[invForm2.profession] || DEFAULT_INCOME_OPTIONS)
-    : DEFAULT_INCOME_OPTIONS;
+  const getIncomeOptions = () => {
+    if (!invForm2.profession) return DEFAULT_INCOME_OPTIONS;
+    if (invForm2.profession.includes('NRI')) return INCOME_OPTIONS_BY_PROFESSION['NRI / Overseas Professional'];
+    if (invForm2.profession === 'Retired') return INCOME_OPTIONS_BY_PROFESSION['Retired'];
+    if (invForm2.profession === 'Other') return INCOME_OPTIONS_BY_PROFESSION['Other'];
+    return DEFAULT_INCOME_OPTIONS;
+  };
 
-  const NATIONALITIES = [
-    'Indian', 'American', 'British', 'Australian', 'Canadian', 'UAE / Emirati',
-    'Singaporean', 'Malaysian', 'Saudi Arabian', 'Qatari', 'German', 'French', 'Other'
-  ];
+  const incomeOptions = getIncomeOptions();
+
+  // Dynamically compute valid investment types based on selected categories
+  const dynamicTypesList = [];
+  invForm2.preferredCategories.forEach(cat => {
+    if (INVESTMENT_CATEGORY_TYPES[cat]) {
+      dynamicTypesList.push(...INVESTMENT_CATEGORY_TYPES[cat]);
+    }
+  });
 
   return (
     <div className="min-h-[80vh] flex items-center justify-center p-4">
-      <div className="max-w-2xl w-full bg-white rounded-3xl border border-gray-100 p-8 shadow-xl shadow-gray-200/50">
+      <div className="max-w-3xl w-full bg-white rounded-3xl border border-gray-100 p-8 shadow-xl shadow-gray-200/50">
         
         {/* Header */}
         <div className="text-center mb-8">
@@ -181,7 +333,7 @@ export default function InvestorKycPage() {
         )}
 
         {/* ── Status: Pending ── */}
-        {kycStatus === 'pending' && (
+        {kycStatus === 'pending' && user?.onboardingStatus !== 'form2_changes_requested' && (
           <div className="text-center flex flex-col items-center py-6 animate-in fade-in zoom-in-95 duration-300">
             <div className="w-16 h-16 bg-amber-50 rounded-2xl flex items-center justify-center text-amber-600 mb-6 shadow-inner">
               <FileCheck className="w-8 h-8 animate-pulse" />
@@ -196,8 +348,8 @@ export default function InvestorKycPage() {
           </div>
         )}
 
-        {/* ── Status: Not Started or Rejected ── */}
-        {(kycStatus === 'not_started' || kycStatus === 'rejected') && (
+        {/* ── Status: Not Started or Rejected or Changes Requested ── */}
+        {(kycStatus === 'not_started' || kycStatus === 'rejected' || user?.onboardingStatus === 'form2_changes_requested') && (
           <div className="animate-in fade-in duration-300">
             {kycStatus === 'rejected' && (
               <div className="mb-8 p-4 bg-rose-50 border border-rose-100 text-rose-700 rounded-2xl text-xs font-bold flex items-start gap-3.5">
@@ -205,6 +357,18 @@ export default function InvestorKycPage() {
                 <div>
                   <span className="block font-black uppercase tracking-tight mb-0.5">KYC Application Rejected</span>
                   <span className="font-semibold text-gray-600 leading-normal">Please review and re-submit your details and passport scan.</span>
+                </div>
+              </div>
+            )}
+
+            {user?.onboardingStatus === 'form2_changes_requested' && (
+              <div className="mb-8 p-4 bg-orange-50 border border-orange-100 text-orange-700 rounded-2xl text-xs font-bold flex items-start gap-3.5 animate-in slide-in-from-top-2 duration-300">
+                <AlertIcon className="w-5 h-5 shrink-0 text-orange-500 mt-0.5" />
+                <div>
+                  <span className="block font-black uppercase tracking-tight mb-0.5">Changes Requested by Admin</span>
+                  <span className="font-semibold text-gray-600 leading-normal">
+                    Please correct the following fields: <span className="underline">{user.adminRequests?.join(', ')}</span>.
+                  </span>
                 </div>
               </div>
             )}
@@ -222,14 +386,10 @@ export default function InvestorKycPage() {
             <form onSubmit={handleUploadSubmit} className="space-y-8">
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
 
-                {/* Pre-filled from Form 1 */}
-                <div>
+                {/* Pre-filled from Form 1 (Location removed) */}
+                <div className="md:col-span-2">
                   <Label className={labelStyle}>Full Name</Label>
                   <input readOnly value={user?.name || user?.fullName || ''} className="w-full h-12 bg-gray-100 border-transparent rounded-xl px-4 font-bold text-gray-500 select-none" />
-                </div>
-                <div>
-                  <Label className={labelStyle}>Location</Label>
-                  <input readOnly value={[user?.city, user?.state, user?.country].filter(Boolean).join(', ')} className="w-full h-12 bg-gray-100 border-transparent rounded-xl px-4 font-bold text-gray-500 select-none" />
                 </div>
 
                 {/* Profession */}
@@ -241,23 +401,17 @@ export default function InvestorKycPage() {
                     value={invForm2.profession}
                     onChange={(e) => setInvForm2({ ...invForm2, profession: e.target.value, yearlyIncome: '' })}
                   >
-                    <option value="">Select</option>
-                    <option value="NRI / Overseas Professional">NRI / Overseas Professional</option>
-                    <option value="Salaried (Government)">Salaried (Government)</option>
-                    <option value="Salaried (Private)">Salaried (Private)</option>
-                    <option value="Business Owner">Business Owner</option>
-                    <option value="Self-Employed Professional">Self-Employed Professional (CA, Doctor, etc.)</option>
-                    <option value="Entrepreneur / Startup Founder">Entrepreneur / Startup Founder</option>
-                    <option value="Investor / Trader">Investor / Trader</option>
-                    <option value="Retired">Retired</option>
-                    <option value="Other">Other</option>
+                    <option value="">Select Profession</option>
+                    {DETAILED_PROFESSIONS.map(prof => (
+                      <option key={prof} value={prof}>{prof}</option>
+                    ))}
                   </select>
                 </div>
 
                 {/* "Other" profession text input */}
                 {invForm2.profession === 'Other' && (
                   <div className="animate-in slide-in-from-top-2 duration-300">
-                    <Label className={labelStyle}>Please Specify *</Label>
+                    <Label className={labelStyle}>Please Specify Profession *</Label>
                     <Input
                       required
                       value={invForm2.professionOther}
@@ -350,21 +504,165 @@ export default function InvestorKycPage() {
                   </select>
                 </div>
 
-                {/* Portfolio Interest */}
-                <div className="md:col-span-2">
-                  <Label className={labelStyle}>Portfolio Interest *</Label>
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mt-2 p-5 border border-gray-100 rounded-2xl bg-gray-50/50">
-                    {['Plots / Land', 'Villa', 'Apartments / Flats', 'Commercial Spaces', 'Farm Land / Agri Projects', 'Open to All'].map((type) => (
-                      <div key={type} className="flex items-center space-x-3">
-                        <Checkbox
-                          id={`kyc-${type}`}
-                          checked={invForm2.preferredProjectType?.includes(type)}
-                          onCheckedChange={() => handleProjectTypeToggle(type)}
-                          className="data-[state=checked]:bg-orange-600 border-gray-300 w-5 h-5"
-                        />
-                        <Label htmlFor={`kyc-${type}`} className="text-sm font-semibold text-gray-700 cursor-pointer">{type}</Label>
+                {/* Passport Number */}
+                <div>
+                  <Label className={labelStyle}>Passport Number *</Label>
+                  <Input
+                    required
+                    value={invForm2.passportNumber}
+                    onChange={(e) => setInvForm2({ ...invForm2, passportNumber: e.target.value.toUpperCase() })}
+                    className={inputStyle}
+                    placeholder="Enter passport number"
+                  />
+                </div>
+              </div>
+
+              {/* ─── INVESTMENT PREFERENCES SECTION ─── */}
+              <div className="pt-6 border-t border-gray-100 space-y-6">
+                <div>
+                  <h3 className="text-sm font-black text-gray-900 uppercase tracking-wider">Investment Preferences</h3>
+                  <p className="text-xs text-gray-500 font-semibold mt-1">These preferences help customize recommendations and matching options.</p>
+                </div>
+
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                  {/* Category (Multi Select) */}
+                  <div>
+                    <Label className={labelStyle}>Investment Category *</Label>
+                    <MultiSelect
+                      options={Object.keys(INVESTMENT_CATEGORY_TYPES)}
+                      selected={invForm2.preferredCategories}
+                      onChange={(val) => {
+                        // Reset types that are no longer valid under new categories
+                        const validTypes = val.reduce((acc, cat) => [...acc, ...INVESTMENT_CATEGORY_TYPES[cat]], []);
+                        const filteredSelectedTypes = invForm2.preferredTypes.filter(t => validTypes.includes(t));
+                        setInvForm2(prev => ({ 
+                          ...prev, 
+                          preferredCategories: val,
+                          preferredTypes: filteredSelectedTypes
+                        }));
+                      }}
+                      placeholder="Select categories"
+                    />
+                  </div>
+
+                  {/* Type (Dependent Multi Select) */}
+                  <div>
+                    <Label className={labelStyle}>Investment Type *</Label>
+                    <MultiSelect
+                      options={dynamicTypesList}
+                      selected={invForm2.preferredTypes}
+                      onChange={(val) => setInvForm2(prev => ({ ...prev, preferredTypes: val }))}
+                      placeholder={invForm2.preferredCategories.length === 0 ? "Select categories first" : "Select investment types"}
+                      emptyMessage={invForm2.preferredCategories.length === 0 ? "Please select a category first." : "No types found."}
+                    />
+                  </div>
+
+                  {/* Preferred Investment Stage (Multi Select) */}
+                  <div>
+                    <Label className={labelStyle}>Preferred Investment Stage</Label>
+                    <MultiSelect
+                      options={PREFERRED_INVESTMENT_STAGES}
+                      selected={invForm2.preferredStages}
+                      onChange={(val) => setInvForm2(prev => ({ ...prev, preferredStages: val }))}
+                      placeholder="Select stages"
+                    />
+                  </div>
+
+                  {/* Investment Purpose (Multi Select) */}
+                  <div>
+                    <Label className={labelStyle}>Investment Purpose</Label>
+                    <MultiSelect
+                      options={INVESTMENT_PURPOSES}
+                      selected={invForm2.preferredPurposes}
+                      onChange={(val) => setInvForm2(prev => ({ ...prev, preferredPurposes: val }))}
+                      placeholder="Select purposes"
+                    />
+                  </div>
+
+                  {/* Preferred Locations (Multi Select Country, State, City) */}
+                  <div className="md:col-span-2 space-y-4">
+                    <Label className={labelStyle}>Preferred Locations (Multiple)</Label>
+                    <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 items-end">
+                      <div>
+                        <Label className="text-[10px] font-bold text-gray-400 uppercase mb-1 block">Country</Label>
+                        <select 
+                          className={selectStyle}
+                          value={locInput.country} 
+                          onChange={(e) => setLocInput(prev => ({ ...prev, country: e.target.value }))}
+                        >
+                          <option value="">Select Country</option>
+                          {countries.map(c => <option key={c.name} value={c.name}>{c.name}</option>)}
+                        </select>
                       </div>
-                    ))}
+
+                      <div>
+                        <Label className="text-[10px] font-bold text-gray-400 uppercase mb-1 block">State / Region</Label>
+                        <select 
+                          className={selectStyle}
+                          value={locInput.state} 
+                          onChange={(e) => setLocInput(prev => ({ ...prev, state: e.target.value }))}
+                          disabled={!locInput.country}
+                        >
+                          <option value="">{loadingLocation && !locInput.state ? "Loading..." : "Select State"}</option>
+                          {states.map(s => <option key={s.name} value={s.name}>{s.name}</option>)}
+                        </select>
+                      </div>
+
+                      <div className="flex gap-2">
+                        <div className="flex-grow">
+                          <Label className="text-[10px] font-bold text-gray-400 uppercase mb-1 block">City</Label>
+                          <select 
+                            className={selectStyle}
+                            value={locInput.city} 
+                            onChange={(e) => setLocInput(prev => ({ ...prev, city: e.target.value }))}
+                            disabled={!locInput.state}
+                          >
+                            <option value="">{loadingLocation && !locInput.city ? "Loading..." : "Select City"}</option>
+                            {cities.map(c => <option key={c} value={c}>{c}</option>)}
+                          </select>
+                        </div>
+                        <Button 
+                          type="button" 
+                          onClick={handleAddLocation}
+                          disabled={!locInput.country}
+                          className="h-12 w-12 rounded-xl bg-orange-600 hover:bg-orange-700 text-white p-0 flex items-center justify-center flex-shrink-0"
+                        >
+                          <Plus className="w-5 h-5" />
+                        </Button>
+                      </div>
+                    </div>
+
+                    {/* Removable chips/tags */}
+                    {invForm2.preferredLocations.length > 0 && (
+                      <div className="flex flex-wrap gap-2 p-3 bg-gray-50 border border-gray-100 rounded-2xl">
+                        {invForm2.preferredLocations.map(loc => (
+                          <Badge 
+                            key={loc.label} 
+                            className="bg-gray-200 text-gray-800 hover:bg-gray-300 font-bold py-1 px-3.5 rounded-xl flex items-center gap-1.5"
+                          >
+                            {loc.label}
+                            <button 
+                              type="button" 
+                              onClick={() => handleRemoveLocation(loc.label)}
+                              className="text-gray-500 hover:text-gray-800"
+                            >
+                              <X className="w-3.5 h-3.5" />
+                            </button>
+                          </Badge>
+                        ))}
+                      </div>
+                    )}
+                  </div>
+
+                  {/* Budget Range */}
+                  <div>
+                    <Label className={labelStyle}>Budget Range</Label>
+                    <MultiSelect
+                      options={BUDGET_RANGES}
+                      selected={invForm2.preferredBudgets}
+                      onChange={(val) => setInvForm2(prev => ({ ...prev, preferredBudgets: val }))}
+                      placeholder="Select budgets"
+                    />
                   </div>
                 </div>
               </div>
@@ -372,7 +670,7 @@ export default function InvestorKycPage() {
               <div className="h-px bg-gray-100 w-full" />
 
               <div>
-                <Label className={labelStyle}>Passport Document *</Label>
+                <Label className={labelStyle}>Passport Document Copy *</Label>
                 <div className="relative group border-2 border-dashed border-gray-200 hover:border-orange-500/50 rounded-2xl p-8 text-center transition-all bg-gray-50/50 hover:bg-orange-50/10 cursor-pointer mt-2">
                   <input
                     type="file"
@@ -396,7 +694,7 @@ export default function InvestorKycPage() {
 
               <Button
                 type="submit"
-                disabled={uploading || !file || invForm2.preferredProjectType.length === 0}
+                disabled={uploading || !file || invForm2.preferredCategories.length === 0 || invForm2.preferredTypes.length === 0}
                 className="w-full h-14 bg-gray-900 hover:bg-black text-white font-black text-sm uppercase tracking-wider rounded-xl shadow-lg transition-all hover:scale-[1.02] active:scale-[0.98] disabled:scale-100 disabled:opacity-50"
               >
                 {uploading ? (
