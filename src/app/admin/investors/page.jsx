@@ -416,18 +416,6 @@ export default function AdminInvestors() {
                           <div className="flex flex-wrap gap-1">{viewInvestorData.preferredTypes.map((t, i) => <span key={i} className="inline-block bg-indigo-50 text-indigo-700 text-xs font-bold px-2 py-0.5 rounded-full">{t}</span>)}</div>
                         </div>
                       )}
-                      {Array.isArray(viewInvestorData.preferredBudgets) && viewInvestorData.preferredBudgets.length > 0 && (
-                        <div>
-                          <span className="text-gray-500 block mb-1">Budget Range</span>
-                          <div className="flex flex-wrap gap-1">{viewInvestorData.preferredBudgets.map((b, i) => <span key={i} className="inline-block bg-green-50 text-green-700 text-xs font-bold px-2 py-0.5 rounded-full">{b}</span>)}</div>
-                        </div>
-                      )}
-                      {Array.isArray(viewInvestorData.preferredLocations) && viewInvestorData.preferredLocations.length > 0 && (
-                        <div>
-                          <span className="text-gray-500 block mb-1">Preferred Locations</span>
-                          <div className="flex flex-wrap gap-1">{viewInvestorData.preferredLocations.map((loc, i) => <span key={i} className="inline-block bg-orange-50 text-orange-700 text-xs font-bold px-2 py-0.5 rounded-full">{typeof loc === 'object' ? loc.label || [loc.city, loc.state, loc.country].filter(Boolean).join(', ') : loc}</span>)}</div>
-                        </div>
-                      )}
                     </>
                   ) : (
                     <>
