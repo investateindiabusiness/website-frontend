@@ -40,9 +40,7 @@ let _refreshPromise = null;
  * Stores the new token + expiry back into sessionStorage.
  * Returns the new idToken string, or null if the refresh fails.
  */
-const silentRefresh = async (currentSession) => {
-  if (!currentSession?.refreshToken) return null;
-
+const silentRefresh = async () => {
   // Reuse an in-flight refresh rather than sending duplicate requests
   if (_refreshPromise) return _refreshPromise;
 
@@ -51,26 +49,24 @@ const silentRefresh = async (currentSession) => {
       const response = await fetch(`${API_BASE_URL}/api/auth/refresh-token`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ refreshToken: currentSession.refreshToken }),
       });
 
       if (!response.ok) return null;
 
       const data = await response.json();
-      if (!data.idToken) return null;
+      if (!data.success) return null;
 
-      // Persist the refreshed token back to storage
+      // Persist the refreshed token expiry estimate back to storage
       const newExpiry = Date.now() + (data.expiresIn || 3600) * 1000;
-      const updated = {
-        ...currentSession,
-        token: data.idToken,
-        refreshToken: data.refreshToken || currentSession.refreshToken,
-        expiresAt: newExpiry,
-      };
       if (typeof window !== 'undefined') {
-        sessionStorage.setItem('user_session', JSON.stringify(updated));
+        try {
+          const current = JSON.parse(localStorage.getItem('user_session')) || {};
+          current.expiresAt = newExpiry;
+          localStorage.setItem('user_session', JSON.stringify(current));
+          window.dispatchEvent(new Event('user_session_updated'));
+        } catch {}
       }
-      return data.idToken;
+      return "refreshed";
     } catch {
       return null;
     } finally {
@@ -86,7 +82,8 @@ const silentRefresh = async (currentSession) => {
  */
 const redirectToLogin = (role, reason = 'session_expired') => {
   if (typeof window === 'undefined') return;
-  sessionStorage.removeItem('user_session');
+  localStorage.removeItem('user_session');
+  window.dispatchEvent(new Event('user_session_updated'));
   const currentPath = window.location.pathname;
   if (!isProtectedRoute(currentPath)) return;
 
@@ -109,7 +106,7 @@ export const apiRequest = async (endpoint, options = {}, _isRetry = false) => {
   let session = null;
   if (typeof window !== 'undefined') {
     try {
-      session = JSON.parse(sessionStorage.getItem('user_session'));
+      session = JSON.parse(localStorage.getItem('user_session'));
     } catch (e) {
       console.warn('Failed to parse user session:', e);
     }
@@ -124,14 +121,14 @@ export const apiRequest = async (endpoint, options = {}, _isRetry = false) => {
     endpoint.includes('/admin-login') ||
     endpoint.includes('/refresh-token');
 
-  if (!isAuthEndpoint && !_isRetry && session?.token && session?.expiresAt) {
+  if (!isAuthEndpoint && !_isRetry && session?.expiresAt) {
     const fiveMinutes = 5 * 60 * 1000;
     if (Date.now() >= session.expiresAt - fiveMinutes) {
-      const newToken = await silentRefresh(session);
+      const newToken = await silentRefresh();
       if (newToken) {
         // Re-read session after refresh so the request uses the fresh token
         try {
-          session = JSON.parse(sessionStorage.getItem('user_session'));
+          session = JSON.parse(localStorage.getItem('user_session'));
         } catch { /* ignore */ }
       } else if (Date.now() >= session.expiresAt) {
         // Token is already expired and refresh failed — bail out now
@@ -173,8 +170,8 @@ export const apiRequest = async (endpoint, options = {}, _isRetry = false) => {
       if (!isAuthEndpoint) {
         // ── Reactive refresh ────────────────────────────────────────────────
         // The server rejected the token. Attempt one silent refresh and retry.
-        if (!_isRetry && session?.refreshToken) {
-          const newToken = await silentRefresh(session);
+        if (!_isRetry) {
+          const newToken = await silentRefresh();
           if (newToken) {
             return apiRequest(endpoint, options, true); // retry once
           }
@@ -207,7 +204,7 @@ export const apiUploadRequest = async (endpoint, formData) => {
   let session = null;
   if (typeof window !== 'undefined') {
     try {
-      session = JSON.parse(sessionStorage.getItem('user_session'));
+      session = JSON.parse(localStorage.getItem('user_session'));
     } catch (e) {
       console.warn("Failed to parse user session:", e);
     }
@@ -299,6 +296,11 @@ export const adminLoginRequest = (payload) =>
   apiRequest('/api/auth/admin-login', {
     method: 'POST',
     body: JSON.stringify(payload),
+  });
+
+export const logoutRequest = () =>
+  apiRequest('/api/auth/logout', {
+    method: 'POST',
   });
 
 export const googleSyncRequest = async (idToken, role) => {

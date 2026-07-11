@@ -8,6 +8,8 @@ import TestimonialsSection from "@/components/TestimonialsSection";
 import DeepakProfileSection from "@/components/DeepakProfileSection";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
+import AdBanner from "@/components/AdBanner";
+import InterstitialAdBanner from "@/components/InterstitialAdBanner";
 import SlideAdPanel from "@/components/SlideAdPanel";
 
 import {
@@ -421,14 +423,10 @@ export default function ServiceProviderHome() {
             </div>
           </motion.div>
         </AnimatePresence>
-
-        {/* Slide-out ad panel — peeks from right edge, slides in on click */}
-        <SlideAdPanel
-          zoneId="zone5"
-          forceRole="service-provider"
-          loginPath="/login"
-        />
       </section>
+
+      {/* Zone 1 — Homepage Hero Leaderboard: fixed right-side panel, opens by default */}
+      <SlideAdPanel zoneId="zone1" forceRole="service-provider" />
 
       {/* Executive Summary Section */}
       <section
@@ -720,6 +718,9 @@ export default function ServiceProviderHome() {
           </div>
         </div>
       </section>
+
+      {/* Zone 2 — Homepage Mid-Page Banner: dismissible interstitial between sections */}
+      <InterstitialAdBanner zoneId="zone2" />
 
       <AwardsSection />
 

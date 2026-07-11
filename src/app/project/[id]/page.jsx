@@ -223,9 +223,9 @@ export default function ProjectDetail() {
                   <p className="text-gray-600 text-sm leading-relaxed">{project.projectOverview}</p>
                </div>
 
-               {/* Zone 3 — Investor Project Sidebar Ad (300x250) */}
+               {/* Zone 5 — Project Detail Page Banner */}
                <div className="flex justify-center">
-                 <AdBanner zoneId="zone3" />
+                 <AdBanner zoneId="zone5" forceRole="investor" />
                </div>
             </div>
          </main>

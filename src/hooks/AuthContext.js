@@ -3,7 +3,7 @@
 import React, { createContext, useContext, useState, useEffect, useCallback, useRef } from 'react';
 import { usePathname, useRouter } from 'next/navigation';
 import { toast } from '@/hooks/use-toast';
-import { apiRequest } from '@/api';
+import { apiRequest, logoutRequest } from '@/api';
 
 const AuthContext = createContext(null);
 
@@ -95,13 +95,17 @@ export const AuthProvider = ({ children }) => {
     if (msUntilExpiry <= 0) return; // already expired
 
     expiryTimerRef.current = setTimeout(() => {
-      const savedUser = sessionStorage.getItem('user_session');
+      if (typeof window === 'undefined') return;
+      const savedUser = localStorage.getItem('user_session');
       if (!savedUser) return;
       try {
         const parsedUser = JSON.parse(savedUser);
         if (isSessionExpired(parsedUser)) {
-          sessionStorage.removeItem('user_session');
+          localStorage.removeItem('user_session');
           setUser(null);
+          if (typeof window !== 'undefined') {
+            window.dispatchEvent(new Event('user_session_updated'));
+          }
           const currentPath = typeof window !== 'undefined' ? window.location.pathname : '';
           if (isProtectedRoute(currentPath)) {
             window.location.href = getLoginPath(parsedUser.role);
@@ -111,16 +115,18 @@ export const AuthProvider = ({ children }) => {
     }, msUntilExpiry);
   }, []);
 
-  // Hydrate from sessionStorage on mount
-  useEffect(() => {
-    const savedUser = sessionStorage.getItem('user_session');
+  // Sync React state helper
+  const syncStateFromStorage = useCallback(() => {
+    if (typeof window === 'undefined') return;
+    const savedUser = localStorage.getItem('user_session');
     if (savedUser) {
       try {
         const parsedUser = JSON.parse(savedUser);
         if (isSessionExpired(parsedUser)) {
           const role = parsedUser.role;
-          sessionStorage.removeItem('user_session');
-          const currentPath = typeof window !== 'undefined' ? window.location.pathname : '';
+          localStorage.removeItem('user_session');
+          setUser(null);
+          const currentPath = window.location.pathname;
           if (isProtectedRoute(currentPath)) {
             window.location.href = getLoginPath(role);
           }
@@ -128,14 +134,32 @@ export const AuthProvider = ({ children }) => {
           setUser(parsedUser);
           scheduleExpiryCheck(parsedUser);
         }
-      } catch { /* corrupt session — ignore */ }
+      } catch {
+        setUser(null);
+      }
+    } else {
+      setUser(null);
     }
+  }, [scheduleExpiryCheck]);
+
+  // Hydrate from localStorage on mount and register listeners
+  useEffect(() => {
+    syncStateFromStorage();
     setLoading(false);
+
+    if (typeof window !== 'undefined') {
+      window.addEventListener('user_session_updated', syncStateFromStorage);
+      window.addEventListener('storage', syncStateFromStorage);
+    }
 
     return () => {
       if (expiryTimerRef.current) clearTimeout(expiryTimerRef.current);
+      if (typeof window !== 'undefined') {
+        window.removeEventListener('user_session_updated', syncStateFromStorage);
+        window.removeEventListener('storage', syncStateFromStorage);
+      }
     };
-  }, [scheduleExpiryCheck]);
+  }, [syncStateFromStorage]);
 
   // Route-based access control
   useEffect(() => {
@@ -203,9 +227,12 @@ export const AuthProvider = ({ children }) => {
       loginTime: Date.now(),
       expiresAt: tokenExpiry > 0 ? tokenExpiry : Date.now() + 3600 * 1000,
     };
-    sessionStorage.setItem('user_session', JSON.stringify(sessionData));
+    localStorage.setItem('user_session', JSON.stringify(sessionData));
     setUser(sessionData);
     scheduleExpiryCheck(sessionData);
+    if (typeof window !== 'undefined') {
+      window.dispatchEvent(new Event('user_session_updated'));
+    }
   };
 
   const logout = () => {
@@ -213,17 +240,22 @@ export const AuthProvider = ({ children }) => {
       clearTimeout(expiryTimerRef.current);
       expiryTimerRef.current = null;
     }
-    sessionStorage.removeItem('user_session');
+    logoutRequest().catch(() => {});
+    localStorage.removeItem('user_session');
     setUser(null);
+    if (typeof window !== 'undefined') {
+      window.dispatchEvent(new Event('user_session_updated'));
+    }
   };
 
   /**
    * Exchange the stored refreshToken for a new idToken via the backend.
-   * Updates sessionStorage and React state on success.
+   * Updates localStorage and React state on success.
    * Returns true on success, false on failure.
    */
   const refreshSession = useCallback(async () => {
-    const savedUser = sessionStorage.getItem('user_session');
+    if (typeof window === 'undefined') return false;
+    const savedUser = localStorage.getItem('user_session');
     if (!savedUser) return false;
     let parsedUser;
     try {
@@ -247,9 +279,10 @@ export const AuthProvider = ({ children }) => {
         refreshToken: data.refreshToken || parsedUser.refreshToken,
         expiresAt: tokenExpiry > 0 ? tokenExpiry : Date.now() + 3600 * 1000,
       };
-      sessionStorage.setItem('user_session', JSON.stringify(updated));
+      localStorage.setItem('user_session', JSON.stringify(updated));
       setUser(updated);
       scheduleExpiryCheck(updated);
+      window.dispatchEvent(new Event('user_session_updated'));
       return true;
     } catch {
       return false;
@@ -260,15 +293,17 @@ export const AuthProvider = ({ children }) => {
    * Reload user profile data from the backend into the session.
    */
   const refreshUser = useCallback(async () => {
+    if (typeof window === 'undefined') return;
     try {
       const data = await apiRequest('/api/auth/me', { method: 'GET' });
       if (data.success && data.user) {
-        const savedUser = sessionStorage.getItem('user_session');
+        const savedUser = localStorage.getItem('user_session');
         if (savedUser) {
           const parsedUser = JSON.parse(savedUser);
           const updated = { ...parsedUser, ...data.user };
-          sessionStorage.setItem('user_session', JSON.stringify(updated));
+          localStorage.setItem('user_session', JSON.stringify(updated));
           setUser(updated);
+          window.dispatchEvent(new Event('user_session_updated'));
         }
       }
     } catch (err) {

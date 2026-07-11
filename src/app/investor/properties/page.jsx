@@ -1,4 +1,4 @@
-﻿"use client";
+"use client";
 
 import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
@@ -82,13 +82,11 @@ export default function InvestorProperties() {
       <main className="flex-grow mt-0 pb-16">
         <div className="container mx-auto px-4 py-8">
 
-            {/* ── Ad Banner ── */}
-            <div className="mb-8 flex justify-center">
-              <div className="w-full max-w-md">
-                <AdBanner zoneId="zone4" variant="card" />
-              </div>
+            {/* ── Zone 4: Properties Page Top Banner (full-width leaderboard) ── */}
+            <div className="mb-8 w-full">
+              <AdBanner zoneId="zone4" variant="default" forceRole="investor" />
             </div>
-            {/* ── End Ad Banner ── */}
+            {/* ── End Zone 4 ── */}
 
             <div className="bg-white rounded-2xl shadow-sm border border-gray-200 p-4 mb-8 sticky top-[4rem] z-30">
                 <div className="flex flex-col lg:flex-row gap-4">

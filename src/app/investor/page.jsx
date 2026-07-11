@@ -828,14 +828,10 @@ export default function Index() {
             </div>
           </motion.div>
         </AnimatePresence>
-
-        {/* Slide-out ad panel — peeks from right edge, slides in on click */}
-        <SlideAdPanel
-          zoneId="zone2"
-          forceRole="investor"
-          loginPath="/investor/login"
-        />
       </section>
+
+      {/* Zone 3 — Investor Hero Leaderboard: fixed right-side panel, opens by default */}
+      <SlideAdPanel zoneId="zone3" forceRole="investor" />
 
       <section className="fullscreen-section section-light" id="about">
         <div className="container">

@@ -10,7 +10,6 @@ import { MapPin, Building2, Search, Filter, Loader2, Heart } from 'lucide-react'
 import { apiRequest, submitProjectLead } from '@/api';
 import { toast } from '@/hooks/use-toast';
 import { parseProjectImages } from '@/utils/imageCompressor';
-import AdBanner from '@/components/AdBanner';
 
 export default function InvestorProjects() {
   const router = useRouter();
@@ -164,12 +163,6 @@ export default function InvestorProjects() {
                 </CardContent>
               </Card>
 
-              {/* Inject Zone 3 ad after every 5th project card */}
-              {(index + 1) % 5 === 0 && (
-                <div className="col-span-full flex justify-center py-2">
-                  <AdBanner zoneId="zone3" />
-                </div>
-              )}
             </React.Fragment>
           ))}
         </div>

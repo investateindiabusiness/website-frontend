@@ -1,4 +1,4 @@
-﻿"use client";
+"use client";
 
 import React, { useState, useEffect } from "react";
 import { useAuth } from "@/hooks/AuthContext";
@@ -57,6 +57,61 @@ const formatDate = (dateStr) => {
   const month = String(date.getMonth() + 1).padStart(2, "0");
   const year = date.getFullYear();
   return `${day}-${month}-${year}`;
+};
+
+/**
+ * ZONE_PLACEMENT_MAP
+ * Maps each zone ID to its friendly display name and location description.
+ * Shown in admin UI so it's immediately clear where each zone appears on the site.
+ */
+const ZONE_PLACEMENT_MAP = {
+  zone1: {
+    label: "Homepage Hero Leaderboard",
+    location: "Bottom of main homepage hero section",
+    page: "/ (Home)",
+    color: "bg-blue-100 text-blue-800",
+    dot: "bg-blue-500",
+  },
+  zone2: {
+    label: "Homepage Mid-Page Banner",
+    location: "Between sections 3–4 on the main homepage",
+    page: "/ (Home)",
+    color: "bg-purple-100 text-purple-800",
+    dot: "bg-purple-500",
+  },
+  zone3: {
+    label: "Investor Hero Leaderboard",
+    location: "Bottom of the Investor landing page hero",
+    page: "/investor",
+    color: "bg-green-100 text-green-800",
+    dot: "bg-green-500",
+  },
+  zone4: {
+    label: "Properties Page Top Banner",
+    location: "Top of the Properties listing page",
+    page: "/properties",
+    color: "bg-orange-100 text-orange-800",
+    dot: "bg-orange-500",
+  },
+  zone5: {
+    label: "Project Detail Page Banner",
+    location: "Inside individual project detail pages",
+    page: "/project/[id]",
+    color: "bg-rose-100 text-rose-800",
+    dot: "bg-rose-500",
+  },
+};
+
+/** Returns the friendly zone info, with a fallback for unknown zones */
+const getZoneMeta = (zoneIdOrName) => {
+  // Try direct key match first (e.g., "zone1")
+  if (ZONE_PLACEMENT_MAP[zoneIdOrName]) return ZONE_PLACEMENT_MAP[zoneIdOrName];
+  // Try matching by label (in case the zone name was renamed to something else)
+  const entry = Object.entries(ZONE_PLACEMENT_MAP).find(
+    ([, v]) => v.label.toLowerCase() === (zoneIdOrName || "").toLowerCase()
+  );
+  if (entry) return entry[1];
+  return { label: zoneIdOrName, location: "—", page: "—", color: "bg-slate-100 text-slate-600", dot: "bg-slate-400" };
 };
 
 export default function AdminAdvertisements() {
@@ -620,12 +675,24 @@ export default function AdminAdvertisements() {
                                 </span>
                               </td>
                               <td className="py-4 px-4">
-                                <span className="font-bold text-slate-700 block">
-                                  {zone?.name || booking.zoneId}
-                                </span>
-                                <span className="text-[10px] text-slate-400 bg-slate-100 px-1.5 py-0.5 rounded font-mono w-fit mt-1 block">
-                                  {zone?.width}x{zone?.height}
-                                </span>
+                                <div className="space-y-1">
+                                  {(() => {
+                                    const meta = getZoneMeta(zone?.id || booking.zoneId);
+                                    return (
+                                      <>
+                                        <span className="font-bold text-slate-700 block">
+                                          {zone?.name || meta.label}
+                                        </span>
+                                        <span className={`text-[9px] font-bold px-2 py-0.5 rounded-full w-fit inline-block mt-0.5 ${meta.color}`}>
+                                          {meta.label}
+                                        </span>
+                                        <span className="text-[10px] text-slate-400 block mt-0.5">
+                                          {meta.location}
+                                        </span>
+                                      </>
+                                    );
+                                  })()}
+                                </div>
                               </td>
                               <td className="py-4 px-4 text-xs font-semibold text-slate-600">
                                 {formatDate(booking.startDate)} to{" "}
@@ -751,39 +818,54 @@ export default function AdminAdvertisements() {
                         </p>
                       </div>
                     ) : (
-                      zones.map((zone) => (
-                        <div
-                          key={zone.id}
-                          className={`p-3.5 rounded-xl border transition-all duration-200 flex items-center justify-between gap-2 ${
-                            selectedZone?.id === zone.id
-                              ? "border-slate-800 bg-slate-50 shadow-sm"
-                              : "border-slate-200"
-                          }`}
-                        >
-                          <button
-                            onClick={() => {
-                              handleSelectZone(zone);
-                              handleOpenEditZone(zone);
-                            }}
-                            className="flex-grow text-left flex flex-col gap-0.5"
+                      zones.map((zone) => {
+                        const meta = getZoneMeta(zone.id);
+                        const isSelected = selectedZone?.id === zone.id;
+                        return (
+                          <div
+                            key={zone.id}
+                            className={`p-3.5 rounded-xl border transition-all duration-200 ${
+                              isSelected
+                                ? "border-slate-800 bg-slate-50 shadow-sm"
+                                : "border-slate-200 hover:border-slate-300 hover:bg-slate-50/50"
+                            }`}
                           >
-                            <span className="text-sm font-bold text-slate-800">
-                              {zone.name}
-                            </span>
-                            <span className="text-[10px] text-slate-500">
-                              ${zone.costPerDay}/day
-                            </span>
-                          </button>
-                          <Button
-                            onClick={() => handleOpenEditZone(zone)}
-                            size="sm"
-                            variant="ghost"
-                            className="rounded-lg h-8 w-8 p-1 text-slate-500 hover:text-slate-800 hover:bg-slate-100"
-                          >
-                            <Settings className="w-4 h-4" />
-                          </Button>
-                        </div>
-                      ))
+                            <div className="flex items-start justify-between gap-2">
+                              <button
+                                onClick={() => {
+                                  handleSelectZone(zone);
+                                  handleOpenEditZone(zone);
+                                }}
+                                className="flex-grow text-left flex flex-col gap-1"
+                              >
+                                <div className="flex items-center gap-2">
+                                  <span className={`inline-block w-2 h-2 rounded-full flex-shrink-0 ${meta.dot}`} />
+                                  <span className="text-sm font-bold text-slate-800">
+                                    {zone.name || meta.label}
+                                  </span>
+                                </div>
+                                <span className={`text-[10px] font-bold px-2 py-0.5 rounded-full w-fit ${meta.color}`}>
+                                  {meta.label}
+                                </span>
+                                <span className="text-[10px] text-slate-500 mt-0.5">
+                                  📍 {meta.location}
+                                </span>
+                                <span className="text-[10px] text-slate-400 font-mono">
+                                  {zone.id} · ${zone.costPerDay}/day
+                                </span>
+                              </button>
+                              <Button
+                                onClick={() => handleOpenEditZone(zone)}
+                                size="sm"
+                                variant="ghost"
+                                className="rounded-lg h-8 w-8 p-1 text-slate-500 hover:text-slate-800 hover:bg-slate-100 flex-shrink-0"
+                              >
+                                <Settings className="w-4 h-4" />
+                              </Button>
+                            </div>
+                          </div>
+                        );
+                      })
                     )}
                   </CardContent>
                 </Card>
@@ -798,12 +880,23 @@ export default function AdminAdvertisements() {
                       <CardHeader className="bg-slate-50 border-b border-slate-100 py-4 px-6 flex justify-between items-center">
                         <div>
                           <CardTitle className="text-base font-bold text-slate-800">
-                            Zone Specifications
+                            {selectedZone.name || getZoneMeta(selectedZone.id).label}
                           </CardTitle>
                           <CardDescription className="text-xs">
-                            Details and default ad configuration for{" "}
-                            {selectedZone.name}
+                            {getZoneMeta(selectedZone.id).location}
                           </CardDescription>
+                          {/* Placement badge */}
+                          <div className="flex items-center gap-2 mt-2 flex-wrap">
+                            <span className={`text-[10px] font-bold px-2.5 py-1 rounded-full ${getZoneMeta(selectedZone.id).color}`}>
+                              {getZoneMeta(selectedZone.id).label}
+                            </span>
+                            <span className="text-[10px] font-mono text-slate-400 bg-slate-100 px-2 py-0.5 rounded">
+                              {selectedZone.id}
+                            </span>
+                            <span className="text-[10px] text-slate-500">
+                              Page: <span className="font-semibold">{getZoneMeta(selectedZone.id).page}</span>
+                            </span>
+                          </div>
                         </div>
                         <Button
                           onClick={() => handleOpenEditZone(selectedZone)}
@@ -943,11 +1036,17 @@ export default function AdminAdvertisements() {
               <div className="flex justify-between items-start">
                 <div>
                   <CardTitle className="text-xl font-bold">
-                    Edit Zone Configuration
+                    Edit Ad Zone
                   </CardTitle>
                   <CardDescription className="text-xs text-slate-300 mt-1">
-                    Placement ID: {editZoneItem.id}
+                    <span className={`inline-block px-2 py-0.5 rounded-full font-bold text-[10px] mr-2 ${getZoneMeta(editZoneItem.id).color}`}>
+                      {getZoneMeta(editZoneItem.id).label}
+                    </span>
+                    {getZoneMeta(editZoneItem.id).location}
                   </CardDescription>
+                  <p className="text-[10px] text-slate-500 mt-1 font-mono">
+                    Zone ID: {editZoneItem.id} · Page: {getZoneMeta(editZoneItem.id).page}
+                  </p>
                 </div>
                 <button
                   onClick={handleCloseEditZone}
