@@ -77,8 +77,12 @@ const RegisterDialog = ({ isOpen, onOpenChange, onLoginClick, initialData = {} }
   });
 
   const [builderData, setBuilderData] = useState({
-    companyName: '', yearsOfExperience: '', contactNameAndDesignation: '', contactPersonPhone: '',
-    ongoingProjects: '', projectsCompleted: '', address: '', country: '', state: '', city: '', zip: '', termsAccepted: false
+    companyName: '', yearsOfExperience: '',
+    contactName: '', contactPersonRole: '', contactPersonRoleOther: '',
+    contactPersonPhone: '', companyEmail: '',
+    ongoingProjects: '', projectType: '', projectSubType: '',
+    projectsCompleted: '', aboutYourself: '',
+    address: '', country: '', state: '', city: '', zip: '', termsAccepted: false
   });
 
   const [serviceProviderData, setServiceProviderData] = useState({
@@ -161,6 +165,8 @@ const RegisterDialog = ({ isOpen, onOpenChange, onLoginClick, initialData = {} }
           setInvestorData(prev => ({ ...prev, fullName: localInitialData.name || '' }));
         } else if (localInitialData.userType === 'serviceProvider' && !isForm2Mode) {
           setServiceProviderData(prev => ({ ...prev, fullName: localInitialData.name || '' }));
+        } else if (localInitialData.userType === 'builder' && !isForm2Mode) {
+          setBuilderData(prev => ({ ...prev, contactName: localInitialData.name || '' }));
         }
 
         if (isForm2Mode) {
@@ -230,7 +236,9 @@ const RegisterDialog = ({ isOpen, onOpenChange, onLoginClick, initialData = {} }
     } else if (userType === 'builder') {
       return (
         builderData.companyName.trim() !== '' && builderData.yearsOfExperience.toString().trim() !== '' &&
-        builderData.contactNameAndDesignation.trim() !== '' && builderData.contactPersonPhone.trim() !== '' &&
+        builderData.contactName.trim() !== '' && builderData.contactPersonRole.trim() !== '' &&
+        (builderData.contactPersonRole !== 'Other' || builderData.contactPersonRoleOther.trim() !== '') &&
+        builderData.contactPersonPhone.trim() !== '' &&
         builderData.country.trim() !== '' && builderData.state.trim() !== '' && builderData.city.trim() !== '' && builderData.termsAccepted
       );
     } else {
@@ -703,16 +711,7 @@ const RegisterDialog = ({ isOpen, onOpenChange, onLoginClick, initialData = {} }
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                           {shouldShowField('fullName') && (<div><Label className={labelStyle}>Full Name *</Label><Input required value={investorData.fullName} onChange={(e) => setInvestorData({ ...investorData, fullName: e.target.value })} placeholder="Full name" className={inputStyle} /></div>)}
                           {shouldShowField('contactNumber') && (<div><Label className={labelStyle}>Contact Number *</Label><Input required value={investorData.contactNumber} onChange={(e) => setInvestorData({ ...investorData, contactNumber: e.target.value.replace(/\D/g, '') })} placeholder="Contact number" className={inputStyle} /></div>)}
-                          {shouldShowField('investorType') && (
-                            <div>
-                              <Label className={labelStyle}>Investor Type</Label>
-                              <select className={selectStyle} value={investorData.investorType} onChange={(e) => setInvestorData({ ...investorData, investorType: e.target.value })}>
-                                <option value="">Select Type</option>
-                                <option value="Direct Investor">Direct Investor</option>
-                                <option value="Financial Advisor">Financial Advisor</option>
-                              </select>
-                            </div>
-                          )}
+
                           {(shouldShowField('investmentRangeMin') || shouldShowField('investmentRangeMax')) && (
                             <div>
                               <Label className={labelStyle}>Investment Range</Label>
@@ -770,17 +769,74 @@ const RegisterDialog = ({ isOpen, onOpenChange, onLoginClick, initialData = {} }
                             {shouldShowField('yearsOfExperience') && (<div><Label className={labelStyle}>Track Record (Years) *</Label><Input type="text" required value={builderData.yearsOfExperience} onChange={(e) => setBuilderData({ ...builderData, yearsOfExperience: e.target.value.replace(/\D/g, '') })} placeholder="e.g. 10" className={inputStyle} /></div>)}
                           </div>
                           {(shouldShowField('contactNameAndDesignation') || shouldShowField('contactPersonPhone')) && (
-                            <div className={isForm1UpdateMode ? "" : sectionContainerStyle}>
+                          {(shouldShowField('contactName') || shouldShowField('contactPersonRole') || shouldShowField('contactPersonPhone')) && (
+                            <div className={`${isForm1UpdateMode ? '' : sectionContainerStyle} space-y-4`}>
                               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                                {shouldShowField('contactNameAndDesignation') && (<div><Label className={labelStyle}>Liaison Name & Role *</Label><Input required value={builderData.contactNameAndDesignation} onChange={(e) => setBuilderData({ ...builderData, contactNameAndDesignation: e.target.value })} className={inputStyle} /></div>)}
+                                {shouldShowField('contactName') && (<div><Label className={labelStyle}>Liaison Name *</Label><Input required value={builderData.contactName} onChange={(e) => setBuilderData({ ...builderData, contactName: e.target.value })} className={inputStyle} placeholder="Full name" /></div>)}
+                                {shouldShowField('contactPersonRole') && (
+                                  <div>
+                                    <Label className={labelStyle}>Liaison Role *</Label>
+                                    <select required className={selectStyle} value={builderData.contactPersonRole} onChange={(e) => setBuilderData({ ...builderData, contactPersonRole: e.target.value, contactPersonRoleOther: '' })}>
+                                      <option value="">Select Role</option>
+                                      {['Managing Director (MD)', 'Chairman', 'Director', 'Partner', 'Proprietor', 'General Manager', 'Project Manager', 'Business Development Manager', 'Sales Manager', 'Marketing Manager', 'Liaison Officer', 'Authorized Signatory', 'Relationship Manager', 'Legal Representative', 'Administrative Officer', 'Other'].map(r => <option key={r} value={r}>{r}</option>)}
+                                    </select>
+                                  </div>
+                                )}
+                              </div>
+                              {builderData.contactPersonRole === 'Other' && (
+                                <div className="animate-in slide-in-from-top-2 duration-300">
+                                  <Label className={labelStyle}>Specify Role *</Label>
+                                  <Input required value={builderData.contactPersonRoleOther} onChange={(e) => setBuilderData({ ...builderData, contactPersonRoleOther: e.target.value })} className={inputStyle} placeholder="e.g. Founder, Co-founder" />
+                                </div>
+                              )}
+                              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                                 {shouldShowField('contactPersonPhone') && (<div><Label className={labelStyle}>Direct Phone *</Label><Input required value={builderData.contactPersonPhone} onChange={(e) => setBuilderData({ ...builderData, contactPersonPhone: e.target.value.replace(/\D/g, '') })} className={inputStyle} /></div>)}
+                                {shouldShowField('companyEmail') && (<div><Label className={labelStyle}>Company Email <span className="text-gray-400 normal-case font-medium">(optional)</span></Label><Input type="email" value={builderData.companyEmail} onChange={(e) => setBuilderData({ ...builderData, companyEmail: e.target.value })} className={inputStyle} placeholder="contact@company.com" /></div>)}
                               </div>
                             </div>
                           )}
-                          {(shouldShowField('ongoingProjects') || shouldShowField('projectsCompleted')) && (
+                          {(shouldShowField('ongoingProjects') || shouldShowField('projectType') || shouldShowField('projectsCompleted')) && (
                             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                               {shouldShowField('ongoingProjects') && (<div><Label className={labelStyle}>Active Projects</Label><Input type="text" value={builderData.ongoingProjects} onChange={(e) => setBuilderData({ ...builderData, ongoingProjects: e.target.value })} className={inputStyle} /></div>)}
+                              {shouldShowField('projectType') && (
+                                <div>
+                                  <Label className={labelStyle}>Project Type</Label>
+                                  <select className={selectStyle} value={builderData.projectType} onChange={(e) => setBuilderData({ ...builderData, projectType: e.target.value, projectSubType: '' })}>
+                                    <option value="">Select Category</option>
+                                    <option value="Residential">Residential</option>
+                                    <option value="Commercial">Commercial</option>
+                                    <option value="Industrial">Industrial</option>
+                                    <option value="Land">Land</option>
+                                    <option value="Rental Services">Rental Services</option>
+                                    <option value="Other">Other</option>
+                                  </select>
+                                </div>
+                              )}
+                              {builderData.projectType && builderData.projectType !== 'Other' && (
+                                <div className="md:col-span-2 animate-in slide-in-from-top-2 duration-300">
+                                  <Label className={labelStyle}>Project Sub-Type</Label>
+                                  <select className={selectStyle} value={builderData.projectSubType} onChange={(e) => setBuilderData({ ...builderData, projectSubType: e.target.value })}>
+                                    <option value="">Select Sub-Type</option>
+                                    {builderData.projectType === 'Residential' && ['Apartment', 'Villa', 'Independent House', 'Residential Plot', 'Gated Community', 'Studio Apartment'].map(t => <option key={t} value={t}>{t}</option>)}
+                                    {builderData.projectType === 'Commercial' && ['Office Space', 'Retail Shop', 'Showroom', 'Commercial Plot', 'Commercial Complex', 'Co-working Space'].map(t => <option key={t} value={t}>{t}</option>)}
+                                    {builderData.projectType === 'Industrial' && ['Warehouse', 'Factory', 'Industrial Plot', 'Logistics Park'].map(t => <option key={t} value={t}>{t}</option>)}
+                                    {builderData.projectType === 'Land' && ['Agricultural Land / Farm Land', 'Development Land', 'Open Plot', 'Layout'].map(t => <option key={t} value={t}>{t}</option>)}
+                                    {builderData.projectType === 'Rental Services' && ['Residential Rental', 'Commercial Rental'].map(t => <option key={t} value={t}>{t}</option>)}
+                                  </select>
+                                </div>
+                              )}
                               {shouldShowField('projectsCompleted') && (<div><Label className={labelStyle}>Total Deliveries</Label><Input type="text" value={builderData.projectsCompleted} onChange={(e) => setBuilderData({ ...builderData, projectsCompleted: e.target.value })} className={inputStyle} /></div>)}
+                            </div>
+                          )}
+                          {shouldShowField('aboutYourself') && (
+                            <div>
+                              <Label className={labelStyle}>About Your Company / Yourself</Label>
+                              <Textarea
+                                value={builderData.aboutYourself}
+                                onChange={(e) => setBuilderData({ ...builderData, aboutYourself: e.target.value })}
+                                className="w-full bg-gray-50 border-gray-200 rounded-xl px-4 py-3 font-semibold text-gray-900 focus:bg-white focus:ring-2 focus:ring-orange-500/20 focus:border-orange-500 transition-all min-h-[120px] resize-y"
+                                placeholder="Tell us about your company, your background, and what makes you stand out..."
+                              />
                             </div>
                           )}
                           {(shouldShowField('address') || shouldShowField('country') || shouldShowField('zip') || shouldShowField('state') || shouldShowField('city')) && (

@@ -574,16 +574,7 @@ function InvestorRegisterContent() {
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                       {shouldShowField('fullName') && (<div><Label className={labelStyle}>Full Name *</Label><Input required value={investorData.fullName} onChange={(e) => setInvestorData({ ...investorData, fullName: e.target.value })} placeholder="Full name" className={inputStyle} /></div>)}
                       {shouldShowField('contactNumber') && (<div><Label className={labelStyle}>Contact Number *</Label><Input required value={investorData.contactNumber} onChange={(e) => setInvestorData({ ...investorData, contactNumber: e.target.value.replace(/\D/g, '') })} placeholder="Contact number" className={inputStyle} /></div>)}
-                      {shouldShowField('investorType') && (
-                        <div>
-                          <Label className={labelStyle}>Investor Type</Label>
-                          <select className={selectStyle} value={investorData.investorType} onChange={(e) => setInvestorData({ ...investorData, investorType: e.target.value })}>
-                            <option value="">Select Type</option>
-                            <option value="Direct Investor">Direct Investor</option>
-                            <option value="Financial Advisor">Financial Advisor</option>
-                          </select>
-                        </div>
-                      )}
+
                       {(shouldShowField('investmentRangeMin') || shouldShowField('investmentRangeMax')) && (
                         <div>
                           <Label className={labelStyle}>Investment Range</Label>
