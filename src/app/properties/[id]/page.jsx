@@ -201,6 +201,15 @@ export default function ProjectDetail() {
                                  "I'm Interested"
                               )}
                            </Button>
+                           {project.projectBrochureUrl && (
+                              <Button
+                                 size="sm"
+                                 onClick={() => window.open(project.projectBrochureUrl, '_blank')}
+                                 className="gap-1.5 text-xs rounded-full bg-slate-800 hover:bg-slate-900 text-white"
+                              >
+                                 <Download className="w-3.5 h-3.5" /> Brochure
+                              </Button>
+                           )}
                         </div>
                      </div>
                   </div>
@@ -213,17 +222,27 @@ export default function ProjectDetail() {
                <div className="bg-white p-6 rounded-xl shadow-sm border border-gray-200">
                   <h2 className="text-lg font-bold mb-4">Overview</h2>
                   <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
-                     <DetailItem label="Type" value={project.projectType} icon={<Building2 />} />
+                     <DetailItem label="Type" value={Array.isArray(project.projectType) ? project.projectType.join(', ') : (project.projectType || 'Property')} icon={<Building2 />} />
                      <DetailItem label="Units" value={project.totalUnits} icon={<Layers />} />
                      <DetailItem label="Land Area" value={project.totalLandArea} icon={<Ruler />} />
                      <DetailItem label="RERA ID" value={project.reraRegistrationNumber} icon={<CheckCircle />} />
+                     {project.area && <DetailItem label="Sizes" value={project.area} icon={<Ruler />} />}
+                     {project.inventory && <DetailItem label="Configurations" value={project.inventory} icon={<Layers />} />}
+                     {project.landType && <DetailItem label="Land Ownership" value={project.landType === 'Other' ? project.landTypeOther : project.landType} icon={<ShieldCheck />} />}
                   </div>
                </div>
 
                <div className="bg-white p-6 rounded-xl shadow-sm border border-gray-200">
                   <h2 className="text-lg font-bold mb-4">Project Overview</h2>
-                  <p className="text-gray-600 text-sm leading-relaxed">{project.projectOverview}</p>
+                  <p className="text-gray-600 text-sm leading-relaxed whitespace-pre-wrap">{project.projectOverview}</p>
                </div>
+
+               {project.projectSpecifications && (
+                  <div className="bg-white p-6 rounded-xl shadow-sm border border-gray-200 animate-in fade-in">
+                     <h2 className="text-lg font-bold mb-4">Project Specifications</h2>
+                     <p className="text-gray-600 text-sm leading-relaxed whitespace-pre-wrap">{project.projectSpecifications}</p>
+                  </div>
+               )}
 
                {/* Zone 5 — Project Detail Page Banner */}
                <div className="flex justify-center">

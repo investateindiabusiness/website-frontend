@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState, useEffect, useCallback } from 'react';
-import { Plus, Search, Edit, Trash2, Eye, ArrowLeft, Save, Building2, MapPin, FileText, ShieldAlert, CheckCircle, FileWarning, Loader2, Clock, XCircle, RefreshCw, LayoutDashboard, Layers, Landmark, DollarSign, ImagePlus, X, Lock } from 'lucide-react';
+import { Plus, Search, Edit, Trash2, Eye, ArrowLeft, Save, Building2, MapPin, FileText, ShieldAlert, CheckCircle, FileWarning, Loader2, Clock, XCircle, RefreshCw, LayoutDashboard, Layers, Landmark, DollarSign, ImagePlus, X, Lock, Upload, Download } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Input } from '@/components/ui/input';
@@ -12,22 +12,41 @@ import { toast } from '@/hooks/use-toast';
 import { useAuth } from '@/hooks/AuthContext';
 import { useRouter } from 'next/navigation';
 import { fetchBuilderProjects, createProject, updateProject, deleteProject, submitProjectChanges, appealProjectRejection, uploadFile, uploadImage } from '@/api';
+import MultiSelect from '@/components/ui/MultiSelect';
+
+const PROJECT_CATEGORY_TYPES = {
+    "Residential": ["Apartments", "Villas", "Villaments", "Gated Communities", "Luxury Homes", "Senior Living", "Affordable Housing", "Holiday Homes"],
+    "Commercial": ["Office Spaces", "Retail Shops", "Commercial Complexes", "Shopping Malls", "Co-working Spaces", "IT Parks"],
+    "Land & Plots": ["Residential Plots", "Villa Plots", "Farm Plots", "Commercial Plots", "Township Plots"],
+    "Industrial & Warehousing": ["Warehouses", "Industrial Parks", "Manufacturing Units", "Logistics Parks", "Cold Storage"],
+    "Agricultural": ["Agricultural Land", "Farm Houses", "Organic Farms", "Plantation Projects"],
+    "Hospitality": ["Hotels", "Resorts", "Serviced Apartments", "Holiday Projects"],
+    "Alternative Investments": ["Fractional Ownership", "REIT Opportunities", "Equity Participation", "Joint Ventures"]
+};
 
 const initialFormState = {
-    projectName: '', builderName: '', projectOverview: '', projectLocation: '', projectType: 'Residential',
+    projectName: '', builderName: '', projectOverview: '', projectLocation: '', projectType: [],
+    projectCategories: [], projectTypes: [],
     totalLandArea: '', totalBuiltUpArea: '', totalUnits: '', currentConstructionStatus: '', expectedCompletionDate: '',
     governmentApprovalsObtained: '', reraRegistrationNumber: '', bankApprovals: 'No', bankApprovalsName: '',
     projectCost: '', existingBorrowings: 'No', existingBorrowingsAmount: '', existingBorrowingsPurpose: '', sellingPrice: '', pricingOffered: '',
     securityOffered: '', lockInPeriod: '', buybackGuarantee: 'No', buybackGuaranteeDetails: '', exitResaleFramework: '', marketingResponsibility: '',
     additionalDisclosures: '', availableForRent: 'No', expectedRent: '',
     projectImages: [],
-    projectDocuments: []
+    projectDocuments: [],
+    area: '',
+    inventory: '',
+    landType: 'Owned Land',
+    landTypeOther: '',
+    projectBrochure: null,
+    projectBrochureUrl: '',
+    projectSpecifications: ''
 };
 
 const IGNORED_DETAIL_KEYS = [
     'id', 'builderId', 'status', 'projectName', 'projectType', 'projectLocation',
     'projectImages', 'projectDocuments', 'adminRequests', 'appealReason', 'createdAt', 'updatedAt', 'views', 'inquiries', 'createdBy', 'updatedBy',
-    'pendingEdits', 'hasPendingEdits'
+    'pendingEdits', 'hasPendingEdits', 'projectCategories', 'projectTypes', 'projectSpecifications', 'projectBrochure', 'projectBrochureUrl', 'landTypeOther'
 ];
 
 const CONSTRUCTION_STATUSES = [
@@ -155,12 +174,24 @@ export default function ProjectManager() {
                 }
             }
 
+            let uploadedBrochureUrl = currentProject.projectBrochureUrl || '';
+            if (currentProject.projectBrochure instanceof File) {
+                const response = await uploadFile(currentProject.projectBrochure, `${tempId}/ProjectBrochure`);
+                if (!response?.url) throw new Error(`Brochure upload failed`);
+                uploadedBrochureUrl = response.url;
+            }
+
             const payload = {
                 ...currentProject,
                 builderId: user.uid,
                 updatedBy: user.email || user.name,
                 projectImages: uploadedImages,
-                projectDocuments: uploadedDocs
+                projectDocuments: uploadedDocs,
+                projectBrochureUrl: uploadedBrochureUrl,
+                projectBrochure: null,
+                projectCategories: currentProject.projectCategories || [],
+                projectTypes: currentProject.projectTypes || [],
+                projectType: currentProject.projectTypes || []
             };
 
             if (isEditing) {
@@ -222,9 +253,24 @@ export default function ProjectManager() {
             ? { ...project, ...project.pendingEdits }
             : project;
 
+        const categories = Array.isArray(dataToLoad.projectCategories) 
+            ? dataToLoad.projectCategories 
+            : (typeof dataToLoad.projectCategory === 'string' 
+                ? [dataToLoad.projectCategory] 
+                : (typeof dataToLoad.projectType === 'string' && Object.keys(PROJECT_CATEGORY_TYPES).includes(dataToLoad.projectType)
+                    ? [dataToLoad.projectType]
+                    : []));
+        const types = Array.isArray(dataToLoad.projectTypes)
+            ? dataToLoad.projectTypes
+            : (Array.isArray(dataToLoad.projectType)
+                ? dataToLoad.projectType
+                : (typeof dataToLoad.projectType === 'string' ? [dataToLoad.projectType] : []));
+
         setCurrentProject({
             ...initialFormState,
             ...dataToLoad,
+            projectCategories: categories,
+            projectTypes: types,
             projectImages: dataToLoad.projectImages || [],
             projectDocuments: dataToLoad.projectDocuments || []
         });
@@ -233,9 +279,24 @@ export default function ProjectManager() {
     };
 
     const handleViewDetails = (project) => {
+        const categories = Array.isArray(project.projectCategories) 
+            ? project.projectCategories 
+            : (typeof project.projectCategory === 'string' 
+                ? [project.projectCategory] 
+                : (typeof project.projectType === 'string' && Object.keys(PROJECT_CATEGORY_TYPES).includes(project.projectType)
+                    ? [project.projectType]
+                    : []));
+        const types = Array.isArray(project.projectTypes)
+            ? project.projectTypes
+            : (Array.isArray(project.projectType)
+                ? project.projectType
+                : (typeof project.projectType === 'string' ? [project.projectType] : []));
+
         setCurrentProject({
             ...initialFormState,
-            ...project
+            ...project,
+            projectCategories: categories,
+            projectTypes: types
         });
         setDynamicProjectData({});
         setView('detail');
@@ -441,12 +502,34 @@ export default function ProjectManager() {
                                 <div><Label className={labelStyle}>Builder Name *</Label><Input required name="builderName" value={currentProject.builderName} onChange={handleInputChange} className={inputStyle} /></div>
                                 <div className="md:col-span-2"><Label className={labelStyle}>Project Overview *</Label><Textarea required name="projectOverview" value={currentProject.projectOverview} onChange={handleInputChange} rows="3" className={inputStyle} /></div>
                                 <div className="md:col-span-2"><Label className={labelStyle}>Project Location *</Label><Input required name="projectLocation" value={currentProject.projectLocation} onChange={handleInputChange} className={inputStyle} /></div>
-                                <div>
-                                    <Label className={labelStyle}>Project Type *</Label>
-                                    <select required name="projectType" value={currentProject.projectType} onChange={handleInputChange} className={selectStyle}>
-                                        <option value="Residential">Residential</option>
-                                        <option value="Commercial">Commercial</option>
-                                    </select>
+                                <div className="md:col-span-2 grid grid-cols-1 md:grid-cols-2 gap-6">
+                                    <div>
+                                        <Label className={labelStyle}>Project Category *</Label>
+                                        <MultiSelect
+                                            options={Object.keys(PROJECT_CATEGORY_TYPES)}
+                                            selected={currentProject.projectCategories || []}
+                                            onChange={(val) => {
+                                                const validTypes = val.reduce((acc, cat) => [...acc, ...PROJECT_CATEGORY_TYPES[cat]], []);
+                                                const filteredTypes = (currentProject.projectTypes || []).filter(t => validTypes.includes(t));
+                                                setCurrentProject(prev => ({
+                                                    ...prev,
+                                                    projectCategories: val,
+                                                    projectTypes: filteredTypes
+                                                }));
+                                            }}
+                                            placeholder="Select categories"
+                                        />
+                                    </div>
+                                    <div>
+                                        <Label className={labelStyle}>Project Type *</Label>
+                                        <MultiSelect
+                                            options={(currentProject.projectCategories || []).reduce((acc, cat) => [...acc, ...(PROJECT_CATEGORY_TYPES[cat] || [])], [])}
+                                            selected={currentProject.projectTypes || []}
+                                            onChange={(val) => setCurrentProject(prev => ({ ...prev, projectTypes: val }))}
+                                            placeholder={(currentProject.projectCategories || []).length === 0 ? 'Select categories first' : 'Select project types'}
+                                            emptyMessage={(currentProject.projectCategories || []).length === 0 ? 'Please select a category first.' : 'No types found.'}
+                                        />
+                                    </div>
                                 </div>
                                 <div>
                                     <Label className={labelStyle}>Current Construction Status *</Label>
@@ -470,6 +553,8 @@ export default function ProjectManager() {
                                 <div><Label className={labelStyle}>Total Land Area *</Label><Input required name="totalLandArea" value={currentProject.totalLandArea} onChange={handleInputChange} className={inputStyle} /></div>
                                 <div><Label className={labelStyle}>Total Built-up Area *</Label><Input required name="totalBuiltUpArea" value={currentProject.totalBuiltUpArea} onChange={handleInputChange} className={inputStyle} /></div>
                                 <div><Label className={labelStyle}>Total Units *</Label><Input required type="number" name="totalUnits" value={currentProject.totalUnits} onChange={handleInputChange} className={inputStyle} /></div>
+                                <div className="md:col-span-2"><Label className={labelStyle}>Area Range / Sizes *</Label><Input required name="area" value={currentProject.area} onChange={handleInputChange} placeholder="e.g. 1200 - 2400 sqft or 2-5 Acres" className={inputStyle} /></div>
+                                <div><Label className={labelStyle}>Inventory / Configurations *</Label><Input required name="inventory" value={currentProject.inventory} onChange={handleInputChange} placeholder="e.g. 2 BHK, 3 BHK, Commercial Plots" className={inputStyle} /></div>
                             </div>
                         </div>
 
@@ -547,6 +632,71 @@ export default function ProjectManager() {
                                 <div className="md:col-span-2"><Label className={labelStyle}>Exit & Resale Framework *</Label><Textarea required name="exitResaleFramework" value={currentProject.exitResaleFramework} onChange={handleInputChange} rows="2" className={inputStyle} /></div>
                                 <div className="md:col-span-2"><Label className={labelStyle}>Marketing Responsibility for Investor Inventory *</Label><Input required name="marketingResponsibility" value={currentProject.marketingResponsibility} onChange={handleInputChange} className={inputStyle} /></div>
                                 <div className="md:col-span-2"><Label className={labelStyle}>Additional Disclosures (Optional)</Label><Textarea name="additionalDisclosures" value={currentProject.additionalDisclosures} onChange={handleInputChange} rows="2" className={inputStyle} placeholder="Any other relevant details or risks..." /></div>
+                            </div>
+                        </div>
+
+                        <div className={cardStyle}>
+                            <div className={cardHeaderStyle}>
+                                <Building2 className="w-5 h-5 mr-2 text-[#0b264f]" />
+                                <h3 className="text-lg font-bold text-gray-900">Land & Specifications</h3>
+                            </div>
+                            <div className="p-6 grid grid-cols-1 md:grid-cols-2 gap-6 bg-white">
+                                <div>
+                                    <Label className={labelStyle}>Land Ownership / Type *</Label>
+                                    <select required name="landType" value={currentProject.landType} onChange={handleInputChange} className={selectStyle}>
+                                        <option value="Owned Land">Owned Land</option>
+                                        <option value="Joint Venture / Joint Development (JV/JDA)">Joint Venture / Joint Development (JV/JDA)</option>
+                                        <option value="Leasehold Land">Leasehold Land</option>
+                                        <option value="Other">Other</option>
+                                    </select>
+                                </div>
+                                {currentProject.landType === 'Other' && (
+                                    <div className="animate-in fade-in slide-in-from-top-2">
+                                        <Label className={labelStyle}>Specify Land Type *</Label>
+                                        <Input required name="landTypeOther" value={currentProject.landTypeOther} onChange={handleInputChange} className={inputStyle} placeholder="e.g. Joint Development Agreement" />
+                                    </div>
+                                )}
+                                <div className="md:col-span-2">
+                                    <Label className={labelStyle}>Product Brochure (PDF / Document) *</Label>
+                                    <div className="flex items-center gap-4 mt-1 bg-gray-50 p-4 rounded-xl border border-dashed border-gray-300">
+                                        <div className="bg-white p-2.5 rounded-lg border border-gray-200 shadow-sm">
+                                            <FileText className="w-6 h-6 text-[#0b264f]" />
+                                        </div>
+                                        <div className="flex-1 min-w-0">
+                                            {currentProject.projectBrochureUrl ? (
+                                                <div>
+                                                    <p className="text-xs font-semibold text-green-600 flex items-center gap-1"><CheckCircle className="w-3.5 h-3.5" /> Brochure Uploaded</p>
+                                                    <a href={currentProject.projectBrochureUrl} target="_blank" rel="noopener noreferrer" className="text-xs text-blue-600 hover:underline truncate block mt-0.5">{currentProject.projectBrochureUrl}</a>
+                                                </div>
+                                            ) : currentProject.projectBrochure ? (
+                                                <div>
+                                                    <p className="text-xs font-semibold text-amber-600">Selected: {currentProject.projectBrochure.name}</p>
+                                                    <p className="text-[10px] text-gray-400">Ready to save</p>
+                                                </div>
+                                            ) : (
+                                                <div>
+                                                    <p className="text-xs font-semibold text-gray-600">No brochure uploaded</p>
+                                                    <p className="text-[10px] text-gray-400">PDF, DOC up to 10MB</p>
+                                                </div>
+                                            )}
+                                        </div>
+                                        <div>
+                                            <Button type="button" variant="outline" className="relative h-9 text-xs border-gray-300 hover:bg-gray-100">
+                                                <Upload className="w-3.5 h-3.5 mr-1.5" /> {currentProject.projectBrochureUrl || currentProject.projectBrochure ? 'Change' : 'Upload'}
+                                                <input type="file" accept=".pdf,.doc,.docx" onChange={(e) => {
+                                                    const file = e.target.files[0];
+                                                    if (file) {
+                                                        setCurrentProject(prev => ({ ...prev, projectBrochure: file }));
+                                                    }
+                                                }} className="absolute inset-0 opacity-0 cursor-pointer w-full h-full" />
+                                            </Button>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div className="md:col-span-2">
+                                    <Label className={labelStyle}>Project Specifications & Details *</Label>
+                                    <Textarea required name="projectSpecifications" value={currentProject.projectSpecifications} onChange={handleInputChange} rows="5" placeholder="Enter specifications, construction materials, internal and external fittings, project highlights, etc." className={inputStyle} />
+                                </div>
                             </div>
                         </div>
 
@@ -636,7 +786,16 @@ export default function ProjectManager() {
                                     <p className="text-gray-500 flex items-center"><MapPin className="w-4 h-4 mr-1" /> {currentProject.projectLocation}</p>
                                 </div>
                                 <div className="flex flex-wrap items-center gap-2">
-                                    <Badge className="bg-blue-50 text-blue-800 border border-blue-200 px-3 py-1.5 text-sm">{currentProject.projectType}</Badge>
+                                    {Array.isArray(currentProject.projectCategories) && currentProject.projectCategories.map(c => (
+                                        <Badge key={c} className="bg-slate-100 text-slate-800 border border-slate-200 px-3 py-1.5 text-xs font-semibold">{c}</Badge>
+                                    ))}
+                                    {Array.isArray(currentProject.projectType) ? (
+                                        currentProject.projectType.map(t => (
+                                            <Badge key={t} className="bg-blue-50 text-blue-800 border border-blue-200 px-3 py-1.5 text-xs font-medium">{t}</Badge>
+                                        ))
+                                    ) : currentProject.projectType ? (
+                                        <Badge className="bg-blue-50 text-blue-800 border border-blue-200 px-3 py-1.5 text-sm font-medium">{currentProject.projectType}</Badge>
+                                    ) : null}
                                     <Badge className={`${currentProject.status === 'approved' ? 'bg-green-50 text-green-800' : 'bg-yellow-50 text-yellow-800'} border px-3 py-1.5 text-sm capitalize`}>{currentProject.status}</Badge>
                                 </div>
                             </div>
@@ -682,6 +841,37 @@ export default function ProjectManager() {
                                             ) : null
                                         ))}
                                     </div>
+                                </div>
+                            )}
+
+                            {/* Land Details & Brochure */}
+                            <div className="mt-8 border-t border-gray-100 pt-6 grid grid-cols-1 md:grid-cols-2 gap-6">
+                                <div>
+                                    <dt className="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-1.5">Land Ownership Type</dt>
+                                    <dd className="text-sm font-medium text-gray-900 bg-gray-50 p-3.5 rounded-lg border border-gray-100 leading-relaxed">
+                                        {currentProject.landType === 'Other' ? currentProject.landTypeOther || 'Other' : currentProject.landType || 'Not specified'}
+                                    </dd>
+                                </div>
+                                {currentProject.projectBrochureUrl && (
+                                    <div>
+                                        <dt className="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-1.5">Product Brochure</dt>
+                                        <dd className="text-sm font-medium text-gray-900 bg-gray-50 p-3 rounded-lg border border-gray-100 flex items-center justify-between">
+                                            <span className="truncate max-w-[200px] text-xs font-mono text-gray-600">{currentProject.projectBrochureUrl.split('/').pop()}</span>
+                                            <a href={currentProject.projectBrochureUrl} target="_blank" rel="noopener noreferrer" className="bg-[#0b264f] hover:bg-[#1a4b8c] text-white text-xs font-bold py-1.5 px-3 rounded-lg flex items-center gap-1.5 transition-colors">
+                                                <Download className="w-3.5 h-3.5" /> Download PDF
+                                            </a>
+                                        </dd>
+                                    </div>
+                                )}
+                            </div>
+
+                            {/* Project Specifications */}
+                            {currentProject.projectSpecifications && (
+                                <div className="mt-6 border-t border-gray-100 pt-6">
+                                    <dt className="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-2">Project Specifications & Materials</dt>
+                                    <dd className="text-sm font-medium text-gray-600 bg-gray-50 p-4 rounded-lg border border-gray-100 leading-relaxed whitespace-pre-wrap">
+                                        {currentProject.projectSpecifications}
+                                    </dd>
                                 </div>
                             )}
 

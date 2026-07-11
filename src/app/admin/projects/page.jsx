@@ -294,7 +294,7 @@ export default function AdminProjects() {
               {/* Core Details Grid */}
               <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
                 {[
-                  { label: 'Project Type', value: viewProjectData.projectType, icon: <Building2 className="w-4 h-4" /> },
+                  { label: 'Project Type', value: Array.isArray(viewProjectData.projectType) ? viewProjectData.projectType.join(', ') : viewProjectData.projectType, icon: <Building2 className="w-4 h-4" /> },
                   { label: 'Total Units', value: viewProjectData.totalUnits, icon: <Layers className="w-4 h-4" /> },
                   { label: 'Land Area', value: viewProjectData.totalLandArea, icon: <Ruler className="w-4 h-4" /> },
                   { label: 'Selling Price', value: viewProjectData.sellingPrice, icon: <TrendingUp className="w-4 h-4" /> },
@@ -302,6 +302,9 @@ export default function AdminProjects() {
                   { label: 'Construction Status', value: viewProjectData.currentConstructionStatus, icon: <Calendar className="w-4 h-4" /> },
                   { label: 'Expected Rent', value: viewProjectData.expectedRent, icon: <TrendingUp className="w-4 h-4" /> },
                   { label: 'Location', value: viewProjectData.projectLocation, icon: <MapPin className="w-4 h-4" /> },
+                  { label: 'Land Type', value: viewProjectData.landType === 'Other' ? viewProjectData.landTypeOther : viewProjectData.landType, icon: <ShieldCheck className="w-4 h-4" /> },
+                  { label: 'Sizes / Area Range', value: viewProjectData.area, icon: <Ruler className="w-4 h-4" /> },
+                  { label: 'Configurations', value: viewProjectData.inventory, icon: <Layers className="w-4 h-4" /> },
                 ].map(({ label, value, icon }) => (
                   <div key={label} className="bg-gray-50 rounded-xl p-3 border border-gray-100">
                     <div className="flex items-center gap-1.5 text-gray-400 mb-1">
@@ -365,6 +368,33 @@ export default function AdminProjects() {
                       </span>
                     ))}
                   </div>
+                </div>
+              )}
+
+              {/* Product Brochure */}
+              {viewProjectData.projectBrochureUrl && (
+                <div className="bg-white border border-gray-100 rounded-xl p-4">
+                  <h3 className="text-sm font-bold text-gray-900 mb-2 flex items-center gap-2">
+                    <FileText className="w-4 h-4 text-orange-500" /> Product Brochure
+                  </h3>
+                  <div className="flex items-center justify-between bg-orange-50 rounded-lg px-3 py-2 border border-orange-100">
+                    <div className="flex items-center gap-2 min-w-0">
+                      <FileText className="w-4 h-4 text-orange-400 flex-shrink-0" />
+                      <span className="text-sm text-orange-800 truncate font-medium">{viewProjectData.projectBrochureUrl.split('/').pop()}</span>
+                    </div>
+                    <a href={viewProjectData.projectBrochureUrl} target="_blank" rel="noopener noreferrer"
+                      className="flex items-center gap-1 text-xs bg-orange-600 hover:bg-orange-700 text-white font-bold py-1.5 px-3 rounded-lg transition-colors flex-shrink-0">
+                      <Download className="w-3.5 h-3.5" /> Download Brochure
+                    </a>
+                  </div>
+                </div>
+              )}
+
+              {/* Project Specifications */}
+              {viewProjectData.projectSpecifications && (
+                <div className="bg-white border border-gray-100 rounded-xl p-4">
+                  <h3 className="text-sm font-bold text-gray-900 mb-2">Project Specifications</h3>
+                  <p className="text-sm text-gray-600 leading-relaxed whitespace-pre-wrap">{viewProjectData.projectSpecifications}</p>
                 </div>
               )}
 

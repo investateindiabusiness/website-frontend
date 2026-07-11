@@ -48,7 +48,7 @@ export default function InvestorProperties() {
             title: p.projectName || 'Unnamed Project',
             builder: p.builderName || 'Unknown Builder',
             location: p.projectLocation || 'Location TBA',
-            type: p.projectType || 'Property',
+            type: Array.isArray(p.projectType) ? p.projectType.join(', ') : (p.projectType || 'Property'),
             price: p.sellingPrice || 'Price on Request',
             yield: p.expectedRent ? `Rent: ${p.expectedRent}` : 'High ROI',
             image: parseProjectImages(p.projectImages)[0],
@@ -71,13 +71,17 @@ export default function InvestorProperties() {
     const matchesSearch = prop.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
       prop.builder.toLowerCase().includes(searchQuery.toLowerCase());
     const matchesLocation = locationFilter === 'All' || prop.location.includes(locationFilter);
-    const matchesType = typeFilter === 'All' || prop.type === typeFilter;
+    const matchesType = typeFilter === 'All' || 
+      (typeof prop.type === 'string' && prop.type.split(',').map(s => s.trim()).includes(typeFilter)) ||
+      prop.type === typeFilter;
 
     return matchesSearch && matchesLocation && matchesType;
   });
 
   const locations = ['All', ...new Set(properties.map(p => p.location.split(',')[0].trim()))];
-  const propertyTypes = ['All', ...new Set(properties.map(p => p.type))];
+  const propertyTypes = ['All', ...new Set(properties.flatMap(p => 
+    typeof p.type === 'string' ? p.type.split(',').map(s => s.trim()) : [p.type]
+  ))];
 
   return (
     <div className="min-h-screen bg-[#F4F5F7] flex flex-col font-sans overflow-x-hidden">
