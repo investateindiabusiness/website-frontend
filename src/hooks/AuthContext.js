@@ -296,13 +296,11 @@ export const AuthProvider = ({ children }) => {
       const data = await apiRequest('/api/auth/me', { method: 'GET' });
       if (data.success && data.user) {
         const savedUser = localStorage.getItem('user_session');
-        if (savedUser) {
-          const parsedUser = JSON.parse(savedUser);
-          const updated = { ...parsedUser, ...data.user };
-          localStorage.setItem('user_session', JSON.stringify(updated));
-          setUser(updated);
-          window.dispatchEvent(new Event('user_session_updated'));
-        }
+        const parsedUser = savedUser ? JSON.parse(savedUser) : {};
+        const updated = { ...parsedUser, ...data.user };
+        localStorage.setItem('user_session', JSON.stringify(updated));
+        setUser(updated);
+        window.dispatchEvent(new Event('user_session_updated'));
       }
     } catch (err) {
       console.warn('Failed to refresh user profile:', err);

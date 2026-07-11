@@ -133,14 +133,34 @@ export default function InvestorKycPage() {
 
   const kycStatus = user?.kycStatus || 'not_started';
   const isKycVerified = user?.isKycVerified || false;
+  const onboardingStatus = user?.onboardingStatus || '';
+  const adminRequests = user?.adminRequests || [];
+
+  // Always refresh user data from server on mount so we get latest
+  // onboardingStatus (e.g. form2_changes_requested) set by the admin
+  useEffect(() => {
+    refreshUser();
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   // Hydrate form if user data exists
   useEffect(() => {
     if (user) {
+      const getOtherParts = (val) => {
+        if (val && val.startsWith('Other: ')) {
+          return { main: 'Other', other: val.substring(7) };
+        }
+        return { main: val || '', other: '' };
+      };
+      const prof = getOtherParts(user.profession);
+      const nat = getOtherParts(user.nationality);
+
       setInvForm2(prev => ({
         ...prev,
-        profession: user.profession || '',
-        nationality: user.nationality || '',
+        profession: prof.main,
+        professionOther: prof.other,
+        nationality: nat.main,
+        nationalityOther: nat.other,
         industryNatureOfWork: user.industryNatureOfWork || '',
         yearlyIncome: user.yearlyIncome || '',
         investmentTenure: user.investmentTenure || '',
@@ -333,7 +353,7 @@ export default function InvestorKycPage() {
         )}
 
         {/* ── Status: Pending ── */}
-        {kycStatus === 'pending' && user?.onboardingStatus !== 'form2_changes_requested' && (
+        {kycStatus === 'pending' && onboardingStatus !== 'form2_changes_requested' && (
           <div className="text-center flex flex-col items-center py-6 animate-in fade-in zoom-in-95 duration-300">
             <div className="w-16 h-16 bg-amber-50 rounded-2xl flex items-center justify-center text-amber-600 mb-6 shadow-inner">
               <FileCheck className="w-8 h-8 animate-pulse" />
@@ -349,7 +369,7 @@ export default function InvestorKycPage() {
         )}
 
         {/* ── Status: Not Started or Rejected or Changes Requested ── */}
-        {(kycStatus === 'not_started' || kycStatus === 'rejected' || user?.onboardingStatus === 'form2_changes_requested') && (
+        {(kycStatus === 'not_started' || kycStatus === 'rejected' || onboardingStatus === 'form2_changes_requested') && (
           <div className="animate-in fade-in duration-300">
             {kycStatus === 'rejected' && (
               <div className="mb-8 p-4 bg-rose-50 border border-rose-100 text-rose-700 rounded-2xl text-xs font-bold flex items-start gap-3.5">
@@ -361,13 +381,16 @@ export default function InvestorKycPage() {
               </div>
             )}
 
-            {user?.onboardingStatus === 'form2_changes_requested' && (
+            {onboardingStatus === 'form2_changes_requested' && (
               <div className="mb-8 p-4 bg-orange-50 border border-orange-100 text-orange-700 rounded-2xl text-xs font-bold flex items-start gap-3.5 animate-in slide-in-from-top-2 duration-300">
                 <AlertIcon className="w-5 h-5 shrink-0 text-orange-500 mt-0.5" />
                 <div>
                   <span className="block font-black uppercase tracking-tight mb-0.5">Changes Requested by Admin</span>
                   <span className="font-semibold text-gray-600 leading-normal">
-                    Please correct the following fields: <span className="underline">{user.adminRequests?.join(', ')}</span>.
+                    The admin has requested corrections to your submission.
+                    {adminRequests.length > 0 && (
+                      <span> Please update: <span className="text-orange-800 underline font-black">{adminRequests.join(', ')}</span>.</span>
+                    )}
                   </span>
                 </div>
               </div>

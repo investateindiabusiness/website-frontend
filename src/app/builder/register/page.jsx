@@ -15,6 +15,7 @@ import { getAuth } from 'firebase/auth';
 import { app } from '@/firebase';
 import { registerStep1, sendOtp, submitBuilderForm1, submitRequestedChanges, submitBuilderForm2, loginRequest, googleSyncRequest } from '@/api';
 import MultiSelect from '@/components/ui/MultiSelect';
+import GoogleAuthButton from '@/components/GoogleAuthButton';
 
 const PROJECT_CATEGORY_TYPES = {
   "Residential": [
@@ -679,99 +680,6 @@ function BuilderRegisterContent() {
                         </div>
                       </div>
                     )}
-
-                    {/* Preference Selects */}
-                    <div className="md:col-span-2 border-t border-gray-100 pt-6 mt-4 space-y-6">
-                      <div>
-                        <Label className="text-xs font-black text-gray-900 uppercase tracking-widest block">Project & Capital Preferences</Label>
-                        <p className="text-xs text-gray-400 font-bold tracking-wide uppercase mt-1">Specify your project specializations and business requirements.</p>
-                      </div>
-
-                      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                        {/* Project Category */}
-                        {shouldShowField('projectCategories') && (
-                          <div>
-                            <Label className={labelStyle}>Project Category *</Label>
-                            <MultiSelect
-                              options={Object.keys(PROJECT_CATEGORY_TYPES)}
-                              selected={builderData.projectCategories || []}
-                              onChange={(val) => {
-                                const validTypes = val.reduce((acc, cat) => [...acc, ...PROJECT_CATEGORY_TYPES[cat]], []);
-                                const filteredSelectedTypes = (builderData.projectTypes || []).filter(t => validTypes.includes(t));
-                                setBuilderData(prev => ({
-                                  ...prev,
-                                  projectCategories: val,
-                                  projectTypes: filteredSelectedTypes
-                                }));
-                              }}
-                              placeholder="Select project categories"
-                            />
-                          </div>
-                        )}
-
-                        {/* Project Type (Dependent) */}
-                        {shouldShowField('projectTypes') && (
-                          <div>
-                            <Label className={labelStyle}>Project Type *</Label>
-                            <MultiSelect
-                              options={(() => {
-                                let list = [];
-                                (builderData.projectCategories || []).forEach(cat => {
-                                  if (PROJECT_CATEGORY_TYPES[cat]) list.push(...PROJECT_CATEGORY_TYPES[cat]);
-                                });
-                                return list;
-                              })()}
-                              selected={builderData.projectTypes || []}
-                              onChange={(val) => setBuilderData(prev => ({ ...prev, projectTypes: val }))}
-                              placeholder={builderData.projectCategories?.length === 0 ? "Select categories first" : "Select project types"}
-                              emptyMessage={builderData.projectCategories?.length === 0 ? "Please select a category first." : "No types found."}
-                            />
-                          </div>
-                        )}
-
-                        {/* Project Stage */}
-                        {shouldShowField('projectStages') && (
-                          <div>
-                            <Label className={labelStyle}>Project Stage</Label>
-                            <MultiSelect
-                              options={PROJECT_STAGES}
-                              selected={builderData.projectStages || []}
-                              onChange={(val) => setBuilderData(prev => ({ ...prev, projectStages: val }))}
-                              placeholder="Select project stages"
-                            />
-                          </div>
-                        )}
-
-                        {/* Capital / Business Requirement */}
-                        {shouldShowField('capitalRequirements') && (
-                          <div>
-                            <Label className={labelStyle}>Capital / Business Requirement</Label>
-                            <MultiSelect
-                              options={CAPITAL_REQUIREMENTS}
-                              selected={builderData.capitalRequirements || []}
-                              onChange={(val) => setBuilderData(prev => ({ ...prev, capitalRequirements: val }))}
-                              placeholder="Select business needs"
-                            />
-                          </div>
-                        )}
-
-                        {/* Active Projects */}
-                        {shouldShowField('ongoingProjects') && (
-                          <div>
-                            <Label className={labelStyle}>Active Projects</Label>
-                            <Input type="text" value={builderData.ongoingProjects} onChange={(e) => setBuilderData({ ...builderData, ongoingProjects: e.target.value })} className={inputStyle} placeholder="e.g. 3 active projects" />
-                          </div>
-                        )}
-
-                        {/* Total Deliveries */}
-                        {shouldShowField('projectsCompleted') && (
-                          <div>
-                            <Label className={labelStyle}>Total Deliveries</Label>
-                            <Input type="text" value={builderData.projectsCompleted} onChange={(e) => setBuilderData({ ...builderData, projectsCompleted: e.target.value })} className={inputStyle} placeholder="e.g. 15 projects completed" />
-                          </div>
-                        )}
-                      </div>
-                    </div>
 
                     {shouldShowField('aboutYourself') && (
                       <div>

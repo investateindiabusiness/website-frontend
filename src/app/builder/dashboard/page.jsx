@@ -2,11 +2,10 @@
 
 import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
-import { motion } from 'framer-motion';
 import {
   Building2, MapPin, Search, Users, TrendingUp, Wallet,
   HardHat, Loader2, Plus, MessageSquare, CheckCircle,
-  Clock, ArrowRight, Inbox, Lock
+  Clock, ArrowRight, Inbox, Lock, ShieldCheck, AlertCircle
 } from 'lucide-react';
 import { AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
 
@@ -16,10 +15,21 @@ import { useAuth } from '@/hooks/AuthContext';
 import { fetchBuilderProjects } from '@/api';
 import { toast } from '@/hooks/use-toast';
 
+// ─── Onboarding status helpers ────────────────────────────────────────────────
+function getOnboardingState(user) {
+  if (!user) return { isFullyVerified: false, needsForm1: true, needsForm2: false, needsForm2Changes: false, isForm1Pending: false };
+  const s = user.onboardingStatus || '';
+  const isFullyVerified = s === 'complete' || user.isVerified === true;
+  const needsForm1 = !s || s === 'form1_pending' || s === 'form1_changes_requested' || s === 'form1_rejected';
+  const isForm1Pending = s === 'form1_pending';
+  const needsForm2 = s === 'form1_approved' || s === 'form2_pending';
+  const needsForm2Changes = s === 'form2_changes_requested';
+  return { isFullyVerified, needsForm1, needsForm2, needsForm2Changes, isForm1Pending };
+}
 
 export default function BuilderDashboard() {
   const router = useRouter();
-  const { user } = useAuth();
+  const { user, refreshUser } = useAuth();
   const [searchQuery, setSearchQuery] = useState('');
   const [projects, setProjects] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
@@ -27,10 +37,11 @@ export default function BuilderDashboard() {
   const ITEMS_PER_PAGE = 8;
   const [mounted, setMounted] = useState(false);
 
-  const isBlocked = user?.kycStatus !== 'approved' && !user?.isVerified;
-
+  // Always fetch latest onboarding status from the server
   useEffect(() => {
+    refreshUser();
     setMounted(true);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   useEffect(() => { setCurrentPage(1); }, [searchQuery]);
@@ -42,7 +53,7 @@ export default function BuilderDashboard() {
         setIsLoading(true);
         const res = await fetchBuilderProjects(user.uid);
         setProjects(res?.data || res || []);
-      } catch (error) {
+      } catch {
         toast({ title: "Error", description: "Failed to load your projects.", variant: "destructive" });
       } finally {
         setIsLoading(false);
@@ -50,6 +61,9 @@ export default function BuilderDashboard() {
     };
     loadProjects();
   }, [user]);
+
+  const { isFullyVerified, needsForm1, needsForm2, needsForm2Changes, isForm1Pending } = getOnboardingState(user);
+  const isBlocked = !isFullyVerified;
 
   const totalLeads = projects.reduce((acc, curr) => acc + (curr.inquiries || 0), 0);
   const approvedCount = projects.filter(p => p.status === 'approved').length;
@@ -72,10 +86,15 @@ export default function BuilderDashboard() {
     { name: 'Feb', leads: totalLeads, approved: approvedCount },
   ];
 
+  if (!user) return null;
+
+
+
   return (
     <div className="min-h-screen bg-[#f5f6fa] font-sans pb-16 overflow-x-hidden">
-      {/* Hero */}
-      <div className={`relative bg-gradient-to-br from-[#0b264f] via-[#1a3e7a] to-[#0b264f] text-white px-4 sm:px-6 pt-8 pb-20 sm:pb-24 overflow-hidden ${isBlocked ? 'opacity-30 blur-sm pointer-events-none' : ''}`}>
+
+      {/* ── Hero Header ── */}
+      <div className="relative bg-gradient-to-br from-[#0b264f] via-[#1a3e7a] to-[#0b264f] text-white px-4 sm:px-6 pt-8 pb-20 sm:pb-24 overflow-hidden">
         <div className="absolute inset-0 pointer-events-none overflow-hidden">
           <div className="absolute -top-20 -right-20 w-96 h-96 bg-blue-400/10 rounded-full blur-3xl" />
           <div className="absolute bottom-0 left-1/3 w-64 h-64 bg-indigo-400/10 rounded-full blur-2xl" />
@@ -83,87 +102,100 @@ export default function BuilderDashboard() {
         <div className="container mx-auto relative z-10">
           <div className="flex flex-col gap-5">
             {/* Title + Actions */}
-            <div>
-              <Badge className="bg-blue-400/20 text-blue-100 border-none mb-3 px-3 py-1">
-                <HardHat className="w-3.5 h-3.5 mr-1.5" /> Builder Dashboard
-              </Badge>
-              <h1 className="text-2xl sm:text-3xl md:text-4xl font-extrabold leading-tight">
-                Welcome back,<br />
-                <span className="text-orange-300">{user?.name || 'Builder'}</span>
-              </h1>
-              <p className="text-blue-200 text-sm mt-2 opacity-80">Track your projects and monitor performance.</p>
-              <div className="flex flex-wrap gap-2 sm:gap-3 mt-4 sm:mt-5">
-                <Button
-                  onClick={() => router.push('/builder/projects')}
-                  className="bg-orange-500 hover:bg-orange-600 text-white rounded-xl gap-2 text-sm h-9 sm:h-10"
-                >
-                  <Plus className="w-4 h-4" /> Add Project
-                </Button>
-                <Button
-                  onClick={() => router.push('/builder/outreach-inbox')}
-                  variant="outline"
-                  className="bg-white/10 border-white/20 text-white hover:bg-white/20 rounded-xl gap-2 text-sm h-9 sm:h-10"
-                >
-                  <Inbox className="w-4 h-4" /> SP Inbox
-                </Button>
-                <Button
-                  onClick={() => router.push('/support')}
-                  variant="outline"
-                  className="bg-white/10 border-white/20 text-white hover:bg-white/20 rounded-xl gap-2 text-sm h-9 sm:h-10"
-                >
-                  <MessageSquare className="w-4 h-4" /> Support
-                </Button>
-              </div>
-            </div>
-
-            {/* Stat Pills — 2x2 grid on mobile */}
-            <div className="grid grid-cols-2 gap-2 sm:gap-3">
-              {[
-                { label: 'Total Revenue', value: '$0 Cr', icon: Wallet, color: 'text-emerald-300' },
-                { label: 'Active Leads', value: totalLeads, icon: Users, color: 'text-blue-300' },
-                { label: 'Units Sold', value: 0, icon: Building2, color: 'text-orange-300' },
-                { label: 'Conversion', value: '0.0%', icon: TrendingUp, color: 'text-purple-300' },
-              ].map((stat, idx) => (
-                <div key={idx} className="bg-white/10 backdrop-blur border border-white/10 rounded-xl sm:rounded-2xl p-3 sm:p-4 flex flex-col justify-between">
-                  <div className={`p-1.5 sm:p-2 rounded-lg sm:rounded-xl bg-white/10 ${stat.color} w-fit`}>
-                    <stat.icon className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
-                  </div>
-                  <div className="mt-2 sm:mt-3">
-                    <p className="text-lg sm:text-xl font-bold">{isLoading ? '—' : stat.value}</p>
-                    <p className="text-[9px] sm:text-[10px] text-blue-200 uppercase tracking-wider opacity-80 leading-tight">{stat.label}</p>
-                  </div>
+            <div className="flex flex-col md:flex-row md:items-start justify-between gap-4">
+              <div>
+                <Badge className={`${isBlocked ? 'bg-amber-400/20 text-amber-200' : 'bg-emerald-400/20 text-emerald-200'} border-none mb-3 px-3 py-1`}>
+                  {isBlocked
+                    ? <><AlertCircle className="w-3.5 h-3.5 mr-1.5" /> Unverified Builder</>
+                    : <><ShieldCheck className="w-3.5 h-3.5 mr-1.5" /> Verified Builder</>
+                  }
+                </Badge>
+                <h1 className="text-2xl sm:text-3xl md:text-4xl font-extrabold leading-tight">
+                  Welcome back,<br />
+                  <span className="text-orange-300">{user?.name || user?.companyName || 'Builder'}</span>
+                </h1>
+                <p className="text-blue-200 text-sm mt-2 opacity-80">Track your projects and monitor performance.</p>
+                <div className="flex flex-wrap gap-2 sm:gap-3 mt-4 sm:mt-5">
+                  <Button
+                    onClick={() => router.push('/builder/projects')}
+                    disabled={isBlocked}
+                    className="bg-orange-500 hover:bg-orange-600 disabled:opacity-40 text-white rounded-xl gap-2 text-sm h-9 sm:h-10"
+                  >
+                    <Plus className="w-4 h-4" /> Add Project
+                  </Button>
+                  <Button
+                    onClick={() => router.push('/builder/outreach-inbox')}
+                    disabled={isBlocked}
+                    variant="outline"
+                    className="bg-white/10 border-white/20 text-white hover:bg-white/20 disabled:opacity-40 rounded-xl gap-2 text-sm h-9 sm:h-10"
+                  >
+                    <Inbox className="w-4 h-4" /> SP Inbox
+                  </Button>
+                  <Button
+                    onClick={() => router.push('/support')}
+                    variant="outline"
+                    className="bg-white/10 border-white/20 text-white hover:bg-white/20 rounded-xl gap-2 text-sm h-9 sm:h-10"
+                  >
+                    <MessageSquare className="w-4 h-4" /> Support
+                  </Button>
                 </div>
-              ))}
+              </div>
+
+              {/* Stat Pills */}
+              <div className="grid grid-cols-2 gap-2 sm:gap-3 w-full md:w-auto md:min-w-[280px]">
+                {[
+                  { label: 'Total Revenue', value: '₹0 Cr', icon: Wallet, color: 'text-emerald-300' },
+                  { label: 'Active Leads', value: totalLeads, icon: Users, color: 'text-blue-300' },
+                  { label: 'Live Projects', value: approvedCount, icon: Building2, color: 'text-orange-300' },
+                  { label: 'Conversion', value: '0.0%', icon: TrendingUp, color: 'text-purple-300' },
+                ].map((stat, idx) => (
+                  <div key={idx} className="bg-white/10 backdrop-blur border border-white/10 rounded-xl sm:rounded-2xl p-3 sm:p-4 flex flex-col justify-between">
+                    <div className={`p-1.5 sm:p-2 rounded-lg sm:rounded-xl bg-white/10 ${stat.color} w-fit`}>
+                      <stat.icon className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
+                    </div>
+                    <div className="mt-2 sm:mt-3">
+                      <p className="text-lg sm:text-xl font-bold">{isLoading ? '—' : stat.value}</p>
+                      <p className="text-[9px] sm:text-[10px] text-blue-200 uppercase tracking-wider opacity-80 leading-tight">{stat.label}</p>
+                    </div>
+                  </div>
+                ))}
+              </div>
             </div>
           </div>
         </div>
       </div>
 
+      {/* ── Main Content ── */}
       <div className="container mx-auto px-3 sm:px-4 md:px-6 -mt-10 relative z-20 space-y-6 sm:space-y-8">
 
+        {/* ── Verification Gate Banner ── */}
         {isBlocked && (
-          <div className="bg-white/80 backdrop-blur-md border border-amber-200/50 rounded-3xl p-8 sm:p-12 text-center shadow-2xl shadow-amber-900/5 relative overflow-hidden mb-10 mt-10">
-            <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-amber-400 via-orange-500 to-amber-400"></div>
-            
+          <div className="bg-white/80 backdrop-blur-md border border-amber-200/50 rounded-3xl p-8 sm:p-12 text-center shadow-2xl shadow-amber-900/5 relative overflow-hidden mt-4">
+            <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-amber-400 via-orange-500 to-amber-400" />
+
             <div className="w-20 h-20 bg-amber-50 rounded-full flex items-center justify-center mx-auto mb-6 shadow-inner border border-amber-100">
               <Lock className="w-10 h-10 text-amber-500" />
             </div>
-            
-            <h2 className="text-2xl sm:text-3xl font-black text-gray-900 mb-4 tracking-tight">Complete Verification to Unlock Dashboard</h2>
-            <p className="text-gray-500 max-w-lg mx-auto mb-8 leading-relaxed font-medium">
-              Your builder account is currently restricted. To access your dashboard, add projects, and manage leads, please complete your professional profile.
+
+            <h2 className="text-2xl sm:text-3xl font-black text-gray-900 mb-4 tracking-tight">
+              {needsForm2Changes ? "Action Required: Changes Requested" : "Complete Verification to Unlock Dashboard"}
+            </h2>
+            <p className="text-gray-500 max-w-lg mx-auto mb-8 leading-relaxed font-semibold">
+              {needsForm2Changes 
+                ? "The administrator has requested modifications or additional details for your profile verification. Please go to the verification page to review the requests and resubmit."
+                : "Your account is currently restricted. To access your dashboard, add projects, and manage leads, please complete your profile and upload your verification documents."}
             </p>
-            
-            <Button 
+
+            <Button
               onClick={() => router.push('/builder/verification')}
               className="bg-gray-900 hover:bg-black text-white px-10 py-6 text-base font-black rounded-2xl shadow-xl shadow-black/10 transition-all hover:scale-105 active:scale-95"
             >
-              Complete Verification
+              Go to Verification
             </Button>
           </div>
         )}
 
-        {/* Charts + Summary — stacks on mobile */}
+        {/* ── Charts + Summary ── */}
         <div className={`grid grid-cols-1 lg:grid-cols-3 gap-4 sm:gap-6 transition-all duration-500 ${isBlocked ? 'opacity-30 pointer-events-none select-none blur-sm' : ''}`}>
           <div className="lg:col-span-2 bg-white rounded-2xl sm:rounded-3xl p-4 sm:p-6 shadow-sm border border-gray-100">
             <h3 className="font-bold text-gray-900 text-base sm:text-lg flex items-center mb-4 sm:mb-6">
@@ -214,8 +246,8 @@ export default function BuilderDashboard() {
           </div>
         </div>
 
-        {/* Projects — Card layout on mobile, Table on desktop */}
-        <div>
+        {/* ── Projects Table ── */}
+        <div className={`transition-all duration-500 ${isBlocked ? 'opacity-30 pointer-events-none select-none blur-sm' : ''}`}>
           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 sm:gap-4 mb-4 sm:mb-5">
             <h2 className="text-lg sm:text-xl font-bold text-gray-900">Your Projects</h2>
             <div className="bg-white rounded-xl sm:rounded-2xl border border-gray-200 px-3 sm:px-4 py-2.5 sm:py-3 flex items-center gap-2 w-full sm:w-72 shadow-sm">
@@ -239,7 +271,7 @@ export default function BuilderDashboard() {
             <div className="flex flex-col items-center justify-center py-20 bg-white rounded-3xl shadow-sm border border-gray-100 text-center">
               <Building2 className="w-12 h-12 text-gray-200 mb-4" />
               <h3 className="text-lg font-bold text-gray-900 mb-2">No Projects Yet</h3>
-              <p className="text-gray-400 mb-6 text-sm">Start building your portfolio.</p>
+              <p className="text-gray-400 mb-6 text-sm">Start building your portfolio by adding your first project.</p>
               <Button onClick={() => router.push('/builder/projects')} className="bg-[#0b264f] hover:bg-blue-900 text-white gap-2">
                 <Plus className="w-4 h-4" /> Add New Project
               </Button>
@@ -274,7 +306,7 @@ export default function BuilderDashboard() {
                           <span className="truncate">{project.projectLocation || '—'}</span>
                         </div>
                         <div className="flex items-center justify-between mt-2">
-                          <span className="text-xs text-gray-400">{project.projectType || 'Residential'} Â· {project.totalUnits || 0} Units</span>
+                          <span className="text-xs text-gray-400">{project.projectType || 'Residential'} · {project.totalUnits || 0} Units</span>
                           <Button onClick={() => router.push('/builder/projects')}
                             className="bg-white text-[#0b264f] border border-gray-200 hover:bg-[#0b264f] hover:text-white rounded-lg text-xs px-3 py-1 h-auto gap-1">
                             Manage <ArrowRight className="w-3 h-3" />
@@ -311,12 +343,7 @@ export default function BuilderDashboard() {
                         }[project.status] || { label: project.status, cls: 'bg-gray-100 text-gray-700' };
 
                         return (
-                          <motion.tr
-                            key={project.id}
-                            initial={{ opacity: 0 }}
-                            animate={{ opacity: 1 }}
-                            className="hover:bg-gray-50/50 transition-colors"
-                          >
+                          <tr key={project.id} className="hover:bg-gray-50/50 transition-colors">
                             <td className="px-6 py-4">
                               <div className="flex items-center gap-3">
                                 <div className="w-14 h-10 rounded-xl overflow-hidden bg-gray-100 border border-gray-200 shrink-0">
@@ -352,7 +379,7 @@ export default function BuilderDashboard() {
                                 Manage <ArrowRight className="w-3 h-3" />
                               </Button>
                             </td>
-                          </motion.tr>
+                          </tr>
                         );
                       })}
                     </tbody>

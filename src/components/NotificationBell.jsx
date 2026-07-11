@@ -17,7 +17,7 @@ export default function NotificationBell({ iconColor = 'rgba(255,255,255,0.7)', 
   const [anchorEl, setAnchorEl] = useState(null);
 
   const fetchUnreadCount = async () => {
-    if (!user?.token) return;
+    if (!user) return;
     try {
       const res = await apiRequest('/api/notifications/unread-count', { method: 'GET' });
       setUnreadCount(res.count || 0);
@@ -30,7 +30,7 @@ export default function NotificationBell({ iconColor = 'rgba(255,255,255,0.7)', 
   };
 
   const fetchNotifications = async () => {
-    if (!user?.token) return;
+    if (!user) return;
     try {
       setLoading(true);
       const res = await apiRequest('/api/notifications?limit=10', { method: 'GET' });

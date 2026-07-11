@@ -1,7 +1,7 @@
-﻿"use client";
+"use client";
 
 import React, { useState, useEffect, useCallback } from 'react';
-import { Plus, Search, Edit, Trash2, Eye, ArrowLeft, Save, Building2, MapPin, FileText, ShieldAlert, CheckCircle, FileWarning, Loader2, Clock, XCircle, RefreshCw, LayoutDashboard, Layers, Landmark, DollarSign, ImagePlus, X } from 'lucide-react';
+import { Plus, Search, Edit, Trash2, Eye, ArrowLeft, Save, Building2, MapPin, FileText, ShieldAlert, CheckCircle, FileWarning, Loader2, Clock, XCircle, RefreshCw, LayoutDashboard, Layers, Landmark, DollarSign, ImagePlus, X, Lock } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Input } from '@/components/ui/input';
@@ -10,6 +10,7 @@ import { Textarea } from '@/components/ui/textarea';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from '@/components/ui/dialog';
 import { toast } from '@/hooks/use-toast';
 import { useAuth } from '@/hooks/AuthContext';
+import { useRouter } from 'next/navigation';
 import { fetchBuilderProjects, createProject, updateProject, deleteProject, submitProjectChanges, appealProjectRejection, uploadFile, uploadImage } from '@/api';
 
 const initialFormState = {
@@ -36,6 +37,7 @@ const CONSTRUCTION_STATUSES = [
 
 export default function ProjectManager() {
     const { user } = useAuth();
+    const router = useRouter();
     const [view, setView] = useState('list');
     const [projects, setProjects] = useState([]);
     const [currentProject, setCurrentProject] = useState(initialFormState);
@@ -267,7 +269,32 @@ export default function ProjectManager() {
     const cardStyle = "bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden mb-8";
     const cardHeaderStyle = "bg-gray-50/80 border-b border-gray-100 px-6 py-4 flex items-center";
 
+    const isBlocked = user?.onboardingStatus !== 'complete' && user?.isVerified !== true;
+
     if (!user) return null;
+
+    if (isBlocked) {
+        return (
+            <div className="min-h-screen bg-gray-50 flex items-center justify-center font-sans p-4">
+                <div className="bg-white border border-amber-200/50 rounded-3xl p-8 sm:p-12 text-center shadow-2xl max-w-lg w-full relative overflow-hidden">
+                    <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-amber-400 via-orange-500 to-amber-400" />
+                    <div className="w-20 h-20 bg-amber-50 rounded-full flex items-center justify-center mx-auto mb-6 shadow-inner border border-amber-100">
+                        <Lock className="w-10 h-10 text-amber-500" />
+                    </div>
+                    <h2 className="text-2xl sm:text-3xl font-black text-gray-900 mb-4 tracking-tight">Verification Required</h2>
+                    <p className="text-gray-500 mb-8 leading-relaxed font-medium">
+                        To add and manage projects, your profile must be fully verified by our administration team. Please complete the verification process first.
+                    </p>
+                    <Button 
+                        onClick={() => router.push('/builder/verification')}
+                        className="bg-gray-900 hover:bg-black text-white px-10 py-6 text-base font-black rounded-2xl shadow-xl shadow-black/10 transition-all hover:scale-105 active:scale-95"
+                    >
+                        Go to Verification
+                    </Button>
+                </div>
+            </div>
+        );
+    }
 
     return (
         <div className="min-h-screen bg-gray-50 flex flex-col font-sans">

@@ -60,6 +60,7 @@ const NAV_ITEMS_BY_ROLE = {
   builder: [
     { label: 'Dashboard', path: '/builder/dashboard', icon: <DashboardIcon /> },
     { label: 'Projects', path: '/builder/projects', icon: <ProjectsIcon /> },
+    { label: 'Verification', path: '/builder/verification', icon: <KYCIcon /> },
     { label: 'Advertise', path: '/builder/advertisements', icon: <AdsIcon /> },
     { label: 'Payments', path: '/builder/payments', icon: <LeadsIcon /> },
     { label: 'Referrals', path: '/builder/referrals', icon: <ReferralsIcon /> },

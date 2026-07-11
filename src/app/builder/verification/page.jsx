@@ -14,6 +14,19 @@ import {
   Loader2, FileCheck, ArrowRight, ShieldAlert as AlertIcon, ClipboardList
 } from 'lucide-react';
 import { useRouter } from 'next/navigation';
+import MultiSelect from '@/components/ui/MultiSelect';
+
+const PROJECT_CATEGORY_TYPES = {
+  "Residential": ["Apartments", "Villas", "Villaments", "Gated Communities", "Luxury Homes", "Senior Living", "Affordable Housing", "Holiday Homes"],
+  "Commercial": ["Office Spaces", "Retail Shops", "Commercial Complexes", "Shopping Malls", "Co-working Spaces", "IT Parks"],
+  "Land & Plots": ["Residential Plots", "Villa Plots", "Farm Plots", "Commercial Plots", "Township Plots"],
+  "Industrial & Warehousing": ["Warehouses", "Industrial Parks", "Manufacturing Units", "Logistics Parks", "Cold Storage"],
+  "Agricultural": ["Agricultural Land", "Farm Houses", "Organic Farms", "Plantation Projects"],
+  "Hospitality": ["Hotels", "Resorts", "Serviced Apartments", "Holiday Projects"],
+  "Alternative Investments": ["Fractional Ownership", "REIT Opportunities", "Equity Participation", "Joint Ventures"]
+};
+const PROJECT_STAGES = ["Pre-Launch", "New Launch", "Under Construction", "Ready to Move", "Rental Income", "Resale"];
+const CAPITAL_REQUIREMENTS = ["Equity Investment", "Debt Funding", "Joint Venture", "Revenue Sharing", "Construction Finance", "Land Acquisition Finance", "NRI Capital", "Institutional Funding"];
 
 export default function BuilderVerificationPage() {
   const { user, refreshUser } = useAuth();
@@ -57,10 +70,59 @@ export default function BuilderVerificationPage() {
     propertyLandType: '', // 'own' | 'development'
     propertyLandDetails: '',
     projectSpecifications: '',
+    // Project & Capital Preferences (moved from Form 1)
+    projectCategories: [],
+    projectTypes: [],
+    projectStages: [],
+    capitalRequirements: [],
+    ongoingProjects: '',
+    projectsCompleted: '',
   });
 
   const kycStatus = user?.kycStatus || 'not_started';
   const isVerified = user?.isVerified || false;
+
+  // Always refresh user data from server on mount so we get latest
+  // onboardingStatus (e.g. form2_changes_requested) set by the admin
+  React.useEffect(() => {
+    refreshUser();
+  }, [refreshUser]);
+
+  // Hydrate form if user data exists
+  React.useEffect(() => {
+    if (user) {
+      setBldForm2(prev => ({
+        ...prev,
+        yearOfIncorporation: user.yearOfIncorporation || '',
+        deliveryVolumeType: user.deliveryVolumeType || '',
+        deliverySqft: user.deliverySqft || '',
+        deliverySqyd: user.deliverySqyd || '',
+        namesOfProjects: user.namesOfProjects || '',
+        typeOfFirm: user.typeOfFirm || '',
+        typeOfFirmOther: user.typeOfFirmOther || '',
+        totalPartners: user.totalPartners || '',
+        managingPartnerName: user.managingPartnerName || '',
+        majorStakeholderName: user.majorStakeholderName || '',
+        tradeOrganizationMembership: user.tradeOrganizationMembership || [],
+        tradeOrganizationOther: user.tradeOrganizationOther || '',
+        companyOverview: user.companyOverview || '',
+        declaredLitigationDisputes: user.declaredLitigationDisputes || '',
+        bankingPartners: user.bankingPartners || '',
+        totalRevenue: user.totalRevenue || '',
+        revenueInLastYear: user.revenueInLastYear || '',
+        experienceWithNriInvestors: user.experienceWithNriInvestors || '',
+        majorCompletedProjects: user.majorCompletedProjects || '',
+        outstandingDebt: user.outstandingDebt || '',
+        financialOfCompany: user.financialOfCompany || '',
+        projectCategories: user.projectCategories || [],
+        projectTypes: user.projectTypes || [],
+        projectStages: user.projectStages || [],
+        capitalRequirements: user.capitalRequirements || [],
+        ongoingProjects: user.ongoingProjects || '',
+        projectsCompleted: user.projectsCompleted || '',
+      }));
+    }
+  }, [user]);
 
   const handleTradeToggle = (type) => {
     setBldForm2(prev => {
@@ -92,7 +154,6 @@ export default function BuilderVerificationPage() {
       false;
 
     const firmOk = bldForm2.typeOfFirm.trim() !== '' && (bldForm2.typeOfFirm !== 'Other' || bldForm2.typeOfFirmOther.trim() !== '');
-    const landOk = bldForm2.propertyLandType.trim() !== '' && bldForm2.propertyLandDetails.trim() !== '';
 
     return (
       bldForm2.yearOfIncorporation.trim() !== '' &&
@@ -107,28 +168,27 @@ export default function BuilderVerificationPage() {
       bldForm2.totalRevenue.trim() !== '' &&
       bldForm2.revenueInLastYear.trim() !== '' &&
       bldForm2.experienceWithNriInvestors !== '' &&
-      bldForm2.outstandingDebt !== '' &&
-      bldForm2.projectType !== '' &&
-      (bldForm2.projectType === 'Other' || bldForm2.projectSubType !== '') &&
-      landOk &&
-      bldForm2.projectSpecifications.trim() !== ''
+      bldForm2.outstandingDebt !== ''
     );
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if (!file) {
-      return toast({ title: "No File Selected", description: "Please upload your project brochure.", variant: "destructive" });
-    }
 
     try {
       setUploading(true);
-      const uploadRes = await uploadFile(file, 'builder_documents');
-      if (!uploadRes.success || !uploadRes.url) throw new Error(uploadRes.error || "File upload failed");
+      let payload = { ...bldForm2 };
+
+      if (file) {
+        const uploadRes = await uploadFile(file, 'builder_documents');
+        if (uploadRes.success && uploadRes.url) {
+          payload.projectBrochureUrl = uploadRes.url;
+        }
+      }
 
       await apiRequest('/api/builders/submit-verification', {
         method: 'POST',
-        body: JSON.stringify({ ...bldForm2, projectBrochureUrl: uploadRes.url })
+        body: JSON.stringify(payload)
       });
 
       toast({ title: "Verification Submitted", description: "Your details have been sent for admin review." });
@@ -159,7 +219,7 @@ export default function BuilderVerificationPage() {
         </div>
 
         {/* ── Approved ── */}
-        {kycStatus === 'approved' && isVerified && (
+        {isVerified && (
           <div className="text-center flex flex-col items-center py-6 animate-in fade-in zoom-in-95 duration-300">
             <div className="w-20 h-20 bg-emerald-50 rounded-2xl flex items-center justify-center text-emerald-600 mb-6 shadow-inner border border-emerald-100">
               <CheckCircle2 className="w-10 h-10 animate-bounce" />
@@ -175,7 +235,7 @@ export default function BuilderVerificationPage() {
         )}
 
         {/* ── Pending ── */}
-        {kycStatus === 'pending' && (
+        {!isVerified && kycStatus === 'pending' && user?.onboardingStatus !== 'form2_changes_requested' && (
           <div className="text-center flex flex-col items-center py-6 animate-in fade-in zoom-in-95 duration-300">
             <div className="w-20 h-20 bg-amber-50 rounded-2xl flex items-center justify-center text-amber-600 mb-6 shadow-inner border border-amber-100">
               <FileCheck className="w-10 h-10 animate-pulse" />
@@ -190,9 +250,24 @@ export default function BuilderVerificationPage() {
           </div>
         )}
 
-        {/* ── Not Started / Rejected ── */}
-        {(kycStatus === 'not_started' || kycStatus === 'rejected') && (
+        {/* ── Not Started / Rejected / Changes Requested ── */}
+        {!isVerified && (kycStatus === 'not_started' || kycStatus === 'rejected' || user?.onboardingStatus === 'form2_changes_requested') && (
           <div className="animate-in fade-in duration-300">
+            {user?.onboardingStatus === 'form2_changes_requested' && (
+              <div className="mb-8 p-4 bg-orange-50 border border-orange-100 text-orange-700 rounded-2xl text-xs font-bold flex items-start gap-3.5 animate-in slide-in-from-top-2 duration-300">
+                <AlertIcon className="w-5 h-5 shrink-0 text-orange-500 mt-0.5" />
+                <div>
+                  <span className="block font-black uppercase tracking-tight mb-0.5">Changes Requested by Admin</span>
+                  <span className="font-semibold text-gray-600 leading-normal">
+                    The admin has requested corrections to your submission.
+                    {user?.adminRequests && user.adminRequests.length > 0 && (
+                      <span> Please update: <span className="text-orange-800 underline font-black">{user.adminRequests.join(', ')}</span>.</span>
+                    )}
+                  </span>
+                </div>
+              </div>
+            )}
+
             {kycStatus === 'rejected' && (
               <div className="mb-8 p-4 bg-rose-50 border border-rose-100 text-rose-700 rounded-2xl text-xs font-bold flex items-start gap-3.5">
                 <AlertIcon className="w-5 h-5 shrink-0 text-rose-500 mt-0.5" />
@@ -224,6 +299,83 @@ export default function BuilderVerificationPage() {
                 <div>
                   <Label className={lbl}>Location</Label>
                   <input readOnly value={[user?.city, user?.state, user?.country].filter(Boolean).join(', ') || ''} className={ro} placeholder="—" />
+                </div>
+              </div>
+
+              {/* ── Project & Capital Preferences ── */}
+              <div className="border-t border-gray-100 pt-8 space-y-6">
+                <div>
+                  <Label className="text-xs font-black text-gray-900 uppercase tracking-widest block">Project &amp; Capital Preferences</Label>
+                  <p className="text-xs text-gray-400 font-bold tracking-wide uppercase mt-1">Specify your project specializations and business requirements.</p>
+                </div>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                  {/* Project Category */}
+                  <div>
+                    <Label className={lbl}>Project Category *</Label>
+                    <MultiSelect
+                      options={Object.keys(PROJECT_CATEGORY_TYPES)}
+                      selected={bldForm2.projectCategories || []}
+                      onChange={(val) => {
+                        const validTypes = val.reduce((acc, cat) => [...acc, ...PROJECT_CATEGORY_TYPES[cat]], []);
+                        const filteredTypes = (bldForm2.projectTypes || []).filter(t => validTypes.includes(t));
+                        setBldForm2(prev => ({ ...prev, projectCategories: val, projectTypes: filteredTypes }));
+                      }}
+                      placeholder="Select project categories"
+                    />
+                  </div>
+                  {/* Project Type */}
+                  <div>
+                    <Label className={lbl}>Project Type *</Label>
+                    <MultiSelect
+                      options={bldForm2.projectCategories.reduce((acc, cat) => [...acc, ...(PROJECT_CATEGORY_TYPES[cat] || [])], [])}
+                      selected={bldForm2.projectTypes || []}
+                      onChange={(val) => setBldForm2(prev => ({ ...prev, projectTypes: val }))}
+                      placeholder={bldForm2.projectCategories.length === 0 ? 'Select categories first' : 'Select project types'}
+                      emptyMessage={bldForm2.projectCategories.length === 0 ? 'Please select a category first.' : 'No types found.'}
+                    />
+                  </div>
+                  {/* Project Stage */}
+                  <div>
+                    <Label className={lbl}>Project Stage</Label>
+                    <MultiSelect
+                      options={PROJECT_STAGES}
+                      selected={bldForm2.projectStages || []}
+                      onChange={(val) => setBldForm2(prev => ({ ...prev, projectStages: val }))}
+                      placeholder="Select project stages"
+                    />
+                  </div>
+                  {/* Capital / Business Requirement */}
+                  <div>
+                    <Label className={lbl}>Capital / Business Requirement</Label>
+                    <MultiSelect
+                      options={CAPITAL_REQUIREMENTS}
+                      selected={bldForm2.capitalRequirements || []}
+                      onChange={(val) => setBldForm2(prev => ({ ...prev, capitalRequirements: val }))}
+                      placeholder="Select business needs"
+                    />
+                  </div>
+                  {/* Active Projects */}
+                  <div>
+                    <Label className={lbl}>Active Projects</Label>
+                    <Input
+                      type="text"
+                      value={bldForm2.ongoingProjects}
+                      onChange={(e) => setBldForm2({ ...bldForm2, ongoingProjects: e.target.value })}
+                      className={inp}
+                      placeholder="e.g. 3 active projects"
+                    />
+                  </div>
+                  {/* Total Deliveries */}
+                  <div>
+                    <Label className={lbl}>Total Deliveries</Label>
+                    <Input
+                      type="text"
+                      value={bldForm2.projectsCompleted}
+                      onChange={(e) => setBldForm2({ ...bldForm2, projectsCompleted: e.target.value })}
+                      className={inp}
+                      placeholder="e.g. 15 projects completed"
+                    />
+                  </div>
                 </div>
               </div>
 
@@ -511,117 +663,10 @@ export default function BuilderVerificationPage() {
                 </div>
               </div>
 
-              <div className="h-px bg-gray-100 w-full" />
-
-              {/* ── PROPERTY FORM ── */}
-              <div className="p-6 bg-orange-50/30 border border-orange-100 rounded-2xl space-y-6">
-                <span className={sectionHead}>Property Form</span>
-
-                {/* Project Type */}
-                <div>
-                  <Label className={lbl}>Project Type *</Label>
-                  <select required className={sel} value={bldForm2.projectType} onChange={(e) => setBldForm2({ ...bldForm2, projectType: e.target.value, projectSubType: '' })}>
-                    <option value="">Select Project Type</option>
-                    <option value="Residential">Residential</option>
-                    <option value="Commercial">Commercial</option>
-                    <option value="Industrial">Industrial</option>
-                    <option value="Land">Land</option>
-                    <option value="Rental Services">Rental Services</option>
-                    <option value="Other">Other</option>
-                  </select>
-                </div>
-                {bldForm2.projectType && bldForm2.projectType !== 'Other' && (
-                  <div className="animate-in slide-in-from-top-2 duration-300">
-                    <Label className={lbl}>Project Sub-Type *</Label>
-                    <select required className={sel} value={bldForm2.projectSubType} onChange={(e) => setBldForm2({ ...bldForm2, projectSubType: e.target.value })}>
-                      <option value="">Select Sub-Type</option>
-                      {bldForm2.projectType === 'Residential' && ['Apartment', 'Villa', 'Independent House', 'Residential Plot', 'Gated Community', 'Studio Apartment'].map(t => <option key={t} value={t}>{t}</option>)}
-                      {bldForm2.projectType === 'Commercial' && ['Office Space', 'Retail Shop', 'Showroom', 'Commercial Plot', 'Commercial Complex', 'Co-working Space'].map(t => <option key={t} value={t}>{t}</option>)}
-                      {bldForm2.projectType === 'Industrial' && ['Warehouse', 'Factory', 'Industrial Plot', 'Logistics Park'].map(t => <option key={t} value={t}>{t}</option>)}
-                      {bldForm2.projectType === 'Land' && ['Agricultural Land / Farm Land', 'Development Land', 'Open Plot', 'Layout'].map(t => <option key={t} value={t}>{t}</option>)}
-                      {bldForm2.projectType === 'Rental Services' && ['Residential Rental', 'Commercial Rental'].map(t => <option key={t} value={t}>{t}</option>)}
-                    </select>
-                  </div>
-                )}
-
-                {/* Area & Inventory */}
-                <div>
-                  <Label className={lbl}>Area &amp; Inventory (Land Ownership) *</Label>
-                  <div className="flex gap-6 p-4 bg-white border border-gray-100 rounded-2xl mb-4">
-                    {[
-                      { val: 'own', label: '1. Is it Own Land?' },
-                      { val: 'development', label: '2. Development Land?' },
-                    ].map(opt => (
-                      <label key={opt.val} className="flex items-center gap-2.5 cursor-pointer">
-                        <input
-                          type="radio"
-                          name="propertyLandType"
-                          value={opt.val}
-                          checked={bldForm2.propertyLandType === opt.val}
-                          onChange={(e) => setBldForm2({ ...bldForm2, propertyLandType: e.target.value, propertyLandDetails: '' })}
-                          className="w-4 h-4 text-orange-600 border-gray-300 focus:ring-orange-500"
-                        />
-                        <span className="text-sm font-semibold text-gray-700">{opt.label}</span>
-                      </label>
-                    ))}
-                  </div>
-                  {bldForm2.propertyLandType && (
-                    <div className="animate-in slide-in-from-top-2 duration-200">
-                      <Input
-                        required
-                        value={bldForm2.propertyLandDetails}
-                        onChange={(e) => setBldForm2({ ...bldForm2, propertyLandDetails: e.target.value })}
-                        className={inp}
-                        placeholder={bldForm2.propertyLandType === 'own' ? "Enter Own Land Details / Area..." : "Enter Development Land Details / Area..."}
-                      />
-                    </div>
-                  )}
-                </div>
-
-                {/* Specifications */}
-                <div>
-                  <Label className={lbl}>Specifications *</Label>
-                  <p className="text-xs text-gray-500 mb-3">Size of product offered, plot size, flat, amenities, facilities, etc.</p>
-                  <Textarea
-                    required
-                    value={bldForm2.projectSpecifications}
-                    onChange={(e) => setBldForm2({ ...bldForm2, projectSpecifications: e.target.value })}
-                    className={txta}
-                    placeholder="Enter full specifications of the property..."
-                  />
-                </div>
-              </div>
-
-              <div className="h-px bg-gray-100 w-full" />
-
-              {/* ── Document Upload ── */}
-              <div>
-                <Label className={lbl}>Upload Project Brochure / Company Document *</Label>
-                <div className="relative group border-2 border-dashed border-gray-200 hover:border-orange-500/50 rounded-2xl p-10 text-center transition-all bg-gray-50/50 hover:bg-orange-50/10 cursor-pointer mt-2">
-                  <input
-                    type="file"
-                    accept=".pdf,.doc,.docx,image/*"
-                    onChange={handleFileChange}
-                    className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
-                  />
-                  <div className="flex flex-col items-center justify-center">
-                    <div className="w-14 h-14 bg-white rounded-2xl flex items-center justify-center text-gray-400 group-hover:text-orange-500 group-hover:scale-110 shadow-sm border border-gray-100 transition-all mb-4">
-                      <Upload className="w-6 h-6" />
-                    </div>
-                    <span className="text-sm font-black text-gray-700 uppercase tracking-tight block">
-                      {file ? file.name : "Upload Document"}
-                    </span>
-                    <span className="text-xs text-gray-400 font-semibold uppercase tracking-wide block mt-2">
-                      {file ? `${(file.size / 1024 / 1024).toFixed(2)} MB` : "PDF, DOC, or Image up to 10MB"}
-                    </span>
-                  </div>
-                </div>
-              </div>
-
               {/* ── Submit ── */}
               <Button
                 type="submit"
-                disabled={uploading || !file || !isForm2Valid()}
+                disabled={uploading || !isForm2Valid()}
                 className="w-full h-16 bg-gray-900 hover:bg-black text-white font-black text-lg uppercase tracking-wider rounded-2xl shadow-xl shadow-black/10 transition-all hover:scale-[1.02] active:scale-[0.98] disabled:scale-100 disabled:opacity-50 flex items-center justify-center gap-3"
               >
                 {uploading ? (
