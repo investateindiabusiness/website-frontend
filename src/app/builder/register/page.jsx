@@ -238,7 +238,6 @@ function BuilderRegisterContent() {
       (builderData.contactPersonRole !== 'Other' || builderData.contactPersonRoleOther.trim() !== '') &&
       builderData.contactPersonPhone.trim() !== '' &&
       builderData.country.trim() !== '' && builderData.state.trim() !== '' && builderData.city.trim() !== '' &&
-      builderData.projectCategories.length > 0 && builderData.projectTypes.length > 0 &&
       builderData.termsAccepted
     );
   };
