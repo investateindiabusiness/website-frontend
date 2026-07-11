@@ -143,6 +143,7 @@ export default function InvestorKycPage() {
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
+
   // Hydrate form if user data exists
   useEffect(() => {
     if (user) {
@@ -353,7 +354,7 @@ export default function InvestorKycPage() {
         )}
 
         {/* ── Status: Pending ── */}
-        {kycStatus === 'pending' && onboardingStatus !== 'form2_changes_requested' && (
+        {kycStatus === 'pending' && !onboardingStatus?.includes('changes_requested') && (
           <div className="text-center flex flex-col items-center py-6 animate-in fade-in zoom-in-95 duration-300">
             <div className="w-16 h-16 bg-amber-50 rounded-2xl flex items-center justify-center text-amber-600 mb-6 shadow-inner">
               <FileCheck className="w-8 h-8 animate-pulse" />
@@ -369,7 +370,7 @@ export default function InvestorKycPage() {
         )}
 
         {/* ── Status: Not Started or Rejected or Changes Requested ── */}
-        {(kycStatus === 'not_started' || kycStatus === 'rejected' || onboardingStatus === 'form2_changes_requested') && (
+        {(kycStatus === 'not_started' || kycStatus === 'rejected' || onboardingStatus?.includes('changes_requested')) && (
           <div className="animate-in fade-in duration-300">
             {kycStatus === 'rejected' && (
               <div className="mb-8 p-4 bg-rose-50 border border-rose-100 text-rose-700 rounded-2xl text-xs font-bold flex items-start gap-3.5">
@@ -381,7 +382,7 @@ export default function InvestorKycPage() {
               </div>
             )}
 
-            {onboardingStatus === 'form2_changes_requested' && (
+            {onboardingStatus?.includes('changes_requested') && (
               <div className="mb-8 p-4 bg-orange-50 border border-orange-100 text-orange-700 rounded-2xl text-xs font-bold flex items-start gap-3.5 animate-in slide-in-from-top-2 duration-300">
                 <AlertIcon className="w-5 h-5 shrink-0 text-orange-500 mt-0.5" />
                 <div>

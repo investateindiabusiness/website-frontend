@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
-import { Building2, MapPin, Search, TrendingUp, Shield, CheckCircle, Filter, PieChart as PieChartIcon, BarChart as BarChartIcon, Loader2, MessageSquare, Lock } from 'lucide-react';
+import { Building2, MapPin, Search, TrendingUp, Shield, CheckCircle, Filter, PieChart as PieChartIcon, BarChart as BarChartIcon, Loader2, MessageSquare, Lock, AlertCircle } from 'lucide-react';
 
 
 import { Button } from '@/components/ui/button';
@@ -159,24 +159,61 @@ export default function InvestorDashboard() {
               <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-amber-400 via-orange-500 to-amber-400"></div>
               
               <div className="w-20 h-20 bg-amber-50 rounded-full flex items-center justify-center mx-auto mb-6 shadow-inner">
-                <Lock className="w-10 h-10 text-amber-500" />
+                {user.onboardingStatus?.includes('changes_requested') ? (
+                  <AlertCircle className="w-10 h-10 text-orange-500 animate-pulse" />
+                ) : (
+                  <Lock className="w-10 h-10 text-amber-500" />
+                )}
               </div>
               
-              <h2 className="text-2xl sm:text-3xl font-black text-gray-900 mb-4 tracking-tight">Complete KYC to Unlock Dashboard</h2>
+              <h2 className="text-2xl sm:text-3xl font-black text-gray-900 mb-4 tracking-tight uppercase">
+                {user.onboardingStatus === 'form1_changes_requested' ? 'Form 1 Correction Required' : 
+                 user.onboardingStatus === 'form2_changes_requested' ? 'Form 2 Correction Required' : 'Complete KYC to Unlock Dashboard'}
+              </h2>
               <p className="text-gray-500 max-w-lg mx-auto mb-8 leading-relaxed font-medium">
-                Your account is currently restricted. To access premium property listings, high-yield investments, and detailed blueprints, please complete your profile and upload your verification documents.
+                {user.onboardingStatus === 'form1_changes_requested' ? (
+                  <>
+                    The administrator has requested modifications to your Form 1 details.
+                    {user.adminRequests?.length > 0 && (
+                      <span className="block mt-2 font-bold text-orange-600">Please correct: {user.adminRequests.join(', ')}</span>
+                    )}
+                  </>
+                ) : user.onboardingStatus === 'form2_changes_requested' ? (
+                  <>
+                    The administrator has requested modifications to your Form 2 details.
+                    {user.adminRequests?.length > 0 && (
+                      <span className="block mt-2 font-bold text-orange-600">Please correct: {user.adminRequests.join(', ')}</span>
+                    )}
+                  </>
+                ) : (
+                  'Your account is currently restricted. To access premium property listings, high-yield investments, and detailed blueprints, please complete your profile and upload your verification documents.'
+                )}
               </p>
               
               <Button 
-                onClick={() => router.push('/investor/kyc')}
+                onClick={() => {
+                  if (user.onboardingStatus === 'form1_changes_requested') {
+                    if (typeof window !== 'undefined') {
+                      sessionStorage.setItem('onboarding_init_data', JSON.stringify({
+                        userData: user,
+                        adminRequests: user.adminRequests || [],
+                        phase: 'CHANGES_REQUESTED',
+                        uid: user.uid
+                      }));
+                    }
+                    router.push(`/investor/register?uid=${user.uid}&skipStep1=true&phase=CHANGES_REQUESTED`);
+                  } else {
+                    router.push('/investor/kyc');
+                  }
+                }}
                 className="bg-gray-900 hover:bg-black text-white px-10 py-6 text-base font-black rounded-2xl shadow-xl shadow-black/10 transition-all hover:scale-105 active:scale-95"
               >
-                Complete KYC Process
+                {user.onboardingStatus === 'form1_changes_requested' ? 'Correct Details' : 'Complete KYC Process'}
               </Button>
             </div>
           )}
 
-          <div className={`transition-all duration-500 ${isBlocked ? 'opacity-30 pointer-events-none select-none blur-sm' : ''}`}>
+          <div className="transition-all duration-500">
             <div className="bg-white rounded-2xl !mt-0 shadow-lg p-2 flex flex-col sm:flex-row items-center gap-2 max-w-3xl mx-auto border border-gray-100">
             <div className="pl-4 hidden sm:block">
               <Search className="text-gray-400 w-5 h-5" />
