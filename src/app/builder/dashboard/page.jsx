@@ -174,16 +174,27 @@ export default function BuilderDashboard() {
             <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-amber-400 via-orange-500 to-amber-400" />
 
             <div className="w-20 h-20 bg-amber-50 rounded-full flex items-center justify-center mx-auto mb-6 shadow-inner border border-amber-100">
-              <Lock className="w-10 h-10 text-amber-500" />
+              {needsForm2Changes ? (
+                <AlertCircle className="w-10 h-10 text-orange-500 animate-pulse" />
+              ) : (
+                <Lock className="w-10 h-10 text-amber-500" />
+              )}
             </div>
 
             <h2 className="text-2xl sm:text-3xl font-black text-gray-900 mb-4 tracking-tight">
               {needsForm2Changes ? "Action Required: Changes Requested" : "Complete Verification to Unlock Dashboard"}
             </h2>
             <p className="text-gray-500 max-w-lg mx-auto mb-8 leading-relaxed font-semibold">
-              {needsForm2Changes 
-                ? "The administrator has requested modifications or additional details for your profile verification. Please go to the verification page to review the requests and resubmit."
-                : "Your account is currently restricted. To access your dashboard, add projects, and manage leads, please complete your profile and upload your verification documents."}
+              {needsForm2Changes ? (
+                <>
+                  The administrator has requested modifications or additional details for your profile verification.
+                  {user.adminRequests?.length > 0 && (
+                    <span className="block mt-2 font-bold text-orange-600">Please correct: {user.adminRequests.join(', ')}</span>
+                  )}
+                </>
+              ) : (
+                "Your account is currently restricted. To access your dashboard, add projects, and manage leads, please complete your profile and upload your verification documents."
+              )}
             </p>
 
             <Button
