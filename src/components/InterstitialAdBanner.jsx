@@ -222,29 +222,26 @@ export default function InterstitialAdBanner({
   // Fallback when no ad is booked — show "book this spot" prompt
   const fallbackContent = (
     <div
-      className="relative overflow-hidden rounded-3xl shadow-xl cursor-pointer group"
-      style={{
-        background: "linear-gradient(135deg, #0b264f 0%, #1a4b8c 60%, #1e3a6e 100%)",
-        minHeight: 200,
-      }}
+      className="relative overflow-hidden rounded-3xl border border-slate-200/80 shadow-md cursor-pointer group bg-gradient-to-r from-[#0b264f] via-[#0d2e5c] to-[#0b264f]"
+      style={{ minHeight: 200 }}
       onClick={handleBookAdClick}
     >
       {/* Background pattern */}
       <div
-        className="absolute inset-0 opacity-5"
+        className="absolute inset-0 opacity-[0.03]"
         style={{
-          backgroundImage: "radial-gradient(circle at 2px 2px, white 1px, transparent 0)",
-          backgroundSize: "32px 32px",
+          backgroundImage: "radial-gradient(circle at 1px 1px, white 1px, transparent 0)",
+          backgroundSize: "24px 24px",
         }}
       />
-      {/* Glow orbs */}
-      <div className="absolute top-0 right-0 w-64 h-64 bg-orange-500/20 rounded-full blur-3xl -mr-16 -mt-16 pointer-events-none" />
-      <div className="absolute bottom-0 left-0 w-48 h-48 bg-blue-400/10 rounded-full blur-3xl -ml-12 -mb-12 pointer-events-none" />
+      
+      {/* Left Accent Bar */}
+      <div className="absolute left-0 top-0 bottom-0 w-1.5 bg-[#D48035]" />
 
       {/* Close button */}
       <button
         onClick={(e) => { e.stopPropagation(); handleDismiss(); }}
-        className="absolute top-4 right-4 z-20 w-8 h-8 rounded-full bg-white/10 hover:bg-white/20 border border-white/20 flex items-center justify-center transition-colors"
+        className="absolute top-4 right-4 z-20 w-8 h-8 rounded-full bg-white/10 hover:bg-white/20 border border-white/15 flex items-center justify-center transition-colors"
         aria-label="Close advertisement"
       >
         <X className="w-4 h-4 text-white/70" />
@@ -253,28 +250,28 @@ export default function InterstitialAdBanner({
       <div className="relative z-10 flex flex-col md:flex-row items-center justify-between gap-8 px-8 md:px-12 py-10">
         {/* Left content */}
         <div className="flex-1 text-center md:text-left">
-          <div className="inline-flex items-center gap-2 bg-orange-500/20 border border-orange-400/30 text-orange-300 text-[10px] font-black uppercase tracking-[0.2em] px-3 py-1.5 rounded-full mb-4">
+          <div className="inline-flex items-center gap-2 bg-orange-500/15 border border-orange-400/20 text-orange-300 text-[10px] font-black uppercase tracking-[0.18em] px-3 py-1.5 rounded-full mb-4">
             <Megaphone className="w-3.5 h-3.5" />
-            Premium Advertising Spot
+            Premium Advertising Slot
           </div>
-          <h3 className="text-2xl md:text-3xl font-extrabold text-white leading-tight mb-3">
+          <h3 className="text-2xl md:text-3xl font-extrabold text-white leading-tight mb-2.5 tracking-tight">
             Reach 10,000+ Investors<br />
-            <span className="text-orange-400">With Your Project</span>
+            <span className="text-[#D48035]">Showcase Your Real Estate Project</span>
           </h3>
-          <p className="text-white/60 text-sm leading-relaxed max-w-md">
-            This premium mid-page banner is available for your real estate project, service, or investment offer. Get maximum visibility from verified NRI investors.
+          <p className="text-blue-200/60 text-xs md:text-sm font-medium leading-relaxed max-w-lg">
+            This premium mid-page showcase is available. Target high-value NRI property buyers directly.
           </p>
         </div>
 
         {/* Right CTA */}
-        <div className="flex flex-col items-center gap-4 flex-shrink-0">
-          <div className="bg-white/5 border border-white/15 rounded-2xl p-6 text-center min-w-[180px]">
-            <p className="text-white/50 text-[10px] uppercase font-bold tracking-widest mb-1">Available From</p>
-            <p className="text-2xl font-extrabold text-white">₹500/day</p>
-            <p className="text-white/40 text-xs mt-1">Flexible booking</p>
+        <div className="flex flex-col items-center gap-4 flex-shrink-0 min-w-[200px]">
+          <div className="bg-white/5 border border-white/10 rounded-2xl p-5 text-center w-full">
+            <p className="text-white/40 text-[9px] uppercase font-bold tracking-widest mb-1">Rates starting from</p>
+            <p className="text-2xl font-black text-white">₹500 <span className="text-xs font-bold text-white/50">/ day</span></p>
+            <p className="text-white/30 text-[10px] mt-1 font-semibold">Flexible booking cycles</p>
           </div>
           <button
-            className="w-full bg-orange-500 hover:bg-orange-600 text-white font-bold text-sm px-8 py-3 rounded-xl transition-all duration-200 hover:scale-105 active:scale-95 shadow-xl shadow-orange-500/30 flex items-center justify-center gap-2"
+            className="w-full bg-gradient-to-r from-orange-500 to-orange-600 hover:from-orange-600 hover:to-orange-700 text-white font-bold text-sm px-8 py-3.5 rounded-xl transition-all duration-200 hover:scale-[1.03] active:scale-95 shadow-lg shadow-orange-500/20 flex items-center justify-center gap-2"
           >
             Book This Spot <ArrowRight className="w-4 h-4" />
           </button>
@@ -289,7 +286,7 @@ export default function InterstitialAdBanner({
 
   const activeContent = (
     <div
-      className="relative overflow-hidden rounded-3xl shadow-xl group cursor-pointer"
+      className="relative overflow-hidden rounded-3xl border border-slate-200/80 shadow-md group cursor-pointer"
       style={{ minHeight: 200 }}
       onClick={() => handleAdClick(targetUrl)}
       aria-label={text || "Sponsored advertisement"}
@@ -300,44 +297,44 @@ export default function InterstitialAdBanner({
           <img
             src={imageUrl}
             alt={text || "Advertisement"}
-            className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
+            className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-[1.02]"
           />
-          <div className="absolute inset-0 bg-gradient-to-r from-black/70 via-black/40 to-black/20 pointer-events-none" />
+          <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/35 to-black/10 pointer-events-none" />
         </>
       ) : (
         <div
           className="absolute inset-0"
-          style={{ background: "linear-gradient(135deg, #0b264f 0%, #1a4b8c 100%)" }}
+          style={{ background: "linear-gradient(135deg, #0b264f 0%, #163e75 100%)" }}
         />
       )}
 
       {/* Sponsored badge */}
-      <div className="absolute top-4 left-4 z-20 flex items-center gap-1.5 bg-black/50 backdrop-blur-sm px-3 py-1.5 rounded-full border border-white/20">
-        <span className="text-[10px] font-black uppercase tracking-[0.15em] text-white/70">Sponsored</span>
-        {targetUrl && <ExternalLink className="w-3 h-3 text-white/50" />}
+      <div className="absolute top-4 left-4 z-20 flex items-center gap-1.5 bg-black/60 backdrop-blur-sm px-3 py-1.5 rounded-full border border-white/10 text-white shadow-sm">
+        <span className="text-[9px] font-black uppercase tracking-[0.15em] text-white/90">Sponsored</span>
+        {targetUrl && <ExternalLink className="w-3 h-3 opacity-80" />}
       </div>
 
       {/* Close button */}
       <button
         onClick={(e) => { e.stopPropagation(); handleDismiss(); }}
-        className="absolute top-4 right-4 z-20 w-8 h-8 rounded-full bg-white/10 hover:bg-white/20 border border-white/20 flex items-center justify-center transition-colors"
+        className="absolute top-4 right-4 z-20 w-8 h-8 rounded-full bg-black/45 hover:bg-black/60 border border-white/10 flex items-center justify-center transition-colors"
         aria-label="Close advertisement"
       >
-        <X className="w-4 h-4 text-white/70" />
+        <X className="w-4 h-4 text-white/80" />
       </button>
 
       {/* Content */}
-      <div className="relative z-10 flex flex-col md:flex-row items-center justify-between gap-6 px-8 md:px-12 py-10">
+      <div className="relative z-10 flex flex-col md:flex-row items-center justify-between gap-6 px-8 md:px-12 py-12">
         <div className="flex-1 text-center md:text-left">
           {text && (
-            <p className="text-2xl md:text-3xl font-extrabold text-white leading-tight drop-shadow-xl line-clamp-3">
+            <p className="text-xl md:text-2xl font-extrabold text-white leading-snug drop-shadow-xl line-clamp-3">
               {text}
             </p>
           )}
         </div>
         {targetUrl && (
           <div className="flex-shrink-0">
-            <span className="inline-flex items-center gap-2 bg-orange-500 hover:bg-orange-600 text-white font-bold text-sm px-6 py-3 rounded-xl transition-all duration-200 group-hover:scale-105 shadow-xl shadow-orange-500/30">
+            <span className="inline-flex items-center gap-2 bg-gradient-to-r from-orange-500 to-orange-600 hover:from-orange-600 hover:to-orange-700 text-white font-bold text-sm px-6 py-3.5 rounded-xl transition-all duration-200 group-hover:scale-[1.03] shadow-lg shadow-orange-500/20">
               Learn More <ArrowRight className="w-4 h-4" />
             </span>
           </div>

@@ -1,4 +1,4 @@
-﻿"use client";
+"use client";
 
 import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
@@ -258,7 +258,7 @@ export default function InvestorProperties() {
                               </Button>
                             ) : (
                               <Button 
-                                onClick={() => router.push(`/project/${property.id}`)} 
+                                onClick={() => router.push(`/properties/${property.id}`)} 
                                 className="bg-[#0b264f] hover:bg-blue-900 text-white rounded-xl text-xs px-4 py-2"
                               >
                                 View Details

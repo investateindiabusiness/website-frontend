@@ -1,4 +1,4 @@
-﻿"use client";
+"use client";
 
 import React, { useState } from 'react';
 import Link from 'next/link';
@@ -217,25 +217,10 @@ export default function AdminSidebar({ children }) {
 
   return (
     <Box sx={{ display: 'flex', minHeight: '100vh', bgcolor: '#f8fafc', overflowX: 'hidden', maxWidth: '100vw' }}>
-      {/* Mobile Drawer */}
-      <Drawer
-        variant="temporary"
-        open={mobileOpen}
-        onClose={() => setMobileOpen(false)}
-        ModalProps={{ keepMounted: true }}
-        sx={{
-          display: { xs: 'block', md: 'none' },
-          '& .MuiDrawer-paper': { width: DRAWER_WIDTH, boxSizing: 'border-box', border: 'none' },
-        }}
-      >
-        {drawerContent}
-      </Drawer>
-
-      {/* Desktop Drawer */}
+      {/* Permanent Sidebar Drawer (shown on all screen sizes) */}
       <Drawer
         variant="permanent"
         sx={{
-          display: { xs: 'none', md: 'block' },
           width: drawerWidth,
           flexShrink: 0,
           '& .MuiDrawer-paper': {
@@ -265,72 +250,9 @@ export default function AdminSidebar({ children }) {
           minWidth: 0,
         }}
       >
-        {/* Mobile top bar */}
+        {/* Top Bar (shown on all screen sizes) */}
         <Box sx={{
-          display: { xs: 'flex', md: 'none' },
-          alignItems: 'center',
-          px: 2,
-          height: 56,
-          bgcolor: '#0f172a',
-          borderBottom: '1px solid rgba(255,255,255,0.08)',
-          position: 'sticky', top: 0, zIndex: 100,
-        }}>
-          <IconButton onClick={() => setMobileOpen(true)} sx={{ color: 'white', mr: 2 }}>
-            <MenuIcon />
-          </IconButton>
-          <img src="/logo-small-white.png" alt="Logo" style={{ height: 36, objectFit: 'contain' }} />
-          <Box sx={{ ml: 'auto', display: 'flex', alignItems: 'center', gap: 1 }}>
-            {/* Profile Dropdown — mobile */}
-            <div ref={profileDropdownRefMobile} style={{ position: 'relative' }}>
-              <button
-                onClick={() => setProfileDropdownOpen(p => !p)}
-                style={{
-                  display: 'flex', alignItems: 'center', gap: 6,
-                  background: 'rgba(255,255,255,0.08)', border: '1px solid rgba(255,255,255,0.12)',
-                  borderRadius: 24, padding: '4px 10px 4px 6px', cursor: 'pointer', color: 'white',
-                  fontSize: 12, fontWeight: 700, transition: 'all 0.2s',
-                }}
-              >
-                <span style={{ width: 28, height: 28, borderRadius: '50%', background: '#D48035', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 13, fontWeight: 800, color: 'white', flexShrink: 0 }}>
-                  {(user?.name || user?.email || 'U')[0].toUpperCase()}
-                </span>
-                <ChevronLeftIcon style={{ width: 14, height: 14, transform: profileDropdownOpen ? 'rotate(-90deg)' : 'rotate(-180deg)', transition: 'transform 0.2s' }} />
-              </button>
-              {profileDropdownOpen && (
-                <div style={{
-                  position: 'absolute', top: 'calc(100% + 8px)', right: 0, width: 220,
-                  background: '#1a1a1c', border: '1px solid rgba(255,255,255,0.1)',
-                  borderRadius: 16, boxShadow: '0 20px 60px rgba(0,0,0,0.6)', zIndex: 9999,
-                  overflow: 'hidden', animation: 'fadeIn 0.15s ease',
-                }}>
-                  <div style={{ padding: '12px 16px', borderBottom: '1px solid rgba(255,255,255,0.08)' }}>
-                    <div style={{ fontSize: 11, color: 'rgba(255,255,255,0.4)', textTransform: 'uppercase', letterSpacing: 1, marginBottom: 2 }}>Account</div>
-                    <div style={{ fontSize: 13, fontWeight: 700, color: 'white', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{user?.name || user?.email?.split('@')[0]}</div>
-                    <div style={{ fontSize: 11, color: '#D48035', fontWeight: 600 }}>{roleLabel}</div>
-                  </div>
-                  {[{ icon: <User style={{ width: 15, height: 15 }} />, label: 'My Profile', action: () => { router.push('/profile'); setProfileDropdownOpen(false); } },
-                  { icon: <Crown style={{ width: 15, height: 15, color: '#f97316' }} />, label: 'My Membership', action: () => { router.push('/membership'); setProfileDropdownOpen(false); } }
-                  ].map(item => (
-                    <button key={item.label} onClick={item.action} style={{ display: 'flex', alignItems: 'center', gap: 10, width: '100%', padding: '10px 16px', background: 'none', border: 'none', cursor: 'pointer', color: 'rgba(255,255,255,0.75)', fontSize: 13, fontWeight: 500, textAlign: 'left', transition: 'all 0.15s' }}
-                      onMouseEnter={e => { e.currentTarget.style.background = 'rgba(255,255,255,0.06)'; e.currentTarget.style.color = '#D48035'; }}
-                      onMouseLeave={e => { e.currentTarget.style.background = 'none'; e.currentTarget.style.color = 'rgba(255,255,255,0.75)'; }}
-                    >{item.icon}{item.label}</button>
-                  ))}
-                  <div style={{ borderTop: '1px solid rgba(255,255,255,0.08)' }}>
-                    <button onClick={() => { handleLogout(); setProfileDropdownOpen(false); }} style={{ display: 'flex', alignItems: 'center', gap: 10, width: '100%', padding: '10px 16px', background: 'none', border: 'none', cursor: 'pointer', color: 'rgba(239,68,68,0.85)', fontSize: 13, fontWeight: 600, textAlign: 'left', transition: 'all 0.15s' }}
-                      onMouseEnter={e => { e.currentTarget.style.background = 'rgba(239,68,68,0.08)'; }}
-                      onMouseLeave={e => { e.currentTarget.style.background = 'none'; }}
-                    ><LogoutIcon style={{ width: 15, height: 15 }} /> Logout</button>
-                  </div>
-                </div>
-              )}
-            </div>
-            <NotificationBell iconColor="rgba(255,255,255,0.7)" hoverColor="white" />
-          </Box>
-        </Box>
-        {/* Desktop top bar */}
-        <Box sx={{
-          display: { xs: 'none', md: 'flex' },
+          display: 'flex',
           alignItems: 'center',
           justifyContent: 'space-between',
           px: 3,

@@ -287,7 +287,7 @@ export default function InvestorDashboard() {
                             </td>
                             <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
                               <Button
-                                onClick={() => router.push(`/project/${property.id}`)}
+                                onClick={() => router.push(`/properties/${property.id}`)}
                                 className="bg-[#0b264f] hover:bg-blue-900 text-white rounded-xl text-xs px-4 py-2"
                               >
                                 View Details

@@ -116,7 +116,7 @@ export default function InvestorProjects() {
             <React.Fragment key={project.id}>
               <Card
                 className="overflow-hidden cursor-pointer border-none shadow-lg hover:shadow-xl transition-all hover:-translate-y-1"
-                onClick={() => router.push(`/project/${project.id}`)}
+                onClick={() => router.push(`/properties/${project.id}`)}
               >
                 <div className="relative h-56 overflow-hidden">
                   <img
@@ -142,7 +142,7 @@ export default function InvestorProjects() {
                     <Button 
                       variant="outline"
                       className="flex-1 border-blue-200 text-blue-700 hover:bg-blue-50"
-                      onClick={(e) => { e.stopPropagation(); router.push(`/project/${project.id}`); }}
+                      onClick={(e) => { e.stopPropagation(); router.push(`/properties/${project.id}`); }}
                     >
                       View Details
                     </Button>

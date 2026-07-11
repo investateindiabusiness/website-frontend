@@ -129,7 +129,7 @@ export default function Projects() {
             <Card
               key={project.id}
               className="overflow-hidden cursor-pointer border-none shadow-lg hover:shadow-xl transition-all hover:-translate-y-1"
-              onClick={() => router.push(`/project/${project.id}`)}
+              onClick={() => router.push(`/properties/${project.id}`)}
             >
               <div className="relative h-56 overflow-hidden">
                 <img

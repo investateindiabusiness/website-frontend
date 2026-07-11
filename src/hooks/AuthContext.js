@@ -48,9 +48,8 @@ const isProtectedRoute = (path) => {
     path === '/builder/advertisements';
   const isInvestorRoute =
     path === '/dashboard' ||
-    path === '/properties' ||
-    (path.startsWith('/investor/') && path !== '/investor/login' && path !== '/investor/register') ||
-    path.startsWith('/project/');
+    path.startsWith('/properties') ||
+    (path.startsWith('/investor/') && path !== '/investor/login' && path !== '/investor/register');
   const isServiceProviderRoute =
     (path.startsWith('/service-provider/') &&
       path !== '/service-provider' &&
@@ -173,9 +172,8 @@ export const AuthProvider = ({ children }) => {
       pathname === '/builder/advertisements';
     const isInvestorRoute =
       pathname === '/dashboard' ||
-      pathname === '/properties' ||
-      (pathname.startsWith('/investor/') && pathname !== '/investor/login' && pathname !== '/investor/register') ||
-      pathname.startsWith('/project/');
+      pathname.startsWith('/properties') ||
+      (pathname.startsWith('/investor/') && pathname !== '/investor/login' && pathname !== '/investor/register');
     const isServiceProviderRoute =
       (pathname.startsWith('/service-provider/') &&
         pathname !== '/service-provider' &&

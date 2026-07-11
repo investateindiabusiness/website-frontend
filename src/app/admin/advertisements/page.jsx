@@ -96,7 +96,7 @@ const ZONE_PLACEMENT_MAP = {
   zone5: {
     label: "Project Detail Page Banner",
     location: "Inside individual project detail pages",
-    page: "/project/[id]",
+    page: "/properties/[id]",
     color: "bg-rose-100 text-rose-800",
     dot: "bg-rose-500",
   },

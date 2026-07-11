@@ -13,7 +13,7 @@ import { toast } from '@/hooks/use-toast';
 import { CheckCircle, ChevronRight, Loader2, TrendingUp, Building, UserCheck, FileWarning, ClipboardList, Gift, CalendarCheck2, Crown, Sparkles } from 'lucide-react';
 import { getAuth, signOut } from 'firebase/auth';
 import { app } from '@/firebase';
-import { registerStep1, submitInvestorForm1, submitBuilderForm1, submitServiceProviderForm1, submitRequestedChanges, submitInvestorForm2, submitBuilderForm2, apiRequest, loginRequest, googleSyncRequest } from '@/api';
+import { registerStep1, sendOtp, submitInvestorForm1, submitBuilderForm1, submitServiceProviderForm1, submitRequestedChanges, submitInvestorForm2, submitBuilderForm2, apiRequest, loginRequest, googleSyncRequest } from '@/api';
 import GoogleAuthButton from '@/components/GoogleAuthButton';
 
 const RegisterDialog = ({ isOpen, onOpenChange, onLoginClick, initialData = {} }) => {
@@ -26,6 +26,10 @@ const RegisterDialog = ({ isOpen, onOpenChange, onLoginClick, initialData = {} }
   const [loading, setLoading] = useState(false);
   const [submitted, setSubmitted] = useState(false);
   const [launchConfig, setLaunchConfig] = useState(null);
+
+  // OTP Verification States
+  const [otpSent, setOtpSent] = useState(false);
+  const [otpCode, setOtpCode] = useState('');
 
   // Fetch launch configuration on mount
   useEffect(() => {
@@ -252,16 +256,43 @@ const RegisterDialog = ({ isOpen, onOpenChange, onLoginClick, initialData = {} }
 
   const handleAuthSubmit = async (e) => {
     e.preventDefault();
-    if (authData.password !== authData.confirmPassword) return toast({ title: "Error", description: "Passwords do not match", variant: "destructive" });
+    if (authData.password !== authData.confirmPassword) {
+      return toast({ title: "Error", description: "Passwords do not match", variant: "destructive" });
+    }
+    
+    // Step 1A: Send OTP
+    if (!otpSent) {
+      try {
+        setLoading(true);
+        await sendOtp(authData.email);
+        setOtpSent(true);
+        toast({ title: "OTP Code Sent", description: "A 6-digit verification code was sent to your email." });
+      } catch (err) {
+        toast({ title: "Verification Failed", description: err.message || "Failed to send verification email.", variant: "destructive" });
+      } finally {
+        setLoading(false);
+      }
+      return;
+    }
+
+    // Step 1B: Verify OTP & Create Account
     try {
       setLoading(true);
-      let response = await registerStep1({ email: authData.email, password: authData.password, role: userType });
+      let response = await registerStep1({
+        email: authData.email,
+        password: authData.password,
+        role: userType,
+        otp: otpCode
+      });
 
-      setUserId(response.uid); setStep(2);
-      toast({ title: "Account Created", description: "Please complete Form 1 details." });
+      setUserId(response.uid);
+      setStep(2);
+      toast({ title: "Account Verified & Created", description: "Please complete Form 1 details." });
     } catch (err) {
-      toast({ title: "Registration Failed", description: err.message, variant: "destructive" });
-    } finally { setLoading(false); }
+      toast({ title: "Registration Failed", description: err.message || "Invalid or expired OTP.", variant: "destructive" });
+    } finally {
+      setLoading(false);
+    }
   };
 
   const handleProfileSubmit = async (e) => {
@@ -669,24 +700,45 @@ const RegisterDialog = ({ isOpen, onOpenChange, onLoginClick, initialData = {} }
                     <form onSubmit={handleAuthSubmit} className="space-y-5">
                       <div className="space-y-2">
                         <Label className="text-[10px] font-black text-gray-900 uppercase tracking-widest ml-1">{userType === 'investor' ? 'Email Address' : 'Professional Email'}</Label>
-                        <Input type="email" name='email' autoComplete="off" required value={authData.email} onChange={(e) => setAuthData({ ...authData, email: e.target.value })} className="h-11 px-6 bg-gray-50 border-gray-200 focus:bg-white focus:ring-[6px] focus:ring-orange-500/5 focus:border-orange-500 transition-all duration-300 rounded-2xl text-sm font-bold placeholder:text-gray-300" placeholder="name@example.com" />
+                        <Input type="email" name='email' autoComplete="off" required disabled={otpSent} value={authData.email} onChange={(e) => setAuthData({ ...authData, email: e.target.value })} className="h-11 px-6 bg-gray-50 border-gray-200 focus:bg-white focus:ring-[6px] focus:ring-orange-500/5 focus:border-orange-500 transition-all duration-300 rounded-2xl text-sm font-bold placeholder:text-gray-300 disabled:opacity-75 disabled:cursor-not-allowed" placeholder="name@example.com" />
                       </div>
-                      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                        <div className="space-y-2">
-                          <Label className="text-[10px] font-black text-gray-900 uppercase tracking-widest ml-1">Password</Label>
-                          <Input type="password" autoComplete="new-password" required value={authData.password} onChange={(e) => setAuthData({ ...authData, password: e.target.value })} className="h-11 px-6 bg-gray-50 border-gray-200 focus:bg-white focus:ring-[6px] focus:ring-orange-500/5 focus:border-orange-500 transition-all duration-300 rounded-2xl text-sm font-bold placeholder:text-gray-300" placeholder="••••••••" />
+                      {!otpSent ? (
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                          <div className="space-y-2">
+                            <Label className="text-[10px] font-black text-gray-900 uppercase tracking-widest ml-1">Password</Label>
+                            <Input type="password" autoComplete="new-password" required value={authData.password} onChange={(e) => setAuthData({ ...authData, password: e.target.value })} className="h-11 px-6 bg-gray-50 border-gray-200 focus:bg-white focus:ring-[6px] focus:ring-orange-500/5 focus:border-orange-500 transition-all duration-300 rounded-2xl text-sm font-bold placeholder:text-gray-300" placeholder="••••••••" />
+                          </div>
+                          <div className="space-y-2">
+                            <Label className="text-[10px] font-black text-gray-900 uppercase tracking-widest ml-1">Confirm Password</Label>
+                            <Input type="password" autoComplete="new-password" required value={authData.confirmPassword} onChange={(e) => setAuthData({ ...authData, confirmPassword: e.target.value })} className="h-11 px-6 bg-gray-50 border-gray-200 focus:bg-white focus:ring-[6px] focus:ring-orange-500/5 focus:border-orange-500 transition-all duration-300 rounded-2xl text-sm font-bold placeholder:text-gray-300" placeholder="••••••••" />
+                          </div>
                         </div>
-                        <div className="space-y-2">
-                          <Label className="text-[10px] font-black text-gray-900 uppercase tracking-widest ml-1">Confirm Password</Label>
-                          <Input type="password" autoComplete="new-password" required value={authData.confirmPassword} onChange={(e) => setAuthData({ ...authData, confirmPassword: e.target.value })} className="h-11 px-6 bg-gray-50 border-gray-200 focus:bg-white focus:ring-[6px] focus:ring-orange-500/5 focus:border-orange-500 transition-all duration-300 rounded-2xl text-sm font-bold placeholder:text-gray-300" placeholder="••••••••" />
+                      ) : (
+                        <div className="space-y-2 animate-in fade-in slide-in-from-top-2 duration-300">
+                          <Label className="text-[10px] font-black text-orange-600 uppercase tracking-widest ml-1">Enter 6-Digit Email OTP *</Label>
+                          <Input type="text" maxLength={6} required value={otpCode} onChange={(e) => setOtpCode(e.target.value.replace(/\D/g, ''))} className="h-11 px-6 bg-orange-50/10 border-orange-200 focus:bg-white focus:ring-[6px] focus:ring-orange-500/5 focus:border-orange-500 transition-all duration-300 rounded-2xl text-center text-lg font-black tracking-[0.4em] placeholder:text-gray-300" placeholder="000000" />
+                          <div className="flex justify-between items-center text-[10px] font-bold text-gray-400 uppercase tracking-wider px-1 pt-1">
+                            <span>Code sent to email</span>
+                            <button type="button" onClick={async () => {
+                              try {
+                                setLoading(true);
+                                await sendOtp(authData.email);
+                                toast({ title: "OTP Resent", description: "A new code has been sent to your email." });
+                              } catch (err) {
+                                toast({ title: "Resend Failed", description: err.message, variant: "destructive" });
+                              } finally {
+                                setLoading(false);
+                              }
+                            }} className="text-orange-600 hover:underline font-black">Resend Code</button>
+                          </div>
                         </div>
-                      </div>
+                      )}
                       <Button
                         type="submit"
                         className="w-full h-12 bg-gray-900 hover:bg-black text-white font-black text-base rounded-[1.25rem] mt-4 shadow-2xl shadow-black/10 transition-all hover:scale-[1.02] active:scale-[0.98]"
                         disabled={loading}
                       >
-                        {loading ? <Loader2 className="mr-2 h-6 w-6 animate-spin" /> : <div className="flex items-center justify-center gap-3 text-sm uppercase tracking-wider">Register <ChevronRight className="h-5 w-5" /></div>}
+                        {loading ? <Loader2 className="mr-2 h-6 w-6 animate-spin" /> : <div className="flex items-center justify-center gap-3 text-sm uppercase tracking-wider">{otpSent ? "Verify & Register" : "Send Verification OTP"} <ChevronRight className="h-5 w-5" /></div>}
                       </Button>
 
                       <p className="text-center text-[10px] font-bold text-gray-400 uppercase tracking-widest pt-2">

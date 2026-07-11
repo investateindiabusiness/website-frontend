@@ -12,7 +12,7 @@ import { toast } from '@/hooks/use-toast';
 import { CheckCircle, ChevronRight, Loader2, FileWarning, ClipboardList, ArrowLeft, Eye, EyeOff } from 'lucide-react';
 import { getAuth } from 'firebase/auth';
 import { app } from '@/firebase';
-import { registerStep1, submitServiceProviderForm1, submitRequestedChanges } from '@/api';
+import { registerStep1, sendOtp, submitServiceProviderForm1, submitRequestedChanges } from '@/api';
 import GoogleAuthButton from '@/components/GoogleAuthButton';
 
 function ServiceProviderRegisterContent() {
@@ -24,6 +24,8 @@ function ServiceProviderRegisterContent() {
   const [userId, setUserId] = useState(null);
   const [loading, setLoading] = useState(false);
   const [submitted, setSubmitted] = useState(false);
+  const [otpSent, setOtpSent] = useState(false);
+  const [otpCode, setOtpCode] = useState('');
   const [onboardingInitData, setOnboardingInitData] = useState(null);
 
   // Form states
@@ -193,15 +195,37 @@ function ServiceProviderRegisterContent() {
     if (authData.password !== authData.confirmPassword) {
       return toast({ title: "Error", description: "Passwords do not match", variant: "destructive" });
     }
+    
+    // Step 1A: Send OTP
+    if (!otpSent) {
+      try {
+        setLoading(true);
+        await sendOtp(authData.email);
+        setOtpSent(true);
+        toast({ title: "OTP Code Sent", description: "A 6-digit verification code was sent to your email." });
+      } catch (err) {
+        toast({ title: "Verification Failed", description: err.message || "Failed to send verification email.", variant: "destructive" });
+      } finally {
+        setLoading(false);
+      }
+      return;
+    }
+
+    // Step 1B: Verify OTP & Create Account
     try {
       setLoading(true);
-      const response = await registerStep1({ email: authData.email, password: authData.password, role: 'serviceProvider' });
+      const response = await registerStep1({
+        email: authData.email,
+        password: authData.password,
+        role: 'serviceProvider',
+        otp: otpCode
+      });
 
       setUserId(response.uid);
       setStep(2);
-      toast({ title: "Account Created", description: "Please complete profile registration details." });
+      toast({ title: "Account Verified & Created", description: "Please complete profile registration details." });
     } catch (err) {
-      toast({ title: "Registration Failed", description: err.message, variant: "destructive" });
+      toast({ title: "Registration Failed", description: err.message || "Invalid or expired OTP.", variant: "destructive" });
     } finally {
       setLoading(false);
     }
@@ -415,64 +439,94 @@ function ServiceProviderRegisterContent() {
                     <div className="relative flex justify-center text-[9px] font-black uppercase tracking-[0.3em]"><span className="bg-white px-6 text-gray-400">Security Check</span></div>
                   </div>
 
-                  <form onSubmit={handleAuthSubmit} className="space-y-5">
-                    <div className="space-y-2">
-                      <Label htmlFor="email" className="text-[10px] font-black text-gray-900 uppercase tracking-widest ml-1">Email Address</Label>
-                      <Input
-                        id="email"
-                        type="email"
-                        required
-                        value={authData.email}
-                        onChange={e => setAuthData({ ...authData, email: e.target.value })}
-                        placeholder="professional@example.com"
-                        className="h-11 px-6 bg-gray-50 border-gray-200 focus:bg-white focus:ring-[6px] focus:ring-orange-500/5 focus:border-orange-500 transition-all duration-300 rounded-2xl text-sm font-bold placeholder:text-gray-300 w-full"
-                      />
-                    </div>
-
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+                    <form onSubmit={handleAuthSubmit} className="space-y-5">
                       <div className="space-y-2">
-                        <Label htmlFor="password" className="text-[10px] font-black text-gray-900 uppercase tracking-widest ml-1">Password</Label>
-                        <div className="relative">
-                          <Input
-                            id="password"
-                            type={showPassword ? 'text' : 'password'}
-                            required
-                            value={authData.password}
-                            onChange={e => setAuthData({ ...authData, password: e.target.value })}
-                            placeholder="••••••••"
-                            className="h-11 px-6 pr-12 bg-gray-50 border-gray-200 focus:bg-white focus:ring-[6px] focus:ring-orange-500/5 focus:border-orange-500 transition-all duration-300 rounded-2xl text-sm font-bold placeholder:text-gray-300 w-full"
-                          />
-                          <button type="button" onClick={() => setShowPassword(prev => !prev)} className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-700 transition-colors" tabIndex={-1}>
-                            {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
-                          </button>
-                        </div>
+                        <Label htmlFor="email" className="text-[10px] font-black text-gray-900 uppercase tracking-widest ml-1">Email Address</Label>
+                        <Input
+                          id="email"
+                          type="email"
+                          required
+                          disabled={otpSent}
+                          value={authData.email}
+                          onChange={e => setAuthData({ ...authData, email: e.target.value })}
+                          placeholder="professional@example.com"
+                          className="h-11 px-6 bg-gray-50 border-gray-200 focus:bg-white focus:ring-[6px] focus:ring-orange-500/5 focus:border-orange-500 transition-all duration-300 rounded-2xl text-sm font-bold placeholder:text-gray-300 w-full disabled:opacity-75 disabled:cursor-not-allowed"
+                        />
                       </div>
-                      <div className="space-y-2">
-                        <Label htmlFor="confirmPassword" className="text-[10px] font-black text-gray-900 uppercase tracking-widest ml-1">Confirm Password</Label>
-                        <div className="relative">
-                          <Input
-                            id="confirmPassword"
-                            type={showConfirmPassword ? 'text' : 'password'}
-                            required
-                            value={authData.confirmPassword}
-                            onChange={e => setAuthData({ ...authData, confirmPassword: e.target.value })}
-                            placeholder="••••••••"
-                            className="h-11 px-6 pr-12 bg-gray-50 border-gray-200 focus:bg-white focus:ring-[6px] focus:ring-orange-500/5 focus:border-orange-500 transition-all duration-300 rounded-2xl text-sm font-bold placeholder:text-gray-300 w-full"
-                          />
-                          <button type="button" onClick={() => setShowConfirmPassword(prev => !prev)} className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-700 transition-colors" tabIndex={-1}>
-                            {showConfirmPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
-                          </button>
-                        </div>
-                      </div>
-                    </div>
 
-                    <Button
-                      type="submit"
-                      disabled={loading}
-                      className="w-full h-12 bg-gray-900 hover:bg-black text-white font-black text-sm uppercase tracking-wider rounded-[1.25rem] transition-all shadow-lg hover:scale-[1.02] mt-4 flex items-center justify-center gap-2"
-                    >
-                      {loading ? <Loader2 className="w-4 h-4 animate-spin" /> : <>Next Step <ChevronRight className="w-4 h-4" /></>}
-                    </Button>
+                      {!otpSent ? (
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+                          <div className="space-y-2">
+                            <Label htmlFor="password" className="text-[10px] font-black text-gray-900 uppercase tracking-widest ml-1">Password</Label>
+                            <div className="relative">
+                              <Input
+                                id="password"
+                                type={showPassword ? 'text' : 'password'}
+                                required
+                                value={authData.password}
+                                onChange={e => setAuthData({ ...authData, password: e.target.value })}
+                                placeholder="••••••••"
+                                className="h-11 px-6 pr-12 bg-gray-50 border-gray-200 focus:bg-white focus:ring-[6px] focus:ring-orange-500/5 focus:border-orange-500 transition-all duration-300 rounded-2xl text-sm font-bold placeholder:text-gray-300 w-full"
+                              />
+                              <button type="button" onClick={() => setShowPassword(prev => !prev)} className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-700 transition-colors" tabIndex={-1}>
+                                {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+                              </button>
+                            </div>
+                          </div>
+                          <div className="space-y-2">
+                            <Label htmlFor="confirmPassword" className="text-[10px] font-black text-gray-900 uppercase tracking-widest ml-1">Confirm Password</Label>
+                            <div className="relative">
+                              <Input
+                                id="confirmPassword"
+                                type={showConfirmPassword ? 'text' : 'password'}
+                                required
+                                value={authData.confirmPassword}
+                                onChange={e => setAuthData({ ...authData, confirmPassword: e.target.value })}
+                                placeholder="••••••••"
+                                className="h-11 px-6 pr-12 bg-gray-50 border-gray-200 focus:bg-white focus:ring-[6px] focus:ring-orange-500/5 focus:border-orange-500 transition-all duration-300 rounded-2xl text-sm font-bold placeholder:text-gray-300 w-full"
+                              />
+                              <button type="button" onClick={() => setShowConfirmPassword(prev => !prev)} className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-700 transition-colors" tabIndex={-1}>
+                                {showConfirmPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+                              </button>
+                            </div>
+                          </div>
+                        </div>
+                      ) : (
+                        <div className="space-y-2 animate-in fade-in slide-in-from-top-2 duration-300">
+                          <Label className="text-[10px] font-black text-orange-600 uppercase tracking-widest ml-1">Enter 6-Digit Email OTP *</Label>
+                          <Input
+                            type="text"
+                            maxLength={6}
+                            required
+                            value={otpCode}
+                            onChange={(e) => setOtpCode(e.target.value.replace(/\D/g, ''))}
+                            className="h-11 px-6 bg-orange-50/10 border-orange-200 focus:bg-white focus:ring-[6px] focus:ring-orange-500/5 focus:border-orange-500 transition-all duration-300 rounded-2xl text-center text-lg font-black tracking-[0.4em] placeholder:text-gray-300 w-full"
+                            placeholder="000000"
+                          />
+                          <div className="flex justify-between items-center text-[10px] font-bold text-gray-400 uppercase tracking-wider px-1 pt-1">
+                            <span>Code sent to email</span>
+                            <button type="button" onClick={async () => {
+                              try {
+                                setLoading(true);
+                                await sendOtp(authData.email);
+                                toast({ title: "OTP Resent", description: "A new code has been sent to your email." });
+                              } catch (err) {
+                                toast({ title: "Resend Failed", description: err.message, variant: "destructive" });
+                              } finally {
+                                setLoading(false);
+                              }
+                            }} className="text-orange-600 hover:underline font-black">Resend Code</button>
+                          </div>
+                        </div>
+                      )}
+
+                      <Button
+                        type="submit"
+                        disabled={loading}
+                        className="w-full h-12 bg-gray-900 hover:bg-black text-white font-black text-sm uppercase tracking-wider rounded-[1.25rem] transition-all shadow-lg hover:scale-[1.02] mt-4 flex items-center justify-center gap-2"
+                      >
+                        {loading ? <Loader2 className="w-4 h-4 animate-spin" /> : <>{otpSent ? "Verify & Register" : "Send Verification OTP"} <ChevronRight className="w-4 h-4" /></>}
+                      </Button>
 
                     <p className="text-center text-xs text-gray-400 mt-6 font-medium">
                       Already have a partner account?{' '}

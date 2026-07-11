@@ -3,6 +3,7 @@
 import React, { useState, useEffect } from "react";
 import { X, ChevronRight, Megaphone, ExternalLink } from "lucide-react";
 import AdBanner from "@/components/AdBanner";
+import { fetchActiveAd } from "@/api";
 
 /**
  * SlideAdPanel
@@ -12,7 +13,7 @@ import AdBanner from "@/components/AdBanner";
  * - Has a clear X close button
  * - Stays flush to the right side of the viewport
  * - Does NOT overlap hero content (positioned at top right, clear of text)
- * - Has a small re-open tab when closed
+ * - Has an increased-size circular re-open badge showing the first word of the ad title
  *
  * Props:
  *  zoneId     — ad zone to display, e.g. "zone1"
@@ -26,6 +27,22 @@ export default function SlideAdPanel({
 }) {
   const [isOpen, setIsOpen] = useState(false); // starts false, animates open after mount
   const [hasEverClosed, setHasEverClosed] = useState(false);
+  const [ad, setAd] = useState(null);
+
+  // Fetch active ad to display its title's first word on the tab
+  useEffect(() => {
+    let active = true;
+    const loadAd = async () => {
+      try {
+        const data = await fetchActiveAd(zoneId);
+        if (active) setAd(data || null);
+      } catch (err) {
+        console.warn(`SlideAdPanel [${zoneId}]: failed to load.`, err);
+      }
+    };
+    loadAd();
+    return () => { active = false; };
+  }, [zoneId]);
 
   // Animate open after a short delay so the page renders first
   useEffect(() => {
@@ -42,61 +59,115 @@ export default function SlideAdPanel({
     setIsOpen(true);
   };
 
+  const getFirstWord = () => {
+    if (ad?.adContent?.text) {
+      const cleanText = ad.adContent.text.trim().replace(/[^\w\s-]/g, '');
+      const firstWord = cleanText.split(/\s+/)[0];
+      if (firstWord) {
+        return firstWord.substring(0, 8); // maximum 8 characters to fit nicely
+      }
+    }
+    return "Promo";
+  };
+
   return (
     <>
-      {/* ─── Re-open tab (visible only after user has closed the panel) ─── */}
+      {/* ─── Re-open tab: Circular Floating Attachment Badge (visible only after closed) ─── */}
       {hasEverClosed && !isOpen && (
-        <button
-          onClick={handleReopen}
-          aria-label="Open advertisement"
+        <div
           style={{
             position: "fixed",
             top: topOffset,
-            right: 0,
+            right: "12px",
             zIndex: 50,
-            display: "flex",
-            flexDirection: "column",
-            alignItems: "center",
-            justifyContent: "center",
-            gap: 6,
-            width: 36,
-            minHeight: 120,
-            borderRadius: "12px 0 0 12px",
-            border: "none",
-            cursor: "pointer",
-            padding: "14px 0",
-            boxShadow: "-4px 4px 20px rgba(0,0,0,0.3)",
-            transition: "transform 0.2s ease, box-shadow 0.2s ease",
           }}
-          className="bg-gradient-to-b from-[#0b264f] to-[#1a4b8c]"
-          onMouseEnter={(e) => { e.currentTarget.style.transform = "translateX(-3px)"; }}
-          onMouseLeave={(e) => { e.currentTarget.style.transform = "translateX(0)"; }}
+          className="animate-bounce-slow"
         >
-          <Megaphone
-            size={14}
-            style={{ color: "rgba(255,255,255,0.8)" }}
-          />
-          <span
+          {/* Circular Button */}
+          <button
+            onClick={handleReopen}
+            aria-label="Open advertisement"
             style={{
-              writingMode: "vertical-rl",
-              fontSize: 9,
-              fontWeight: 900,
-              letterSpacing: "0.15em",
-              textTransform: "uppercase",
-              color: "rgba(255,255,255,0.7)",
-              userSelect: "none",
+              position: "relative",
+              width: 76,
+              height: 76,
+              borderRadius: "50%",
+              border: "2px solid rgba(255, 255, 255, 0.2)",
+              cursor: "pointer",
+              display: "flex",
+              flexDirection: "column",
+              alignItems: "center",
+              justifyContent: "center",
+              boxShadow: "0 8px 32px rgba(249, 115, 22, 0.4)",
+              transition: "transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275), box-shadow 0.3s ease",
             }}
+            className="bg-gradient-to-br from-orange-500 via-orange-600 to-orange-700 text-white hover:scale-105 active:scale-95"
           >
-            Sponsored
-          </span>
-          <ChevronRight
-            size={14}
-            style={{
-              color: "rgba(255,255,255,0.7)",
-              transform: "rotate(180deg)",
-            }}
-          />
-        </button>
+            {/* Small Attachment (Pill Badge overlapping top of circle) */}
+            <div
+              style={{
+                position: "absolute",
+                top: "-8px",
+                left: "50%",
+                transform: "translateX(-50%)",
+                background: "#0b264f",
+                color: "#ffffff",
+                fontSize: "8px",
+                fontWeight: "900",
+                letterSpacing: "0.12em",
+                padding: "2px 8px",
+                borderRadius: "9999px",
+                border: "1px solid rgba(255, 255, 255, 0.2)",
+                boxShadow: "0 2px 8px rgba(0,0,0,0.3)",
+                whiteSpace: "nowrap",
+                textTransform: "uppercase",
+              }}
+            >
+              Sponsored
+            </div>
+
+            {/* Main word from ad title */}
+            <span
+              style={{
+                fontSize: "10px",
+                fontWeight: "900",
+                textTransform: "uppercase",
+                letterSpacing: "0.06em",
+                maxWidth: "60px",
+                overflow: "hidden",
+                textOverflow: "ellipsis",
+                whiteSpace: "nowrap",
+                lineHeight: "1.2",
+              }}
+            >
+              {getFirstWord()}
+            </span>
+
+            <span style={{ fontSize: "8px", fontWeight: "700", color: "rgba(255,255,255,0.75)", marginTop: "2px" }}>
+              Click to View
+            </span>
+
+            {/* Small corner Megaphone icon attachment */}
+            <div
+              style={{
+                position: "absolute",
+                bottom: "-2px",
+                right: "-2px",
+                width: "22px",
+                height: "22px",
+                borderRadius: "50%",
+                background: "#0b264f",
+                border: "1px solid rgba(255,255,255,0.2)",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                boxShadow: "0 2px 6px rgba(0,0,0,0.2)",
+              }}
+            >
+              <Megaphone size={10} className="text-orange-400" />
+            </div>
+          </button>
+        </div>
       )}
 
       {/* ─── Main panel ─── */}
@@ -247,10 +318,12 @@ export default function SlideAdPanel({
       </div>
 
       <style>{`
-        @keyframes adPanelPulse {
-          0%   { box-shadow: 0 0 0 0 rgba(249,115,22,0.6); }
-          60%  { box-shadow: 0 0 0 8px rgba(249,115,22,0); }
-          100% { box-shadow: 0 0 0 0 rgba(249,115,22,0); }
+        @keyframes bounceSlow {
+          0%, 100% { transform: translateY(0); }
+          50% { transform: translateY(-4px); }
+        }
+        .animate-bounce-slow {
+          animation: bounceSlow 3s ease-in-out infinite;
         }
       `}</style>
     </>

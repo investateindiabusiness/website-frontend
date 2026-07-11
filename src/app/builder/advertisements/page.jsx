@@ -254,15 +254,19 @@ export default function BuilderAdvertisements() {
     const today = new Date().toISOString().split('T')[0];
     if (dateStr < today) return;
 
-    if (!rangeStart || (rangeStart && rangeEnd)) {
+    if (!rangeStart || (rangeStart && rangeEnd && rangeStart !== rangeEnd)) {
+      // Start fresh selection: make it a 1-day selection immediately
       setRangeStart(dateStr);
-      setRangeEnd(null);
+      setRangeEnd(dateStr);
     } else {
-      if (dateStr < rangeStart) {
+      // One day was selected (rangeStart === rangeEnd)
+      if (dateStr === rangeStart) {
+        // Clicked same day again — reset selection
+        setRangeStart(null);
+        setRangeEnd(null);
+      } else if (dateStr < rangeStart) {
         setRangeEnd(rangeStart);
         setRangeStart(dateStr);
-      } else if (dateStr === rangeStart) {
-        setRangeStart(null);
       } else {
         const overlaps = slots.some(s => s.isBooked && rangeStart <= s.endDate && dateStr >= s.startDate);
         if (overlaps) {
@@ -470,6 +474,9 @@ export default function BuilderAdvertisements() {
     const isStart = rangeStart && dateStr === rangeStart;
     const isEnd = rangeEnd && dateStr === rangeEnd;
 
+    const isSingleDay = rangeStart && rangeEnd && rangeStart === rangeEnd;
+    if (isSingleDay && dateStr === rangeStart) return { bg: 'bg-[#0b264f] text-white font-bold rounded-xl cursor-pointer shadow-md', label: 'Selected' };
+
     if (isStart && rangeEnd) return { bg: 'bg-[#0b264f] text-white font-bold rounded-l-xl cursor-pointer shadow-md', label: 'Start' };
     if (isEnd) return { bg: 'bg-[#0b264f] text-white font-bold rounded-r-xl cursor-pointer shadow-md', label: 'End' };
     if (isStart && !rangeEnd) return { bg: 'bg-[#0b264f] text-white font-bold cursor-pointer shadow-md ring-2 ring-blue-300', label: 'Start' };
@@ -663,7 +670,10 @@ export default function BuilderAdvertisements() {
                 <CardHeader className="bg-slate-50 border-b border-slate-100 py-4 px-6 flex items-center justify-between">
                   <div>
                     <CardTitle className="text-lg font-bold text-slate-800">Available Booking Calendar</CardTitle>
-                    <CardDescription className="text-xs">Click a start date, then click an end date to select your campaign window in {selectedZone?.name}</CardDescription>
+                    <CardDescription className="text-xs font-medium">Click a start date, then click an end date to select your campaign window in {selectedZone?.name}</CardDescription>
+                    <div className="mt-2.5 text-[10px] md:text-[11px] text-slate-500 font-semibold bg-white border border-slate-200/80 rounded-lg px-2.5 py-1.5 flex items-center gap-1.5 w-fit shadow-sm">
+                      <span>🕒</span> Campaign Runtime: Daily 12:00 AM – 11:59 PM EST (New York) / 09:30 AM – 09:29 AM IST (India)
+                    </div>
                   </div>
                 </CardHeader>
                 <CardContent className="p-6">

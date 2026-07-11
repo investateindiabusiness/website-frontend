@@ -647,7 +647,10 @@ export default function ServiceProviderAdvertisements() {
                 <CardHeader className="bg-slate-50 border-b border-slate-100 py-4 px-6 flex items-center justify-between">
                   <div>
                     <CardTitle className="text-lg font-bold text-slate-800">Available Booking Calendar</CardTitle>
-                    <CardDescription className="text-xs">Select a green date slot to schedule your advertisement campaign in {selectedZone?.name}</CardDescription>
+                    <CardDescription className="text-xs font-medium">Select a green date slot to schedule your advertisement campaign in {selectedZone?.name}</CardDescription>
+                    <div className="mt-2.5 text-[10px] md:text-[11px] text-slate-500 font-semibold bg-white border border-slate-200/80 rounded-lg px-2.5 py-1.5 flex items-center gap-1.5 w-fit shadow-sm">
+                      <span>🕒</span> Campaign Runtime: Daily 12:00 AM – 11:59 PM EST (New York) / 09:30 AM – 09:29 AM IST (India)
+                    </div>
                   </div>
                 </CardHeader>
                 <CardContent className="p-6">

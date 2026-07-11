@@ -6,7 +6,7 @@ const isProtectedRoute = (path) => {
   if (!path) return false;
   const isAdminRoute = path.startsWith('/admin') && path !== '/admin/login';
   const isBuilderRoute = (path.startsWith('/builder/') && path !== '/builder/login' && path !== '/builder/register') || path === '/builder/dashboard' || path === '/builder/projects' || path === '/builder/advertisements';
-  const isInvestorRoute = path === '/dashboard' || path === '/properties' || (path.startsWith('/investor/') && path !== '/investor/login' && path !== '/investor/register') || path.startsWith('/project/');
+  const isInvestorRoute = path === '/dashboard' || path.startsWith('/properties') || (path.startsWith('/investor/') && path !== '/investor/login' && path !== '/investor/register');
   const isServiceProviderRoute = (path.startsWith('/service-provider/') && path !== '/service-provider' && path !== '/service-provider/login' && path !== '/service-provider/register') || path === '/service-provider/dashboard' || path === '/service-provider/advertisements';
 
   return isAdminRoute || isBuilderRoute || isInvestorRoute || isServiceProviderRoute;
@@ -311,6 +311,12 @@ export const googleSyncRequest = async (idToken, role) => {
 };
 
 // --- Unified Registration Endpoints ---
+
+export const sendOtp = (email) =>
+  apiRequest('/api/auth/send-otp', {
+    method: 'POST',
+    body: JSON.stringify({ email }),
+  });
 
 export const registerStep1 = (authData) =>
   apiRequest('/api/auth/register-step1', {

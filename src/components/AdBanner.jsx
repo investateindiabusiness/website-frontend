@@ -6,7 +6,7 @@ import { createPortal } from 'react-dom';
 import { fetchActiveAd } from '@/api';
 import { useAuth } from '@/hooks/AuthContext';
 import { getSocket, joinZone, leaveZone } from '@/utils/socket';
-import { ExternalLink, Loader2, TrendingUp, CheckCircle, Building2, MapPin, X, User, HardHat, Wrench, ChevronRight, Megaphone } from 'lucide-react';
+import { ExternalLink, Loader2, TrendingUp, CheckCircle, Building2, MapPin, X, User, HardHat, Wrench, ChevronRight, Megaphone, ArrowRight } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 
 /**
@@ -14,14 +14,14 @@ import { Button } from '@/components/ui/button';
  *   zone1 → Homepage Hero Leaderboard        (970×90)
  *   zone2 → Homepage Mid-Page Banner          (970×250)
  *   zone3 → Investor Hero Leaderboard         (970×90)
- *   zone4 → Properties Page Top Banner        (970×90)
+ *   zone4 → Properties Page Top Banner        (970×180)
  *   zone5 → Project Detail Page Banner        (728×90)
  */
 const ZONE_CONFIG = {
   zone1: { width: 970, height: 90,  name: 'Homepage Hero Leaderboard',    location: 'Bottom of main homepage hero section' },
   zone2: { width: 970, height: 250, name: 'Homepage Mid-Page Banner',      location: 'Between sections on main homepage' },
   zone3: { width: 970, height: 90,  name: 'Investor Hero Leaderboard',     location: 'Bottom of Investor page hero section' },
-  zone4: { width: 970, height: 90,  name: 'Properties Page Top Banner',    location: 'Top of /properties listing page' },
+  zone4: { width: 970, height: 180,  name: 'Properties Page Top Banner',    location: 'Top of /properties listing page' },
   zone5: { width: 728, height: 90,  name: 'Project Detail Page Banner',    location: 'Inside individual project detail pages' },
 };
 
@@ -548,35 +548,44 @@ export default function AdBanner({ zoneId, variant = 'default', forceRole }) {
     );
   }
 
-
   /* ─────────────────────────────────────────
      DEFAULT VARIANT — floating leaderboard card
   ───────────────────────────────────────── */
   const staticFallbackBanner = (
     <div
-      className="relative w-full mx-auto rounded-2xl overflow-hidden shadow-md cursor-pointer group"
-      style={{ maxWidth: '100%', height: Math.max(zone.height, 90) }}
+      className="relative w-full mx-auto rounded-2xl overflow-hidden border border-slate-200/80 shadow-sm cursor-pointer group bg-gradient-to-r from-[#0b264f] via-[#0f3166] to-[#0b264f]"
+      style={{ maxWidth: '100%' }}
       onClick={handleBookAdClick}
     >
-      <img
-        src="https://images.unsplash.com/photo-1560518883-ce09059eeffa?w=1200&q=80"
-        alt="Real estate banner"
-        className="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
-      />
+      {/* Subtle lines pattern */}
       <div
-        className="absolute inset-0"
-        style={{ background: 'linear-gradient(to right, rgba(11,38,79,0.92) 0%, rgba(26,75,140,0.8) 50%, rgba(26,75,140,0.4) 100%)' }}
+        className="absolute inset-0 opacity-[0.03]"
+        style={{
+          backgroundImage: "radial-gradient(circle at 1px 1px, white 1px, transparent 0)",
+          backgroundSize: "24px 24px",
+        }}
       />
-      <div className="absolute top-3 right-3 flex items-center gap-1.5 bg-white/10 backdrop-blur-sm text-white text-[9px] font-bold tracking-widest px-2.5 py-1 rounded-full border border-white/20 uppercase pointer-events-none">
-        Advertise Here
+      
+      {/* Left Highlight Bar */}
+      <div className="absolute left-0 top-0 bottom-0 w-1.5 bg-[#D48035]" />
+
+      <div className="absolute top-3 right-3 flex items-center gap-1.5 bg-white/10 backdrop-blur-sm text-white/90 text-[8px] font-black tracking-widest px-2.5 py-1 rounded-full border border-white/15 uppercase pointer-events-none">
+        <Megaphone className="w-2.5 h-2.5 text-orange-400" /> Advertising
       </div>
-      <div className={`absolute inset-0 flex justify-center px-6 md:px-8 z-10 ${zone.height <= 100 ? 'flex-row items-center justify-between gap-4' : 'flex-col items-start'}`}>
-        <h2 className={`text-white font-extrabold leading-tight drop-shadow-lg ${zone.height <= 100 ? 'text-base md:text-lg mb-0' : 'text-xl md:text-2xl mb-3'}`}>
-          {zone.name} — This spot is available
-        </h2>
+      
+      {/* Responsive Content Container */}
+      <div className="relative z-10 flex flex-col md:flex-row items-center justify-between gap-6 px-6 md:px-10 py-6 md:py-8">
+        <div className="text-center md:text-left">
+          <h2 className="text-white font-extrabold text-sm md:text-base tracking-tight leading-snug">
+            Promote your Real Estate Project here
+          </h2>
+          <p className="text-blue-200/60 text-[10px] md:text-xs font-semibold max-w-lg leading-relaxed mt-1">
+            Showcase listings to NRI investors. High-visibility booking at low daily rates.
+          </p>
+        </div>
         <button
           onClick={(e) => { e.stopPropagation(); handleBookAdClick(); }}
-          className="bg-orange-500 hover:bg-orange-600 text-white font-bold text-xs px-4 py-2 rounded-xl transition-all duration-200 hover:scale-105 shadow-lg shadow-orange-500/30 whitespace-nowrap flex-shrink-0"
+          className="bg-gradient-to-r from-orange-500 to-orange-600 hover:from-orange-600 hover:to-orange-700 text-white font-bold text-xs px-5 py-2.5 rounded-xl transition-all duration-200 hover:scale-[1.03] active:scale-95 shadow-lg shadow-orange-500/25 whitespace-nowrap flex-shrink-0"
         >
           Book This Spot →
         </button>
@@ -588,35 +597,46 @@ export default function AdBanner({ zoneId, variant = 'default', forceRole }) {
   if (!ad?.adContent || (!ad.adContent.imageUrl && !ad.adContent.text)) return staticFallbackBanner;
 
   const { imageUrl, targetUrl, text } = ad.adContent;
-  const paddingBottom = `${((zone.height / zone.width) * 100).toFixed(4)}%`;
+
+  const isFullWidthZone = zoneId === 'zone4' || zoneId === 'zone5';
 
   return (
     <>
       <div
-        className="w-full mx-auto relative group rounded-2xl shadow-sm hover:shadow-md transition-all duration-300 select-none border border-slate-200/60 cursor-pointer"
-        style={{ maxWidth: zone.width }}
+        className="w-full mx-auto relative group rounded-2xl shadow-sm hover:shadow-md transition-all duration-300 select-none border border-slate-200/80 cursor-pointer overflow-hidden bg-white"
+        style={{ maxWidth: isFullWidthZone ? '100%' : zone.width }}
         aria-label={text || 'Sponsored advertisement'}
         onClick={() => handleAdContentClick(targetUrl)}
       >
-        <div className="absolute top-2 right-2 z-20 flex items-center gap-1 bg-white/90 backdrop-blur-sm px-2 py-0.5 rounded-full border border-slate-200/60 text-[9px] font-bold text-slate-500 uppercase tracking-widest pointer-events-none shadow-sm">
+        <div className="absolute top-3 right-3 z-20 flex items-center gap-1.5 bg-black/60 backdrop-blur-sm px-3 py-1 rounded-full border border-slate-700/20 text-[9px] font-bold text-white/90 uppercase tracking-widest pointer-events-none shadow-sm">
           <span>Sponsored</span>
-          {targetUrl && <ExternalLink className="w-2.5 h-2.5 opacity-60 group-hover:opacity-100 transition-opacity" />}
+          {targetUrl && <ExternalLink className="w-2.5 h-2.5 opacity-80" />}
         </div>
         {imageUrl ? (
-          <div className="relative w-full rounded-2xl overflow-hidden bg-slate-900" style={{ paddingBottom }}>
+          <div 
+            className="relative w-full overflow-hidden bg-slate-950 flex items-center justify-center min-h-[90px]" 
+            style={{ aspectRatio: `${zone.width} / ${zone.height}` }}
+          >
             <img
               src={imageUrl}
               alt={text || 'Advertisement'}
-              className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
+              className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-[1.02]"
             />
             {text && (
-              <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/70 via-black/30 to-transparent px-4 py-3 text-white text-xs md:text-sm font-medium line-clamp-1 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+              <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/85 via-black/45 to-transparent px-5 py-3.5 text-white text-xs md:text-sm font-semibold line-clamp-1">
                 {text}
               </div>
             )}
           </div>
         ) : (
-          staticFallbackBanner
+          <div className="relative w-full flex flex-col justify-center px-6 md:px-10 py-6 bg-gradient-to-r from-[#0b264f] to-[#1a3e7a] text-white min-h-[90px]">
+            <p className="font-extrabold text-sm md:text-base text-left line-clamp-2 max-w-2xl leading-snug">{text}</p>
+            {targetUrl && (
+              <p className="text-[10px] font-bold text-orange-400 mt-1.5 flex items-center gap-1 group-hover:text-orange-300 transition-colors">
+                Learn More <ArrowRight className="w-3 h-3" />
+              </p>
+            )}
+          </div>
         )}
       </div>
       {portal}

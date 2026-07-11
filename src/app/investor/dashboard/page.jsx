@@ -225,7 +225,7 @@ export default function InvestorDashboard() {
                       </span>
                     </div>
                     <Button
-                      onClick={() => router.push(`/project/${property.id}`)}
+                      onClick={() => router.push(`/properties/${property.id}`)}
                       className="w-full bg-[#0b264f] hover:bg-blue-900 text-white font-bold py-4 rounded-xl mt-auto gap-2 text-sm"
                     >
                       View Details <ArrowRight className="w-4 h-4" />
