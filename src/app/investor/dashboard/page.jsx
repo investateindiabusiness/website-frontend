@@ -26,6 +26,20 @@ export default function InvestorDashboard() {
   const [currentPage, setCurrentPage] = useState(1);
   const ITEMS_PER_PAGE = 9;
 
+  // ─── Onboarding status helpers ────────────────────────────────────────────────
+  const getOnboardingState = (user) => {
+    if (!user) return { isFullyVerified: false, needsForm1: true, needsForm2: false, needsForm2Changes: false, isForm1Pending: false };
+    const s = user.onboardingStatus || '';
+    const isFullyVerified = s === 'complete' || user.isVerified === true;
+    const needsForm1 = !s || s === 'form1_pending' || s === 'form1_changes_requested' || s === 'form1_rejected';
+    const isForm1Pending = s === 'form1_pending';
+    const needsForm2 = s === 'form1_approved' || s === 'form2_pending';
+    const needsForm2Changes = s === 'form2_changes_requested';
+    return { isFullyVerified, needsForm1, needsForm2, needsForm2Changes, isForm1Pending };
+  };
+
+  const { isFullyVerified, needsForm2Changes } = getOnboardingState(user);
+  const isBlocked = !isFullyVerified;
   useEffect(() => { setCurrentPage(1); }, [searchQuery, locationFilter]);
 
   useEffect(() => {
@@ -82,8 +96,9 @@ export default function InvestorDashboard() {
         <div className="container mx-auto relative z-10">
           <div className="flex flex-col gap-5">
             <div>
-              <Badge className="bg-orange-500/20 text-orange-200 border-none mb-3 px-3 py-1">
-                <Shield className="w-3.5 h-3.5 mr-1.5" /> Verified Investor
+              <Badge className={`${isBlocked ? 'bg-amber-400/20 text-amber-200' : 'bg-emerald-400/20 text-emerald-200'} border-none mb-3 px-3 py-1`}>
+                {isBlocked ? <Shield className="w-3.5 h-3.5 mr-1.5" /> : <Shield className="w-3.5 h-3.5 mr-1.5" />}
+                {isBlocked ? 'Unverified Investor' : 'Verified Investor'}
               </Badge>
               <h1 className="text-2xl sm:text-3xl md:text-4xl font-extrabold leading-tight">
                 Welcome back,<br />
@@ -122,8 +137,41 @@ export default function InvestorDashboard() {
       </div>
 
       <div className="container mx-auto px-3 sm:px-4 md:px-6 -mt-14 relative z-10 space-y-6 sm:space-y-8">
-        {/* Search + Filter Bar */}
-        <div className="bg-white rounded-2xl sm:rounded-3xl shadow-lg border border-gray-100 p-2.5 sm:p-3 flex flex-col sm:flex-row gap-2 sm:gap-3">
+        
+        {/* ── Verification Gate Banner ── */}
+        {isBlocked && (
+          <div className="bg-white/80 backdrop-blur-md border border-amber-200/50 rounded-3xl p-8 sm:p-12 text-center shadow-2xl shadow-amber-900/5 relative overflow-hidden mt-8">
+            <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-amber-400 via-orange-500 to-amber-400" />
+            <div className="w-20 h-20 bg-amber-50 rounded-full flex items-center justify-center mx-auto mb-6 shadow-inner border border-amber-100">
+              <Shield className="w-10 h-10 text-amber-500" />
+            </div>
+            <h2 className="text-2xl sm:text-3xl font-black text-gray-900 mb-4 tracking-tight">
+              {needsForm2Changes ? "Action Required: Changes Requested" : "Complete Verification to Unlock Dashboard"}
+            </h2>
+            <p className="text-gray-500 max-w-lg mx-auto mb-8 leading-relaxed font-semibold">
+              {needsForm2Changes ? (
+                <>
+                  The administrator has requested modifications for your profile verification.
+                  {user.adminRequests?.length > 0 && (
+                    <span className="block mt-2 font-bold text-orange-600">Please correct: {user.adminRequests.join(', ')}</span>
+                  )}
+                </>
+              ) : (
+                "Your account is currently restricted. To access premium property listings and insights, please complete your KYC profile."
+              )}
+            </p>
+            <Button
+              onClick={() => router.push('/investor/kyc')}
+              className="bg-gray-900 hover:bg-black text-white px-10 py-6 text-base font-black rounded-2xl shadow-xl shadow-black/10 transition-all hover:scale-105 active:scale-95"
+            >
+              Go to Verification
+            </Button>
+          </div>
+        )}
+
+        <div className={`transition-all duration-500 space-y-6 sm:space-y-8 ${isBlocked ? 'opacity-30 pointer-events-none select-none blur-sm' : ''}`}>
+          {/* Search + Filter Bar */}
+          <div className="bg-white rounded-2xl sm:rounded-3xl shadow-lg border border-gray-100 p-2.5 sm:p-3 flex flex-col sm:flex-row gap-2 sm:gap-3">
           <div className="relative flex-grow">
             <Search className="absolute left-3 sm:left-4 top-1/2 -translate-y-1/2 w-4 h-4 sm:w-5 sm:h-5 text-gray-400" />
             <input
@@ -235,7 +283,6 @@ export default function InvestorDashboard() {
               ))}
             </div>
 
-            {/* Pagination */}
             {totalPages > 1 && (
               <div className="flex items-center justify-center gap-1.5 sm:gap-2 pt-4 flex-wrap">
                 <Button
@@ -249,9 +296,9 @@ export default function InvestorDashboard() {
                 {Array.from({ length: totalPages }, (_, i) => i + 1).map(page => (
                   <Button
                     key={page}
+                    variant={currentPage === page ? "default" : "outline"}
                     onClick={() => setCurrentPage(page)}
-                    variant={currentPage === page ? 'default' : 'outline'}
-                    className={`h-9 w-9 rounded-xl text-xs font-bold ${currentPage === page ? 'bg-[#0b264f] text-white' : ''}`}
+                    className={`rounded-xl h-9 w-9 p-0 text-xs font-bold ${currentPage === page ? 'bg-[#0b264f] hover:bg-blue-900 text-white' : ''}`}
                   >
                     {page}
                   </Button>
@@ -265,6 +312,12 @@ export default function InvestorDashboard() {
                   Next
                 </Button>
               </div>
+            )}
+          </>
+        )}
+        </div>
+      </div>
+    </div>
             )}
           </>
         )}

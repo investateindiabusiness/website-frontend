@@ -33,8 +33,8 @@ function ServiceProviderRegisterContent() {
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [serviceProviderData, setServiceProviderData] = useState({
-    fullName: '', contactNumber: '', serviceCategory: '', yearsOfExperience: '',
-    address: '', country: '', state: '', city: '', zip: '', termsAccepted: false
+    fullName: '', contactNumber: '', companyEmail: '', serviceCategory: '', yearsOfExperience: '',
+    portfolioLink: '', address: '', country: '', state: '', city: '', zip: '', termsAccepted: false
   });
 
   const [countries, setCountries] = useState([]);
@@ -181,6 +181,7 @@ function ServiceProviderRegisterContent() {
     return (
       data.fullName.trim() !== '' &&
       data.contactNumber.trim() !== '' &&
+      data.companyEmail.trim() !== '' &&
       data.serviceCategory.trim() !== '' &&
       data.yearsOfExperience.toString().trim() !== '' &&
       data.country.trim() !== '' &&
@@ -586,11 +587,17 @@ function ServiceProviderRegisterContent() {
                           onChange={e => setServiceProviderData({ ...serviceProviderData, serviceCategory: e.target.value })}
                         >
                           <option value="">Select Category</option>
-                          <option value="Lawyers">Lawyers</option>
-                          <option value="Real Estate Consultants">Real Estate Consultants</option>
-                          <option value="Real Estate Agents / Brokers">Real Estate Agents / Brokers</option>
-                          <option value="Chartered Accountants">Chartered Accountants</option>
-                          <option value="Tax Consultants">Tax Consultants</option>
+                          <option value="Real Estate Lawyers">Real Estate Lawyers</option>
+                          <option value="Chartered Accountants & Tax Advisors">Chartered Accountants & Tax Advisors</option>
+                          <option value="Compliance & Documentation Consultants">Compliance & Documentation Consultants</option>
+                          <option value="Real Estate Agents / Channel Partners">Real Estate Agents / Channel Partners</option>
+                          <option value="Property Management Companies">Property Management Companies</option>
+                          <option value="Property Valuation Experts">Property Valuation Experts</option>
+                          <option value="Financial Advisors & Wealth Managers">Financial Advisors & Wealth Managers</option>
+                          <option value="Insurance Advisors">Insurance Advisors</option>
+                          <option value="Architects & Interior Designers">Architects & Interior Designers</option>
+                          <option value="Construction & Contracting Companies">Construction & Contracting Companies</option>
+                          <option value="Relocation & Immigration Consultants">Relocation & Immigration Consultants</option>
                           <option value="Others">Others</option>
                         </select>
                       </div>
@@ -604,6 +611,34 @@ function ServiceProviderRegisterContent() {
                           value={serviceProviderData.yearsOfExperience}
                           onChange={e => setServiceProviderData({ ...serviceProviderData, yearsOfExperience: e.target.value.replace(/\D/g, '') })}
                           placeholder="e.g. 8"
+                          className={inputStyle}
+                        />
+                      </div>
+                    )}
+                  </div>
+
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+                    {shouldShowField('companyEmail') && (
+                      <div>
+                        <Label className={labelStyle}>Company Email *</Label>
+                        <Input
+                          required
+                          type="email"
+                          value={serviceProviderData.companyEmail}
+                          onChange={e => setServiceProviderData({ ...serviceProviderData, companyEmail: e.target.value })}
+                          placeholder="professional@company.com"
+                          className={inputStyle}
+                        />
+                      </div>
+                    )}
+                    {shouldShowField('portfolioLink') && (
+                      <div>
+                        <Label className={labelStyle}>Portfolio / Website Link</Label>
+                        <Input
+                          type="url"
+                          value={serviceProviderData.portfolioLink}
+                          onChange={e => setServiceProviderData({ ...serviceProviderData, portfolioLink: e.target.value })}
+                          placeholder="https://yourwebsite.com"
                           className={inputStyle}
                         />
                       </div>
