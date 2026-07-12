@@ -28,14 +28,15 @@ export default function InvestorDashboard() {
 
   // ─── Onboarding status helpers ────────────────────────────────────────────────
   const getOnboardingState = (user) => {
-    if (!user) return { isFullyVerified: false, needsForm1: true, needsForm2: false, needsForm2Changes: false, isForm1Pending: false };
+    if (!user) return { isFullyVerified: false, needsForm2: false, needsForm2Changes: false };
     const s = user.onboardingStatus || '';
+    // Investors auto-approve Form 1 — they never hit form1_pending.
+    // isFullyVerified = admin has set status to 'complete' (after KYC/Form2 approval)
     const isFullyVerified = s === 'complete' || user.isVerified === true;
-    const needsForm1 = !s || s === 'form1_pending' || s === 'form1_changes_requested' || s === 'form1_rejected';
-    const isForm1Pending = s === 'form1_pending';
+    // needsForm2 = Form1 done, waiting for user to submit KYC (Form 2)
     const needsForm2 = s === 'form1_approved' || s === 'form2_pending';
     const needsForm2Changes = s === 'form2_changes_requested';
-    return { isFullyVerified, needsForm1, needsForm2, needsForm2Changes, isForm1Pending };
+    return { isFullyVerified, needsForm2, needsForm2Changes };
   };
 
   const { isFullyVerified, needsForm2Changes } = getOnboardingState(user);

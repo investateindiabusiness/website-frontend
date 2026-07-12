@@ -285,8 +285,8 @@ function InvestorRegisterContent() {
           if (userData && userData.uid) {
             login(userData);
             autoLoginSucceeded = true;
-            toast({ title: 'Account Initialized 🎉', description: 'Basic details saved. Routing to dashboard...' });
-            router.push('/dashboard');
+            toast({ title: 'Registration Complete! 🎉', description: 'Welcome! Taking you to your dashboard...' });
+            router.push('/investor/dashboard');
             return;
           }
         } catch (loginErr) {
@@ -294,8 +294,9 @@ function InvestorRegisterContent() {
         }
 
         if (!autoLoginSucceeded) {
-          toast({ title: 'Details Saved!', description: 'Please sign in to access your dashboard.' });
-          setSubmitted(true);
+          // Fallback: redirect to login with a success message
+          toast({ title: 'Registration Complete!', description: 'Please sign in to access your dashboard.' });
+          router.push('/investor/login');
         }
       }
     } catch (error) {
