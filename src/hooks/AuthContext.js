@@ -95,12 +95,12 @@ export const AuthProvider = ({ children }) => {
 
     expiryTimerRef.current = setTimeout(() => {
       if (typeof window === 'undefined') return;
-      const savedUser = localStorage.getItem('user_session');
+      const savedUser = sessionStorage.getItem('user_session');
       if (!savedUser) return;
       try {
         const parsedUser = JSON.parse(savedUser);
         if (isSessionExpired(parsedUser)) {
-          localStorage.removeItem('user_session');
+          sessionStorage.removeItem('user_session');
           setUser(null);
           if (typeof window !== 'undefined') {
             window.dispatchEvent(new Event('user_session_updated'));
@@ -117,13 +117,13 @@ export const AuthProvider = ({ children }) => {
   // Sync React state helper
   const syncStateFromStorage = useCallback(() => {
     if (typeof window === 'undefined') return;
-    const savedUser = localStorage.getItem('user_session');
+    const savedUser = sessionStorage.getItem('user_session');
     if (savedUser) {
       try {
         const parsedUser = JSON.parse(savedUser);
         if (isSessionExpired(parsedUser)) {
           const role = parsedUser.role;
-          localStorage.removeItem('user_session');
+          sessionStorage.removeItem('user_session');
           setUser(null);
           const currentPath = window.location.pathname;
           if (isProtectedRoute(currentPath)) {
@@ -133,7 +133,7 @@ export const AuthProvider = ({ children }) => {
           const normalizedRole = parsedUser.role === 'partner' ? 'builder' : parsedUser.role;
           if (parsedUser.role !== normalizedRole) {
             parsedUser.role = normalizedRole;
-            localStorage.setItem('user_session', JSON.stringify(parsedUser));
+            sessionStorage.setItem('user_session', JSON.stringify(parsedUser));
           }
           setUser(parsedUser);
           scheduleExpiryCheck(parsedUser);
@@ -146,21 +146,21 @@ export const AuthProvider = ({ children }) => {
     }
   }, [scheduleExpiryCheck]);
 
-  // Hydrate from localStorage on mount and register listeners
+  // Hydrate from sessionStorage on mount and register listeners
   useEffect(() => {
     syncStateFromStorage();
     setLoading(false);
 
     if (typeof window !== 'undefined') {
       window.addEventListener('user_session_updated', syncStateFromStorage);
-      window.addEventListener('storage', syncStateFromStorage);
+      // NOTE: 'storage' event only fires for localStorage changes in OTHER tabs.
+      // With sessionStorage (tab-isolated), we no longer need cross-tab sync.
     }
 
     return () => {
       if (expiryTimerRef.current) clearTimeout(expiryTimerRef.current);
       if (typeof window !== 'undefined') {
         window.removeEventListener('user_session_updated', syncStateFromStorage);
-        window.removeEventListener('storage', syncStateFromStorage);
       }
     };
   }, [syncStateFromStorage]);
@@ -235,7 +235,7 @@ export const AuthProvider = ({ children }) => {
       loginTime: Date.now(),
       expiresAt: tokenExpiry > 0 ? tokenExpiry : Date.now() + 3600 * 1000,
     };
-    localStorage.setItem('user_session', JSON.stringify(sessionData));
+    sessionStorage.setItem('user_session', JSON.stringify(sessionData));
     setUser(sessionData);
     scheduleExpiryCheck(sessionData);
     if (typeof window !== 'undefined') {
@@ -249,7 +249,7 @@ export const AuthProvider = ({ children }) => {
       expiryTimerRef.current = null;
     }
     logoutRequest().catch(() => {});
-    localStorage.removeItem('user_session');
+    sessionStorage.removeItem('user_session');
     setUser(null);
     if (typeof window !== 'undefined') {
       window.dispatchEvent(new Event('user_session_updated'));
@@ -263,7 +263,7 @@ export const AuthProvider = ({ children }) => {
    */
   const refreshSession = useCallback(async () => {
     if (typeof window === 'undefined') return false;
-    const savedUser = localStorage.getItem('user_session');
+    const savedUser = sessionStorage.getItem('user_session');
     if (!savedUser) return false;
     let parsedUser;
     try {
@@ -287,7 +287,7 @@ export const AuthProvider = ({ children }) => {
         refreshToken: data.refreshToken || parsedUser.refreshToken,
         expiresAt: tokenExpiry > 0 ? tokenExpiry : Date.now() + 3600 * 1000,
       };
-      localStorage.setItem('user_session', JSON.stringify(updated));
+      sessionStorage.setItem('user_session', JSON.stringify(updated));
       setUser(updated);
       scheduleExpiryCheck(updated);
       window.dispatchEvent(new Event('user_session_updated'));
@@ -305,7 +305,7 @@ export const AuthProvider = ({ children }) => {
     try {
       const data = await apiRequest('/api/auth/me', { method: 'GET' });
       if (data.success && data.user) {
-        const savedUser = localStorage.getItem('user_session');
+        const savedUser = sessionStorage.getItem('user_session');
         const parsedUser = savedUser ? JSON.parse(savedUser) : {};
         
         // Normalize role 'partner' to 'builder'
@@ -313,7 +313,7 @@ export const AuthProvider = ({ children }) => {
         const updatedUser = { ...data.user, role: normalizedRole };
         
         const updated = { ...parsedUser, ...updatedUser };
-        localStorage.setItem('user_session', JSON.stringify(updated));
+        sessionStorage.setItem('user_session', JSON.stringify(updated));
         setUser(updated);
         window.dispatchEvent(new Event('user_session_updated'));
       }
