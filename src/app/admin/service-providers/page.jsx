@@ -36,7 +36,7 @@ const FORM1_SP_FIELDS = [
 ];
 
 export default function AdminServiceProviders() {
-  const { user } = useAuth();
+  const { user, loading: authLoading } = useAuth();
   const [providers, setProviders] = useState([]);
   const [loading, setLoading] = useState(true);
   const [filter, setFilter] = useState('all');
@@ -79,8 +79,9 @@ export default function AdminServiceProviders() {
   }, [user?.token]);
 
   useEffect(() => {
-    if (user && user.token) loadProviders();
-  }, [user, loadProviders]);
+    if (authLoading) return; // wait for auth to finish hydrating
+    if (user) loadProviders();
+  }, [user, authLoading, loadProviders]);
 
   const handleApproveForm1 = async (providerId) => {
     try {
@@ -195,10 +196,12 @@ export default function AdminServiceProviders() {
             ))}
           </div>
 
-          {loading ? (
+          {(authLoading || loading) ? (
             <div className="flex flex-col items-center justify-center py-20">
               <Loader2 className="w-10 h-10 text-orange-600 animate-spin mb-4" />
-              <p className="text-sm text-slate-500">Fetching service providers database...</p>
+              <p className="text-sm text-slate-500">
+                {authLoading ? 'Verifying session...' : 'Fetching service providers database...'}
+              </p>
             </div>
           ) : filteredProviders.length === 0 ? (
             <Card className="p-12 text-center text-slate-400 border border-gray-100 rounded-3xl">
