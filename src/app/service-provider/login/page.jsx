@@ -1,4 +1,4 @@
-﻿"use client";
+"use client";
 
 import React, { useState, useEffect, Suspense } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
@@ -218,7 +218,12 @@ function ServiceProviderLoginContent() {
   const handleGoogleSuccess = (userData) => {
     login(userData);
     toast({ title: 'Login Successful', description: `Welcome back, ${userData.name || 'User'}!` });
-    router.push('/service-provider/dashboard');
+    
+    const targetRole = userData.role === 'partner' ? 'builder' : userData.role;
+    if (targetRole === 'admin') router.push('/admin/dashboard');
+    else if (targetRole === 'builder') router.push('/builder/dashboard');
+    else if (targetRole === 'serviceProvider') router.push('/service-provider/dashboard');
+    else router.push('/dashboard');
   };
 
   const handleGoogleError = (err) => {

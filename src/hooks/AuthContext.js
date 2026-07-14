@@ -130,6 +130,11 @@ export const AuthProvider = ({ children }) => {
             window.location.href = getLoginPath(role);
           }
         } else {
+          const normalizedRole = parsedUser.role === 'partner' ? 'builder' : parsedUser.role;
+          if (parsedUser.role !== normalizedRole) {
+            parsedUser.role = normalizedRole;
+            localStorage.setItem('user_session', JSON.stringify(parsedUser));
+          }
           setUser(parsedUser);
           scheduleExpiryCheck(parsedUser);
         }
@@ -192,7 +197,7 @@ export const AuthProvider = ({ children }) => {
     } else if (isBuilderRoute) {
       if (!user) {
         router.push('/builder/login');
-      } else if (user.role !== 'builder') {
+      } else if (user.role !== 'builder' && user.role !== 'partner') {
         toast({ title: 'Access Denied', description: 'You do not have builder privileges.', variant: 'destructive' });
         router.push('/');
       }
@@ -220,8 +225,13 @@ export const AuthProvider = ({ children }) => {
   const login = (userData) => {
     // Decode the JWT's own exp claim for accurate expiry tracking
     const tokenExpiry = userData.token ? decodeTokenExpiry(userData.token) : 0;
+    
+    // Normalize role 'partner' to 'builder'
+    const normalizedRole = userData.role === 'partner' ? 'builder' : userData.role;
+    
     const sessionData = {
       ...userData,
+      role: normalizedRole,
       loginTime: Date.now(),
       expiresAt: tokenExpiry > 0 ? tokenExpiry : Date.now() + 3600 * 1000,
     };
@@ -297,7 +307,12 @@ export const AuthProvider = ({ children }) => {
       if (data.success && data.user) {
         const savedUser = localStorage.getItem('user_session');
         const parsedUser = savedUser ? JSON.parse(savedUser) : {};
-        const updated = { ...parsedUser, ...data.user };
+        
+        // Normalize role 'partner' to 'builder'
+        const normalizedRole = data.user.role === 'partner' ? 'builder' : data.user.role;
+        const updatedUser = { ...data.user, role: normalizedRole };
+        
+        const updated = { ...parsedUser, ...updatedUser };
         localStorage.setItem('user_session', JSON.stringify(updated));
         setUser(updated);
         window.dispatchEvent(new Event('user_session_updated'));

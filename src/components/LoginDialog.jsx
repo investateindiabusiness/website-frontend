@@ -1,4 +1,4 @@
-﻿"use client";
+"use client";
 
 import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
@@ -298,7 +298,7 @@ const LoginDialog = ({ isOpen, onOpenChange, onSwitchToRegister, initialData = {
     onOpenChange(false);
 
     if (userData.role === 'admin') router.push('/admin/dashboard');
-    else if (userData.role === 'builder') router.push('/builder/dashboard');
+    else if (userData.role === 'builder' || userData.role === 'partner') router.push('/builder/dashboard');
     else router.push('/dashboard');
   };
 

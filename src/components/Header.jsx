@@ -90,9 +90,10 @@ const HeaderContent = ({ transparent = false }) => {
   };
 
   const getDashboardPath = (role) => {
-    if (role === 'admin') return '/admin/dashboard';
-    if (role === 'builder') return '/builder/dashboard';
-    if (role === 'serviceProvider') return '/service-provider/dashboard';
+    const resolvedRole = role === 'partner' ? 'builder' : role;
+    if (resolvedRole === 'admin') return '/admin/dashboard';
+    if (resolvedRole === 'builder') return '/builder/dashboard';
+    if (resolvedRole === 'serviceProvider') return '/service-provider/dashboard';
     return '/dashboard';
   };
 

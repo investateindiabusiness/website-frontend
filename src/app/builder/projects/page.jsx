@@ -358,8 +358,8 @@ export default function ProjectManager() {
     }
 
     return (
-        <div className="min-h-screen bg-gray-50 flex flex-col font-sans">
-            <div className="flex-grow w-full max-w-7xl mx-auto px-4 pb-8 pt-6">
+        <div className="min-h-screen bg-gray-50 flex flex-col font-sans overflow-x-hidden">
+            <div className="flex-grow w-full max-w-7xl mx-auto px-2 sm:px-4 pb-8 pt-4 sm:pt-6">
                 {view === 'list' && (
                     <div className="space-y-6">
                         <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 bg-white p-6 rounded-2xl shadow-sm border border-gray-100">
@@ -475,19 +475,21 @@ export default function ProjectManager() {
                 )}
 
                 {view === 'form' && (
-                    <form onSubmit={handleSubmit} className="max-w-5xl mx-auto space-y-6">
-                        <div className="flex items-center justify-between mb-4 sticky top-16 md:top-20 z-10 bg-gray-50/95 backdrop-blur py-4 border-b border-gray-200 shadow-sm px-4 rounded-xl">
-                            <Button type="button" variant="ghost" onClick={() => setView('list')} className="text-gray-500 hover:text-[#0b264f]">
-                                <ArrowLeft className="w-4 h-4 mr-2" /> Back
+                    <form onSubmit={handleSubmit} className="max-w-5xl mx-auto">
+                        {/* Form Top Bar — static, not sticky */}
+                        <div className="flex items-center justify-between bg-white border border-gray-200 rounded-xl px-3 sm:px-5 py-3 mb-4 shadow-sm gap-2">
+                            <Button type="button" variant="ghost" onClick={() => setView('list')} className="text-gray-500 hover:text-[#0b264f] shrink-0 px-2 sm:px-4">
+                                <ArrowLeft className="w-4 h-4 sm:mr-2" /> <span className="hidden sm:inline">Back</span>
                             </Button>
-                            <h2 className="text-xl md:text-2xl font-bold text-gray-900">{isEditing ? 'Edit Project' : 'New Project Listing'}</h2>
-                            <Button type="submit" disabled={isLoading} className="bg-[#0b264f] hover:bg-[#1a4b8c] text-white">
-                                {isLoading ? <Loader2 className="w-4 h-4 mr-2 animate-spin" /> : <Save className="w-4 h-4 md:mr-2" />}
-                                <span className="hidden md:inline">{isLoading ? 'Uploading & Saving...' : 'Save & Submit'}</span>
+                            <h2 className="text-base sm:text-xl md:text-2xl font-bold text-gray-900 text-center truncate">{isEditing ? 'Edit Project' : 'New Project Listing'}</h2>
+                            <Button type="submit" disabled={isLoading} className="bg-[#0b264f] hover:bg-[#1a4b8c] text-white shrink-0 px-2 sm:px-4">
+                                {isLoading ? <Loader2 className="w-4 h-4 sm:mr-2 animate-spin" /> : <Save className="w-4 h-4 sm:mr-2" />}
+                                <span className="hidden sm:inline">{isLoading ? 'Saving...' : 'Save & Submit'}</span>
                             </Button>
                         </div>
 
-                        <div className="bg-yellow-50 border border-yellow-200 text-yellow-800 p-4 rounded-xl text-sm flex gap-3 mb-6 mx-2">
+                        <div className="space-y-4 sm:space-y-6">
+                        <div className="bg-yellow-50 border border-yellow-200 text-yellow-800 p-3 sm:p-4 rounded-xl text-sm flex gap-3">
                             <ShieldAlert className="w-5 h-5 flex-shrink-0 mt-0.5" />
                             <p><strong>Verification Required:</strong> Submitting this form sends it for Administrator Review. The project will not be visible to investors until approved.</p>
                         </div>
@@ -771,6 +773,8 @@ export default function ProjectManager() {
                                 </div>
                             </div>
                         </div>
+                        </div>{/* end space-y wrapper */}
+                        <div className="pb-8" />
                     </form>
                 )}
 

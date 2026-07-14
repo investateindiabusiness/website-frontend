@@ -419,7 +419,7 @@ const RegisterDialog = ({ isOpen, onOpenChange, onLoginClick, initialData = {} }
     onOpenChange(false);
 
     if (userData.role === 'admin') router.push('/admin/dashboard');
-    else if (userData.role === 'builder') router.push('/builder/dashboard');
+    else if (userData.role === 'builder' || userData.role === 'partner') router.push('/builder/dashboard');
     else router.push('/dashboard');
   };
 
@@ -609,7 +609,7 @@ const RegisterDialog = ({ isOpen, onOpenChange, onLoginClick, initialData = {} }
         </div>
 
         <div className="flex-1 overflow-y-auto relative custom-scrollbar bg-white flex flex-col">
-          <div className="flex-1 p-6 md:px-12 lg:px-14 py-8 md:py-10 flex flex-col justify-center">
+          <div className="flex-1 p-6 md:px-12 lg:px-14 py-8 md:py-10 flex flex-col justify-start">
             {submitted ? (
               <div className="text-center py-4 animate-in zoom-in duration-500 space-y-6">
                 {/* Success Icon */}
@@ -820,7 +820,6 @@ const RegisterDialog = ({ isOpen, onOpenChange, onLoginClick, initialData = {} }
                             {shouldShowField('companyName') && (<div><Label className={labelStyle}>Entity Name *</Label><Input required value={builderData.companyName} onChange={(e) => setBuilderData({ ...builderData, companyName: e.target.value })} className={inputStyle} /></div>)}
                             {shouldShowField('yearsOfExperience') && (<div><Label className={labelStyle}>Track Record (Years) *</Label><Input type="text" required value={builderData.yearsOfExperience} onChange={(e) => setBuilderData({ ...builderData, yearsOfExperience: e.target.value.replace(/\D/g, '') })} placeholder="e.g. 10" className={inputStyle} /></div>)}
                           </div>
-                          {(shouldShowField('contactNameAndDesignation') || shouldShowField('contactPersonPhone')) && (
                           {(shouldShowField('contactName') || shouldShowField('contactPersonRole') || shouldShowField('contactPersonPhone')) && (
                             <div className={`${isForm1UpdateMode ? '' : sectionContainerStyle} space-y-4`}>
                               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">

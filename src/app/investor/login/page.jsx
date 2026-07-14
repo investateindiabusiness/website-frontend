@@ -33,8 +33,10 @@ function InvestorLoginContent() {
   // Redirect to dashboard if already logged in
   useEffect(() => {
     if (!authLoading && user) {
-      if (user.role === 'admin') router.push('/admin/dashboard');
-      else if (user.role === 'builder') router.push('/builder/dashboard');
+      const resolvedRole = user.role === 'partner' ? 'builder' : user.role;
+      if (resolvedRole === 'admin') router.push('/admin/dashboard');
+      else if (resolvedRole === 'builder') router.push('/builder/dashboard');
+      else if (resolvedRole === 'serviceProvider') router.push('/service-provider/dashboard');
       else router.push('/dashboard');
     }
   }, [user, authLoading, router]);
@@ -234,7 +236,12 @@ function InvestorLoginContent() {
   const handleGoogleSuccess = (userData) => {
     login(userData);
     toast({ title: 'Login Successful', description: `Welcome back, ${userData.name || 'User'}!` });
-    router.push('/dashboard');
+    
+    const targetRole = userData.role === 'partner' ? 'builder' : userData.role;
+    if (targetRole === 'admin') router.push('/admin/dashboard');
+    else if (targetRole === 'builder') router.push('/builder/dashboard');
+    else if (targetRole === 'serviceProvider') router.push('/service-provider/dashboard');
+    else router.push('/dashboard');
   };
 
   const handleGoogleError = (err) => {

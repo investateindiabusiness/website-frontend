@@ -12,7 +12,7 @@ import {
   User,
 } from "lucide-react";
 import { usePathname, useRouter } from "next/navigation";
-import { fetchChatbotFaqs, submitContactInquiry } from "@/api";
+import { fetchChatbotFaqs, submitContactInquiry, submitChatbotRequest } from "@/api";
 import { chatbotFaqGroups, fallbackQuestion } from "@/data/chatbotFaqs";
 import { useAuth } from "@/hooks/AuthContext";
 
@@ -329,8 +329,35 @@ export default function ChatbotWidget() {
     event.preventDefault();
     setStatus({ type: "loading", message: "Submitting your request..." });
 
+    // Build the subject line from the selected question or a default
+    const subject = selectedQuestion?.question
+      ? `Chatbot Query: ${selectedQuestion.question}`
+      : `Chatbot Query: ${fallbackQuestion}`;
+
+    // Build a rich message combining the user's typed message with context
+    const fullMessage = [
+      form.message,
+      form.organization ? `Context: ${form.organization}` : null,
+      form.preferredContact && form.preferredContact !== "Any"
+        ? `Preferred Contact: ${form.preferredContact}`
+        : null,
+      `User Type: ${audience}`,
+    ]
+      .filter(Boolean)
+      .join("\n");
+
     try {
-      await submitChatbotRequest({
+      // Submit to /api/inquiries so it appears in the admin inquiries dashboard
+      await submitContactInquiry({
+        name: form.name,
+        email: form.email,
+        phone: form.phone,
+        subject,
+        message: fullMessage,
+      });
+
+      // Also send to the chatbot requests endpoint for analytics/logging (fire-and-forget)
+      submitChatbotRequest({
         userType: audience,
         name: form.name,
         email: form.email,
@@ -339,7 +366,7 @@ export default function ChatbotWidget() {
         preferredContact: form.preferredContact,
         selectedQuestion: selectedQuestion?.question || fallbackQuestion,
         message: form.message,
-      });
+      }).catch(() => {});
 
       setStatus({
         type: "success",
