@@ -259,10 +259,10 @@ export default function ContactUs() {
                     <div>
                       <p className="text-sm text-gray-300">Email</p>
                       <a
-                        href="mailto:investateindia.business@gmail.com"
+                        href="mailto:support@investateindia.com"
                         className="text-sm font-semibold text-white transition-colors hover:text-[#D48035]"
                       >
-                        investigateindia.business@gmail.com
+                        support@investateindia.com
                       </a>
                     </div>
                   </div>
@@ -271,10 +271,10 @@ export default function ContactUs() {
                     <div>
                       <p className="text-sm text-gray-300">Phone</p>
                       <a
-                        href="tel:+914048293000"
+                        href="tel:+918309656943"
                         className="text-sm font-semibold text-white transition-colors hover:text-[#D48035]"
                       >
-                        +91 40 4829 3000
+                        +91 8309656943
                       </a>
                     </div>
                   </div>
@@ -312,32 +312,22 @@ export default function ContactUs() {
             <div className="grid gap-6 md:grid-cols-2">
               {[
                 {
-                  title: "Corporate Office (India)",
+                  title: "Corporate Office",
                   address:
-                    "Jubilee Hills, Road No. 36, Hyderabad, Telangana 500033, India",
-                  phone: "+91 40 4829 3000",
+                    "5th Floor, Sanghi One, 8-2-596/4, Road No. 10, Banjara Hills, Hyderabad, Telangana State - 500034, India",
                   email: "india.office@investateindia.com",
                 },
                 {
-                  title: "United States Office",
+                  title: "New York Head Office",
                   address:
                     "Valentine Mark Corporation, 55 West 47 Street Suite 425, New York, NY 10036, USA",
-                  phone: "+1 212 901 3290",
                   email: "usa.office@investateindia.com",
                 },
                 {
-                  title: "United Kingdom Office",
+                  title: "Mumbai Branch Office",
                   address:
-                    "Valentine Mark Ltd, 128 City Road, London, EC1V 2NX, United Kingdom",
-                  phone: "+44 20 7946 0958",
-                  email: "uk.office@investateindia.com",
-                },
-                {
-                  title: "Middle East Office (UAE)",
-                  address:
-                    "Valentine Mark DMCC, Marina Plaza, Level 29, Dubai Marina, Dubai, UAE",
-                  phone: "+971 4 563 9200",
-                  email: "uae.office@investateindia.com",
+                    "Mumbai, Maharashtra, India",
+                  email: "india.office@investateindia.com",
                 },
               ].map((loc, i) => (
                 <div
@@ -356,18 +346,22 @@ export default function ContactUs() {
                     </p>
                   </div>
                   <div className="mt-6 border-t border-gray-200 pt-4 text-sm text-gray-500 space-y-1 font-body">
-                    <div>
-                      <span className="font-semibold text-gray-600">
-                        Phone:
-                      </span>{" "}
-                      {loc.phone}
-                    </div>
-                    <div>
-                      <span className="font-semibold text-gray-600">
-                        Email:
-                      </span>{" "}
-                      {loc.email}
-                    </div>
+                    {loc.phone && (
+                      <div>
+                        <span className="font-semibold text-gray-600">
+                          Phone:
+                        </span>{" "}
+                        {loc.phone}
+                      </div>
+                    )}
+                    {loc.email && (
+                      <div>
+                        <span className="font-semibold text-gray-600">
+                          Email:
+                        </span>{" "}
+                        {loc.email}
+                      </div>
+                    )}
                   </div>
                 </div>
               ))}

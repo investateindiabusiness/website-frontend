@@ -4,6 +4,7 @@ import React, { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
+import PlayPauseButton from "@/components/PlayPauseButton";
 import Head from "next/head";
 import {
   CheckCircle,
@@ -40,7 +41,7 @@ const heroSlides = [
     title: "Unlock Growth Capital with",
     highlight: "Strategic Investment Solutions",
     subtitle:
-      "Supporting real estate developers, infrastructure projects, and businesses through structured capital solutions backed by evaluation, security, collateral, and clear exit planning.",
+      "Supporting infrastructure projects, real estate developers and businesses through structured capital solutions backed by evaluation, security, collateral, and clear exit planning.",
   },
   {
     image: "/images/equity2.png",
@@ -114,13 +115,13 @@ const faqs = [
     q: "Who can apply for capital support?",
     a: "Real estate developers, infrastructure companies, and eligible businesses seeking structured capital, pre-sale support, or growth funding can submit their profile for evaluation.",
   },
-  {
-    q: "Is there a fee for assessment?",
-    a: "Yes. A professional assessment fee applies because our dedicated team performs financial review, project evaluation, documentation checks, and feasibility analysis.",
-  },
+  // {
+  //   q: "Is there a fee for assessment?",
+  //   a: "Yes. A professional assessment fee applies because our dedicated team performs financial review, project evaluation, documentation checks, and feasibility analysis.",
+  // },
   {
     q: "How long does the evaluation process take?",
-    a: "Initial assessment usually takes 2 to 4 weeks depending on project complexity, documentation availability, and verification requirements.",
+    a: "Total evaluation process usually takes 60 to 90 days depending on project complexity, documentation availability, and verification requirements.",
   },
   {
     q: "What requirements should my project meet?",
@@ -224,23 +225,12 @@ export default function EquityRaisingPage() {
           </AnimatePresence>
           <div className="absolute inset-0 z-[1] hero-split-overlay" />
 
-          <button
-            type="button"
+          <PlayPauseButton
+            isPaused={isHeroPaused}
             onClick={() => setIsHeroPaused((prev) => !prev)}
             onMouseEnter={() => setIsPauseButtonHovered(true)}
             onMouseLeave={() => setIsPauseButtonHovered(false)}
-            onFocus={() => setIsPauseButtonHovered(true)}
-            onBlur={() => setIsPauseButtonHovered(false)}
-            aria-label={
-              isHeroPaused ? "Resume auto-rotation" : "Pause auto-rotation"
-            }
-            className="absolute bottom-16 left-1/2 -translate-x-1/2 z-[30] flex min-w-[112px] items-center justify-center gap-2 rounded-full border border-white/40 bg-slate-950/80 px-4 py-3 text-[12px] font-semibold uppercase tracking-[0.3em] text-white shadow-xl shadow-black/35 backdrop-blur-md transition-all duration-200 hover:bg-slate-800/90"
-          >
-            <span className="text-base leading-none">
-              {isHeroPaused ? "▶" : "⏸"}
-            </span>
-            {isHeroPaused ? "Play" : "Pause"}
-          </button>
+          />
 
           {/* Prev / Next buttons */}
           <button
@@ -354,7 +344,7 @@ export default function EquityRaisingPage() {
               </AnimatePresence>
               <div className="hero-cta-group">
                 <a href="/contact-us" className="btn btn-primary">
-                  Talk to Us
+                  Contact Us
                 </a>
               </div>
             </div>
@@ -532,7 +522,7 @@ export default function EquityRaisingPage() {
                 );
               })}
             </div>
-            <motion.div
+            {/* <motion.div
               {...fadeUp(0.4)}
               className="mt-10 rounded-2xl overflow-hidden border border-[#D48035]/20"
             >
@@ -550,7 +540,7 @@ export default function EquityRaisingPage() {
                   investment structures.
                 </p>
               </div>
-            </motion.div>
+            </motion.div>a */}
           </div>
         </section>
 

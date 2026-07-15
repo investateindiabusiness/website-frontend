@@ -221,7 +221,7 @@ export default function ServiceProviderHome() {
                 onClick={() => router.push("/contact-us")}
                 className="btn bg-[#D48035] hover:bg-[#B45309] border-none text-white px-8 py-3 rounded-full font-bold shadow-lg transition-transform hover:scale-105 active:scale-95"
               >
-                Talk to Us
+                Contact Us
               </button>
             </div>
           </div>

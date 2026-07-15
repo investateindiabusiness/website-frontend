@@ -12,6 +12,7 @@ import dynamic from "next/dynamic";
 import Image from "next/image";
 import AdBanner from "@/components/AdBanner";
 import SlideAdPanel from "@/components/SlideAdPanel";
+import PlayPauseButton from "@/components/PlayPauseButton";
 
 import { toast } from "@/hooks/use-toast";
 import { subscribeToNewsletter } from "@/api";
@@ -350,7 +351,7 @@ const investorSteps = [
   {
     id: "2",
     title: "Discover",
-    text: "Explore carefully evaluated opportunities including pre-launch projects, premium developments, villas, farmhouses, rental assets, and other high-value investment options.",
+    text: "Explore carefully evaluated opportunities including residential, commercial, plotted developments, villas, apartments, farm projects, industrial assets, hospitality, rental opportunities, and structured capital investments—all tailored to your investment preferences.",
   },
   {
     id: "3",
@@ -632,23 +633,10 @@ export default function Index() {
         </AnimatePresence>
         <div className="absolute inset-0 z-[1] hero-split-overlay" />
 
-        <button
-          type="button"
+        <PlayPauseButton
+          isPaused={isHeroPaused}
           onClick={() => setIsHeroPaused((prev) => !prev)}
-          onMouseEnter={() => setIsPauseButtonHovered(true)}
-          onMouseLeave={() => setIsPauseButtonHovered(false)}
-          onFocus={() => setIsPauseButtonHovered(true)}
-          onBlur={() => setIsPauseButtonHovered(false)}
-          aria-label={
-            isHeroPaused ? "Resume auto-rotation" : "Pause auto-rotation"
-          }
-          className="absolute bottom-16 left-1/2 -translate-x-1/2 z-[30] flex min-w-[112px] items-center justify-center gap-2 rounded-full border border-white/40 bg-slate-950/80 px-4 py-3 text-[12px] font-semibold uppercase tracking-[0.3em] text-white shadow-xl shadow-black/35 backdrop-blur-md transition-all duration-200 hover:bg-slate-800/90"
-        >
-          <span className="text-base leading-none">
-            {isHeroPaused ? "▶" : "⏸"}
-          </span>
-          {isHeroPaused ? "Play" : "Pause"}
-        </button>
+        />
 
         {/* Prev / Next buttons */}
         <button

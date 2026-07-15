@@ -1,9 +1,9 @@
-﻿"use client";
+"use client";
 
 import React, { useEffect, useState } from 'react';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
-import { Mail, MapPin, Send, CheckCircle, Loader2 } from 'lucide-react';
+import { Phone, Mail, MapPin, Send, CheckCircle, Loader2 } from 'lucide-react';
 import { submitContactInquiry } from '@/api';
 import { toast } from '@/hooks/use-toast';
 
@@ -69,17 +69,17 @@ export default function ContactUs() {
                       <div className="bg-white/10 p-3 rounded-lg text-orange-400"><Mail className="w-6 h-6" /></div>
                       <div>
                         <p className="text-xs text-blue-200 uppercase font-semibold mb-1">Email Us</p>
-                        <a href="mailto:investateindia.business@gmail.com" className="text-[14px] min-[375px]:text-base md:text-lg font-medium hover:text-orange-400 transition-colors">
-                          investateindia.business@gmail.com
+                        <a href="mailto:support@investateindia.com" className="text-[14px] min-[375px]:text-base md:text-lg font-medium hover:text-orange-400 transition-colors">
+                          support@investateindia.com
                         </a>
                       </div>
                     </div>
                     <div className="flex items-start gap-4">
-                      <div className="bg-white/10 p-3 rounded-lg text-orange-400"><MapPin className="w-6 h-6" /></div>
+                      <div className="bg-white/10 p-3 rounded-lg text-orange-400"><Phone className="w-6 h-6" /></div>
                       <div>
                         <p className="text-xs text-blue-200 uppercase font-semibold mb-1">Call Us</p>
-                        <a href="tel:+914048293000" className="text-[14px] min-[375px]:text-base md:text-lg font-medium hover:text-orange-400 transition-colors">
-                          +91 40 4829 3000
+                        <a href="tel:+918309656943" className="text-[14px] min-[375px]:text-base md:text-lg font-medium hover:text-orange-400 transition-colors">
+                          +91 8309656943
                         </a>
                       </div>
                     </div>
@@ -135,31 +135,22 @@ export default function ContactUs() {
             </p>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {[
               {
-                title: "Corporate Office (India)",
-                address: "Jubilee Hills, Road No. 36, Hyderabad, Telangana 500033, India",
-                phone: "+91 40 4829 3000",
+                title: "Corporate Office",
+                address: "5th Floor, Sanghi One, 8-2-596/4, Road No. 10, Banjara Hills, Hyderabad, Telangana State - 500034, India",
                 email: "india.office@investateindia.com",
               },
               {
-                title: "United States Office",
+                title: "New York Head Office",
                 address: "Valentine Mark Corporation, 55 West 47 Street Suite 425, New York, NY 10036, USA",
-                phone: "+1 212 901 3290",
                 email: "usa.office@investateindia.com",
               },
               {
-                title: "United Kingdom Office",
-                address: "Valentine Mark Ltd, 128 City Road, London, EC1V 2NX, United Kingdom",
-                phone: "+44 20 7946 0958",
-                email: "uk.office@investateindia.com",
-              },
-              {
-                title: "Middle East Office (UAE)",
-                address: "Valentine Mark DMCC, Marina Plaza, Level 29, Dubai Marina, Dubai, UAE",
-                phone: "+971 4 563 9200",
-                email: "uae.office@investateindia.com",
+                title: "Mumbai Branch Office",
+                address: "Mumbai, Maharashtra, India",
+                email: "india.office@investateindia.com",
               }
             ].map((loc, i) => (
               <div key={i} className="bg-white dark:bg-slate-900 rounded-2xl p-6 border border-gray-100 dark:border-slate-800 shadow-sm hover:shadow-md transition-all flex flex-col justify-between">
@@ -171,8 +162,8 @@ export default function ContactUs() {
                   <p className="text-gray-500 dark:text-slate-400 text-sm leading-relaxed mb-6">{loc.address}</p>
                 </div>
                 <div className="pt-4 border-t border-gray-50 dark:border-slate-800 text-xs text-gray-400 space-y-1">
-                  <div><span className="font-semibold text-gray-500 dark:text-slate-400">Phone:</span> {loc.phone}</div>
-                  <div><span className="font-semibold text-gray-500 dark:text-slate-400">Email:</span> {loc.email}</div>
+                  {loc.phone && <div><span className="font-semibold text-gray-500 dark:text-slate-400">Phone:</span> {loc.phone}</div>}
+                  {loc.email && <div><span className="font-semibold text-gray-500 dark:text-slate-400">Email:</span> {loc.email}</div>}
                 </div>
               </div>
             ))}

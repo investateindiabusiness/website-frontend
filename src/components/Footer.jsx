@@ -135,15 +135,17 @@ const resourceLinks = [
 
 const officeLocations = [
   {
-    city: "Hyderabad, India",
-    address: "Jubilee Hills, Road No. 36, Telangana 500033",
+    city: "Corporate Office",
+    address: "5th Floor, Sanghi One, 8-2-596/4, Road No. 10, Banjara Hills, Hyderabad, Telangana State - 500034",
   },
   {
-    city: "New York, USA",
+    city: "New York Head Office",
     address: "55 West 47 Street Suite 425, New York, NY 10036",
   },
-  // { city: "London, UK", address: "128 City Road, London, EC1V 2NX" },
-  // { city: "Dubai, UAE", address: "Marina Plaza, Level 29, Dubai Marina" },
+  {
+    city: "Mumbai Branch Office",
+    address: "Mumbai, Maharashtra, India",
+  },
 ];
 
 const Footer = () => {

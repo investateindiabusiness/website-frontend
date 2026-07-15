@@ -11,6 +11,7 @@ import Footer from "@/components/Footer";
 import AdBanner from "@/components/AdBanner";
 import InterstitialAdBanner from "@/components/InterstitialAdBanner";
 import SlideAdPanel from "@/components/SlideAdPanel";
+import PlayPauseButton from "@/components/PlayPauseButton";
 
 import {
   ShieldCheck,
@@ -59,7 +60,7 @@ const heroSlides = [
 const serviceProviderBenefits = [
   {
     title: "Trusted Investment Access",
-    desc: "Helping investors discover verified real estate, growth opportunities, and structured investment options across India.",
+    desc: "Helping investors discover verified growth opportunities, real estate, and structured investment options across India.",
     image:
       "https://images.unsplash.com/photo-1557804506-669a67965ba0?q=80&w=2070&auto=format&fit=crop",
   },
@@ -80,13 +81,13 @@ const serviceProviderChallenges = [
   {
     id: "01",
     text: "Investor Access",
-    desc: "Helping global investors discover verified Indian real estate, growth opportunities, and professional support through one ecosystem.",
+    desc: "Helping global investors discover verified growth opportunities, real estate, and professional support through one ecosystem.",
     icon: <Compass className="w-8 h-8 text-white" />,
   },
   {
     id: "02",
     text: "Builder Growth",
-    desc: "Connecting trusted developers with NRI investors, capital partners, and global market visibility.",
+    desc: "Connecting trusted developers with Global investors, capital partners, and global market visibility.",
     icon: <Building2 className="w-8 h-8 text-white" />,
   },
   {
@@ -332,23 +333,13 @@ export default function ServiceProviderHome() {
         </AnimatePresence>
         <div className="absolute inset-0 z-[1] hero-split-overlay" />
 
-        <button
-          type="button"
+        <PlayPauseButton
+          isPaused={isHeroPaused}
           onClick={() => setIsHeroPaused((prev) => !prev)}
           onMouseEnter={() => setIsPauseButtonHovered(true)}
           onMouseLeave={() => setIsPauseButtonHovered(false)}
-          onFocus={() => setIsPauseButtonHovered(true)}
-          onBlur={() => setIsPauseButtonHovered(false)}
-          aria-label={
-            isHeroPaused ? "Resume auto-rotation" : "Pause auto-rotation"
-          }
-          className="absolute bottom-16 left-1/2 -translate-x-1/2 z-[30] flex min-w-[112px] items-center justify-center gap-2 rounded-full border border-white/40 bg-slate-950/80 px-4 py-3 text-[12px] font-semibold uppercase tracking-[0.3em] text-white shadow-xl shadow-black/35 backdrop-blur-md transition-all duration-200 hover:bg-slate-800/90"
-        >
-          <span className="text-base leading-none">
-            {isHeroPaused ? "▶" : "⏸"}
-          </span>
-          {isHeroPaused ? "Play" : "Pause"}
-        </button>
+          className="bottom-16"
+        />
 
         {/* Prev / Next buttons */}
         <button
@@ -417,7 +408,7 @@ export default function ServiceProviderHome() {
                   onClick={() => router.push("/contact-us")}
                   className="btn bg-[#D48035] hover:bg-[#B45309] border-none text-white px-8 py-3 rounded-full font-bold shadow-lg transition-transform hover:scale-105 active:scale-95"
                 >
-                  Talk to Us
+                  Contact us
                 </button>
               </div>
             </div>
@@ -875,7 +866,7 @@ export default function ServiceProviderHome() {
               onClick={() => router.push("/contact-us")}
               className="bg-[#D48035] hover:bg-[#b06725] text-white font-bold px-10 py-4 rounded-full transition-transform hover:scale-105 shadow-xl"
             >
-              Talk to Our Team
+              Contact Our Team
             </button>
           </div>
         </div>

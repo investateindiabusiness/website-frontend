@@ -67,6 +67,11 @@ const schemaJson = {
       "@type": "PostalAddress",
       "addressLocality": "New York",
       "addressCountry": "US"
+    },
+    {
+      "@type": "PostalAddress",
+      "addressLocality": "Mumbai",
+      "addressCountry": "IN"
     }
   ]
 };

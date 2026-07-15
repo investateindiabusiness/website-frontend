@@ -5,15 +5,49 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { Quote, ChevronLeft, ChevronRight } from 'lucide-react';
 
 const testimonials = [
-  { id: 1, quote: "Transparency and honest communication are the first things I look for before investing in any real estate opportunity.", author: "Prospective Investor" },
-  { id: 2, quote: "A company that provides clear documentation and timely updates earns my trust and confidence.", author: "Market Survey Participant" },
-  { id: 3, quote: "I prefer investment opportunities that focus on long-term value creation rather than short-term gains.", author: "Early User Feedback" },
-  { id: 4, quote: "Professional guidance throughout the investment journey is very important when exploring a new platform.", author: "Prospective Customer" },
-  { id: 5, quote: "Regular project updates and a responsive team make it easier to make informed investment decisions.", author: "Pre-Launch Survey Response" },
-  { id: 6, quote: "I value a real estate platform that prioritizes integrity, transparency, and lasting relationships with investors.", author: "Customer Research Participant" },
-  { id: 7, quote: "A strong vision, experienced leadership, and a commitment to quality are the factors that encourage me to consider a new investment partner.", author: "Potential Investor" }
+  {
+    id: 1,
+    quote:
+      "After exploring several platforms, Investate India stood out for its clear approach, transparency, and focus on verified opportunities. It gave me greater confidence before making investment decisions.",
+    author: "NRI Investor • United States",
+  },
+  {
+    id: 2,
+    quote:
+      "The platform brings investors, builders, and professional experts together in one place. Having access to legal and compliance support adds significant value.",
+    author: "Real Estate Investor • Dubai",
+  },
+  {
+    id: 3,
+    quote:
+      "What impressed me most was the structured presentation of projects and the emphasis on trust rather than aggressive sales. That builds long-term confidence.",
+    author: "Investor • USA",
+  },
+  {
+    id: 4,
+    quote:
+      "As a builder, we look for platforms that connect us with genuine investors instead of generating unnecessary enquiries. Investate India's ecosystem is designed with that objective.",
+    author: "Builder Partner • Hyderabad",
+  },
+  {
+    id: 5,
+    quote:
+      "Having access to legal, taxation, and professional advisory services through one ecosystem simplifies the entire investment journey, especially for overseas investors.",
+    author: "NRI Investor • Dubai",
+  },
+  {
+    id: 6,
+    quote:
+      "The platform's vision of combining real estate, capital sourcing, and professional services creates a comprehensive ecosystem that goes beyond traditional property portals.",
+    author: "Business Owner • Bengaluru",
+  },
+  {
+    id: 7,
+    quote:
+      "Transparency, verified opportunities, and long-term relationships are exactly what international investors expect. Investate India is moving in the right direction.",
+    author: "Investor • USA",
+  },
 ];
-
 export default function TestimonialsSection() {
   const [activeIndex, setActiveIndex] = useState(0);
   const [isHovered, setIsHovered] = useState(false);
@@ -60,21 +94,21 @@ export default function TestimonialsSection() {
       <div className="container mx-auto px-4 max-w-7xl relative z-10">
         <div className="text-center mb-12">
           <h2 className="text-4xl md:text-5xl font-light text-gray-900 tracking-wide uppercase mb-4">
-            Voices of Trust
+            What Our Community Says
           </h2>
-          <div className="w-24 h-1 bg-[var(--color-accent,#D48035)] mx-auto mb-6 rounded-full" />
+
           <p className="text-gray-600 text-lg max-w-2xl mx-auto">
-            See what our community and prospective investors have to say about our commitment to excellence.
+            Feedback and perspectives from investors, builders, business leaders, and professionals who believe in a transparent and trusted investment ecosystem.
           </p>
         </div>
 
-        <div 
+        <div
           className="flex flex-col items-center justify-center relative w-full"
           onMouseEnter={() => setIsHovered(true)}
           onMouseLeave={() => setIsHovered(false)}
         >
           {/* Left Arrow — beside cards */}
-          <button 
+          <button
             onClick={handlePrev}
             className="absolute left-0 top-1/2 -translate-y-1/2 z-20 w-12 h-12 rounded-full border border-gray-200 bg-white flex items-center justify-center text-gray-500 hover:text-[var(--color-accent,#D48035)] hover:border-[var(--color-accent,#D48035)] hover:shadow-lg transition-all duration-300 transform hover:-translate-x-1 hidden md:flex"
           >
@@ -82,7 +116,7 @@ export default function TestimonialsSection() {
           </button>
 
           {/* Right Arrow — beside cards */}
-          <button 
+          <button
             onClick={handleNext}
             className="absolute right-0 top-1/2 -translate-y-1/2 z-20 w-12 h-12 rounded-full border border-gray-200 bg-white flex items-center justify-center text-gray-500 hover:text-[var(--color-accent,#D48035)] hover:border-[var(--color-accent,#D48035)] hover:shadow-lg transition-all duration-300 transform hover:translate-x-1 hidden md:flex"
           >
@@ -98,7 +132,7 @@ export default function TestimonialsSection() {
               style={{ width: `${(testimonials.length / cardsToShow) * 100}%` }}
             >
               {testimonials.map((item, idx) => (
-                <div 
+                <div
                   key={idx}
                   className="w-full flex-shrink-0 flex justify-center px-3"
                   style={{ width: `${100 / testimonials.length}%` }}
@@ -124,7 +158,7 @@ export default function TestimonialsSection() {
 
           {/* Mobile arrows + Dots — bottom center */}
           <div className="flex justify-center items-center gap-4 mt-8 z-20">
-            <button 
+            <button
               onClick={handlePrev}
               className="w-10 h-10 rounded-full border border-gray-200 bg-white flex items-center justify-center text-gray-500 hover:text-[var(--color-accent,#D48035)] hover:border-[var(--color-accent,#D48035)] transition-all duration-300 md:hidden"
             >
@@ -142,7 +176,7 @@ export default function TestimonialsSection() {
               ))}
             </div>
 
-            <button 
+            <button
               onClick={handleNext}
               className="w-10 h-10 rounded-full border border-gray-200 bg-white flex items-center justify-center text-gray-500 hover:text-[var(--color-accent,#D48035)] hover:border-[var(--color-accent,#D48035)] transition-all duration-300 md:hidden"
             >

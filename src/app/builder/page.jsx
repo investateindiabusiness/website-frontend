@@ -18,6 +18,7 @@ import {
 import { useRouter } from "next/navigation";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
+import PlayPauseButton from "@/components/PlayPauseButton";
 const heroSlides = [
   {
     image: "/images/image (2).png",
@@ -315,23 +316,12 @@ export default function BuilderHome() {
         </AnimatePresence>
         <div className="absolute inset-0 z-[1] hero-split-overlay" />
 
-        <button
-          type="button"
+        <PlayPauseButton
+          isPaused={isHeroPaused}
           onClick={() => setIsHeroPaused((prev) => !prev)}
           onMouseEnter={() => setIsPauseButtonHovered(true)}
           onMouseLeave={() => setIsPauseButtonHovered(false)}
-          onFocus={() => setIsPauseButtonHovered(true)}
-          onBlur={() => setIsPauseButtonHovered(false)}
-          aria-label={
-            isHeroPaused ? "Resume auto-rotation" : "Pause auto-rotation"
-          }
-          className="absolute bottom-16 left-1/2 -translate-x-1/2 z-[30] flex min-w-[112px] items-center justify-center gap-2 rounded-full border border-white/40 bg-slate-950/80 px-4 py-3 text-[12px] font-semibold uppercase tracking-[0.3em] text-white shadow-xl shadow-black/35 backdrop-blur-md transition-all duration-200 hover:bg-slate-800/90"
-        >
-          <span className="text-base leading-none">
-            {isHeroPaused ? "▶" : "⏸"}
-          </span>
-          {isHeroPaused ? "Play" : "Pause"}
-        </button>
+        />
 
         {/* Prev / Next buttons */}
         <button
