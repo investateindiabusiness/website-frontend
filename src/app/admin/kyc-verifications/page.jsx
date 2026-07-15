@@ -182,10 +182,31 @@ export default function AdminKycVerificationsPage() {
       renderCell: ({ value }) => {
         if (!value) return <Typography variant="caption" sx={{ color: 'gray' }}>No Document</Typography>;
         return (
-          <Tooltip title="View Uploaded Document">
+          <Tooltip title="View Passport Copy">
             <IconButton 
               component="a" 
               href={value} 
+              target="_blank" 
+              rel="noreferrer"
+              size="small" 
+              sx={{ border: '1px solid #e5e7eb', color: '#0b264f' }}
+            >
+              <ViewIcon fontSize="small" />
+            </IconButton>
+          </Tooltip>
+        );
+      }
+    },
+    {
+      field: 'kycVisaUrl', headerName: 'Visa Copy', width: 140,
+      renderCell: ({ row }) => {
+        if (row.nriStatus !== 'NRI') return <Typography variant="caption" sx={{ color: 'gray' }}>N/A (Non-NRI)</Typography>;
+        if (!row.kycVisaUrl) return <Typography variant="caption" sx={{ color: 'gray' }}>No Document</Typography>;
+        return (
+          <Tooltip title="View Visa Copy">
+            <IconButton 
+              component="a" 
+              href={row.kycVisaUrl} 
               target="_blank" 
               rel="noreferrer"
               size="small" 

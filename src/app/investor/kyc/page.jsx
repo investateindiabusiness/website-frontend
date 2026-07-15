@@ -68,25 +68,8 @@ const DETAILED_PROFESSIONS = [
   "Other"
 ];
 
-// Income options by profession (in USD ranges)
-const INCOME_OPTIONS_BY_PROFESSION = {
-  'NRI / Overseas Professional': [
-    '$30,000 - $60,000', '$60,000 - $100,000', '$100,000 - $150,000',
-    '$150,000 - $250,000', '$250,000 - $500,000', '$500,000+'
-  ],
-  'Retired': [
-    '$10,000 - $25,000', '$25,000 - $50,000', '$50,000 - $100,000',
-    '$100,000 - $200,000', '$200,000+'
-  ],
-  'Other': [
-    '$5,000 - $20,000', '$20,000 - $50,000', '$50,000 - $100,000',
-    '$100,000 - $250,000', '$250,000+'
-  ],
-};
-
 const DEFAULT_INCOME_OPTIONS = [
-  '$10,000 - $30,000', '$30,000 - $75,000', '$75,000 - $150,000',
-  '$150,000 - $300,000', '$300,000+'
+  '$0 - $50,000', '$50,000 - $100,000', '$100,000 and above'
 ];
 
 // Dynamic Categories and Types mapping
@@ -123,7 +106,7 @@ const PREFERRED_INVESTMENT_STAGES = [
 ];
 
 const INVESTMENT_PURPOSES = [
-  "Self Use", "Rental Income", "Long-Term Appreciation", "Short-Term Returns", "Portfolio Diversification", "Retirement Planning"
+  "Self Use", "Rental Income", "Long-Term Appreciation", "Short-Term Returns", "Portfolio Diversification", "Retirement Planning", "Investment opportunity with good returns"
 ];
 
 const BUDGET_RANGES = [
@@ -140,6 +123,7 @@ export default function InvestorKycPage() {
   const router = useRouter();
   
   const [file, setFile] = useState(null);
+  const [visaFile, setVisaFile] = useState(null);
   const [uploading, setUploading] = useState(false);
 
   const [countries, setCountries] = useState([]);
@@ -153,7 +137,8 @@ export default function InvestorKycPage() {
     professionOther: '',
     nationality: '',
     nationalityOther: '',
-    industryNatureOfWork: '',
+    nriStatus: '',
+    kycVisaUrl: '',
     yearlyIncome: '',
     investmentTenure: '',
     expectedReturns: '',
@@ -198,7 +183,8 @@ export default function InvestorKycPage() {
         professionOther: prof.other,
         nationality: nat.main,
         nationalityOther: nat.other,
-        industryNatureOfWork: user.industryNatureOfWork || '',
+        nriStatus: user.nriStatus || '',
+        kycVisaUrl: user.kycVisaUrl || '',
         yearlyIncome: user.yearlyIncome || '',
         investmentTenure: user.investmentTenure || '',
         expectedReturns: user.expectedReturns || '',
@@ -297,10 +283,23 @@ export default function InvestorKycPage() {
     }
   };
 
+  const handleVisaFileChange = (e) => {
+    if (e.target.files && e.target.files[0]) {
+      const selectedFile = e.target.files[0];
+      if (selectedFile.size > 10 * 1024 * 1024) {
+        return toast({ title: "File Too Large", description: "Please upload a visa document under 10MB.", variant: "destructive" });
+      }
+      setVisaFile(selectedFile);
+    }
+  };
+
   const handleUploadSubmit = async (e) => {
     e.preventDefault();
     if (!file) {
       return toast({ title: "No File Selected", description: "Please select your passport scanned copy first.", variant: "destructive" });
+    }
+    if (invForm2.nationality === 'Indian' && invForm2.nriStatus === 'NRI' && !visaFile && !invForm2.kycVisaUrl) {
+      return toast({ title: "Visa Required", description: "Please upload your visa document copy first.", variant: "destructive" });
     }
     if (!invForm2.passportNumber || !invForm2.passportNumber.trim()) {
       return toast({ title: "Passport Required", description: "Please enter your passport number.", variant: "destructive" });
@@ -312,15 +311,25 @@ export default function InvestorKycPage() {
       return toast({ title: "Type Required", description: "Please select at least one Investment Type.", variant: "destructive" });
     }
 
-    // Build submission payload — use "other" typed values if selected
-    const payload = {
-      ...invForm2,
-      profession: invForm2.profession === 'Other' ? `Other: ${invForm2.professionOther}` : invForm2.profession,
-      nationality: invForm2.nationality === 'Other' ? `Other: ${invForm2.nationalityOther}` : invForm2.nationality,
-    };
-
     try {
       setUploading(true);
+
+      // Upload Visa if selected
+      let kycVisaUrl = invForm2.kycVisaUrl || null;
+      if (invForm2.nationality === 'Indian' && invForm2.nriStatus === 'NRI' && visaFile) {
+        const visaUploadRes = await uploadFile(visaFile, 'kyc_visas');
+        if (!visaUploadRes.success || !visaUploadRes.url) throw new Error(visaUploadRes.error || "Visa file upload failed");
+        kycVisaUrl = visaUploadRes.url;
+      }
+
+      // Build submission payload — use "other" typed values if selected
+      const payload = {
+        ...invForm2,
+        profession: invForm2.profession === 'Other' ? `Other: ${invForm2.professionOther}` : invForm2.profession,
+        nationality: invForm2.nationality === 'Other' ? `Other: ${invForm2.nationalityOther}` : invForm2.nationality,
+        kycVisaUrl: kycVisaUrl
+      };
+
       await submitInvestorForm2(user.uid, payload);
 
       const uploadRes = await uploadFile(file, 'kyc_passports');
@@ -328,12 +337,17 @@ export default function InvestorKycPage() {
 
       await apiRequest('/api/investors/submit-kyc', {
         method: 'POST',
-        body: JSON.stringify({ kycPassportUrl: uploadRes.url, passportNumber: invForm2.passportNumber })
+        body: JSON.stringify({ 
+          kycPassportUrl: uploadRes.url, 
+          passportNumber: invForm2.passportNumber,
+          kycVisaUrl: kycVisaUrl
+        })
       });
 
-      toast({ title: "Profile & KYC Submitted", description: "Your final details and passport copy have been sent for verification." });
+      toast({ title: "Profile & KYC Submitted", description: "Your final details, passport, and visa copy have been sent for verification." });
       await refreshUser();
       setFile(null);
+      setVisaFile(null);
     } catch (err) {
       toast({ title: "Submission Failed", description: err.message || "Failed to submit KYC. Please try again.", variant: "destructive" });
     } finally {
@@ -345,15 +359,7 @@ export default function InvestorKycPage() {
   const inputStyle = "w-full h-12 bg-gray-50 border-gray-200 rounded-xl px-4 font-semibold text-gray-900 focus:bg-white focus:ring-2 focus:ring-orange-500/20 focus:border-orange-500 transition-all";
   const selectStyle = "w-full h-12 bg-gray-50 border border-gray-200 rounded-xl px-4 font-semibold text-gray-900 focus:bg-white focus:ring-2 focus:ring-orange-500/20 focus:border-orange-500 transition-all outline-none appearance-none";
 
-  const getIncomeOptions = () => {
-    if (!invForm2.profession) return DEFAULT_INCOME_OPTIONS;
-    if (invForm2.profession.includes('NRI')) return INCOME_OPTIONS_BY_PROFESSION['NRI / Overseas Professional'];
-    if (invForm2.profession === 'Retired') return INCOME_OPTIONS_BY_PROFESSION['Retired'];
-    if (invForm2.profession === 'Other') return INCOME_OPTIONS_BY_PROFESSION['Other'];
-    return DEFAULT_INCOME_OPTIONS;
-  };
-
-  const incomeOptions = getIncomeOptions();
+  const incomeOptions = DEFAULT_INCOME_OPTIONS;
 
   // Dynamically compute valid investment types based on selected categories
   const dynamicTypesList = [];
@@ -369,7 +375,7 @@ export default function InvestorKycPage() {
         
         {/* Header */}
         <div className="text-center mb-8">
-          <h1 className="text-2xl font-black text-gray-900 uppercase tracking-tight">Verification</h1>
+          <h1 className="text-2xl font-black text-gray-900 uppercase tracking-tight">Prove your NRI Identity</h1>
           <p className="text-xs text-gray-400 font-bold tracking-wide uppercase mt-1">Step 02 — Profile Completion</p>
         </div>
 
@@ -452,6 +458,113 @@ export default function InvestorKycPage() {
                   <input readOnly value={user?.name || user?.fullName || ''} className="w-full h-12 bg-gray-100 border-transparent rounded-xl px-4 font-bold text-gray-500 select-none" />
                 </div>
 
+                {/* Passport Number */}
+                <div>
+                  <Label className={labelStyle}>Passport Number *</Label>
+                  <Input
+                    required
+                    value={invForm2.passportNumber}
+                    onChange={(e) => setInvForm2({ ...invForm2, passportNumber: e.target.value.toUpperCase() })}
+                    className={inputStyle}
+                    placeholder="Enter passport number"
+                  />
+                </div>
+
+                {/* Passport Document Copy */}
+                <div>
+                  <Label className={labelStyle}>Passport Document Copy *</Label>
+                  <div className="relative group border-2 border-dashed border-gray-200 hover:border-orange-500/50 rounded-2xl h-12 flex items-center justify-center transition-all bg-gray-50/50 hover:bg-orange-50/10 cursor-pointer">
+                    <input
+                      type="file"
+                      accept="image/*,.pdf"
+                      onChange={handleFileChange}
+                      className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
+                    />
+                    <div className="flex items-center gap-2 px-3">
+                      <Upload className="w-4 h-4 text-gray-400 group-hover:text-orange-500" />
+                      <span className="text-xs font-bold text-gray-700 uppercase tracking-tight block truncate max-w-[200px]">
+                        {file ? file.name : (invForm2.kycPassportUrl ? "Update Passport copy" : "Upload Passport copy")}
+                      </span>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Nationality */}
+                <div>
+                  <Label className={labelStyle}>Nationality *</Label>
+                  <select
+                    required
+                    className={selectStyle}
+                    value={invForm2.nationality}
+                    onChange={(e) => {
+                      const newNationality = e.target.value;
+                      setInvForm2(prev => ({
+                        ...prev,
+                        nationality: newNationality,
+                        nationalityOther: '',
+                        nriStatus: newNationality === 'Indian' ? prev.nriStatus : ''
+                      }));
+                    }}
+                  >
+                    <option value="">Select Nationality</option>
+                    {NATIONALITIES.map(n => (
+                      <option key={n} value={n}>{n}</option>
+                    ))}
+                  </select>
+                </div>
+
+                {/* "Other" nationality text input */}
+                {invForm2.nationality === 'Other' && (
+                  <div className="animate-in slide-in-from-top-2 duration-300">
+                    <Label className={labelStyle}>Please Specify Nationality *</Label>
+                    <Input
+                      required
+                      value={invForm2.nationalityOther}
+                      onChange={(e) => setInvForm2({ ...invForm2, nationalityOther: e.target.value })}
+                      className={inputStyle}
+                      placeholder="Enter your nationality"
+                    />
+                  </div>
+                )}
+
+                {/* NRI Status (Conditional on Nationality == Indian) */}
+                {invForm2.nationality === 'Indian' && (
+                  <div className="animate-in slide-in-from-top-2 duration-300">
+                    <Label className={labelStyle}>NRI Status *</Label>
+                    <select
+                      required
+                      className={selectStyle}
+                      value={invForm2.nriStatus}
+                      onChange={(e) => setInvForm2({ ...invForm2, nriStatus: e.target.value })}
+                    >
+                      <option value="">Select NRI Status</option>
+                      <option value="NRI">NRI</option>
+                      <option value="Non-NRI">Non-NRI</option>
+                    </select>
+                  </div>
+                )}
+
+                {/* Visa Document Upload (Conditional on NRI Status == NRI) */}
+                {invForm2.nationality === 'Indian' && invForm2.nriStatus === 'NRI' && (
+                  <div className="md:col-span-2 animate-in slide-in-from-top-2 duration-300">
+                    <Label className={labelStyle}>Visa Document Copy *</Label>
+                    <div className="relative group border-2 border-dashed border-gray-200 hover:border-orange-500/50 rounded-2xl h-12 flex items-center justify-center transition-all bg-gray-50/50 hover:bg-orange-50/10 cursor-pointer">
+                      <input
+                        type="file"
+                        accept="image/*,.pdf"
+                        onChange={handleVisaFileChange}
+                        className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
+                      />
+                      <div className="flex items-center gap-2 px-3">
+                        <Upload className="w-4 h-4 text-gray-400 group-hover:text-orange-500" />
+                        <span className="text-xs font-bold text-gray-700 uppercase tracking-tight block truncate max-w-[400px]">
+                          {visaFile ? visaFile.name : (invForm2.kycVisaUrl ? "Update Visa Document" : "Upload Visa Document")}
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+                )}
+
                 {/* Profession */}
                 <div className={invForm2.profession === 'Other' ? '' : 'md:col-span-1'}>
                   <Label className={labelStyle}>Profession *</Label>
@@ -498,42 +611,6 @@ export default function InvestorKycPage() {
                   </select>
                 </div>
 
-                {/* Nationality */}
-                <div>
-                  <Label className={labelStyle}>Nationality *</Label>
-                  <select
-                    required
-                    className={selectStyle}
-                    value={invForm2.nationality}
-                    onChange={(e) => setInvForm2({ ...invForm2, nationality: e.target.value, nationalityOther: '' })}
-                  >
-                    <option value="">Select Nationality</option>
-                    {NATIONALITIES.map(n => (
-                      <option key={n} value={n}>{n}</option>
-                    ))}
-                  </select>
-                </div>
-
-                {/* "Other" nationality text input */}
-                {invForm2.nationality === 'Other' && (
-                  <div className="animate-in slide-in-from-top-2 duration-300">
-                    <Label className={labelStyle}>Please Specify Nationality *</Label>
-                    <Input
-                      required
-                      value={invForm2.nationalityOther}
-                      onChange={(e) => setInvForm2({ ...invForm2, nationalityOther: e.target.value })}
-                      className={inputStyle}
-                      placeholder="Enter your nationality"
-                    />
-                  </div>
-                )}
-
-                {/* Primary Industry */}
-                <div>
-                  <Label className={labelStyle}>Primary Industry *</Label>
-                  <Input required value={invForm2.industryNatureOfWork} onChange={(e) => setInvForm2({ ...invForm2, industryNatureOfWork: e.target.value })} className={inputStyle} placeholder="e.g. IT, Real Estate, Healthcare" />
-                </div>
-
                 {/* Target Tenure */}
                 <div>
                   <Label className={labelStyle}>Target Tenure *</Label>
@@ -562,18 +639,6 @@ export default function InvestorKycPage() {
                     <option value="Mix of Appreciation & Rental">Mix of Appreciation & Rental</option>
                     <option value="Open to Suggestions">Open to Suggestions</option>
                   </select>
-                </div>
-
-                {/* Passport Number */}
-                <div>
-                  <Label className={labelStyle}>Passport Number *</Label>
-                  <Input
-                    required
-                    value={invForm2.passportNumber}
-                    onChange={(e) => setInvForm2({ ...invForm2, passportNumber: e.target.value.toUpperCase() })}
-                    className={inputStyle}
-                    placeholder="Enter passport number"
-                  />
                 </div>
               </div>
 
@@ -643,32 +708,15 @@ export default function InvestorKycPage() {
 
               <div className="h-px bg-gray-100 w-full" />
 
-              <div>
-                <Label className={labelStyle}>Passport Document Copy *</Label>
-                <div className="relative group border-2 border-dashed border-gray-200 hover:border-orange-500/50 rounded-2xl p-8 text-center transition-all bg-gray-50/50 hover:bg-orange-50/10 cursor-pointer mt-2">
-                  <input
-                    type="file"
-                    accept="image/*,.pdf"
-                    onChange={handleFileChange}
-                    className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
-                  />
-                  <div className="flex flex-col items-center justify-center">
-                    <div className="w-12 h-12 bg-white rounded-xl flex items-center justify-center text-gray-400 group-hover:text-orange-500 group-hover:scale-110 shadow-sm border border-gray-100 transition-all mb-4">
-                      <Upload className="w-5 h-5" />
-                    </div>
-                    <span className="text-xs font-bold text-gray-700 uppercase tracking-tight block">
-                      {file ? file.name : "Upload Passport Document"}
-                    </span>
-                    <span className="text-[10px] text-gray-400 font-semibold uppercase tracking-wide block mt-1">
-                      {file ? `${(file.size / 1024 / 1024).toFixed(2)} MB` : "PDF, JPEG, or PNG up to 10MB"}
-                    </span>
-                  </div>
-                </div>
-              </div>
-
               <Button
                 type="submit"
-                disabled={uploading || !file || invForm2.preferredCategories.length === 0 || invForm2.preferredTypes.length === 0}
+                disabled={
+                  uploading || 
+                  !file || 
+                  (invForm2.nationality === 'Indian' && invForm2.nriStatus === 'NRI' && !visaFile && !invForm2.kycVisaUrl) ||
+                  invForm2.preferredCategories.length === 0 || 
+                  invForm2.preferredTypes.length === 0
+                }
                 className="w-full h-14 bg-gray-900 hover:bg-black text-white font-black text-sm uppercase tracking-wider rounded-xl shadow-lg transition-all hover:scale-[1.02] active:scale-[0.98] disabled:scale-100 disabled:opacity-50"
               >
                 {uploading ? (

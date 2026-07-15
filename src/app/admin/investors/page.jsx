@@ -21,7 +21,7 @@ const STANDARD_INVESTOR_KEYS = [
   'uid', 'id', 'email', 'role', 'createdAt', 'updatedAt', 'onboardingStatus', 'isVerified', 'adminRequests', 'password', 'pendingChanges',
   'fullName', 'name', 'contactNumber', 'investorType', 'investmentRangeMin', 'investmentRangeMax', 'address', 'country', 'state', 'city', 'zip', 'termsAccepted',
   'profession', 'professionOther', 'nationality', 'nationalityOther', 'yearlyIncome', 'investmentTenure', 'expectedReturns', 'preferredProjectType', 'investmentPreference',
-  'preferredGoalStategy', 'industryNatureOfWork',
+  'preferredGoalStategy', 'industryNatureOfWork', 'nriStatus', 'kycVisaUrl',
   'preferredCategories', 'preferredTypes', 'preferredStages', 'preferredPurposes', 'preferredLocations', 'preferredBudgets',
   'projectCategories', 'projectTypes', 'projectStages', 'capitalRequirements',
   'passportNumber', 'kycPassportUrl', 'kycStatus', 'isKycVerified', 'kycSubmittedAt', 'isDuplicatePassport', 'duplicatePassportUsers',
@@ -51,7 +51,7 @@ const FORM1_EDITABLE_FIELDS = [
 
 const FORM2_INVESTOR_FIELDS = [
   { id: 'profession', label: 'Profession' },
-  { id: 'industryNatureOfWork', label: 'Industry / Nature of Work' },
+  { id: 'nriStatus', label: 'NRI Status' },
   { id: 'investmentTenure', label: 'Investment Tenure' },
   { id: 'yearlyIncome', label: 'Yearly Income Range' },
   { id: 'expectedReturns', label: 'Expected Returns' },
@@ -382,7 +382,11 @@ export default function AdminInvestors() {
                   {viewInvestorData.role === 'investor' ? (
                     <>
                       <div><span className="text-gray-500 block mb-1">Profession</span><span className="font-medium">{viewInvestorData.profession || '-'}</span></div>
-                      <div><span className="text-gray-500 block mb-1">Industry / Nature of Work</span><span className="font-medium">{viewInvestorData.industryNatureOfWork || '-'}</span></div>
+                      {viewInvestorData.nationality === 'Indian' ? (
+                        <div><span className="text-gray-500 block mb-1">NRI Status</span><span className="font-medium">{viewInvestorData.nriStatus || '-'}</span></div>
+                      ) : (
+                        <div><span className="text-gray-500 block mb-1">Nationality</span><span className="font-medium">{viewInvestorData.nationality || '-'}</span></div>
+                      )}
                       <div><span className="text-gray-500 block mb-1">Investment Tenure</span><span className="font-medium">{viewInvestorData.investmentTenure || '-'}</span></div>
                       <div><span className="text-gray-500 block mb-1">Yearly Income Range</span><span className="font-medium">{viewInvestorData.yearlyIncome || '-'}</span></div>
                       <div><span className="text-gray-500 block mb-1">Expected Returns</span><span className="font-medium">{viewInvestorData.expectedReturns || '-'}</span></div>
@@ -403,6 +407,23 @@ export default function AdminInvestors() {
                           <span className="text-gray-400 font-medium">Not Uploaded</span>
                         )}
                       </div>
+                      {viewInvestorData.nriStatus === 'NRI' && (
+                        <div>
+                          <span className="text-gray-500 block mb-1">Visa Copy</span>
+                          {viewInvestorData.kycVisaUrl ? (
+                            <a
+                              href={viewInvestorData.kycVisaUrl}
+                              target="_blank"
+                              rel="noreferrer"
+                              className="inline-flex items-center text-blue-600 hover:text-blue-800 font-bold gap-1 mt-1 underline"
+                            >
+                              <Download className="w-4 h-4" /> View Visa Document
+                            </a>
+                          ) : (
+                            <span className="text-gray-400 font-medium">Not Uploaded</span>
+                          )}
+                        </div>
+                      )}
                       {/* Preferred Categories */}
                       {Array.isArray(viewInvestorData.preferredCategories) && viewInvestorData.preferredCategories.length > 0 && (
                         <div className="md:col-span-2">

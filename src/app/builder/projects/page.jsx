@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState, useEffect, useCallback } from 'react';
-import { Plus, Search, Edit, Trash2, Eye, ArrowLeft, Save, Building2, MapPin, FileText, ShieldAlert, CheckCircle, FileWarning, Loader2, Clock, XCircle, RefreshCw, LayoutDashboard, Layers, Landmark, DollarSign, ImagePlus, X, Lock, Upload, Download } from 'lucide-react';
+import { Plus, Search, Edit, Trash2, Eye, ArrowLeft, Save, Building2, MapPin, FileText, ShieldAlert, CheckCircle, FileWarning, Loader2, Clock, XCircle, RefreshCw, LayoutDashboard, Layers, Landmark, DollarSign, ImagePlus, X, Lock, Upload, Download, TrendingUp } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Input } from '@/components/ui/input';
@@ -22,11 +22,29 @@ const PROJECT_CATEGORY_TYPES = {
     "Hospitality": ["Hotels & Resorts"]
 };
 
+const STATE_APPROVALS_MASTER = {
+    "Telangana": [
+        "GHMC", "HMDA", "DTCP", "Gram Panchayat", "TSIIC", "TS-bPASS", "Fire NOC",
+        "Airport Authority", "Pollution Control Board", "Electricity Approval",
+        "Water Approval", "Occupancy Certificate", "Completion Certificate", "Other"
+    ],
+    "Andhra Pradesh": [
+        "APCRDA", "DTCP", "Gram Panchayat", "Municipality", "Fire NOC",
+        "Pollution Control Board", "Occupancy Certificate", "Other"
+    ],
+    "Karnataka": [
+        "BBMP", "BDA", "RERA", "Fire NOC", "Other"
+    ],
+    "Maharashtra": [
+        "BMC", "CIDCO", "PMRDA", "MIDC", "Fire NOC", "Other"
+    ]
+};
+
 const initialFormState = {
     projectName: '', builderName: '', projectOverview: '', projectLocation: '', projectType: [],
     projectCategories: [], projectTypes: [],
     totalLandArea: '', totalBuiltUpArea: '', totalUnits: '', currentConstructionStatus: '', expectedCompletionDate: '',
-    governmentApprovalsObtained: '', reraRegistrationNumber: '', bankApprovals: 'No', bankApprovalsName: '',
+    governmentApprovalsObtained: [], reraRegistrationNumber: '', bankApprovals: 'No', bankApprovalsName: '',
     projectCost: '', existingBorrowings: 'No', existingBorrowingsAmount: '', existingBorrowingsPurpose: '', sellingPrice: '', pricingOffered: '',
     securityOffered: '', lockInPeriod: '', buybackGuarantee: 'No', buybackGuaranteeDetails: '', exitResaleFramework: '', marketingResponsibility: '',
     additionalDisclosures: '', availableForRent: 'No', expectedRent: '',
@@ -38,7 +56,24 @@ const initialFormState = {
     landTypeOther: '',
     projectBrochure: null,
     projectBrochureUrl: '',
-    projectSpecifications: ''
+    projectSpecifications: '',
+    projectState: '',
+    otherGovernmentApprovals: '',
+    undividedShare: '',
+    otherUnitInformation: '',
+    liveCctvAvailable: 'No',
+    liveCameraUrl: '',
+    cameraUsername: '',
+    cameraPassword: '',
+    viewerInstructions: '',
+    projectWebsite: '',
+    googleMapsLocation: '',
+    virtualTourUrl: '',
+    droneVideoUrl: '',
+    salesOfficeAddress: '',
+    projectContactPerson: '',
+    projectContactNumber: '',
+    projectContactEmail: ''
 };
 
 const IGNORED_DETAIL_KEYS = [
@@ -264,11 +299,18 @@ export default function ProjectManager() {
                 ? dataToLoad.projectType
                 : (typeof dataToLoad.projectType === 'string' ? [dataToLoad.projectType] : []));
 
+        const approvals = Array.isArray(dataToLoad.governmentApprovalsObtained)
+            ? dataToLoad.governmentApprovalsObtained
+            : (typeof dataToLoad.governmentApprovalsObtained === 'string'
+                ? (dataToLoad.governmentApprovalsObtained ? dataToLoad.governmentApprovalsObtained.split(',').map(s => s.trim()) : [])
+                : []);
+
         setCurrentProject({
             ...initialFormState,
             ...dataToLoad,
             projectCategories: categories,
             projectTypes: types,
+            governmentApprovalsObtained: approvals,
             projectImages: dataToLoad.projectImages || [],
             projectDocuments: dataToLoad.projectDocuments || []
         });
@@ -290,11 +332,18 @@ export default function ProjectManager() {
                 ? project.projectType
                 : (typeof project.projectType === 'string' ? [project.projectType] : []));
 
+        const approvals = Array.isArray(project.governmentApprovalsObtained)
+            ? project.governmentApprovalsObtained
+            : (typeof project.governmentApprovalsObtained === 'string'
+                ? (project.governmentApprovalsObtained ? project.governmentApprovalsObtained.split(',').map(s => s.trim()) : [])
+                : []);
+
         setCurrentProject({
             ...initialFormState,
             ...project,
             projectCategories: categories,
-            projectTypes: types
+            projectTypes: types,
+            governmentApprovalsObtained: approvals
         });
         setDynamicProjectData({});
         setView('detail');
@@ -325,8 +374,8 @@ export default function ProjectManager() {
     const inputStyle = "w-full p-2.5 border border-gray-300 rounded-lg outline-none focus:ring-2 focus:ring-[#0b264f]/20 focus:border-[#0b264f] bg-white text-sm transition-all";
     const selectStyle = "w-full p-2.5 border border-gray-300 rounded-lg outline-none focus:ring-2 focus:ring-[#0b264f]/20 focus:border-[#0b264f] bg-white text-sm transition-all";
     const labelStyle = "block text-sm font-semibold text-gray-700 mb-1.5";
-    const cardStyle = "bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden mb-8";
-    const cardHeaderStyle = "bg-gray-50/80 border-b border-gray-100 px-6 py-4 flex items-center";
+    const cardStyle = "bg-white rounded-xl shadow-sm border border-gray-200 overflow-visible mb-8";
+    const cardHeaderStyle = "bg-gray-50/80 border-b border-gray-100 px-6 py-4 flex items-center rounded-t-xl";
 
     const isBlocked = user?.onboardingStatus !== 'complete' && user?.isVerified !== true;
 
@@ -547,24 +596,66 @@ export default function ProjectManager() {
                         <div className={cardStyle}>
                             <div className={cardHeaderStyle}>
                                 <Layers className="w-5 h-5 mr-2 text-[#0b264f]" />
-                                <h3 className="text-lg font-bold text-gray-900">Area & Inventory</h3>
+                                <h3 className="text-lg font-bold text-gray-900">Land, Inventory & Configuration</h3>
                             </div>
                             <div className="p-6 grid grid-cols-1 md:grid-cols-3 gap-6 bg-white">
                                 <div><Label className={labelStyle}>Total Land Area *</Label><Input required name="totalLandArea" value={currentProject.totalLandArea} onChange={handleInputChange} className={inputStyle} /></div>
                                 <div><Label className={labelStyle}>Total Built-up Area *</Label><Input required name="totalBuiltUpArea" value={currentProject.totalBuiltUpArea} onChange={handleInputChange} className={inputStyle} /></div>
                                 <div><Label className={labelStyle}>Total Units *</Label><Input required type="number" name="totalUnits" value={currentProject.totalUnits} onChange={handleInputChange} className={inputStyle} /></div>
-                                <div className="md:col-span-2"><Label className={labelStyle}>Area Range / Sizes *</Label><Input required name="area" value={currentProject.area} onChange={handleInputChange} placeholder="e.g. 1200 - 2400 sqft or 2-5 Acres" className={inputStyle} /></div>
-                                <div><Label className={labelStyle}>Inventory / Configurations *</Label><Input required name="inventory" value={currentProject.inventory} onChange={handleInputChange} placeholder="e.g. 2 BHK, 3 BHK, Commercial Plots" className={inputStyle} /></div>
+                                <div className="md:col-span-2">
+                                    <Label className={labelStyle}>Unit Sizes / Configurations *</Label>
+                                    <Textarea required name="area" value={currentProject.area} onChange={handleInputChange} placeholder={"Examples:\n2 BHK – 1,250 Sq.ft\n3 BHK – 1,780 Sq.ft\nVilla – 3,200 Sq.ft"} className={inputStyle} rows="3" />
+                                </div>
+                                <div>
+                                    <Label className={labelStyle}>Unit Mix *</Label>
+                                    <Textarea required name="inventory" value={currentProject.inventory} onChange={handleInputChange} placeholder={"Examples:\n50 × 2 BHK\n80 × 3 BHK\n20 Villas\n15 Commercial Units"} className={inputStyle} rows="3" />
+                                </div>
+                                <div className="md:col-span-2">
+                                    <Label className={labelStyle}>Undivided Share (UDS) / Land Share (Optional)</Label>
+                                    <Textarea name="undividedShare" value={currentProject.undividedShare} onChange={handleInputChange} placeholder={"Example:\n2 BHK – 42 Sq. Yards UDS\n3 BHK – 58 Sq. Yards UDS\n(If not applicable, allow \"Not Applicable\")"} className={inputStyle} rows="3" />
+                                </div>
+                                <div className="md:col-span-1">
+                                    <Label className={labelStyle}>Other Unit Information (Optional)</Label>
+                                    <Textarea name="otherUnitInformation" value={currentProject.otherUnitInformation} onChange={handleInputChange} placeholder="Mention any special sizing or configuration details..." className={inputStyle} rows="3" />
+                                </div>
                             </div>
                         </div>
 
                         <div className={cardStyle}>
                             <div className={cardHeaderStyle}>
                                 <Landmark className="w-5 h-5 mr-2 text-[#0b264f]" />
-                                <h3 className="text-lg font-bold text-gray-900">Financials & Approvals</h3>
+                                <h3 className="text-lg font-bold text-gray-900">Approvals & Compliance</h3>
                             </div>
                             <div className="p-6 grid grid-cols-1 md:grid-cols-2 gap-6 bg-white">
-                                <div><Label className={labelStyle}>Government Approvals Obtained *</Label><Input required name="governmentApprovalsObtained" value={currentProject.governmentApprovalsObtained} onChange={handleInputChange} className={inputStyle} /></div>
+                                <div>
+                                    <Label className={labelStyle}>Project State *</Label>
+                                    <select required name="projectState" value={currentProject.projectState} onChange={(e) => {
+                                        const state = e.target.value;
+                                        setCurrentProject(prev => ({ ...prev, projectState: state, governmentApprovalsObtained: [] }));
+                                    }} className={selectStyle}>
+                                        <option value="">Select State</option>
+                                        {Object.keys(STATE_APPROVALS_MASTER).map(state => (
+                                            <option key={state} value={state}>{state}</option>
+                                        ))}
+                                        <option value="Other">Other</option>
+                                    </select>
+                                </div>
+                                <div>
+                                    <Label className={labelStyle}>Government Construction Approvals *</Label>
+                                    <MultiSelect
+                                        options={currentProject.projectState && STATE_APPROVALS_MASTER[currentProject.projectState] ? STATE_APPROVALS_MASTER[currentProject.projectState] : ["RERA", "Fire NOC", "Occupancy Certificate", "Other"]}
+                                        selected={currentProject.governmentApprovalsObtained || []}
+                                        onChange={(val) => setCurrentProject(prev => ({ ...prev, governmentApprovalsObtained: val }))}
+                                        placeholder={currentProject.projectState ? "Select approvals" : "Please select a state first"}
+                                        emptyMessage="No approvals found."
+                                    />
+                                </div>
+                                {currentProject.governmentApprovalsObtained?.includes("Other") && (
+                                    <div className="md:col-span-2 animate-in fade-in slide-in-from-top-2">
+                                        <Label className={labelStyle}>Specify Other Construction Approvals *</Label>
+                                        <Input required name="otherGovernmentApprovals" value={currentProject.otherGovernmentApprovals} onChange={handleInputChange} className={inputStyle} placeholder="e.g. Environmental Clearance, Local Body NOC" />
+                                    </div>
+                                )}
                                 <div><Label className={labelStyle}>RERA Registration Number *</Label><Input required name="reraRegistrationNumber" value={currentProject.reraRegistrationNumber} onChange={handleInputChange} className={inputStyle} /></div>
                                 <div>
                                     <Label className={labelStyle}>Bank Approvals *</Label>
@@ -574,9 +665,8 @@ export default function ProjectManager() {
                                     </select>
                                 </div>
                                 {currentProject.bankApprovals === 'Yes' && (
-                                    <div className="animate-in fade-in slide-in-from-top-2"><Label className={labelStyle}>Names of Banks *</Label><Input required name="bankApprovalsName" value={currentProject.bankApprovalsName} onChange={handleInputChange} className={inputStyle} placeholder="e.g. HDFC, SBI" /></div>
+                                    <div className="animate-in fade-in slide-in-from-top-2 md:col-span-2"><Label className={labelStyle}>Names of Banks *</Label><Input required name="bankApprovalsName" value={currentProject.bankApprovalsName} onChange={handleInputChange} className={inputStyle} placeholder="e.g. HDFC, SBI" /></div>
                                 )}
-                                <div><Label className={labelStyle}>Project Cost (Approx) *</Label><Input required name="projectCost" value={currentProject.projectCost} onChange={handleInputChange} className={inputStyle} /></div>
                                 <div>
                                     <Label className={labelStyle}>Existing Borrowings *</Label>
                                     <select required name="existingBorrowings" value={currentProject.existingBorrowings} onChange={handleInputChange} className={selectStyle}>
@@ -590,7 +680,7 @@ export default function ProjectManager() {
                                             <Label className={labelStyle}>Borrowing Amount *</Label>
                                             <Input required name="existingBorrowingsAmount" value={currentProject.existingBorrowingsAmount} onChange={handleInputChange} className={inputStyle} placeholder="e.g. $50 Crores" />
                                         </div>
-                                        <div className="animate-in fade-in slide-in-from-top-2">
+                                        <div className="animate-in fade-in slide-in-from-top-2 md:col-span-2">
                                             <Label className={labelStyle}>Purpose of Borrowing *</Label>
                                             <Input required name="existingBorrowingsPurpose" value={currentProject.existingBorrowingsPurpose} onChange={handleInputChange} className={inputStyle} placeholder="e.g. Construction Finance" />
                                         </div>
@@ -601,12 +691,25 @@ export default function ProjectManager() {
 
                         <div className={cardStyle}>
                             <div className={cardHeaderStyle}>
-                                <DollarSign className="w-3 h-3" />
-                                <h3 className="text-lg font-bold text-gray-900">Pricing & Offerings</h3>
+                                <DollarSign className="w-5 h-5 mr-2 text-[#0b264f]" />
+                                <h3 className="text-lg font-bold text-gray-900">Project Financials</h3>
                             </div>
                             <div className="p-6 grid grid-cols-1 md:grid-cols-2 gap-6 bg-white">
+                                <div>
+                                    <Label className={labelStyle}>Estimated Project Value *</Label>
+                                    <Input required name="projectCost" value={currentProject.projectCost} onChange={handleInputChange} className={inputStyle} />
+                                </div>
                                 <div><Label className={labelStyle}>Selling Price *</Label><Input required name="sellingPrice" value={currentProject.sellingPrice} onChange={handleInputChange} className={inputStyle} /></div>
                                 <div><Label className={labelStyle}>Pricing Offered *</Label><Input required name="pricingOffered" value={currentProject.pricingOffered} onChange={handleInputChange} className={inputStyle} /></div>
+                            </div>
+                        </div>
+
+                        <div className={cardStyle}>
+                            <div className={cardHeaderStyle}>
+                                <TrendingUp className="w-5 h-5 mr-2 text-[#0b264f]" />
+                                <h3 className="text-lg font-bold text-gray-900">Investment Opportunity</h3>
+                            </div>
+                            <div className="p-6 grid grid-cols-1 md:grid-cols-2 gap-6 bg-white">
                                 <div><Label className={labelStyle}>Security Offered Against Investment *</Label><Input required name="securityOffered" value={currentProject.securityOffered} onChange={handleInputChange} className={inputStyle} /></div>
                                 <div><Label className={labelStyle}>Lock-in Period *</Label><Input required name="lockInPeriod" value={currentProject.lockInPeriod} onChange={handleInputChange} className={inputStyle} /></div>
                                 <div>
@@ -620,7 +723,7 @@ export default function ProjectManager() {
                                     <div className="animate-in fade-in slide-in-from-top-2"><Label className={labelStyle}>Minimum Guarantee Offered *</Label><Input required name="buybackGuaranteeDetails" value={currentProject.buybackGuaranteeDetails} onChange={handleInputChange} className={inputStyle} placeholder="e.g. 10% after 3 years" /></div>
                                 )}
                                 <div>
-                                    <Label className={labelStyle}>Available for Rent? *</Label>
+                                    <Label className={labelStyle}>Rental Opportunity Available? *</Label>
                                     <select required name="availableForRent" value={currentProject.availableForRent} onChange={handleInputChange} className={selectStyle}>
                                         <option value="No">No</option>
                                         <option value="Yes">Yes</option>
@@ -637,8 +740,44 @@ export default function ProjectManager() {
 
                         <div className={cardStyle}>
                             <div className={cardHeaderStyle}>
+                                <Eye className="w-5 h-5 mr-2 text-[#0b264f]" />
+                                <h3 className="text-lg font-bold text-gray-900">Live Project Monitoring (Optional)</h3>
+                            </div>
+                            <div className="p-6 grid grid-cols-1 md:grid-cols-2 gap-6 bg-white">
+                                <div className="md:col-span-2">
+                                    <Label className={labelStyle}>Live Project CCTV Available</Label>
+                                    <select name="liveCctvAvailable" value={currentProject.liveCctvAvailable} onChange={handleInputChange} className={selectStyle}>
+                                        <option value="No">No</option>
+                                        <option value="Yes">Yes</option>
+                                    </select>
+                                </div>
+                                {currentProject.liveCctvAvailable === 'Yes' && (
+                                    <>
+                                        <div className="md:col-span-2 animate-in fade-in slide-in-from-top-2">
+                                            <Label className={labelStyle}>Live Camera URL</Label>
+                                            <Input type="url" name="liveCameraUrl" value={currentProject.liveCameraUrl} onChange={handleInputChange} className={inputStyle} placeholder="e.g. rtsp:// or https://camera-stream..." />
+                                        </div>
+                                        <div className="animate-in fade-in slide-in-from-top-2">
+                                            <Label className={labelStyle}>Camera Username (Optional)</Label>
+                                            <Input name="cameraUsername" value={currentProject.cameraUsername} onChange={handleInputChange} className={inputStyle} />
+                                        </div>
+                                        <div className="animate-in fade-in slide-in-from-top-2">
+                                            <Label className={labelStyle}>Camera Password (Optional)</Label>
+                                            <Input type="password" name="cameraPassword" value={currentProject.cameraPassword} onChange={handleInputChange} className={inputStyle} />
+                                        </div>
+                                        <div className="md:col-span-2 animate-in fade-in slide-in-from-top-2">
+                                            <Label className={labelStyle}>Viewer Instructions (Optional)</Label>
+                                            <Textarea name="viewerInstructions" value={currentProject.viewerInstructions} onChange={handleInputChange} rows="2" className={inputStyle} placeholder="E.g., click play, download app XYZ, etc." />
+                                        </div>
+                                    </>
+                                )}
+                            </div>
+                        </div>
+
+                        <div className={cardStyle}>
+                            <div className={cardHeaderStyle}>
                                 <Building2 className="w-5 h-5 mr-2 text-[#0b264f]" />
-                                <h3 className="text-lg font-bold text-gray-900">Land & Specifications</h3>
+                                <h3 className="text-lg font-bold text-gray-900">Additional Project Information</h3>
                             </div>
                             <div className="p-6 grid grid-cols-1 md:grid-cols-2 gap-6 bg-white">
                                 <div>
@@ -656,6 +795,11 @@ export default function ProjectManager() {
                                         <Input required name="landTypeOther" value={currentProject.landTypeOther} onChange={handleInputChange} className={inputStyle} placeholder="e.g. Joint Development Agreement" />
                                     </div>
                                 )}
+                                <div>
+                                    <Label className={labelStyle}>Google Maps Location (Optional)</Label>
+                                    <Input name="googleMapsLocation" value={currentProject.googleMapsLocation} onChange={handleInputChange} className={inputStyle} placeholder="e.g. https://maps.app.goo.gl/..." />
+                                </div>
+
                                 <div className="md:col-span-2">
                                     <Label className={labelStyle}>Product Brochure (PDF / Document) *</Label>
                                     <div className="flex items-center gap-4 mt-1 bg-gray-50 p-4 rounded-xl border border-dashed border-gray-300">
@@ -820,9 +964,11 @@ export default function ProjectManager() {
                                     if (key === 'buybackGuaranteeDetails' && currentProject.buybackGuarantee !== 'Yes') return null;
 
                                     return (
-                                        <div key={key} className={typeof value === 'string' && value.length > 50 ? "md:col-span-2" : ""}>
+                                        <div key={key} className={(typeof value === 'string' && value.length > 50) || Array.isArray(value) ? "md:col-span-2" : ""}>
                                             <dt className="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-1.5">{label}</dt>
-                                            <dd className="text-sm font-medium text-gray-900 bg-gray-50 p-3.5 rounded-lg border border-gray-100 leading-relaxed whitespace-pre-wrap">{value || 'Not provided'}</dd>
+                                            <dd className="text-sm font-medium text-gray-900 bg-gray-50 p-3.5 rounded-lg border border-gray-100 leading-relaxed whitespace-pre-wrap">
+                                                {Array.isArray(value) ? value.join(', ') : (value || 'Not provided')}
+                                            </dd>
                                         </div>
                                     );
                                 })}

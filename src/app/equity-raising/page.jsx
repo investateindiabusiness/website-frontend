@@ -4,6 +4,7 @@ import React, { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
+import SlideAdPanel from "@/components/SlideAdPanel";
 import PlayPauseButton from "@/components/PlayPauseButton";
 import Head from "next/head";
 import {
@@ -677,6 +678,8 @@ export default function EquityRaisingPage() {
             </div>
           </div>
         </section>
+
+        <SlideAdPanel zoneId="zone1" forceRole="service-provider" />
 
         <Footer />
       </div>
