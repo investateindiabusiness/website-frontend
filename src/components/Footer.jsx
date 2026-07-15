@@ -140,11 +140,11 @@ const officeLocations = [
   },
   {
     city: "New York Head Office",
-    address: "55 West 47 Street Suite 425, New York, NY 10036",
+    address: "55 West 47 Street, Suite 425, New York, NY 10036 | Tel: 212-575-6104",
   },
   {
     city: "Mumbai Branch Office",
-    address: "Mumbai, Maharashtra, India",
+    address: "1401 Panchratna building, Opera House, Mumbai",
   },
 ];
 

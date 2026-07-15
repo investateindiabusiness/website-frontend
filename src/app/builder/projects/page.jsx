@@ -374,8 +374,8 @@ export default function ProjectManager() {
     const inputStyle = "w-full p-2.5 border border-gray-300 rounded-lg outline-none focus:ring-2 focus:ring-[#0b264f]/20 focus:border-[#0b264f] bg-white text-sm transition-all";
     const selectStyle = "w-full p-2.5 border border-gray-300 rounded-lg outline-none focus:ring-2 focus:ring-[#0b264f]/20 focus:border-[#0b264f] bg-white text-sm transition-all";
     const labelStyle = "block text-sm font-semibold text-gray-700 mb-1.5";
-    const cardStyle = "bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden mb-8";
-    const cardHeaderStyle = "bg-gray-50/80 border-b border-gray-100 px-6 py-4 flex items-center";
+    const cardStyle = "bg-white rounded-xl shadow-sm border border-gray-200 overflow-visible mb-8";
+    const cardHeaderStyle = "bg-gray-50/80 border-b border-gray-100 px-6 py-4 flex items-center rounded-t-xl";
 
     const isBlocked = user?.onboardingStatus !== 'complete' && user?.isVerified !== true;
 
@@ -699,6 +699,8 @@ export default function ProjectManager() {
                                     <Label className={labelStyle}>Estimated Project Value *</Label>
                                     <Input required name="projectCost" value={currentProject.projectCost} onChange={handleInputChange} className={inputStyle} />
                                 </div>
+                                <div><Label className={labelStyle}>Selling Price *</Label><Input required name="sellingPrice" value={currentProject.sellingPrice} onChange={handleInputChange} className={inputStyle} /></div>
+                                <div><Label className={labelStyle}>Pricing Offered *</Label><Input required name="pricingOffered" value={currentProject.pricingOffered} onChange={handleInputChange} className={inputStyle} /></div>
                             </div>
                         </div>
 
@@ -708,8 +710,6 @@ export default function ProjectManager() {
                                 <h3 className="text-lg font-bold text-gray-900">Investment Opportunity</h3>
                             </div>
                             <div className="p-6 grid grid-cols-1 md:grid-cols-2 gap-6 bg-white">
-                                <div><Label className={labelStyle}>Selling Price *</Label><Input required name="sellingPrice" value={currentProject.sellingPrice} onChange={handleInputChange} className={inputStyle} /></div>
-                                <div><Label className={labelStyle}>Pricing Offered *</Label><Input required name="pricingOffered" value={currentProject.pricingOffered} onChange={handleInputChange} className={inputStyle} /></div>
                                 <div><Label className={labelStyle}>Security Offered Against Investment *</Label><Input required name="securityOffered" value={currentProject.securityOffered} onChange={handleInputChange} className={inputStyle} /></div>
                                 <div><Label className={labelStyle}>Lock-in Period *</Label><Input required name="lockInPeriod" value={currentProject.lockInPeriod} onChange={handleInputChange} className={inputStyle} /></div>
                                 <div>

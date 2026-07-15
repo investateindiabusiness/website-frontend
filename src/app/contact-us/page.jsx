@@ -320,13 +320,14 @@ export default function ContactUs() {
                 {
                   title: "New York Head Office",
                   address:
-                    "Valentine Mark Corporation, 55 West 47 Street Suite 425, New York, NY 10036, USA",
+                    "Valentine Mark Corporation, 55 West 47 Street, Suite 425, New York, NY 10036, USA",
                   email: "usa.office@investateindia.com",
+                  phone: "212-575-6104",
                 },
                 {
                   title: "Mumbai Branch Office",
                   address:
-                    "Mumbai, Maharashtra, India",
+                    "1401 Panchratna building, Opera House, Mumbai, India",
                   email: "india.office@investateindia.com",
                 },
               ].map((loc, i) => (
