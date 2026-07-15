@@ -21,11 +21,7 @@ import Footer from "@/components/Footer";
 import PlayPauseButton from "@/components/PlayPauseButton";
 const heroSlides = [
   {
-<<<<<<< HEAD
     image: "/images/image copy 32.png",
-=======
-    image: "/images/image (2).png",
->>>>>>> c16292d1eb4429f93479923b1728dca485f0eaf8
     tag: "Institutional Capital Access",
     title: "Direct Connectivity to",
     highlight: "High-Net-Worth NRI Capital",
@@ -167,17 +163,10 @@ const builderSteps = [
 ];
 
 const stepImages = [
-<<<<<<< HEAD
   "/images/image copy 28.png",
   "/images/image copy 30.png",
   "/images/image copy 34.png",
   "/image.png",
-=======
-  "https://images.unsplash.com/photo-1554224155-8d04cb21cd6c?q=80&w=1000&auto=format&fit=crop",
-  "https://images.unsplash.com/photo-1560518883-ce09059eeffa?q=80&w=1000&auto=format&fit=crop",
-  "https://images.unsplash.com/photo-1460925895917-afdab827c52f?q=80&w=1000&auto=format&fit=crop",
-  "https://images.unsplash.com/photo-1573164713988-8665fc963095?q=80&w=1000&auto=format&fit=crop",
->>>>>>> c16292d1eb4429f93479923b1728dca485f0eaf8
 ];
 
 const trustFeatures = [
@@ -701,14 +690,9 @@ export default function BuilderHome() {
                 .slice(0, Math.ceil(faqsList.length / 2))
                 .map((faq, index) => (
                   <div
-<<<<<<< HEAD
-                    className={`faq-accordion-item ${activeFaq === index ? "active" : ""
-                      }`}
-=======
                     className={`faq-accordion-item ${
                       activeFaq === index ? "active" : ""
                     }`}
->>>>>>> c16292d1eb4429f93479923b1728dca485f0eaf8
                     key={index}
                     onClick={() => toggleFaq(index)}
                   >

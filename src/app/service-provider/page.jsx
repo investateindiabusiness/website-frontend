@@ -122,17 +122,10 @@ const serviceProviderSteps = [
 ];
 
 const stepImages = [
-<<<<<<< HEAD
   "/images/image copy 36.png",
   "/images/image copy 37.png",
   "/images/image copy 11.png",
   "/images/image copy 38.png",
-=======
-  "https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?q=80&w=1000&auto=format&fit=crop",
-  "https://images.unsplash.com/photo-1507537297725-24a1c029d3ca?q=80&w=1000&auto=format&fit=crop",
-  "https://images.unsplash.com/photo-1551836022-d5d88e9218df?q=80&w=1000&auto=format&fit=crop",
-  "https://images.unsplash.com/photo-1556761175-5973dc0f32e7?q=80&w=1000&auto=format&fit=crop",
->>>>>>> c16292d1eb4429f93479923b1728dca485f0eaf8
 ];
 
 const faqsList = [

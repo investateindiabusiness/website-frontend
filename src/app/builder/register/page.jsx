@@ -408,17 +408,10 @@ function BuilderRegisterContent() {
       <div className="hidden lg:flex lg:w-[40%] relative bg-black flex-col justify-between p-10 overflow-hidden z-10 min-h-screen select-none">
         <div className="absolute inset-0 z-0">
           <div className="absolute inset-0 bg-white/10 z-[1]" />
-<<<<<<< HEAD
           <img 
             src="/images/image copy 33.png" 
             alt="bg" 
             className="absolute inset-0 w-full h-full object-cover opacity-[0.75] brightness-105 contrast-105 saturate-[1.05]" 
-=======
-          <img
-            src="https://images.unsplash.com/photo-1504307651254-35680f356dfd?q=80&w=2070&auto=format&fit=crop"
-            alt="bg"
-            className="absolute inset-0 w-full h-full object-cover opacity-[0.6] brightness-110 contrast-105 saturate-[1.1]"
->>>>>>> c16292d1eb4429f93479923b1728dca485f0eaf8
           />
           <div className="absolute top-[-5%] right-[-5%] w-[40%] h-[20%] bg-orange-200/20 blur-[60px] rounded-full" />
         </div>
