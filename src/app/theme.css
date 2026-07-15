@@ -1,0 +1,74 @@
+/* --- THEME SCHEMA (theme.css) --- */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Manrope:wght@300;400;500;600;700;800&display=swap');
+
+:root {
+    /* ── CORE COLORS ──────────────────────────────────────────── */
+    --color-primary: #1F2937;       /* Navy — dark text / dark sections */
+    --color-secondary: #F9FAFB;    /* Off-white — light section bg */
+    --color-white: #FFFFFF;
+    --color-black: #000000;
+
+    --color-accent: #D48035;        /* Gold-bronze CTA */
+    --color-accent-hover: #B45309;  /* Darker bronze on hover */
+    --color-accent-tag: #FFB068;    /* Lighter accent for tags */
+    --color-accent-light: #FFF7ED;  /* Pale amber tint */
+
+    /* ── TEXT ─────────────────────────────────────────────────── */
+    --color-text-main: #111827;
+    --color-text-muted: #4B5563;
+    --color-text-light: #9CA3AF;
+
+    /* ── BORDERS & BACKGROUNDS ────────────────────────────────── */
+    --color-border: #E5E7EB;
+    --color-light-bg: #F8F8F8;
+    --color-white-bg: #FFFFFF;
+    --color-info-card: #F2F0EE;
+    --color-footer-bg: #1A1A1C;
+    --color-light-white: #FAFAFA;
+
+    /* ── MISC ─────────────────────────────────────────────────── */
+    --color-blue: #0A66C2;
+    --color-blue-light: #374151;
+
+    /* ── TYPOGRAPHY ───────────────────────────────────────────── */
+    --font-heading: 'Inter', 'Manrope', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    --font-body: 'Inter', 'Manrope', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+
+    /* ── TYPE SCALE ───────────────────────────────────────────── */
+    --text-xs:   0.75rem;    /* 12px */
+    --text-sm:   0.875rem;   /* 14px */
+    --text-base: 1rem;       /* 16px */
+    --text-lg:   1.125rem;   /* 18px */
+    --text-xl:   1.25rem;    /* 20px */
+    --text-2xl:  1.5rem;     /* 24px */
+    --text-3xl:  1.875rem;   /* 30px */
+    --text-4xl:  2.25rem;    /* 36px */
+    --text-5xl:  3rem;       /* 48px */
+
+    /* ── LAYOUT ───────────────────────────────────────────────── */
+    --max-width: 1200px;
+    --radius-md: 8px;
+    --radius-lg: 12px;
+}
+
+/* ── BASE RESET ─────────────────────────────────────────────── */
+body {
+    margin: 0;
+    padding: 0;
+    font-family: var(--font-body);
+    font-size: var(--text-base);
+    color: var(--color-text-main);
+    overflow-x: hidden;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+    font-family: var(--font-heading);
+    letter-spacing: -0.02em;
+}

@@ -1,0 +1,153 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+    :root {
+        --background: 0 0% 100%;
+        --foreground: 217 33% 17%;          /* matches --color-primary #1F2937 */
+        --card: 0 0% 100%;
+        --card-foreground: 217 33% 17%;
+        --popover: 0 0% 100%;
+        --popover-foreground: 217 33% 17%;
+        --primary: 217 33% 17%;             /* #1F2937 */
+        --primary-foreground: 0 0% 98%;
+        --secondary: 210 17% 98%;           /* #F9FAFB */
+        --secondary-foreground: 217 33% 17%;
+        --muted: 210 40% 96%;
+        --muted-foreground: 215 16% 47%;
+        --accent: 27 60% 52%;               /* #D48035 */
+        --accent-foreground: 0 0% 98%;
+        --destructive: 0 84% 60%;
+        --destructive-foreground: 0 0% 98%;
+        --border: 214 32% 91%;
+        --input: 214 32% 91%;
+        --ring: 27 60% 52%;                 /* matches accent */
+        --radius: 0.5rem;
+
+        /* Brand tokens also available as CSS vars for non-Tailwind use */
+        --brand-orange: #D48035;
+        --brand-navy: #1F2937;
+        --brand-beige: #E6E1DE;
+        --brand-linen: #E1DCD7;
+    }
+
+    .dark {
+        --background: 0 0% 4%;
+        --foreground: 0 0% 98%;
+        --card: 0 0% 4%;
+        --card-foreground: 0 0% 98%;
+        --popover: 0 0% 4%;
+        --popover-foreground: 0 0% 98%;
+        --primary: 0 0% 98%;
+        --primary-foreground: 0 0% 9%;
+        --secondary: 0 0% 15%;
+        --secondary-foreground: 0 0% 98%;
+        --muted: 0 0% 15%;
+        --muted-foreground: 0 0% 64%;
+        --accent: 0 0% 15%;
+        --accent-foreground: 0 0% 98%;
+        --destructive: 0 63% 31%;
+        --destructive-foreground: 0 0% 98%;
+        --border: 0 0% 15%;
+        --input: 0 0% 15%;
+        --ring: 0 0% 83%;
+        --chart-1: 220 70% 50%;
+        --chart-2: 160 60% 45%;
+        --chart-3: 30 80% 55%;
+        --chart-4: 280 65% 60%;
+        --chart-5: 340 75% 55%;
+    }
+}
+
+@layer base {
+    * {
+        @apply border-border;
+    }
+
+    body {
+        @apply bg-background text-foreground;
+        font-family: var(--font-body, 'Manrope', system-ui, sans-serif);
+    }
+
+    h1, h2, h3, h4, h5, h6 {
+        font-family: var(--font-heading, 'Inter', 'Manrope', system-ui, sans-serif);
+    }
+}
+
+@layer base {
+    [data-debug-wrapper="true"] {
+        display: contents !important;
+    }
+
+    [data-debug-wrapper="true"]>* {
+        margin-left: inherit;
+        margin-right: inherit;
+        margin-top: inherit;
+        margin-bottom: inherit;
+        padding-left: inherit;
+        padding-right: inherit;
+        padding-top: inherit;
+        padding-bottom: inherit;
+        column-gap: inherit;
+        row-gap: inherit;
+        gap: inherit;
+        border-left-width: inherit;
+        border-right-width: inherit;
+        border-top-width: inherit;
+        border-bottom-width: inherit;
+        border-left-style: inherit;
+        border-right-style: inherit;
+        border-top-style: inherit;
+        border-bottom-style: inherit;
+        border-left-color: inherit;
+        border-right-color: inherit;
+        border-top-color: inherit;
+        border-bottom-color: inherit;
+    }
+}
+
+.hero-section::after {
+    background: transparent !important;
+    display: none !important;
+}
+
+.hero-split-overlay {
+    background: linear-gradient(to bottom, rgba(0, 0, 0, 0.7) 0%, rgba(0, 0, 0, 0.5) 50%, rgba(0, 0, 0, 0) 80%) !important;
+    display: block !important;
+}
+
+.hero-split-image {
+    object-position: center !important;
+    background-position: center !important;
+}
+
+@media (min-width: 768px) {
+    .hero-split-overlay {
+        background: linear-gradient(to right, rgba(0, 0, 0, 0.75) 0%, rgba(0, 0, 0, 0.6) 20%, rgba(0, 0, 0, 0) 50%) !important;
+    }
+    .hero-split-image {
+        object-position: right center !important;
+        background-position: right center !important;
+    }
+}
+
+.hero-split-overlay ~ div h1,
+.hero-split-overlay ~ div p,
+.hero-split-overlay ~ div span,
+.hero-split-image ~ div h1,
+.hero-split-image ~ div p,
+.hero-split-image ~ div span,
+.hero-content h1,
+.hero-content p,
+.hero-content span {
+    text-shadow: 0px 4px 16px rgba(0, 0, 0, 0.95), 0px 1px 4px rgba(0, 0, 0, 0.9) !important;
+}
+
+/* Hide default browser password reveal/eye icons */
+input::-ms-reveal,
+input::-ms-clear,
+input::-webkit-contacts-auto-fill-button,
+input::-webkit-credentials-auto-fill-button {
+    display: none !important;
+}
