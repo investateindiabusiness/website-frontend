@@ -14,6 +14,42 @@ import {
 } from 'lucide-react';
 import MultiSelect from '@/components/ui/MultiSelect';
 
+const normalizeLocationsForForm = (locations) => {
+  if (!locations) return [];
+  if (Array.isArray(locations)) {
+    return locations.map(loc => {
+      if (typeof loc === 'string') return { label: loc, value: loc };
+      if (loc && typeof loc === 'object') {
+        const lbl = loc.label || loc.value || '';
+        return {
+          country: loc.country || '',
+          state: loc.state || '',
+          city: loc.city || '',
+          label: lbl,
+          value: lbl
+        };
+      }
+      return null;
+    }).filter(Boolean);
+  }
+  if (typeof locations === 'string') {
+    const trimmed = locations.trim();
+    if (trimmed.startsWith('[') && trimmed.endsWith(']')) {
+      try {
+        const parsed = JSON.parse(trimmed);
+        return normalizeLocationsForForm(parsed);
+      } catch (e) {
+        // Fall back
+      }
+    }
+    return trimmed.split(',').map(s => s.trim()).filter(Boolean).map(s => ({
+      label: s,
+      value: s
+    }));
+  }
+  return [];
+};
+
 // Investment Mappings
 const INVESTMENT_CATEGORY_TYPES = {
   "Residential": [
@@ -138,7 +174,7 @@ export default function ProfilePage() {
         preferredTypes: user.preferredTypes || [],
         preferredStages: user.preferredStages || [],
         preferredPurposes: user.preferredPurposes || [],
-        preferredLocations: user.preferredLocations || [],
+        preferredLocations: normalizeLocationsForForm(user.preferredLocations),
         preferredBudgets: user.preferredBudgets || [],
         projectCategories: user.projectCategories || [],
         projectTypes: user.projectTypes || [],
@@ -671,7 +707,7 @@ export default function ProfilePage() {
                         preferredTypes: user.preferredTypes || [],
                         preferredStages: user.preferredStages || [],
                         preferredPurposes: user.preferredPurposes || [],
-                        preferredLocations: user.preferredLocations || [],
+                        preferredLocations: normalizeLocationsForForm(user.preferredLocations),
                         preferredBudgets: user.preferredBudgets || [],
                         projectCategories: user.projectCategories || [],
                         projectTypes: user.projectTypes || [],

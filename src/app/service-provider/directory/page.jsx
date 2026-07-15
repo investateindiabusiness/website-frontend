@@ -193,6 +193,32 @@ function ComposeMessageModal({ recipient, onClose, onSent }) {
   );
 }
 
+const getPreferredLocations = (locations) => {
+  if (!locations) return [];
+  if (Array.isArray(locations)) {
+    return locations
+      .map((loc) => {
+        if (typeof loc === "string") return loc;
+        if (loc && typeof loc === "object") return loc.label || loc.value || "";
+        return "";
+      })
+      .filter(Boolean);
+  }
+  if (typeof locations === "string") {
+    const trimmed = locations.trim();
+    if (trimmed.startsWith("[") && trimmed.endsWith("]")) {
+      try {
+        const parsed = JSON.parse(trimmed);
+        return getPreferredLocations(parsed);
+      } catch (e) {
+        // Fall back
+      }
+    }
+    return trimmed.split(",").map((s) => s.trim()).filter(Boolean);
+  }
+  return [];
+};
+
 function DirectoryCard({ person, onMessage, index }) {
   const router = useRouter();
   const typeInfo =
@@ -202,10 +228,13 @@ function DirectoryCard({ person, onMessage, index }) {
 
   const initials = (person.fullName || person.name || "?")
     .split(" ")
+    .filter(Boolean)
     .map((w) => w[0])
     .slice(0, 2)
     .join("")
     .toUpperCase();
+
+  const locations = getPreferredLocations(person.preferredLocations);
 
   const avatarColors = [
     "from-blue-500 to-indigo-600",
@@ -331,13 +360,13 @@ function DirectoryCard({ person, onMessage, index }) {
             </div>
           )}
 
-          {person.preferredLocations && person.preferredLocations.length > 0 && (
+          {locations.length > 0 && (
             <div className="flex items-start gap-2 text-xs text-slate-600">
               <Globe className="w-3.5 h-3.5 text-slate-400 flex-shrink-0 mt-0.5" />
               <span className="leading-relaxed">
-                {person.preferredLocations.slice(0, 3).join(", ")}
-                {person.preferredLocations.length > 3 && (
-                  <span className="text-slate-400"> +{person.preferredLocations.length - 3} more</span>
+                {locations.slice(0, 3).join(", ")}
+                {locations.length > 3 && (
+                  <span className="text-slate-400"> +{locations.length - 3} more</span>
                 )}
               </span>
             </div>
