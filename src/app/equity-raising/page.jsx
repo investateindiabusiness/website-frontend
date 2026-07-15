@@ -36,7 +36,11 @@ const fadeUp = (delay = 0) => ({
 });
 const heroSlides = [
   {
+<<<<<<< HEAD
     image: "/images/image copy 35.png",
+=======
+    image: "/images/equity.png",
+>>>>>>> c16292d1eb4429f93479923b1728dca485f0eaf8
     tag: "Structured Capital Support",
     title: "Unlock Growth Capital with",
     highlight: "Strategic Investment Solutions",
