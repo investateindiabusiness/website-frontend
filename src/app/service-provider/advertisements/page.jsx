@@ -41,13 +41,7 @@ import { Badge } from '@/components/ui/badge';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 
 // Zone display metadata
-const ZONE_META = {
-  zone1: { name: 'Home Page Spotlight', cost: 63, campaignDuration: 1 },
-  zone2: { name: 'Public Investor Page Spotlight', cost: 70, campaignDuration: 1 },
-  zone3: { name: 'Project Search Results Inline Ad', cost: 70, campaignDuration: 1 },
-  zone4: { name: 'Investor Project Details', cost: 70, campaignDuration: 1 },
-  zone5: { name: 'Landing Page Hero Spotlight', cost: 70, campaignDuration: 1 },
-};
+// Zone display metadata is now dynamically fetched
 
 const stripePromise = loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY || 'pk_test_placeholder');
 
@@ -116,9 +110,11 @@ export default function ServiceProviderAdvertisements() {
   const [isSubmittingRectify, setIsSubmittingRectify] = useState(false);
 
   // Calendar Navigation & Interaction States
+  const [campaignDuration, setCampaignDuration] = useState(4);
   const [calendarDate, setCalendarDate] = useState(new Date());
-  const [selectedSlot, setSelectedSlot] = useState(null);
-  const [hoveredSlot, setHoveredSlot] = useState(null);
+  const [rangeStart, setRangeStart] = useState(null);
+  const [rangeEnd, setRangeEnd] = useState(null);
+  const [hoverDate, setHoverDate] = useState(null);
 
   useEffect(() => {
     if (user) {
@@ -133,11 +129,9 @@ export default function ServiceProviderAdvertisements() {
       const data = await fetchAdZones();
       const enriched = (data.data || [])
         .map((z) => ({
-        ...ZONE_META[z.id],
         ...z,
-        name: z.name || ZONE_META[z.id]?.name || z.id,
-        cost: z.cost ?? ZONE_META[z.id]?.cost ?? '—',
-        campaignDuration: z.campaignDuration ?? ZONE_META[z.id]?.campaignDuration ?? 1,
+        name: z.name || z.id,
+        costPerDay: z.costPerDay ?? 0,
       }));
       setZones(enriched);
       if (enriched.length > 0) {
@@ -173,8 +167,9 @@ export default function ServiceProviderAdvertisements() {
 
   const handleSelectZone = async (zone) => {
     setSelectedZone(zone);
-    setSelectedSlot(null);
-    setHoveredSlot(null);
+    setRangeStart(null);
+    setRangeEnd(null);
+    setHoverDate(null);
     try {
       setLoadingSlots(true);
       const data = await fetchSlots(zone.id);
@@ -190,40 +185,107 @@ export default function ServiceProviderAdvertisements() {
     }
   };
 
-  const handleOpenBookingModal = (slot) => {
-    if (!slot || !selectedZone) return;
+  // Compute selection cost
+  const getSelectionDays = () => {
+    if (!rangeStart || !rangeEnd) return 0;
+    const msPerDay = 1000 * 60 * 60 * 24;
+    return Math.round((new Date(rangeEnd) - new Date(rangeStart)) / msPerDay) + 1;
+  };
+  const selectionDays = getSelectionDays();
+  const totalCost = selectionDays > 0 ? (selectedZone?.costPerDay || 0) * selectionDays : 0;
+
+  const handleOpenBookingModal = () => {
+    if (!rangeStart || !rangeEnd || !selectedZone) return;
     router.push(
-      `/service-provider/advertisements/book?zoneId=${selectedZone.id}&startDate=${slot.startDate}&endDate=${slot.endDate}&timeSlot=${encodeURIComponent(slot.timeSlot || 'All Day')}`
+      `/service-provider/advertisements/book?zoneId=${selectedZone.id}&startDate=${rangeStart}&endDate=${rangeEnd}&days=${selectionDays}&costPerDay=${selectedZone.costPerDay}&totalCost=${totalCost}`
     );
   };
 
-  const getSlotForDate = (dateString) => {
-    const bookedCampaign = slots.find(s => s.isBooked && s.startDate <= dateString && s.endDate >= dateString);
-    if (bookedCampaign) return bookedCampaign;
+  // Handle calendar date clicks for fixed duration selection
+  const handleCalendarClick = (dateStr, isBooked) => {
+    if (isBooked) return;
+    const today = new Date().toISOString().split('T')[0];
+    if (dateStr < today) return;
 
-    const currentDate = new Date().toISOString().split('T')[0];
-    if (dateString < currentDate) return null;
+    // Calculate end date based on duration
+    const start = new Date(dateStr);
+    const end = new Date(start);
+    end.setDate(end.getDate() + campaignDuration - 1);
+    const endDateStr = end.toISOString().split('T')[0];
 
-    if (selectedZone) {
-      const duration = selectedZone.campaignDuration || 1;
-      const start = new Date(dateString);
-      const end = new Date(start);
-      end.setDate(end.getDate() + duration - 1);
-      const endDateString = end.toISOString().split('T')[0];
-
-      const hasOverlap = slots.some(c => c.isBooked && dateString <= c.endDate && endDateString >= c.startDate);
-      if (hasOverlap) return null;
-
-      return {
-        id: `virtual-${dateString}`,
-        startDate: dateString,
-        endDate: endDateString,
-        timeSlot: 'All Day',
-        isBooked: false,
-        isVirtual: true
-      };
+    // Check for overlaps
+    const overlaps = slots.some(s => s.isBooked && dateStr <= s.endDate && endDateStr >= s.startDate);
+    if (overlaps) {
+      toast({ title: 'Overlap Detected', description: 'Your selected range overlaps a booked period. Please choose different dates.', variant: 'destructive' });
+      return;
     }
-    return null;
+
+    setRangeStart(dateStr);
+    setRangeEnd(endDateStr);
+  };
+
+  // Update selection if campaignDuration changes
+  useEffect(() => {
+    if (rangeStart) {
+      const start = new Date(rangeStart);
+      const end = new Date(start);
+      end.setDate(end.getDate() + campaignDuration - 1);
+      const endDateStr = end.toISOString().split('T')[0];
+      
+      const overlaps = slots.some(s => s.isBooked && rangeStart <= s.endDate && endDateStr >= s.startDate);
+      if (overlaps) {
+        toast({ title: 'Overlap Detected', description: 'Duration change caused overlap. Selection reset.', variant: 'destructive' });
+        setRangeStart(null);
+        setRangeEnd(null);
+      } else {
+        setRangeEnd(endDateStr);
+      }
+    }
+  }, [campaignDuration, rangeStart, slots]);
+
+  // Helper: is a given date booked?
+  const isDateBooked = (dateStr) =>
+    slots.some(s => s.isBooked && s.startDate <= dateStr && s.endDate >= dateStr);
+
+  // Helper: get style class for each calendar day
+  const getDateRangeClass = (dateStr) => {
+    const today = new Date().toISOString().split('T')[0];
+    const isPast = dateStr < today;
+    const booked = isDateBooked(dateStr);
+    if (isPast) return { bg: 'bg-slate-100 text-slate-300 cursor-not-allowed', label: null };
+    if (booked) return { bg: 'bg-red-500 text-white font-bold cursor-not-allowed shadow-sm', label: 'Booked' };
+
+    let effectiveHoverEnd = null;
+    if (hoverDate) {
+      const hStart = new Date(hoverDate);
+      const hEnd = new Date(hStart);
+      hEnd.setDate(hEnd.getDate() + campaignDuration - 1);
+      effectiveHoverEnd = hEnd.toISOString().split('T')[0];
+    }
+
+    const effectiveStart = rangeStart || hoverDate;
+    const effectiveEnd = rangeEnd || effectiveHoverEnd;
+
+    const lo = effectiveStart;
+    const hi = effectiveEnd;
+
+    const inRange = lo && hi && dateStr >= lo && dateStr <= hi;
+    const isStart = lo && dateStr === lo;
+    const isEnd = hi && dateStr === hi;
+
+    if (rangeStart && rangeEnd) {
+      if (isStart && isEnd) return { bg: 'bg-green-700 text-white font-bold rounded-xl cursor-pointer shadow-md', label: 'Selected' };
+      if (isStart) return { bg: 'bg-green-700 text-white font-bold rounded-l-xl cursor-pointer shadow-md', label: 'Start' };
+      if (isEnd) return { bg: 'bg-green-700 text-white font-bold rounded-r-xl cursor-pointer shadow-md', label: 'End' };
+      if (inRange) return { bg: 'bg-green-100 text-green-800 font-semibold cursor-pointer', label: null };
+    } else if (hoverDate) {
+      if (isStart && isEnd) return { bg: 'bg-green-100 text-green-800 font-bold rounded-xl cursor-pointer', label: 'Start' };
+      if (isStart) return { bg: 'bg-green-100 text-green-800 font-bold rounded-l-xl cursor-pointer', label: 'Start' };
+      if (isEnd) return { bg: 'bg-green-100 text-green-800 font-bold rounded-r-xl cursor-pointer', label: 'End' };
+      if (inRange) return { bg: 'bg-green-50 text-green-600 font-semibold cursor-pointer', label: null };
+    }
+
+    return { bg: 'bg-white hover:bg-slate-50 border border-slate-100 text-slate-700 cursor-pointer', label: 'Open' };
   };
 
   const calendarYear = calendarDate.getFullYear();
@@ -593,7 +655,7 @@ export default function ServiceProviderAdvertisements() {
                             {zone.name}
                           </span>
                           <span className="text-xs font-semibold text-orange-500">
-                            ${zone.cost} / day
+                            ${zone.costPerDay} / day
                           </span>
                         </div>
                       </button>
@@ -611,8 +673,8 @@ export default function ServiceProviderAdvertisements() {
                   <CardContent className="p-5 space-y-4">
                     <div className="grid grid-cols-2 gap-4">
                       <div className="space-y-1">
-                        <span className="text-[10px] text-slate-400 uppercase font-semibold flex items-center"><DollarSign className="w-3.5 h-3.5 mr-0.5 text-green-600" /> Cost / Slot</span>
-                        <p className="text-lg font-bold text-slate-800">${selectedZone.cost}</p>
+                        <span className="text-[10px] text-slate-400 uppercase font-semibold flex items-center"><DollarSign className="w-3.5 h-3.5 mr-0.5 text-green-600" /> Cost / Day</span>
+                        <p className="text-lg font-bold text-slate-800">${selectedZone.costPerDay}</p>
                       </div>
                       <div className="space-y-1">
                         <span className="text-[10px] text-slate-400 uppercase font-semibold flex items-center"><Clock className="w-3.5 h-3.5 mr-0.5 text-blue-600" /> Duration</span>
@@ -647,7 +709,7 @@ export default function ServiceProviderAdvertisements() {
                 <CardHeader className="bg-slate-50 border-b border-slate-100 py-4 px-6 flex items-center justify-between">
                   <div>
                     <CardTitle className="text-lg font-bold text-slate-800">Available Booking Calendar</CardTitle>
-                    <CardDescription className="text-xs font-medium">Select a green date slot to schedule your advertisement campaign in {selectedZone?.name}</CardDescription>
+                    <CardDescription className="text-xs font-medium">Select your campaign duration and click a start date to schedule your advertisement campaign in {selectedZone?.name}</CardDescription>
                     <div className="mt-2.5 text-[10px] md:text-[11px] text-slate-500 font-semibold bg-white border border-slate-200/80 rounded-lg px-2.5 py-1.5 flex items-center gap-1.5 w-fit shadow-sm">
                       <span>🕒</span> Campaign Runtime: Daily 12:00 AM – 11:59 PM EST (New York) / 09:30 AM – 09:29 AM IST (India)
                     </div>
@@ -661,6 +723,24 @@ export default function ServiceProviderAdvertisements() {
                     </div>
                   ) : (
                     <div className="space-y-6">
+                      {/* Campaign Duration Selector */}
+                      <div className="flex flex-col md:flex-row gap-4 items-start md:items-center bg-slate-50 border border-slate-200 rounded-xl p-4">
+                        <div>
+                          <label className="text-sm font-bold text-slate-700 block mb-1">Campaign Duration</label>
+                          <p className="text-[10px] text-slate-500">Minimum selection is 4 days.</p>
+                        </div>
+                        <select
+                          className="bg-white border border-slate-300 rounded-lg text-sm font-semibold py-2 px-4 text-slate-800 outline-none w-full md:w-auto shadow-sm"
+                          value={campaignDuration}
+                          onChange={(e) => setCampaignDuration(Number(e.target.value))}
+                        >
+                          <option value={4}>4 Days (Minimum)</option>
+                          <option value={7}>1 Week (7 Days)</option>
+                          <option value={14}>2 Weeks (14 Days)</option>
+                          <option value={30}>1 Month (30 Days)</option>
+                        </select>
+                      </div>
+
                       {/* Month Controller */}
                       <div className="flex items-center justify-between border-b border-slate-100 pb-4">
                         <h3 className="text-base font-bold text-slate-800">
@@ -695,60 +775,29 @@ export default function ServiceProviderAdvertisements() {
                         <div>Sat</div>
                       </div>
 
-                      <div className="grid grid-cols-7 gap-2">
+                      <div className="grid grid-cols-7 gap-1">
                         {Array.from({ length: firstDayIndex }).map((_, idx) => (
                           <div key={`empty-${idx}`} className="h-10 md:h-12"></div>
                         ))}
                         {Array.from({ length: daysInMonth }).map((_, idx) => {
                           const day = idx + 1;
                           const dateStr = `${calendarYear}-${String(calendarMonth + 1).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
-                          const slot = getSlotForDate(dateStr);
-
-                          let dayBg = "bg-white hover:bg-slate-50 border border-slate-100 text-slate-700";
-                          let isClickable = false;
-                          let title = "";
-
-                          if (slot) {
-                            if (slot.isBooked) {
-                              dayBg = "bg-red-500 text-white font-bold cursor-not-allowed shadow-sm";
-                              title = `Booked slot: ${formatDate(slot.startDate)} to ${formatDate(slot.endDate)}`;
-                            } else {
-                              const isSelected = selectedSlot?.startDate && slot.startDate === selectedSlot.startDate;
-                              const isHovered = hoveredSlot && !hoveredSlot.isBooked && dateStr >= hoveredSlot.startDate && dateStr <= hoveredSlot.endDate;
-                              dayBg = isSelected
-                                ? "bg-green-700 text-white font-bold ring-2 ring-green-500 shadow-md cursor-pointer"
-                                : isHovered
-                                  ? "bg-green-400 text-white font-semibold cursor-pointer shadow-sm"
-                                  : "bg-green-500 text-white font-semibold hover:bg-green-600 cursor-pointer shadow-sm";
-                              isClickable = true;
-                              title = `Available slot: ${formatDate(slot.startDate)} to ${formatDate(slot.endDate)}`;
-                            }
-                          }
+                          const { bg, label } = getDateRangeClass(dateStr);
 
                           return (
                             <div
                               key={`day-${day}`}
-                              className={`h-10 md:h-12 flex flex-col items-center justify-center rounded-lg text-xs md:text-sm transition-all duration-150 relative select-none ${dayBg}`}
-                              onClick={() => {
-                                if (isClickable && slot) {
-                                  setSelectedSlot(slot);
-                                }
-                              }}
+                              className={`h-10 md:h-12 flex flex-col items-center justify-center rounded-lg text-xs md:text-sm transition-all duration-100 relative select-none ${bg}`}
+                              onClick={() => handleCalendarClick(dateStr, isDateBooked(dateStr))}
                               onMouseEnter={() => {
-                                if (slot && !slot.isBooked) {
-                                  setHoveredSlot(slot);
-                                }
+                                if (rangeStart && !rangeEnd) setHoverDate(dateStr);
+                                else if (!rangeStart) setHoverDate(dateStr);
                               }}
-                              onMouseLeave={() => {
-                                setHoveredSlot(null);
-                              }}
-                              title={title}
+                              onMouseLeave={() => setHoverDate(null)}
                             >
                               <span>{day}</span>
-                              {slot && (
-                                <span className="absolute bottom-0.5 text-[8px] opacity-75 font-mono">
-                                  {slot.isBooked ? "Booked" : "Open"}
-                                </span>
+                              {label && (
+                                <span className="absolute bottom-0.5 text-[8px] opacity-75 font-mono">{label}</span>
                               )}
                             </div>
                           );
@@ -775,28 +824,49 @@ export default function ServiceProviderAdvertisements() {
                 </CardContent>
               </Card>
 
-              {/* Selected Slot Information Card */}
-              {selectedSlot && (
-                <Card className="border border-green-200 bg-green-50/50 rounded-2xl p-4 shadow-sm animate-in fade-in slide-in-from-bottom-2 duration-200">
+              {/* Live Cost Preview Card */}
+              {rangeStart && (
+                <Card className={`border rounded-2xl p-4 shadow-sm animate-in fade-in slide-in-from-bottom-2 duration-200 border-green-700 bg-green-50/50`}>
                   <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
                     <div>
-                      <h4 className="text-xs font-bold text-green-800 uppercase tracking-wide">Selected Available Slot</h4>
+                      <h4 className="text-xs font-bold text-green-800 uppercase tracking-wide">
+                        Selected Campaign Window
+                      </h4>
                       <p className="text-sm font-bold text-slate-800 mt-1">
-                        {formatDate(selectedSlot.startDate)} to {formatDate(selectedSlot.endDate)}
+                        {formatDate(rangeStart)}
+                        {rangeEnd && (
+                          <> → {formatDate(rangeEnd)}</>
+                        )}
                       </p>
-                      <p className="text-xs text-slate-500 mt-0.5 font-medium">Time Slot: {selectedSlot.timeSlot || 'All Day'}</p>
+                      {selectionDays > 0 && (
+                        <p className="text-xs text-slate-500 mt-0.5 font-medium">{selectionDays} day{selectionDays !== 1 ? 's' : ''} selected</p>
+                      )}
                     </div>
-                    <div className="flex items-center gap-4 w-full md:w-auto justify-between md:justify-end border-t md:border-none border-slate-100 pt-3 md:pt-0">
-                      <div>
-                        <span className="text-[10px] text-slate-400 uppercase font-semibold block">Total Price</span>
-                        <p className="text-base font-bold text-slate-800">${selectedZone?.cost}</p>
+                    <div className="flex items-center gap-6 w-full md:w-auto justify-between md:justify-end border-t md:border-none border-slate-100 pt-3 md:pt-0">
+                      <div className="text-right">
+                        <span className="text-[10px] text-slate-400 uppercase font-semibold block">
+                          ${selectedZone?.costPerDay}/day × {selectionDays} days
+                        </span>
+                        <p className="text-xl font-bold text-green-700">
+                          {totalCost > 0 ? `$${totalCost}` : '...'}
+                        </p>
                       </div>
-                      <Button
-                        onClick={() => handleOpenBookingModal(selectedSlot)}
-                        className="bg-green-600 hover:bg-green-700 text-white rounded-xl shadow-md font-semibold px-5"
-                      >
-                        Book Ad Slot
-                      </Button>
+                      <div className="flex gap-2">
+                        <Button
+                          onClick={() => { setRangeStart(null); setRangeEnd(null); }}
+                          variant="outline"
+                          size="sm"
+                          className="rounded-xl border-slate-300 text-slate-600"
+                        >
+                          Reset
+                        </Button>
+                        <Button
+                          onClick={handleOpenBookingModal}
+                          className="bg-green-600 hover:bg-green-700 text-white rounded-xl shadow-md font-semibold px-5"
+                        >
+                          Book Now →
+                        </Button>
+                      </div>
                     </div>
                   </div>
                 </Card>

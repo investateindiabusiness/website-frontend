@@ -98,6 +98,7 @@ export default function BuilderAdvertisements() {
   const [isSubmittingRectify, setIsSubmittingRectify] = useState(false);
 
   // Calendar - free range selection (same as investor)
+  const [campaignDuration, setCampaignDuration] = useState(4);
   const [calendarDate, setCalendarDate] = useState(new Date());
   const [rangeStart, setRangeStart] = useState(null);
   const [rangeEnd, setRangeEnd] = useState(null);
@@ -248,35 +249,47 @@ export default function BuilderAdvertisements() {
     );
   };
 
-  // Handle calendar date clicks for free range selection
+  // Handle calendar date clicks for fixed duration selection
   const handleCalendarClick = (dateStr, isBooked) => {
     if (isBooked) return;
     const today = new Date().toISOString().split('T')[0];
     if (dateStr < today) return;
 
-    if (!rangeStart || (rangeStart && rangeEnd && rangeStart !== rangeEnd)) {
-      // Start fresh selection: make it a 1-day selection immediately
-      setRangeStart(dateStr);
-      setRangeEnd(dateStr);
-    } else {
-      // One day was selected (rangeStart === rangeEnd)
-      if (dateStr === rangeStart) {
-        // Clicked same day again — reset selection
+    // Calculate end date based on duration
+    const start = new Date(dateStr);
+    const end = new Date(start);
+    end.setDate(end.getDate() + campaignDuration - 1);
+    const endDateStr = end.toISOString().split('T')[0];
+
+    // Check for overlaps
+    const overlaps = slots.some(s => s.isBooked && dateStr <= s.endDate && endDateStr >= s.startDate);
+    if (overlaps) {
+      toast({ title: 'Overlap Detected', description: 'Your selected range overlaps a booked period. Please choose different dates.', variant: 'destructive' });
+      return;
+    }
+
+    setRangeStart(dateStr);
+    setRangeEnd(endDateStr);
+  };
+
+  // Update selection if campaignDuration changes
+  useEffect(() => {
+    if (rangeStart) {
+      const start = new Date(rangeStart);
+      const end = new Date(start);
+      end.setDate(end.getDate() + campaignDuration - 1);
+      const endDateStr = end.toISOString().split('T')[0];
+      
+      const overlaps = slots.some(s => s.isBooked && rangeStart <= s.endDate && endDateStr >= s.startDate);
+      if (overlaps) {
+        toast({ title: 'Overlap Detected', description: 'Duration change caused overlap. Selection reset.', variant: 'destructive' });
         setRangeStart(null);
         setRangeEnd(null);
-      } else if (dateStr < rangeStart) {
-        setRangeEnd(rangeStart);
-        setRangeStart(dateStr);
       } else {
-        const overlaps = slots.some(s => s.isBooked && rangeStart <= s.endDate && dateStr >= s.startDate);
-        if (overlaps) {
-          toast({ title: 'Overlap Detected', description: 'Your selected range overlaps a booked period. Please choose different dates.', variant: 'destructive' });
-          return;
-        }
-        setRangeEnd(dateStr);
+        setRangeEnd(endDateStr);
       }
     }
-  };
+  }, [campaignDuration, rangeStart, slots]);
 
   // Compute selection cost
   const getSelectionDays = () => {
@@ -466,21 +479,35 @@ export default function BuilderAdvertisements() {
     if (isPast) return { bg: 'bg-slate-100 text-slate-300 cursor-not-allowed', label: null };
     if (booked) return { bg: 'bg-red-500 text-white font-bold cursor-not-allowed shadow-sm', label: 'Booked' };
 
-    const effectiveEnd = rangeEnd || hoverDate;
-    const lo = rangeStart && effectiveEnd ? (rangeStart <= effectiveEnd ? rangeStart : effectiveEnd) : null;
-    const hi = rangeStart && effectiveEnd ? (rangeStart <= effectiveEnd ? effectiveEnd : rangeStart) : null;
+    let effectiveHoverEnd = null;
+    if (hoverDate) {
+      const hStart = new Date(hoverDate);
+      const hEnd = new Date(hStart);
+      hEnd.setDate(hEnd.getDate() + campaignDuration - 1);
+      effectiveHoverEnd = hEnd.toISOString().split('T')[0];
+    }
+
+    const effectiveStart = rangeStart || hoverDate;
+    const effectiveEnd = rangeEnd || effectiveHoverEnd;
+
+    const lo = effectiveStart;
+    const hi = effectiveEnd;
 
     const inRange = lo && hi && dateStr >= lo && dateStr <= hi;
-    const isStart = rangeStart && dateStr === rangeStart;
-    const isEnd = rangeEnd && dateStr === rangeEnd;
+    const isStart = lo && dateStr === lo;
+    const isEnd = hi && dateStr === hi;
 
-    const isSingleDay = rangeStart && rangeEnd && rangeStart === rangeEnd;
-    if (isSingleDay && dateStr === rangeStart) return { bg: 'bg-[#0b264f] text-white font-bold rounded-xl cursor-pointer shadow-md', label: 'Selected' };
-
-    if (isStart && rangeEnd) return { bg: 'bg-[#0b264f] text-white font-bold rounded-l-xl cursor-pointer shadow-md', label: 'Start' };
-    if (isEnd) return { bg: 'bg-[#0b264f] text-white font-bold rounded-r-xl cursor-pointer shadow-md', label: 'End' };
-    if (isStart && !rangeEnd) return { bg: 'bg-[#0b264f] text-white font-bold cursor-pointer shadow-md ring-2 ring-blue-300', label: 'Start' };
-    if (inRange) return { bg: 'bg-blue-100 text-blue-800 font-semibold cursor-pointer', label: null };
+    if (rangeStart && rangeEnd) {
+      if (isStart && isEnd) return { bg: 'bg-[#0b264f] text-white font-bold rounded-xl cursor-pointer shadow-md', label: 'Selected' };
+      if (isStart) return { bg: 'bg-[#0b264f] text-white font-bold rounded-l-xl cursor-pointer shadow-md', label: 'Start' };
+      if (isEnd) return { bg: 'bg-[#0b264f] text-white font-bold rounded-r-xl cursor-pointer shadow-md', label: 'End' };
+      if (inRange) return { bg: 'bg-blue-100 text-blue-800 font-semibold cursor-pointer', label: null };
+    } else if (hoverDate) {
+      if (isStart && isEnd) return { bg: 'bg-blue-100 text-blue-800 font-bold rounded-xl cursor-pointer', label: 'Start' };
+      if (isStart) return { bg: 'bg-blue-100 text-blue-800 font-bold rounded-l-xl cursor-pointer', label: 'Start' };
+      if (isEnd) return { bg: 'bg-blue-100 text-blue-800 font-bold rounded-r-xl cursor-pointer', label: 'End' };
+      if (inRange) return { bg: 'bg-blue-50 text-blue-600 font-semibold cursor-pointer', label: null };
+    }
 
     return { bg: 'bg-white hover:bg-green-50 border border-slate-100 text-slate-700 cursor-pointer', label: 'Open' };
   };
@@ -670,7 +697,7 @@ export default function BuilderAdvertisements() {
                 <CardHeader className="bg-slate-50 border-b border-slate-100 py-4 px-6 flex items-center justify-between">
                   <div>
                     <CardTitle className="text-lg font-bold text-slate-800">Available Booking Calendar</CardTitle>
-                    <CardDescription className="text-xs font-medium">Click a start date, then click an end date to select your campaign window in {selectedZone?.name}</CardDescription>
+                    <CardDescription className="text-xs font-medium">Select your campaign duration and click a start date to schedule your advertisement campaign in {selectedZone?.name}</CardDescription>
                     <div className="mt-2.5 text-[10px] md:text-[11px] text-slate-500 font-semibold bg-white border border-slate-200/80 rounded-lg px-2.5 py-1.5 flex items-center gap-1.5 w-fit shadow-sm">
                       <span>🕒</span> Campaign Runtime: Daily 12:00 AM – 11:59 PM EST (New York) / 09:30 AM – 09:29 AM IST (India)
                     </div>
@@ -684,6 +711,24 @@ export default function BuilderAdvertisements() {
                     </div>
                   ) : (
                     <div className="space-y-6">
+                      {/* Campaign Duration Selector */}
+                      <div className="flex flex-col md:flex-row gap-4 items-start md:items-center bg-slate-50 border border-slate-200 rounded-xl p-4">
+                        <div>
+                          <label className="text-sm font-bold text-slate-700 block mb-1">Campaign Duration</label>
+                          <p className="text-[10px] text-slate-500">Minimum selection is 4 days.</p>
+                        </div>
+                        <select
+                          className="bg-white border border-slate-300 rounded-lg text-sm font-semibold py-2 px-4 text-slate-800 outline-none w-full md:w-auto shadow-sm"
+                          value={campaignDuration}
+                          onChange={(e) => setCampaignDuration(Number(e.target.value))}
+                        >
+                          <option value={4}>4 Days (Minimum)</option>
+                          <option value={7}>1 Week (7 Days)</option>
+                          <option value={14}>2 Weeks (14 Days)</option>
+                          <option value={30}>1 Month (30 Days)</option>
+                        </select>
+                      </div>
+
                       {/* Month Controller */}
                       <div className="flex items-center justify-between border-b border-slate-100 pb-4">
                         <h3 className="text-base font-bold text-slate-800">
@@ -768,18 +813,18 @@ export default function BuilderAdvertisements() {
                 </CardContent>
               </Card>
 
-              {/* Live Cost Preview Card — investor-style free range */}
+              {/* Live Cost Preview Card */}
               {rangeStart && (
-                <Card className={`border rounded-2xl p-4 shadow-sm animate-in fade-in slide-in-from-bottom-2 duration-200 ${rangeEnd ? 'border-[#0b264f] bg-[#0b264f]/5' : 'border-blue-200 bg-blue-50/50'}`}>
+                <Card className={`border rounded-2xl p-4 shadow-sm animate-in fade-in slide-in-from-bottom-2 duration-200 border-[#0b264f] bg-[#0b264f]/5`}>
                   <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
                     <div>
                       <h4 className="text-xs font-bold text-[#0b264f] uppercase tracking-wide">
-                        {rangeEnd ? 'Selected Campaign Window' : 'Select an End Date…'}
+                        Selected Campaign Window
                       </h4>
                       <p className="text-sm font-bold text-slate-800 mt-1">
                         {formatDate(rangeStart)}
-                        {(rangeEnd || hoverDate) && (
-                          <> → {formatDate(rangeEnd || hoverDate)}</>
+                        {rangeEnd && (
+                          <> → {formatDate(rangeEnd)}</>
                         )}
                       </p>
                       {selectionDays > 0 && (
@@ -789,7 +834,7 @@ export default function BuilderAdvertisements() {
                     <div className="flex items-center gap-6 w-full md:w-auto justify-between md:justify-end border-t md:border-none border-slate-100 pt-3 md:pt-0">
                       <div className="text-right">
                         <span className="text-[10px] text-slate-400 uppercase font-semibold block">
-                          ${selectedZone?.costPerDay}/day Ã— {selectionDays || (hoverDate ? Math.round((new Date(hoverDate) - new Date(rangeStart)) / 86400000) + 1 : '?')} days
+                          ${selectedZone?.costPerDay}/day × {selectionDays} days
                         </span>
                         <p className="text-xl font-bold text-[#0b264f]">
                           {totalCost > 0 ? `$${totalCost}` : '...'}

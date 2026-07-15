@@ -117,7 +117,7 @@ const HeaderContent = ({ transparent = false }) => {
         { label: 'Real Estate Investor', path: '/investor' },
         { label: 'Builder', path: '/builder' },
         { label: 'Service Provider', path: '/service-provider' },
-        { label: 'Capital Sourcing', path: '/equity-raising' },
+        { label: 'Capital Sourcing', path: '/capital-sourcing' },
         // { label: 'About Us', path: '/about-us' },
         { label: 'Gallery', path: '/gallery' },
       ];
