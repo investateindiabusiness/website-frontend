@@ -367,7 +367,7 @@ const investorSteps = [
 
 const stepImages = [
   "/images/register_optimized.jpg" /* Step 1 (Register) */,
-  "/images/process_discovery.png" /* Step 2 (Discover) */,
+  "/images/image copy 43.png" /* Step 2 (Discover) */,
   "/images/image_optimized.jpg" /* Step 3 (Evaluate) */,
   "/images/image3.png" /* Step 4 (Decide) */,
 ];

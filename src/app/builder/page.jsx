@@ -21,7 +21,7 @@ import Footer from "@/components/Footer";
 import PlayPauseButton from "@/components/PlayPauseButton";
 const heroSlides = [
   {
-    image: "/images/image copy 32.png",
+    image: "/images/image copy 42.png",
     tag: "Institutional Capital Access",
     title: "Direct Connectivity to",
     highlight: "High-Net-Worth NRI Capital",
@@ -690,9 +690,8 @@ export default function BuilderHome() {
                 .slice(0, Math.ceil(faqsList.length / 2))
                 .map((faq, index) => (
                   <div
-                    className={`faq-accordion-item ${
-                      activeFaq === index ? "active" : ""
-                    }`}
+                    className={`faq-accordion-item ${activeFaq === index ? "active" : ""
+                      }`}
                     key={index}
                     onClick={() => toggleFaq(index)}
                   >
@@ -729,9 +728,8 @@ export default function BuilderHome() {
 
                 return (
                   <div
-                    className={`faq-accordion-item ${
-                      activeFaq === index ? "active" : ""
-                    }`}
+                    className={`faq-accordion-item ${activeFaq === index ? "active" : ""
+                      }`}
                     key={index}
                     onClick={() => toggleFaq(index)}
                   >
