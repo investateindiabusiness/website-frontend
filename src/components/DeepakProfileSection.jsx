@@ -7,7 +7,7 @@ const PAGE_CONTENT = {
   investor: {
     title: "Leadership & Trust",
     bio1: "Co-Founder Deepak Kavadia brings decades of experience connecting the global Indian community across the USA and India. Through Investate India, he helps build a trusted relationship network, bridging the gap between NRI investors and vetted opportunities.",
-    bio2: "Co-Founders Pankaj Gupta and Atish Agarwal lead local operations in India, managing developer relations, project acquisition, and regulatory compliance. Based in India, they oversee local execution and project curation to ensure every opportunity meets our highest standards of compliance, quality, and security.",
+    bio2: "Co-Founders Pankaj Gupta and Atish Agarwal lead local operations in India, overseeing developer relations, project curation, and regulatory compliance to ensure every opportunity meets our highest standards.",
     quote:
       "Our focus is simple — build trust, transparency, and confidence by bridging global Indians with verified opportunities on the ground in India.",
   },
@@ -43,7 +43,7 @@ export default function DeepakProfileSection({ pageType = "default" }) {
   return (
     <section className="py-12 bg-gray-50 border-y border-gray-100">
       <div className="container mx-auto px-4 max-w-4xl flex flex-col gap-8">
-        
+
         {/* Header */}
         <div className="text-center md:text-left">
           <span className="text-[#D48035] uppercase tracking-widest text-xs font-bold">
@@ -69,12 +69,12 @@ export default function DeepakProfileSection({ pageType = "default" }) {
             </div>
             <h3 className="text-sm font-bold text-gray-900 mt-3">Deepak Kavadia</h3>
             <span className="text-[11px] text-[#D48035] font-semibold leading-none mt-1">
-              Co-Founder (USA)
+              CEO & Co-Founder (USA)
             </span>
           </div>
           <div className="flex-1 mt-2 md:mt-0">
             <h4 className="text-lg font-bold text-gray-900 flex items-center gap-2">
-              <Award className="w-4 h-4 text-[#D48035]" />
+              <Award className="w-4 h-4 shrink-0 text-[#D48035]" />
               Global Vision & Strategic Relations
             </h4>
             <span className="text-xs text-gray-500 font-medium">Chairman of the NRI Federation</span>
@@ -86,45 +86,34 @@ export default function DeepakProfileSection({ pageType = "default" }) {
 
         {/* Row 2: Pankaj Gupta & Atish Agarwal (Images & Text) */}
         <div className="bg-white rounded-3xl shadow-sm border border-gray-100 p-6 md:p-8 flex flex-col md:flex-row gap-6 md:gap-8 items-start">
-          <div className="shrink-0 flex flex-col items-center md:items-start w-full md:w-auto">
-            <div className="flex gap-4 justify-center md:justify-start">
-              {/* Pankaj */}
-              <div className="flex flex-col items-center text-center">
-                <div className="w-20 h-20 md:w-24 md:h-24 rounded-2xl overflow-hidden shadow-md border-2 border-white">
-                  <img
-                    src="/pankaj.png"
-                    alt="Pankaj Gupta"
-                    className="w-full h-full object-cover"
-                  />
-                </div>
-                <h3 className="text-xs font-bold text-gray-900 mt-3">Pankaj Gupta</h3>
-                <span className="text-[10px] text-gray-500 font-semibold leading-none mt-1">
-                  Co-Founder (India)
-                </span>
+          <div className="shrink-0 flex flex-col items-center md:items-start text-center md:text-left w-full md:w-56">
+            <div className="flex gap-3 justify-center md:justify-start">
+              <div className="w-20 h-20 md:w-24 md:h-24 rounded-2xl overflow-hidden shadow-md border-2 border-white">
+                <img
+                  src="/pankaj.png"
+                  alt="Pankaj Gupta"
+                  className="w-full h-full object-cover"
+                />
               </div>
-              
-              {/* Atish */}
-              <div className="flex flex-col items-center text-center">
-                <div className="w-20 h-20 md:w-24 md:h-24 rounded-2xl overflow-hidden shadow-md border-2 border-white">
-                  <img
-                    src="/atish.png"
-                    alt="Atish Agarwal"
-                    className="w-full h-full object-cover"
-                  />
-                </div>
-                <h3 className="text-xs font-bold text-gray-900 mt-3">Atish Agarwal</h3>
-                <span className="text-[10px] text-gray-500 font-semibold leading-none mt-1">
-                  Co-Founder (India)
-                </span>
+              <div className="w-20 h-20 md:w-24 md:h-24 rounded-2xl overflow-hidden shadow-md border-2 border-white">
+                <img
+                  src="/atish.png"
+                  alt="Atish Agarwal"
+                  className="w-full h-full object-cover"
+                />
               </div>
             </div>
+            <h3 className="text-sm font-bold text-gray-900 mt-3">Pankaj Gupta & Atish Agarwal</h3>
+            <span className="text-[11px] text-gray-500 font-semibold leading-none mt-1">
+              Co-Founders (India)
+            </span>
           </div>
           <div className="flex-1 mt-2 md:mt-0">
             <h4 className="text-lg font-bold text-gray-900 flex items-center gap-2">
-              <Award className="w-4 h-4 text-blue-600" />
+              <Award className="w-4 h-4 shrink-0 text-blue-600" />
               Strategic Curation & Local Operations
             </h4>
-            <span className="text-xs text-gray-500 font-medium">Partners, Istana Realtors • Developers & Advisors</span>
+            <span className="text-xs text-gray-500 font-medium">Partners, Kuber Esthana Group • Developers & Advisors</span>
             <p className="text-gray-600 text-sm md:text-base leading-relaxed mt-3">
               {content.bio2}
             </p>

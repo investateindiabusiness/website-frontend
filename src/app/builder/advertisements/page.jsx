@@ -644,6 +644,12 @@ export default function BuilderAdvertisements() {
                           <span className={`text-sm font-bold truncate ${selectedZone?.id === zone.id ? 'text-[#0b264f]' : 'text-slate-800'}`}>
                             {zone.name}
                           </span>
+                          {zone.displayType && (
+                            <span className="text-[10px] font-semibold text-slate-500 truncate">{zone.displayType}</span>
+                          )}
+                          {zone.description && (
+                            <span className="text-[10px] text-slate-400 line-clamp-1">{zone.description}</span>
+                          )}
                           <span className="text-xs font-semibold text-orange-500">
                             ${zone.costPerDay}/day
                           </span>
@@ -662,6 +668,16 @@ export default function BuilderAdvertisements() {
                     <h2 className="text-lg font-bold mt-1">{selectedZone.name}</h2>
                   </div>
                   <CardContent className="p-5 space-y-4">
+                    {(selectedZone.displayType || selectedZone.description) && (
+                      <div className="bg-orange-50 border border-orange-100 rounded-xl p-3.5 space-y-1">
+                        {selectedZone.displayType && (
+                          <p className="text-[11px] font-bold text-orange-700 uppercase tracking-wider">{selectedZone.displayType}</p>
+                        )}
+                        {selectedZone.description && (
+                          <p className="text-xs text-slate-600">{selectedZone.description}</p>
+                        )}
+                      </div>
+                    )}
                     <div className="grid grid-cols-2 gap-4">
                       <div className="space-y-1">
                         <span className="text-[10px] text-slate-400 uppercase font-semibold flex items-center"><DollarSign className="w-3.5 h-3.5 mr-0.5 text-green-600" /> Cost / Day</span>

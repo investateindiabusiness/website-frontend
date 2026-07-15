@@ -128,10 +128,15 @@ export default function ProjectManager() {
 
     const handleImageUpload = (e) => {
         const files = Array.from(e.target.files);
-        setCurrentProject(prev => ({
-            ...prev,
-            projectImages: [...(prev.projectImages || []), ...files]
-        }));
+        setCurrentProject(prev => {
+            const currentImages = prev.projectImages || [];
+            const newImages = [...currentImages, ...files];
+            if (newImages.length > 3) {
+                toast({ title: "Limit Exceeded", description: "You can only upload a maximum of 3 images.", variant: "destructive" });
+                return { ...prev, projectImages: newImages.slice(0, 3) };
+            }
+            return { ...prev, projectImages: newImages };
+        });
     };
 
     const removeImage = (indexToRemove) => {
@@ -173,6 +178,11 @@ export default function ProjectManager() {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
+
+        if (!currentProject.projectImages || currentProject.projectImages.length === 0) {
+            return toast({ title: "Required", description: "Please upload at least 1 project image.", variant: "destructive" });
+        }
+
         setIsLoading(true);
 
         try {
@@ -246,6 +256,10 @@ export default function ProjectManager() {
     };
 
     const handleDynamicSubmit = async () => {
+        if (dynamicProjectData.projectImages !== undefined && dynamicProjectData.projectImages.length === 0) {
+            return toast({ title: "Required", description: "A project must have at least 1 image.", variant: "destructive" });
+        }
+
         setIsLoading(true);
         try {
             const payloadWithUser = {
@@ -847,7 +861,7 @@ export default function ProjectManager() {
                         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-12">
                             <div className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden flex flex-col">
                                 <div className="bg-blue-50/50 border-b border-gray-100 px-6 py-4">
-                                    <h3 className="text-lg font-bold text-[#0b264f] flex items-center"><ImagePlus className="w-5 h-5 mr-2" /> Project Images <span className="text-sm font-normal text-gray-500 ml-2">(Optional)</span></h3>
+                                    <h3 className="text-lg font-bold text-[#0b264f] flex items-center"><ImagePlus className="w-5 h-5 mr-2" /> Project Images <span className="text-sm font-semibold text-red-500 ml-2">* (1-3 images max)</span></h3>
                                 </div>
                                 <div className="p-6 flex-1 flex flex-col">
                                     <div className="relative border-2 border-dashed border-gray-300 rounded-xl p-6 text-center bg-gray-50 hover:bg-gray-100 hover:border-[#0b264f] transition-all cursor-pointer group">
