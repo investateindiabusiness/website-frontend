@@ -259,7 +259,7 @@ const RegisterDialog = ({ isOpen, onOpenChange, onLoginClick, initialData = {} }
     if (authData.password !== authData.confirmPassword) {
       return toast({ title: "Error", description: "Passwords do not match", variant: "destructive" });
     }
-    
+
     // Step 1A: Send OTP
     if (!otpSent) {
       try {

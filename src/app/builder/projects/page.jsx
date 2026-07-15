@@ -15,13 +15,11 @@ import { fetchBuilderProjects, createProject, updateProject, deleteProject, subm
 import MultiSelect from '@/components/ui/MultiSelect';
 
 const PROJECT_CATEGORY_TYPES = {
-    "Residential": ["Apartments", "Villas", "Villaments", "Gated Communities", "Luxury Homes", "Senior Living", "Affordable Housing", "Holiday Homes"],
-    "Commercial": ["Office Spaces", "Retail Shops", "Commercial Complexes", "Shopping Malls", "Co-working Spaces", "IT Parks"],
-    "Land & Plots": ["Residential Plots", "Villa Plots", "Farm Plots", "Commercial Plots", "Township Plots"],
-    "Industrial & Warehousing": ["Warehouses", "Industrial Parks", "Manufacturing Units", "Logistics Parks", "Cold Storage"],
-    "Agricultural": ["Agricultural Land", "Farm Houses", "Organic Farms", "Plantation Projects"],
-    "Hospitality": ["Hotels", "Resorts", "Serviced Apartments", "Holiday Projects"],
-    "Alternative Investments": ["Fractional Ownership", "REIT Opportunities", "Equity Participation", "Joint Ventures"]
+    "Residential": ["Apartments", "Villas", "Luxury Homes", "Senior Living", "Holiday & Farm Houses"],
+    "Commercial": ["Office Spaces", "Retail Shops", "Shopping Malls", "Co-working Spaces", "IT Parks"],
+    "Land & Plots": ["Residential Plots", "Villa Plots", "Farm Plots", "Commercial Plots", "Agricultural Land"],
+    "Industrial & Warehousing": ["Warehouses", "Industrial Parks", "Industrial Plots", "Cold Storage"],
+    "Hospitality": ["Hotels & Resorts"]
 };
 
 const initialFormState = {

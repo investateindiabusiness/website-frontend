@@ -34,7 +34,6 @@ const FORM1_BUILDER_FIELDS = [
   { id: 'contactPersonRole', label: 'Liaison Role' },
   { id: 'contactPersonPhone', label: 'Liaison Phone' },
   { id: 'companyEmail', label: 'Company Email' },
-  { id: 'aboutYourself', label: 'About Company' },
   { id: 'address', label: 'Street Address' },
   { id: 'city', label: 'City' },
   { id: 'state', label: 'State' },
@@ -43,7 +42,7 @@ const FORM1_BUILDER_FIELDS = [
 ];
 
 const FORM2_BUILDER_FIELDS = [
-  { id: 'yearOfIncorporation', label: 'Year of Incorporation' },
+  { id: 'yearOfIncorporation', label: 'Years of Experience' },
   { id: 'namesOfProjects', label: 'Best Projects' },
   { id: 'deliveryVolumeType', label: 'Delivery Volume Type' },
   { id: 'deliverySqft', label: 'Delivery Sqft' },
@@ -51,21 +50,15 @@ const FORM2_BUILDER_FIELDS = [
   { id: 'typeOfFirm', label: 'Type of Firm' },
   { id: 'totalPartners', label: 'Total Partners' },
   { id: 'managingPartnerName', label: 'Managing Partner Name' },
-  { id: 'majorStakeholderName', label: 'Major Stakeholder Name' },
   { id: 'tradeOrganizationMembership', label: 'Trade Organization Membership' },
   { id: 'companyOverview', label: 'Company Overview' },
   { id: 'declaredLitigationDisputes', label: 'Litigation / Disputes' },
-  { id: 'bankingPartners', label: 'Banking Partner' },
   { id: 'totalRevenue', label: 'Total Revenue' },
   { id: 'revenueInLastYear', label: 'Revenue in Last Year' },
   { id: 'experienceWithNriInvestors', label: 'NRI Client Exposure' },
   { id: 'majorCompletedProjects', label: 'Key Portfolio Highlights' },
-  { id: 'outstandingDebt', label: 'Outstanding Debt' },
-  { id: 'financialOfCompany', label: 'Financial Brief (P&L)' },
   { id: 'projectCategories', label: 'Project Categories' },
   { id: 'projectTypes', label: 'Project Types' },
-  { id: 'projectStages', label: 'Project Stages' },
-  { id: 'capitalRequirements', label: 'Capital Requirements' },
   { id: 'ongoingProjects', label: 'Active Projects' },
   { id: 'projectsCompleted', label: 'Total Deliveries' }
 ];
@@ -327,7 +320,6 @@ export default function AdminBuilders() {
                     </span>
                   </div>
                   <div><span className="text-gray-500 block mb-1">Liaison Phone</span><span className="font-medium">{viewBuilderData.contactPersonPhone || '-'}</span></div>
-                  <div className="md:col-span-2"><span className="text-gray-500 block mb-1">About Company</span><span className="font-medium whitespace-pre-wrap">{viewBuilderData.aboutYourself || '-'}</span></div>
                   <div className="md:col-span-2">
                     <span className="text-gray-500 block mb-1">Address</span>
                     <span className="font-medium">
@@ -342,7 +334,7 @@ export default function AdminBuilders() {
                 <div className="bg-white p-6 rounded-xl border border-gray-200 shadow-sm">
                   <h4 className="text-lg font-semibold text-gray-900 mb-4 border-b pb-2">Form 2: Deep Verification</h4>
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-y-6 gap-x-8 text-sm">
-                    <div><span className="text-gray-500 block mb-1">Year of Incorporation</span><span className="font-medium">{viewBuilderData.yearOfIncorporation || '-'}</span></div>
+                    <div><span className="text-gray-500 block mb-1">Years of Experience</span><span className="font-medium">{viewBuilderData.yearOfIncorporation || '-'}</span></div>
                     <div>
                       <span className="text-gray-500 block mb-1">Total Delivery Volume</span>
                       <span className="font-medium">
@@ -361,7 +353,6 @@ export default function AdminBuilders() {
                     </div>
                     <div><span className="text-gray-500 block mb-1">Partners Count</span><span className="font-medium">{viewBuilderData.totalPartners || '-'}</span></div>
                     <div><span className="text-gray-500 block mb-1">Managing Partner</span><span className="font-medium">{viewBuilderData.managingPartnerName || '-'}</span></div>
-                    <div><span className="text-gray-500 block mb-1">Major Stakeholder</span><span className="font-medium">{viewBuilderData.majorStakeholderName || '-'}</span></div>
                     <div>
                       <span className="text-gray-500 block mb-1">Trade Organization Memberships</span>
                       <span className="font-medium">
@@ -373,15 +364,12 @@ export default function AdminBuilders() {
                       </span>
                     </div>
                     <div><span className="text-gray-500 block mb-1">NRI Client Exposure</span><span className="font-medium">{viewBuilderData.experienceWithNriInvestors || '-'}</span></div>
-                    <div><span className="text-gray-500 block mb-1">Outstanding Debt / Leverage</span><span className="font-medium">{viewBuilderData.outstandingDebt || '-'}</span></div>
-                    <div><span className="text-gray-500 block mb-1">Banking Partner</span><span className="font-medium">{viewBuilderData.bankingPartners || '-'}</span></div>
                     <div><span className="text-gray-500 block mb-1">Total Revenue</span><span className="font-medium">{viewBuilderData.totalRevenue || '-'}</span></div>
                     <div><span className="text-gray-500 block mb-1">Revenue in Last Year</span><span className="font-medium">{viewBuilderData.revenueInLastYear || '-'}</span></div>
 
                     <div className="md:col-span-2"><span className="text-gray-500 block mb-1">Best Projects</span><span className="font-medium whitespace-pre-wrap">{viewBuilderData.namesOfProjects || '-'}</span></div>
                     <div className="md:col-span-2"><span className="text-gray-500 block mb-1">Company Overview</span><span className="font-medium whitespace-pre-wrap">{viewBuilderData.companyOverview || '-'}</span></div>
                     <div className="md:col-span-2"><span className="text-gray-500 block mb-1">Litigation / Disputes</span><span className="font-medium whitespace-pre-wrap">{viewBuilderData.declaredLitigationDisputes || 'None declared'}</span></div>
-                    <div className="md:col-span-2"><span className="text-gray-500 block mb-1">Financial Brief (P&L Highlights)</span><span className="font-medium whitespace-pre-wrap">{viewBuilderData.financialOfCompany || '-'}</span></div>
                     <div className="md:col-span-2"><span className="text-gray-500 block mb-1">Key Portfolio Highlights</span><span className="font-medium whitespace-pre-wrap">{viewBuilderData.majorCompletedProjects || '-'}</span></div>
 
                     <div>
@@ -394,18 +382,6 @@ export default function AdminBuilders() {
                       <span className="text-gray-500 block mb-1">Project Types</span>
                       <span className="font-medium">
                         {viewBuilderData.projectTypes ? (Array.isArray(viewBuilderData.projectTypes) ? viewBuilderData.projectTypes.join(', ') : viewBuilderData.projectTypes) : '-'}
-                      </span>
-                    </div>
-                    <div>
-                      <span className="text-gray-500 block mb-1">Project Stages</span>
-                      <span className="font-medium">
-                        {viewBuilderData.projectStages ? (Array.isArray(viewBuilderData.projectStages) ? viewBuilderData.projectStages.join(', ') : viewBuilderData.projectStages) : '-'}
-                      </span>
-                    </div>
-                    <div>
-                      <span className="text-gray-500 block mb-1">Capital / Business Requirements</span>
-                      <span className="font-medium">
-                        {viewBuilderData.capitalRequirements ? (Array.isArray(viewBuilderData.capitalRequirements) ? viewBuilderData.capitalRequirements.join(', ') : viewBuilderData.capitalRequirements) : '-'}
                       </span>
                     </div>
                     <div><span className="text-gray-500 block mb-1">Active Projects</span><span className="font-medium">{viewBuilderData.ongoingProjects || '-'}</span></div>

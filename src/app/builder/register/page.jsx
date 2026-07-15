@@ -18,27 +18,11 @@ import MultiSelect from '@/components/ui/MultiSelect';
 import GoogleAuthButton from '@/components/GoogleAuthButton';
 
 const PROJECT_CATEGORY_TYPES = {
-  "Residential": [
-    "Apartments", "Villas", "Villaments", "Luxury Homes", "Senior Living", "Affordable Housing"
-  ],
-  "Commercial": [
-    "Office Spaces", "Retail", "Shopping Mall", "Commercial Complex", "IT Park", "Business Park"
-  ],
-  "Land Development": [
-    "Residential Plots", "Villa Plots", "Farm Plots", "Commercial Plots", "Townships"
-  ],
-  "Industrial": [
-    "Warehouse", "Logistics Park", "Manufacturing Unit", "Industrial Facility"
-  ],
-  "Agricultural": [
-    "Farm Projects", "Agricultural Land", "Plantation Projects"
-  ],
-  "Hospitality": [
-    "Hotels", "Resorts", "Serviced Apartments"
-  ],
-  "Mixed Use": [
-    "Residential + Commercial", "Integrated Township", "Smart City Development"
-  ]
+  "Residential": ["Apartments", "Villas", "Luxury Homes", "Senior Living", "Holiday & Farm Houses"],
+  "Commercial": ["Office Spaces", "Retail Shops", "Shopping Malls", "Co-working Spaces", "IT Parks"],
+  "Land & Plots": ["Residential Plots", "Villa Plots", "Farm Plots", "Commercial Plots", "Agricultural Land"],
+  "Industrial & Warehousing": ["Warehouses", "Industrial Parks", "Industrial Plots", "Cold Storage"],
+  "Hospitality": ["Hotels & Resorts"]
 };
 
 const PROJECT_STAGES = [
@@ -67,10 +51,10 @@ function BuilderRegisterContent() {
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [builderData, setBuilderData] = useState({
-    companyName: '', yearsOfExperience: '', 
+    companyName: '', yearsOfExperience: '',
     contactName: '', contactPersonRole: '', contactPersonRoleOther: '',
     contactPersonPhone: '', companyEmail: '',
-    ongoingProjects: '', 
+    ongoingProjects: '',
     projectCategories: [],
     projectTypes: [],
     projectStages: [],
@@ -124,7 +108,7 @@ function BuilderRegisterContent() {
       if (targetEmail) setAuthData(prev => ({ ...prev, email: targetEmail }));
 
       const targetName = queryName || initData?.name || initData?.userData?.contactNameAndDesignation;
-      
+
       const uData = initData?.userData || {};
       setBuilderData(prev => ({
         ...prev,
@@ -190,7 +174,7 @@ function BuilderRegisterContent() {
   // Update mode checks
   const currentStatus = onboardingInitData?.userData?.onboardingStatus;
   const adminRequests = onboardingInitData?.adminRequests || onboardingInitData?.userData?.adminRequests || [];
-  
+
   const FORM2_KEYS = [
     'yearOfIncorporation', 'promotersOrDirectors', 'totalSqftDelivered', 'majorCompletedProjects', 'typeOfProjectsOffered', 'companyOverview', 'experienceWithNriInvestors', 'declaredLitigationDisputes', 'financialOfCompany', 'outstandingDebt', 'bankingPartners'
   ];
@@ -226,8 +210,8 @@ function BuilderRegisterContent() {
       const fieldsToCheck = new Set(requested);
       if (fieldsToCheck.has('city')) { fieldsToCheck.add('state'); fieldsToCheck.add('country'); }
       if (fieldsToCheck.has('state')) { fieldsToCheck.add('country'); }
-      fieldsToCheck.forEach(id => { 
-        if (builderData[id] === undefined || builderData[id] === '' || (Array.isArray(builderData[id]) && builderData[id].length === 0)) isValid = false; 
+      fieldsToCheck.forEach(id => {
+        if (builderData[id] === undefined || builderData[id] === '' || (Array.isArray(builderData[id]) && builderData[id].length === 0)) isValid = false;
       });
       return isValid && builderData.termsAccepted;
     }
@@ -247,7 +231,7 @@ function BuilderRegisterContent() {
     if (authData.password !== authData.confirmPassword) {
       return toast({ title: "Error", description: "Passwords do not match", variant: "destructive" });
     }
-    
+
     // Step 1A: Send OTP
     if (!otpSent) {
       try {
@@ -412,7 +396,7 @@ function BuilderRegisterContent() {
 
   return (
     <div className="min-h-screen w-full flex flex-col lg:flex-row bg-white overflow-hidden">
-      
+
       {/* Mobile Back Button */}
       <div className="lg:hidden p-4 border-b border-gray-100 flex items-center">
         <Link href="/" className="inline-flex items-center gap-2 text-xs font-bold text-gray-600 uppercase tracking-wider hover:text-gray-900 transition-colors">
@@ -424,10 +408,10 @@ function BuilderRegisterContent() {
       <div className="hidden lg:flex lg:w-[40%] relative bg-black flex-col justify-between p-10 overflow-hidden z-10 min-h-screen select-none">
         <div className="absolute inset-0 z-0">
           <div className="absolute inset-0 bg-white/10 z-[1]" />
-          <img 
-            src="https://images.unsplash.com/photo-1504307651254-35680f356dfd?q=80&w=2070&auto=format&fit=crop" 
-            alt="bg" 
-            className="absolute inset-0 w-full h-full object-cover opacity-[0.6] brightness-110 contrast-105 saturate-[1.1]" 
+          <img
+            src="https://images.unsplash.com/photo-1504307651254-35680f356dfd?q=80&w=2070&auto=format&fit=crop"
+            alt="bg"
+            className="absolute inset-0 w-full h-full object-cover opacity-[0.6] brightness-110 contrast-105 saturate-[1.1]"
           />
           <div className="absolute top-[-5%] right-[-5%] w-[40%] h-[20%] bg-orange-200/20 blur-[60px] rounded-full" />
         </div>
@@ -450,35 +434,35 @@ function BuilderRegisterContent() {
 
         {/* Floating Chips exactly like first image */}
         <div className="relative h-72 mt-4 pointer-events-none w-full">
-             <div className="absolute top-[5%] left-[5%] px-3 py-1.5 bg-gray-900/90 backdrop-blur-sm rounded-full shadow-xl border border-gray-800 flex items-center gap-2">
-                <div className="w-1.5 h-1.5 rounded-full bg-green-400" />
-                <span className="text-[8px] font-black text-white uppercase tracking-[0.2em]">Yield Focus</span>
-             </div>
-             <div className="absolute top-[18%] right-[8%] px-3 py-1.5 bg-white/95 backdrop-blur-sm rounded-full shadow-xl border border-gray-100 flex items-center gap-2">
-                <div className="w-1.5 h-1.5 rounded-full bg-blue-500" />
-                <span className="text-[8px] font-black text-gray-700 uppercase tracking-[0.2em]">Market Pulse</span>
-             </div>
-             <div className="absolute top-[32%] right-[15%] px-3 py-1.5 bg-gray-900/90 backdrop-blur-sm rounded-full shadow-xl border border-gray-800 flex items-center gap-2">
-                <div className="w-1.5 h-1.5 rounded-full bg-purple-400" />
-                <span className="text-[8px] font-black text-white uppercase tracking-[0.2em]">Secure Vault</span>
-             </div>
-             <div className="absolute top-[45%] left-[0%] px-3 py-1.5 bg-white/95 backdrop-blur-sm rounded-full shadow-xl border border-white/50 flex items-center gap-2">
-                <div className="w-1.5 h-1.5 rounded-full bg-orange-500" />
-                <span className="text-[8px] font-black text-gray-700 uppercase tracking-[0.2em]">Smart Assets</span>
-             </div>
-             <div className="absolute top-[55%] right-[2%] px-3 py-1.5 bg-gray-900/90 backdrop-blur-sm rounded-full shadow-xl border border-gray-800 flex items-center gap-2">
-                <div className="w-1.5 h-1.5 rounded-full bg-red-400" />
-                <span className="text-[8px] font-black text-white uppercase tracking-[0.2em]">Verified</span>
-             </div>
-             <div className="absolute top-[68%] right-[22%] px-3 py-1.5 bg-white/95 backdrop-blur-sm rounded-full shadow-xl border border-gray-100 flex items-center gap-2">
-                <div className="w-1.5 h-1.5 rounded-full bg-yellow-500" />
-                <span className="text-[8px] font-black text-gray-700 uppercase tracking-[0.2em]">ROI Optimized</span>
-             </div>
-             <div className="absolute top-[80%] left-[10%] px-3 py-1.5 bg-white/95 backdrop-blur-sm rounded-full shadow-xl border border-white/50 flex items-center gap-2">
-                <div className="w-1.5 h-1.5 rounded-full bg-cyan-400" />
-                <span className="text-[8px] font-black text-gray-700 uppercase tracking-[0.2em]">Growth Intel</span>
-             </div>
+          <div className="absolute top-[5%] left-[5%] px-3 py-1.5 bg-gray-900/90 backdrop-blur-sm rounded-full shadow-xl border border-gray-800 flex items-center gap-2">
+            <div className="w-1.5 h-1.5 rounded-full bg-green-400" />
+            <span className="text-[8px] font-black text-white uppercase tracking-[0.2em]">Yield Focus</span>
           </div>
+          <div className="absolute top-[18%] right-[8%] px-3 py-1.5 bg-white/95 backdrop-blur-sm rounded-full shadow-xl border border-gray-100 flex items-center gap-2">
+            <div className="w-1.5 h-1.5 rounded-full bg-blue-500" />
+            <span className="text-[8px] font-black text-gray-700 uppercase tracking-[0.2em]">Market Pulse</span>
+          </div>
+          <div className="absolute top-[32%] right-[15%] px-3 py-1.5 bg-gray-900/90 backdrop-blur-sm rounded-full shadow-xl border border-gray-800 flex items-center gap-2">
+            <div className="w-1.5 h-1.5 rounded-full bg-purple-400" />
+            <span className="text-[8px] font-black text-white uppercase tracking-[0.2em]">Secure Vault</span>
+          </div>
+          <div className="absolute top-[45%] left-[0%] px-3 py-1.5 bg-white/95 backdrop-blur-sm rounded-full shadow-xl border border-white/50 flex items-center gap-2">
+            <div className="w-1.5 h-1.5 rounded-full bg-orange-500" />
+            <span className="text-[8px] font-black text-gray-700 uppercase tracking-[0.2em]">Smart Assets</span>
+          </div>
+          <div className="absolute top-[55%] right-[2%] px-3 py-1.5 bg-gray-900/90 backdrop-blur-sm rounded-full shadow-xl border border-gray-800 flex items-center gap-2">
+            <div className="w-1.5 h-1.5 rounded-full bg-red-400" />
+            <span className="text-[8px] font-black text-white uppercase tracking-[0.2em]">Verified</span>
+          </div>
+          <div className="absolute top-[68%] right-[22%] px-3 py-1.5 bg-white/95 backdrop-blur-sm rounded-full shadow-xl border border-gray-100 flex items-center gap-2">
+            <div className="w-1.5 h-1.5 rounded-full bg-yellow-500" />
+            <span className="text-[8px] font-black text-gray-700 uppercase tracking-[0.2em]">ROI Optimized</span>
+          </div>
+          <div className="absolute top-[80%] left-[10%] px-3 py-1.5 bg-white/95 backdrop-blur-sm rounded-full shadow-xl border border-white/50 flex items-center gap-2">
+            <div className="w-1.5 h-1.5 rounded-full bg-cyan-400" />
+            <span className="text-[8px] font-black text-gray-700 uppercase tracking-[0.2em]">Growth Intel</span>
+          </div>
+        </div>
 
         {/* App Download Card */}
         <div className="p-5 bg-white/5 border border-white/10 rounded-2xl flex flex-col gap-4 text-left shadow-sm backdrop-blur-sm">
@@ -493,7 +477,7 @@ function BuilderRegisterContent() {
               <h3 className="text-sm font-black text-white uppercase tracking-tight">Investate Builder</h3>
             </div>
           </div>
-          
+
           <p className="text-[11px] text-gray-300 font-semibold leading-relaxed">
             Manage listings, track high-net-worth investor leads, and update bookings on the go.
           </p>
@@ -505,7 +489,7 @@ function BuilderRegisterContent() {
               className="flex items-center justify-center gap-2 px-3 py-2 bg-white/10 hover:bg-white/15 text-white rounded-xl transition duration-300 shadow-md shadow-black/10 select-none group border border-white/5"
             >
               <svg className="h-5 w-5 text-white" viewBox="0 0 24 24" fill="currentColor">
-                <path d="M18.71 19.5c-.83 1.24-1.71 2.45-3.05 2.47-1.34.03-1.77-.79-3.29-.79-1.53 0-2 .77-3.27.82-1.31.05-2.3-1.32-3.14-2.53C4.25 17 2.94 12.45 4.7 9.39c.87-1.52 2.43-2.48 4.12-2.51 1.28-.02 2.5.87 3.29.87.78 0 2.26-1.07 3.81-.91.65.03 2.47.26 3.64 1.98-.09.06-2.17 1.28-2.15 3.81.03 3.02 2.65 4.03 2.68 4.04-.03.07-.42 1.44-1.38 2.83M15.97 4.17c.66-.81 1.11-1.93.99-3.06-.96.04-2.13.64-2.82 1.45-.6.69-1.12 1.84-.98 2.94.1.08.2.12.3.12.87 0 1.95-.57 2.51-1.45z"/>
+                <path d="M18.71 19.5c-.83 1.24-1.71 2.45-3.05 2.47-1.34.03-1.77-.79-3.29-.79-1.53 0-2 .77-3.27.82-1.31.05-2.3-1.32-3.14-2.53C4.25 17 2.94 12.45 4.7 9.39c.87-1.52 2.43-2.48 4.12-2.51 1.28-.02 2.5.87 3.29.87.78 0 2.26-1.07 3.81-.91.65.03 2.47.26 3.64 1.98-.09.06-2.17 1.28-2.15 3.81.03 3.02 2.65 4.03 2.68 4.04-.03.07-.42 1.44-1.38 2.83M15.97 4.17c.66-.81 1.11-1.93.99-3.06-.96.04-2.13.64-2.82 1.45-.6.69-1.12 1.84-.98 2.94.1.08.2.12.3.12.87 0 1.95-.57 2.51-1.45z" />
               </svg>
               <div className="flex flex-col text-left">
                 <span className="text-[7px] font-black text-white/50 uppercase tracking-widest leading-none">Download on</span>
@@ -545,10 +529,10 @@ function BuilderRegisterContent() {
                 {isUpdateMode ? 'Update Submitted!' : 'Success!'}
               </h2>
               <p className="text-gray-500 mb-8 max-w-md mx-auto text-base leading-relaxed">
-                {isUpdateMode 
-                  ? "Your changes have been sent to our administration team for final review." 
-                  : step === 3 
-                    ? "Your final details have been sent to our administration team. We will activate your account shortly." 
+                {isUpdateMode
+                  ? "Your changes have been sent to our administration team for final review."
+                  : step === 3
+                    ? "Your final details have been sent to our administration team. We will activate your account shortly."
                     : "Your initial details have been sent to our administration team for verification. We will notify you once approved."}
               </p>
               <Link href="/builder/login">
@@ -561,76 +545,76 @@ function BuilderRegisterContent() {
             <div className="w-full">
               {/* Header */}
               <div className="text-center mb-6">
-                 <h2 className="text-2xl font-black tracking-tight text-gray-900 uppercase">
-                    Builder
-                 </h2>
-                 <p className="text-gray-400 font-bold mt-1 tracking-wide uppercase text-[9px]">Step 0{step}</p>
+                <h2 className="text-2xl font-black tracking-tight text-gray-900 uppercase">
+                  Builder
+                </h2>
+                <p className="text-gray-400 font-bold mt-1 tracking-wide uppercase text-[9px]">Step 0{step}</p>
               </div>
 
               {/* Step 1 */}
               {step === 1 && (
                 <div className="space-y-6 animate-in slide-in-from-bottom-6 duration-500">
                   <GoogleAuthButton onSuccess={handleGoogleRegisterSuccess} onError={handleGoogleRegisterError} text="Continue with Google" userType="builder" />
-                  
+
                   <div className="relative py-2">
                     <div className="absolute inset-0 flex items-center"><span className="w-full border-t border-gray-100" /></div>
                     <div className="relative flex justify-center text-[9px] font-black uppercase tracking-[0.3em]"><span className="bg-white px-6 text-gray-400">Security Check</span></div>
                   </div>
 
                   <form onSubmit={handleAuthSubmit} className="space-y-5">
-                      <div className="space-y-2">
-                        <Label className="text-[10px] font-black text-gray-900 uppercase tracking-widest ml-1">Professional Email</Label>
-                        <Input type="email" name='email' autoComplete="off" required disabled={otpSent} value={authData.email} onChange={(e) => setAuthData({ ...authData, email: e.target.value })} className="h-11 px-6 bg-gray-50 border-gray-200 focus:bg-white focus:ring-[6px] focus:ring-orange-500/5 focus:border-orange-500 transition-all duration-300 rounded-2xl text-sm font-bold placeholder:text-gray-300 disabled:opacity-75 disabled:cursor-not-allowed" placeholder="name@company.com" />
+                    <div className="space-y-2">
+                      <Label className="text-[10px] font-black text-gray-900 uppercase tracking-widest ml-1">Professional Email</Label>
+                      <Input type="email" name='email' autoComplete="off" required disabled={otpSent} value={authData.email} onChange={(e) => setAuthData({ ...authData, email: e.target.value })} className="h-11 px-6 bg-gray-50 border-gray-200 focus:bg-white focus:ring-[6px] focus:ring-orange-500/5 focus:border-orange-500 transition-all duration-300 rounded-2xl text-sm font-bold placeholder:text-gray-300 disabled:opacity-75 disabled:cursor-not-allowed" placeholder="name@company.com" />
+                    </div>
+                    {!otpSent ? (
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div className="space-y-2">
+                          <Label className="text-[10px] font-black text-gray-900 uppercase tracking-widest ml-1">Password</Label>
+                          <div className="relative">
+                            <Input type={showPassword ? 'text' : 'password'} autoComplete="new-password" required value={authData.password} onChange={(e) => setAuthData({ ...authData, password: e.target.value })} className="h-11 px-6 pr-12 bg-gray-50 border-gray-200 focus:bg-white focus:ring-[6px] focus:ring-orange-500/5 focus:border-orange-500 transition-all duration-300 rounded-2xl text-sm font-bold placeholder:text-gray-300" placeholder="••••••••" />
+                            <button type="button" onClick={() => setShowPassword(prev => !prev)} className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-700 transition-colors" tabIndex={-1}>
+                              {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+                            </button>
+                          </div>
+                        </div>
+                        <div className="space-y-2">
+                          <Label className="text-[10px] font-black text-gray-900 uppercase tracking-widest ml-1">Confirm Password</Label>
+                          <div className="relative">
+                            <Input type={showConfirmPassword ? 'text' : 'password'} autoComplete="new-password" required value={authData.confirmPassword} onChange={(e) => setAuthData({ ...authData, confirmPassword: e.target.value })} className="h-11 px-6 pr-12 bg-gray-50 border-gray-200 focus:bg-white focus:ring-[6px] focus:ring-orange-500/5 focus:border-orange-500 transition-all duration-300 rounded-2xl text-sm font-bold placeholder:text-gray-300" placeholder="••••••••" />
+                            <button type="button" onClick={() => setShowConfirmPassword(prev => !prev)} className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-700 transition-colors" tabIndex={-1}>
+                              {showConfirmPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+                            </button>
+                          </div>
+                        </div>
                       </div>
-                      {!otpSent ? (
-                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                          <div className="space-y-2">
-                            <Label className="text-[10px] font-black text-gray-900 uppercase tracking-widest ml-1">Password</Label>
-                            <div className="relative">
-                              <Input type={showPassword ? 'text' : 'password'} autoComplete="new-password" required value={authData.password} onChange={(e) => setAuthData({ ...authData, password: e.target.value })} className="h-11 px-6 pr-12 bg-gray-50 border-gray-200 focus:bg-white focus:ring-[6px] focus:ring-orange-500/5 focus:border-orange-500 transition-all duration-300 rounded-2xl text-sm font-bold placeholder:text-gray-300" placeholder="••••••••" />
-                              <button type="button" onClick={() => setShowPassword(prev => !prev)} className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-700 transition-colors" tabIndex={-1}>
-                                {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
-                              </button>
-                            </div>
-                          </div>
-                          <div className="space-y-2">
-                            <Label className="text-[10px] font-black text-gray-900 uppercase tracking-widest ml-1">Confirm Password</Label>
-                            <div className="relative">
-                              <Input type={showConfirmPassword ? 'text' : 'password'} autoComplete="new-password" required value={authData.confirmPassword} onChange={(e) => setAuthData({ ...authData, confirmPassword: e.target.value })} className="h-11 px-6 pr-12 bg-gray-50 border-gray-200 focus:bg-white focus:ring-[6px] focus:ring-orange-500/5 focus:border-orange-500 transition-all duration-300 rounded-2xl text-sm font-bold placeholder:text-gray-300" placeholder="••••••••" />
-                              <button type="button" onClick={() => setShowConfirmPassword(prev => !prev)} className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-700 transition-colors" tabIndex={-1}>
-                                {showConfirmPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
-                              </button>
-                            </div>
-                          </div>
+                    ) : (
+                      <div className="space-y-2 animate-in fade-in slide-in-from-top-2 duration-300">
+                        <Label className="text-[10px] font-black text-orange-600 uppercase tracking-widest ml-1">Enter 6-Digit Email OTP *</Label>
+                        <Input type="text" maxLength={6} required value={otpCode} onChange={(e) => setOtpCode(e.target.value.replace(/\D/g, ''))} className="h-11 px-6 bg-orange-50/10 border-orange-200 focus:bg-white focus:ring-[6px] focus:ring-orange-500/5 focus:border-orange-500 transition-all duration-300 rounded-2xl text-center text-lg font-black tracking-[0.4em] placeholder:text-gray-300" placeholder="000000" />
+                        <div className="flex justify-between items-center text-[10px] font-bold text-gray-400 uppercase tracking-wider px-1 pt-1">
+                          <span>Code sent to email</span>
+                          <button type="button" onClick={async () => {
+                            try {
+                              setLoading(true);
+                              await sendOtp(authData.email);
+                              toast({ title: "OTP Resent", description: "A new code has been sent to your email." });
+                            } catch (err) {
+                              toast({ title: "Resend Failed", description: err.message, variant: "destructive" });
+                            } finally {
+                              setLoading(false);
+                            }
+                          }} className="text-orange-600 hover:underline font-black">Resend Code</button>
                         </div>
-                      ) : (
-                        <div className="space-y-2 animate-in fade-in slide-in-from-top-2 duration-300">
-                          <Label className="text-[10px] font-black text-orange-600 uppercase tracking-widest ml-1">Enter 6-Digit Email OTP *</Label>
-                          <Input type="text" maxLength={6} required value={otpCode} onChange={(e) => setOtpCode(e.target.value.replace(/\D/g, ''))} className="h-11 px-6 bg-orange-50/10 border-orange-200 focus:bg-white focus:ring-[6px] focus:ring-orange-500/5 focus:border-orange-500 transition-all duration-300 rounded-2xl text-center text-lg font-black tracking-[0.4em] placeholder:text-gray-300" placeholder="000000" />
-                          <div className="flex justify-between items-center text-[10px] font-bold text-gray-400 uppercase tracking-wider px-1 pt-1">
-                            <span>Code sent to email</span>
-                            <button type="button" onClick={async () => {
-                              try {
-                                setLoading(true);
-                                await sendOtp(authData.email);
-                                toast({ title: "OTP Resent", description: "A new code has been sent to your email." });
-                              } catch (err) {
-                                toast({ title: "Resend Failed", description: err.message, variant: "destructive" });
-                              } finally {
-                                setLoading(false);
-                              }
-                            }} className="text-orange-600 hover:underline font-black">Resend Code</button>
-                          </div>
-                        </div>
-                      )}
-                      <Button 
-                        type="submit" 
-                        className="w-full h-12 bg-gray-900 hover:bg-black text-white font-black text-base rounded-[1.25rem] mt-4 shadow-2xl shadow-black/10 transition-all hover:scale-[1.02] active:scale-[0.98]" 
-                        disabled={loading}
-                      >
-                        {loading ? <Loader2 className="mr-2 h-6 w-6 animate-spin" /> : <div className="flex items-center justify-center gap-3 text-sm uppercase tracking-wider font-black">{otpSent ? "Verify & Register" : "Send Verification OTP"} <ChevronRight className="h-5 w-5" /></div>}
-                      </Button>
-                    
+                      </div>
+                    )}
+                    <Button
+                      type="submit"
+                      className="w-full h-12 bg-gray-900 hover:bg-black text-white font-black text-base rounded-[1.25rem] mt-4 shadow-2xl shadow-black/10 transition-all hover:scale-[1.02] active:scale-[0.98]"
+                      disabled={loading}
+                    >
+                      {loading ? <Loader2 className="mr-2 h-6 w-6 animate-spin" /> : <div className="flex items-center justify-center gap-3 text-sm uppercase tracking-wider font-black">{otpSent ? "Verify & Register" : "Send Verification OTP"} <ChevronRight className="h-5 w-5" /></div>}
+                    </Button>
+
                     <p className="text-center text-[10px] font-bold text-gray-400 uppercase tracking-widest pt-2">
                       Already registered? <Link href="/builder/login" className="text-orange-600 hover:text-orange-700 font-black underline underline-offset-4 decoration-2">Sign In</Link>
                     </p>
@@ -653,7 +637,7 @@ function BuilderRegisterContent() {
                       {shouldShowField('companyName') && (<div><Label className={labelStyle}>Entity Name *</Label><Input required value={builderData.companyName} onChange={(e) => setBuilderData({ ...builderData, companyName: e.target.value })} className={inputStyle} /></div>)}
                       {shouldShowField('yearsOfExperience') && (<div><Label className={labelStyle}>Track Record (Years) *</Label><Input type="text" required value={builderData.yearsOfExperience} onChange={(e) => setBuilderData({ ...builderData, yearsOfExperience: e.target.value.replace(/\D/g, '') })} placeholder="e.g. 10" className={inputStyle} /></div>)}
                     </div>
-                    
+
                     {(shouldShowField('contactName') || shouldShowField('contactPersonRole') || shouldShowField('contactPersonPhone')) && (
                       <div className="bg-gray-50/50 p-5 rounded-2xl border border-gray-100 space-y-4">
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -681,7 +665,7 @@ function BuilderRegisterContent() {
                       </div>
                     )}
 
-                    {shouldShowField('aboutYourself') && (
+                    {/* {shouldShowField('aboutYourself') && (
                       <div>
                         <Label className={labelStyle}>About Your Company / Yourself</Label>
                         <Textarea
@@ -691,7 +675,7 @@ function BuilderRegisterContent() {
                           placeholder="Tell us about your company, your background, and what makes you stand out..."
                         />
                       </div>
-                    )}
+                    )} */}
 
                     {(shouldShowField('address') || shouldShowField('country') || shouldShowField('zip') || shouldShowField('state') || shouldShowField('city')) && (
                       <div className="space-y-6 pt-4 border-t border-gray-100">
@@ -739,14 +723,14 @@ function BuilderRegisterContent() {
                     </Label>
                   </div>
 
-                  <Button 
-                    type="submit" 
-                    className="w-full h-14 bg-gray-900 hover:bg-black text-white font-black text-lg rounded-[1.25rem] shadow-2xl shadow-black/10 disabled:bg-gray-200 disabled:shadow-none transition-all hover:scale-[1.02] active:scale-[0.98] mt-6" 
+                  <Button
+                    type="submit"
+                    className="w-full h-14 bg-gray-900 hover:bg-black text-white font-black text-lg rounded-[1.25rem] shadow-2xl shadow-black/10 disabled:bg-gray-200 disabled:shadow-none transition-all hover:scale-[1.02] active:scale-[0.98] mt-6"
                     disabled={loading || !isProfileFormValid()}
                   >
                     {loading ? <Loader2 className="mr-2 h-6 w-6 animate-spin" /> : (isForm1UpdateMode ? 'Update Account' : 'Complete Registration')}
                   </Button>
-                        {/* Step 3 removed for builders */}          </form>
+                  {/* Step 3 removed for builders */}          </form>
               )}
             </div>
           )}
@@ -763,7 +747,7 @@ function BuilderRegisterContent() {
                 <h3 className="text-sm font-black text-gray-900 uppercase tracking-tight">Investate Builder</h3>
               </div>
             </div>
-            
+
             <p className="text-[11px] text-gray-500 font-semibold leading-relaxed">
               Manage listings, track high-net-worth investor leads, and update bookings on the go.
             </p>
@@ -775,7 +759,7 @@ function BuilderRegisterContent() {
                 className="flex items-center justify-center gap-2 px-3 py-2 bg-gray-900 hover:bg-black text-white rounded-xl transition duration-300 shadow-md shadow-black/10 select-none group border border-gray-800"
               >
                 <svg className="h-5 w-5 text-white" viewBox="0 0 24 24" fill="currentColor">
-                  <path d="M18.71 19.5c-.83 1.24-1.71 2.45-3.05 2.47-1.34.03-1.77-.79-3.29-.79-1.53 0-2 .77-3.27.82-1.31.05-2.3-1.32-3.14-2.53C4.25 17 2.94 12.45 4.7 9.39c.87-1.52 2.43-2.48 4.12-2.51 1.28-.02 2.5.87 3.29.87.78 0 2.26-1.07 3.81-.91.65.03 2.47.26 3.64 1.98-.09.06-2.17 1.28-2.15 3.81.03 3.02 2.65 4.03 2.68 4.04-.03.07-.42 1.44-1.38 2.83M15.97 4.17c.66-.81 1.11-1.93.99-3.06-.96.04-2.13.64-2.82 1.45-.6.69-1.12 1.84-.98 2.94.1.08.2.12.3.12.87 0 1.95-.57 2.51-1.45z"/>
+                  <path d="M18.71 19.5c-.83 1.24-1.71 2.45-3.05 2.47-1.34.03-1.77-.79-3.29-.79-1.53 0-2 .77-3.27.82-1.31.05-2.3-1.32-3.14-2.53C4.25 17 2.94 12.45 4.7 9.39c.87-1.52 2.43-2.48 4.12-2.51 1.28-.02 2.5.87 3.29.87.78 0 2.26-1.07 3.81-.91.65.03 2.47.26 3.64 1.98-.09.06-2.17 1.28-2.15 3.81.03 3.02 2.65 4.03 2.68 4.04-.03.07-.42 1.44-1.38 2.83M15.97 4.17c.66-.81 1.11-1.93.99-3.06-.96.04-2.13.64-2.82 1.45-.6.69-1.12 1.84-.98 2.94.1.08.2.12.3.12.87 0 1.95-.57 2.51-1.45z" />
                 </svg>
                 <div className="flex flex-col text-left">
                   <span className="text-[7px] font-black text-white/50 uppercase tracking-widest leading-none">Download on</span>

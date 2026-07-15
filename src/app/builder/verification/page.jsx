@@ -17,13 +17,11 @@ import { useRouter } from 'next/navigation';
 import MultiSelect from '@/components/ui/MultiSelect';
 
 const PROJECT_CATEGORY_TYPES = {
-  "Residential": ["Apartments", "Villas", "Villaments", "Gated Communities", "Luxury Homes", "Senior Living", "Affordable Housing", "Holiday Homes"],
-  "Commercial": ["Office Spaces", "Retail Shops", "Commercial Complexes", "Shopping Malls", "Co-working Spaces", "IT Parks"],
-  "Land & Plots": ["Residential Plots", "Villa Plots", "Farm Plots", "Commercial Plots", "Township Plots"],
-  "Industrial & Warehousing": ["Warehouses", "Industrial Parks", "Manufacturing Units", "Logistics Parks", "Cold Storage"],
-  "Agricultural": ["Agricultural Land", "Farm Houses", "Organic Farms", "Plantation Projects"],
-  "Hospitality": ["Hotels", "Resorts", "Serviced Apartments", "Holiday Projects"],
-  "Alternative Investments": ["Fractional Ownership", "REIT Opportunities", "Equity Participation", "Joint Ventures"]
+  "Residential": ["Apartments", "Villas", "Luxury Homes", "Senior Living", "Holiday & Farm Houses"],
+  "Commercial": ["Office Spaces", "Retail Shops", "Shopping Malls", "Co-working Spaces", "IT Parks"],
+  "Land & Plots": ["Residential Plots", "Villa Plots", "Farm Plots", "Commercial Plots", "Agricultural Land"],
+  "Industrial & Warehousing": ["Warehouses", "Industrial Parks", "Industrial Plots", "Cold Storage"],
+  "Hospitality": ["Hotels & Resorts"]
 };
 const PROJECT_STAGES = ["Pre-Launch", "New Launch", "Under Construction", "Ready to Move", "Rental Income", "Resale"];
 const CAPITAL_REQUIREMENTS = ["Equity Investment", "Debt Funding", "Joint Venture", "Revenue Sharing", "Construction Finance", "Land Acquisition Finance", "NRI Capital", "Institutional Funding"];
@@ -162,13 +160,10 @@ export default function BuilderVerificationPage() {
       firmOk &&
       bldForm2.totalPartners.trim() !== '' &&
       bldForm2.managingPartnerName.trim() !== '' &&
-      bldForm2.majorStakeholderName.trim() !== '' &&
       bldForm2.companyOverview.trim() !== '' &&
-      bldForm2.bankingPartners.trim() !== '' &&
       bldForm2.totalRevenue.trim() !== '' &&
       bldForm2.revenueInLastYear.trim() !== '' &&
-      bldForm2.experienceWithNriInvestors !== '' &&
-      bldForm2.outstandingDebt !== ''
+      bldForm2.experienceWithNriInvestors !== ''
     );
   };
 
@@ -302,178 +297,54 @@ export default function BuilderVerificationPage() {
                 </div>
               </div>
 
-              {/* ── Project & Capital Preferences ── */}
-              <div className="border-t border-gray-100 pt-8 space-y-6">
+              {/* ── Section 1: Company Profile & Governance ── */}
+              <div className="p-6 bg-gray-50/50 border border-gray-100 rounded-2xl space-y-6">
                 <div>
-                  <Label className="text-xs font-black text-gray-900 uppercase tracking-widest block">Project &amp; Capital Preferences</Label>
-                  <p className="text-xs text-gray-400 font-bold tracking-wide uppercase mt-1">Specify your project specializations and business requirements.</p>
+                  <span className={sectionHead}>Company Profile &amp; Governance</span>
+                  <p className="text-xs text-gray-400 font-bold tracking-wide uppercase mt-1">Provide your general company info and structure.</p>
                 </div>
+
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                  {/* Project Category */}
+                  {/* Years of Experience */}
                   <div>
-                    <Label className={lbl}>Project Category *</Label>
-                    <MultiSelect
-                      options={Object.keys(PROJECT_CATEGORY_TYPES)}
-                      selected={bldForm2.projectCategories || []}
-                      onChange={(val) => {
-                        const validTypes = val.reduce((acc, cat) => [...acc, ...PROJECT_CATEGORY_TYPES[cat]], []);
-                        const filteredTypes = (bldForm2.projectTypes || []).filter(t => validTypes.includes(t));
-                        setBldForm2(prev => ({ ...prev, projectCategories: val, projectTypes: filteredTypes }));
-                      }}
-                      placeholder="Select project categories"
-                    />
-                  </div>
-                  {/* Project Type */}
-                  <div>
-                    <Label className={lbl}>Project Type *</Label>
-                    <MultiSelect
-                      options={bldForm2.projectCategories.reduce((acc, cat) => [...acc, ...(PROJECT_CATEGORY_TYPES[cat] || [])], [])}
-                      selected={bldForm2.projectTypes || []}
-                      onChange={(val) => setBldForm2(prev => ({ ...prev, projectTypes: val }))}
-                      placeholder={bldForm2.projectCategories.length === 0 ? 'Select categories first' : 'Select project types'}
-                      emptyMessage={bldForm2.projectCategories.length === 0 ? 'Please select a category first.' : 'No types found.'}
-                    />
-                  </div>
-                  {/* Project Stage */}
-                  <div>
-                    <Label className={lbl}>Project Stage</Label>
-                    <MultiSelect
-                      options={PROJECT_STAGES}
-                      selected={bldForm2.projectStages || []}
-                      onChange={(val) => setBldForm2(prev => ({ ...prev, projectStages: val }))}
-                      placeholder="Select project stages"
-                    />
-                  </div>
-                  {/* Capital / Business Requirement */}
-                  <div>
-                    <Label className={lbl}>Capital / Business Requirement</Label>
-                    <MultiSelect
-                      options={CAPITAL_REQUIREMENTS}
-                      selected={bldForm2.capitalRequirements || []}
-                      onChange={(val) => setBldForm2(prev => ({ ...prev, capitalRequirements: val }))}
-                      placeholder="Select business needs"
-                    />
-                  </div>
-                  {/* Active Projects */}
-                  <div>
-                    <Label className={lbl}>Active Projects</Label>
-                    <Input
-                      type="text"
-                      value={bldForm2.ongoingProjects}
-                      onChange={(e) => setBldForm2({ ...bldForm2, ongoingProjects: e.target.value })}
-                      className={inp}
-                      placeholder="e.g. 3 active projects"
-                    />
-                  </div>
-                  {/* Total Deliveries */}
-                  <div>
-                    <Label className={lbl}>Total Deliveries</Label>
-                    <Input
-                      type="text"
-                      value={bldForm2.projectsCompleted}
-                      onChange={(e) => setBldForm2({ ...bldForm2, projectsCompleted: e.target.value })}
-                      className={inp}
-                      placeholder="e.g. 15 projects completed"
-                    />
-                  </div>
-                </div>
-              </div>
-
-              {/* ── 1. Year of Incorporation ── */}
-              <div>
-                <Label className={lbl}>1. Year of Incorporation *</Label>
-                <Input
-                  required
-                  value={bldForm2.yearOfIncorporation}
-                  onChange={(e) => setBldForm2({ ...bldForm2, yearOfIncorporation: e.target.value.replace(/\D/g, '').slice(0, 4) })}
-                  className={inp}
-                  placeholder="YYYY"
-                  maxLength={4}
-                />
-              </div>
-
-              {/* ── 3. Names of Projects ── */}
-              <div>
-                <Label className={lbl}>3. Names of Projects (Best Projects) *</Label>
-                <Textarea
-                  required
-                  value={bldForm2.namesOfProjects}
-                  onChange={(e) => setBldForm2({ ...bldForm2, namesOfProjects: e.target.value })}
-                  className={txta}
-                  placeholder="List your best / flagship projects..."
-                />
-              </div>
-
-              {/* ── 4. Delivery Volume (Sqft / Sqyd / Both) ── */}
-              <div>
-                <Label className={lbl}>4. Total Delivery Volume *</Label>
-                <div className="flex gap-6 p-4 bg-gray-50/50 border border-gray-100 rounded-2xl mb-4">
-                  {[
-                    { val: 'sqft', label: 'Square Feet (Sqft)' },
-                    { val: 'sqyd', label: 'Square Yard (Sqyd)' },
-                    { val: 'both', label: 'Both' },
-                  ].map(opt => (
-                    <label key={opt.val} className="flex items-center gap-2.5 cursor-pointer">
-                      <input
-                        type="radio"
-                        name="deliveryVolumeType"
-                        value={opt.val}
-                        checked={bldForm2.deliveryVolumeType === opt.val}
-                        onChange={(e) => setBldForm2({ ...bldForm2, deliveryVolumeType: e.target.value, deliverySqft: '', deliverySqyd: '' })}
-                        className="w-4 h-4 text-orange-600 border-gray-300 focus:ring-orange-500"
-                      />
-                      <span className="text-sm font-semibold text-gray-700">{opt.label}</span>
-                    </label>
-                  ))}
-                </div>
-                {(bldForm2.deliveryVolumeType === 'sqft' || bldForm2.deliveryVolumeType === 'both') && (
-                  <div className={bldForm2.deliveryVolumeType === 'both' ? 'grid grid-cols-2 gap-4 animate-in slide-in-from-top-2 duration-200' : 'animate-in slide-in-from-top-2 duration-200'}>
-                    <div>
-                      <Label className={lbl}>Total Sqft *</Label>
-                      <Input
-                        required
-                        value={bldForm2.deliverySqft}
-                        onChange={(e) => setBldForm2({ ...bldForm2, deliverySqft: e.target.value.replace(/\D/g, '') })}
-                        className={inp}
-                        placeholder="e.g. 500000"
-                      />
-                    </div>
-                    {bldForm2.deliveryVolumeType === 'both' && (
-                      <div className="animate-in slide-in-from-top-2 duration-200">
-                        <Label className={lbl}>Total Sqyd *</Label>
-                        <Input
-                          required
-                          value={bldForm2.deliverySqyd}
-                          onChange={(e) => setBldForm2({ ...bldForm2, deliverySqyd: e.target.value.replace(/\D/g, '') })}
-                          className={inp}
-                          placeholder="e.g. 55000"
-                        />
-                      </div>
-                    )}
-                  </div>
-                )}
-                {bldForm2.deliveryVolumeType === 'sqyd' && (
-                  <div className="animate-in slide-in-from-top-2 duration-200">
-                    <Label className={lbl}>Total Sqyd *</Label>
+                    <Label className={lbl}>Years of Experience *</Label>
                     <Input
                       required
-                      value={bldForm2.deliverySqyd}
-                      onChange={(e) => setBldForm2({ ...bldForm2, deliverySqyd: e.target.value.replace(/\D/g, '') })}
+                      value={bldForm2.yearOfIncorporation}
+                      onChange={(e) => setBldForm2({ ...bldForm2, yearOfIncorporation: e.target.value.replace(/\D/g, '').slice(0, 2) })}
                       className={inp}
-                      placeholder="e.g. 55000"
+                      placeholder="e.g. 10"
+                      maxLength={2}
                     />
                   </div>
-                )}
-              </div>
 
-              {/* ── GROUPED: 5, 6, 7, 12 — Partners / Governance / Firm Type ── */}
-              <div className="p-6 bg-gray-50/50 border border-gray-100 rounded-2xl space-y-6">
-                <span className={sectionHead}>Governance &amp; Firm Structure (5, 6, 7, 12)</span>
+                  {/* NRI Client Exposure */}
+                  <div>
+                    <Label className={lbl}>NRI Client Exposure *</Label>
+                    <select required className={sel} value={bldForm2.experienceWithNriInvestors} onChange={(e) => setBldForm2({ ...bldForm2, experienceWithNriInvestors: e.target.value })}>
+                      <option value="">Select Option</option>
+                      <option value="Yes">Yes</option>
+                      <option value="No">No</option>
+                    </select>
+                  </div>
+                </div>
+
+                {/* Company Overview */}
+                <div>
+                  <Label className={lbl}>Company Overview *</Label>
+                  <Textarea
+                    required
+                    value={bldForm2.companyOverview}
+                    onChange={(e) => setBldForm2({ ...bldForm2, companyOverview: e.target.value })}
+                    className={txta}
+                    placeholder="Write about your company in your own words — vision, mission, what makes you stand out..."
+                  />
+                </div>
 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                  {/* 12. Type of Firm */}
+                  {/* Type of Firm */}
                   <div>
-                    <Label className={lbl}>12. Type of Firm *</Label>
+                    <Label className={lbl}>Type of Firm *</Label>
                     <select required className={sel} value={bldForm2.typeOfFirm} onChange={(e) => setBldForm2({ ...bldForm2, typeOfFirm: e.target.value })}>
                       <option value="">Select Type</option>
                       <option value="LLC">LLC (Limited Liability Company)</option>
@@ -497,9 +368,9 @@ export default function BuilderVerificationPage() {
                     )}
                   </div>
 
-                  {/* 5. Total No. of Partners */}
+                  {/* Total No. of Partners */}
                   <div>
-                    <Label className={lbl}>5. Total No. of Partners *</Label>
+                    <Label className={lbl}>Total No. of Partners *</Label>
                     <Input
                       required
                       type="text"
@@ -510,25 +381,13 @@ export default function BuilderVerificationPage() {
                     />
                   </div>
 
-                  {/* 6. Managing Partner Name */}
-                  <div>
-                    <Label className={lbl}>6. Managing Partner Name *</Label>
+                  {/* Managing Partner Name */}
+                  <div className="md:col-span-2">
+                    <Label className={lbl}>Managing Partner Name *</Label>
                     <Input
                       required
                       value={bldForm2.managingPartnerName}
                       onChange={(e) => setBldForm2({ ...bldForm2, managingPartnerName: e.target.value })}
-                      className={inp}
-                      placeholder="Full name"
-                    />
-                  </div>
-
-                  {/* 7. Major Stakeholder Name */}
-                  <div>
-                    <Label className={lbl}>7. Major Stakeholder Name *</Label>
-                    <Input
-                      required
-                      value={bldForm2.majorStakeholderName}
-                      onChange={(e) => setBldForm2({ ...bldForm2, majorStakeholderName: e.target.value })}
                       className={inp}
                       placeholder="Full name"
                     />
@@ -538,8 +397,8 @@ export default function BuilderVerificationPage() {
                 {/* Association with Trade Organizations */}
                 <div>
                   <Label className={lbl}>Association with Trade Organizations / Membership</Label>
-                  <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mt-2 p-4 border border-gray-100 rounded-xl bg-white">
-                    {['FAPCCI', 'CRUPPI', 'Others'].map((type) => (
+                  <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 mt-2 p-4 border border-gray-100 rounded-xl bg-white">
+                    {['CREDAI', 'FAPCCI', 'CRUPPI', 'Others'].map((type) => (
                       <div key={type} className="flex items-center space-x-3">
                         <Checkbox
                           id={`trade-${type}`}
@@ -565,100 +424,203 @@ export default function BuilderVerificationPage() {
                 </div>
               </div>
 
-              {/* ── 8. Company Overview ── */}
-              <div>
-                <Label className={lbl}>8. Company Overview *</Label>
-                <Textarea
-                  required
-                  value={bldForm2.companyOverview}
-                  onChange={(e) => setBldForm2({ ...bldForm2, companyOverview: e.target.value })}
-                  className={txta}
-                  placeholder="Write about your company in your own words — vision, mission, what makes you stand out..."
-                />
-              </div>
-
-              {/* ── 9. Litigation / Disputes ── */}
-              <div>
-                <Label className={lbl}>9. Litigation / Disputes</Label>
-                <Textarea
-                  value={bldForm2.declaredLitigationDisputes}
-                  onChange={(e) => setBldForm2({ ...bldForm2, declaredLitigationDisputes: e.target.value })}
-                  className={txta}
-                  placeholder="Disclose any ongoing or past litigation or legal disputes (if applicable)"
-                />
-              </div>
-
-              {/* ── 10 + Revenue ── */}
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              {/* ── Section 2: Project Specializations & Track Record ── */}
+              <div className="p-6 bg-gray-50/50 border border-gray-100 rounded-2xl space-y-6">
                 <div>
-                  <Label className={lbl}>10. Banking Partner *</Label>
-                  <Input
+                  <span className={sectionHead}>Project Specializations &amp; Track Record</span>
+                  <p className="text-xs text-gray-400 font-bold tracking-wide uppercase mt-1">Specify your project specializations and delivery record.</p>
+                </div>
+
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                  {/* Project Category */}
+                  <div>
+                    <Label className={lbl}>Project Category *</Label>
+                    <MultiSelect
+                      options={Object.keys(PROJECT_CATEGORY_TYPES)}
+                      selected={bldForm2.projectCategories || []}
+                      onChange={(val) => {
+                        const validTypes = val.reduce((acc, cat) => [...acc, ...(PROJECT_CATEGORY_TYPES[cat] || [])], []);
+                        const filteredTypes = (bldForm2.projectTypes || []).filter(t => validTypes.includes(t));
+                        setBldForm2(prev => ({ ...prev, projectCategories: val, projectTypes: filteredTypes }));
+                      }}
+                      placeholder="Select project categories"
+                    />
+                  </div>
+
+                  {/* Project Type */}
+                  <div>
+                    <Label className={lbl}>Project Type *</Label>
+                    <MultiSelect
+                      options={bldForm2.projectCategories.reduce((acc, cat) => [...acc, ...(PROJECT_CATEGORY_TYPES[cat] || [])], [])}
+                      selected={bldForm2.projectTypes || []}
+                      onChange={(val) => setBldForm2(prev => ({ ...prev, projectTypes: val }))}
+                      placeholder={bldForm2.projectCategories.length === 0 ? 'Select categories first' : 'Select project types'}
+                      emptyMessage={bldForm2.projectCategories.length === 0 ? 'Please select a category first.' : 'No types found.'}
+                    />
+                  </div>
+
+                  {/* Active Projects */}
+                  <div>
+                    <Label className={lbl}>Active Projects</Label>
+                    <Input
+                      type="text"
+                      value={bldForm2.ongoingProjects}
+                      onChange={(e) => setBldForm2({ ...bldForm2, ongoingProjects: e.target.value })}
+                      className={inp}
+                      placeholder="e.g. 3 active projects"
+                    />
+                  </div>
+
+                  {/* Total Deliveries */}
+                  <div>
+                    <Label className={lbl}>Total Deliveries</Label>
+                    <Input
+                      type="text"
+                      value={bldForm2.projectsCompleted}
+                      onChange={(e) => setBldForm2({ ...bldForm2, projectsCompleted: e.target.value })}
+                      className={inp}
+                      placeholder="e.g. 15 projects completed"
+                    />
+                  </div>
+                </div>
+
+                {/* Names of Projects (Best Projects) */}
+                <div>
+                  <Label className={lbl}>Names of Projects (Best Projects) *</Label>
+                  <Textarea
                     required
-                    value={bldForm2.bankingPartners}
-                    onChange={(e) => setBldForm2({ ...bldForm2, bankingPartners: e.target.value })}
-                    className={inp}
-                    placeholder="e.g. HDFC, SBI, ICICI"
+                    value={bldForm2.namesOfProjects}
+                    onChange={(e) => setBldForm2({ ...bldForm2, namesOfProjects: e.target.value })}
+                    className={txta}
+                    placeholder="List your best / flagship projects..."
                   />
                 </div>
-                <div>
-                  <Label className={lbl}>10. Total Revenue *</Label>
-                  <Input
-                    required
-                    type="text"
-                    value={bldForm2.totalRevenue}
-                    onChange={(e) => setBldForm2({ ...bldForm2, totalRevenue: e.target.value.replace(/\D/g, '') })}
-                    className={inp}
-                    placeholder="e.g. 50000000"
-                  />
-                </div>
-                <div>
-                  <Label className={lbl}>Revenue in Last Year *</Label>
-                  <Input
-                    required
-                    type="text"
-                    value={bldForm2.revenueInLastYear}
-                    onChange={(e) => setBldForm2({ ...bldForm2, revenueInLastYear: e.target.value.replace(/\D/g, '') })}
-                    className={inp}
-                    placeholder="e.g. 12000000"
-                  />
-                </div>
-                <div>
-                  <Label className={lbl}>NRI Client Exposure *</Label>
-                  <select required className={sel} value={bldForm2.experienceWithNriInvestors} onChange={(e) => setBldForm2({ ...bldForm2, experienceWithNriInvestors: e.target.value })}>
-                    <option value="">Select</option>
-                    <option value="Yes">Yes</option>
-                    <option value="No">No</option>
-                  </select>
-                </div>
-              </div>
 
-              {/* ── Remaining Fields ── */}
-              <div className="grid grid-cols-1 gap-6">
+                {/* Key Portfolio Highlights */}
                 <div>
-                  <Label className={lbl}>Key Portfolio Highlights</Label>
+                  <Label className={lbl}>Key Portfolio Highlights (Optional)</Label>
                   <Textarea
                     value={bldForm2.majorCompletedProjects}
                     onChange={(e) => setBldForm2({ ...bldForm2, majorCompletedProjects: e.target.value })}
                     className={txta}
-                    placeholder="Brief descriptions of major completed projects"
+                    placeholder="Brief descriptions of major completed projects..."
                   />
                 </div>
+
+                {/* Total Delivery Volume (Sqft / Sqyd / Both) */}
                 <div>
-                  <Label className={lbl}>Leverage Level (Outstanding Debt) *</Label>
-                  <select required className={sel} value={bldForm2.outstandingDebt} onChange={(e) => setBldForm2({ ...bldForm2, outstandingDebt: e.target.value })}>
-                    <option value="">Select Level</option>
-                    <option value="High">High</option>
-                    <option value="Medium">Medium</option>
-                    <option value="Low">Low</option>
-                  </select>
+                  <Label className={lbl}>Total Delivery Volume *</Label>
+                  <div className="flex gap-6 p-4 bg-white border border-gray-100 rounded-2xl mb-4">
+                    {[
+                      { val: 'sqft', label: 'Square Feet (Sqft)' },
+                      { val: 'sqyd', label: 'Square Yard (Sqyd)' },
+                      { val: 'both', label: 'Both' },
+                    ].map(opt => (
+                      <label key={opt.val} className="flex items-center gap-2.5 cursor-pointer">
+                        <input
+                          type="radio"
+                          name="deliveryVolumeType"
+                          value={opt.val}
+                          checked={bldForm2.deliveryVolumeType === opt.val}
+                          onChange={(e) => setBldForm2({ ...bldForm2, deliveryVolumeType: e.target.value, deliverySqft: '', deliverySqyd: '' })}
+                          className="w-4 h-4 text-orange-600 border-gray-300 focus:ring-orange-500"
+                        />
+                        <span className="text-sm font-semibold text-gray-700">{opt.label}</span>
+                      </label>
+                    ))}
+                  </div>
+                  {(bldForm2.deliveryVolumeType === 'sqft' || bldForm2.deliveryVolumeType === 'both') && (
+                    <div className={bldForm2.deliveryVolumeType === 'both' ? 'grid grid-cols-2 gap-4 animate-in slide-in-from-top-2 duration-200' : 'animate-in slide-in-from-top-2 duration-200'}>
+                      <div>
+                        <Label className={lbl}>Total Sqft *</Label>
+                        <Input
+                          required
+                          value={bldForm2.deliverySqft}
+                          onChange={(e) => setBldForm2({ ...bldForm2, deliverySqft: e.target.value.replace(/\D/g, '') })}
+                          className={inp}
+                          placeholder="e.g. 500000"
+                        />
+                      </div>
+                      {bldForm2.deliveryVolumeType === 'both' && (
+                        <div className="animate-in slide-in-from-top-2 duration-200">
+                          <Label className={lbl}>Total Sqyd *</Label>
+                          <Input
+                            required
+                            value={bldForm2.deliverySqyd}
+                            onChange={(e) => setBldForm2({ ...bldForm2, deliverySqyd: e.target.value.replace(/\D/g, '') })}
+                            className={inp}
+                            placeholder="e.g. 55000"
+                          />
+                        </div>
+                      )}
+                    </div>
+                  )}
+                  {bldForm2.deliveryVolumeType === 'sqyd' && (
+                    <div className="animate-in slide-in-from-top-2 duration-200">
+                      <Label className={lbl}>Total Sqyd *</Label>
+                      <Input
+                        required
+                        value={bldForm2.deliverySqyd}
+                        onChange={(e) => setBldForm2({ ...bldForm2, deliverySqyd: e.target.value.replace(/\D/g, '') })}
+                        className={inp}
+                        placeholder="e.g. 55000"
+                      />
+                    </div>
+                  )}
                 </div>
+              </div>
+
+              {/* ── Section 3: Financial Overview ── */}
+              <div className="p-6 bg-gray-50/50 border border-gray-100 rounded-2xl space-y-6">
                 <div>
-                  <Label className={lbl}>Financial Brief (P&amp;L Highlights)</Label>
+                  <span className={sectionHead}>Financial Overview</span>
+                  <p className="text-xs text-gray-400 font-bold tracking-wide uppercase mt-1">Provide key revenue stats for your entity.</p>
+                </div>
+
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                  {/* Total Revenue */}
+                  <div>
+                    <Label className={lbl}>Total Revenue *</Label>
+                    <Input
+                      required
+                      type="text"
+                      value={bldForm2.totalRevenue}
+                      onChange={(e) => setBldForm2({ ...bldForm2, totalRevenue: e.target.value.replace(/\D/g, '') })}
+                      className={inp}
+                      placeholder="e.g. 50000000"
+                    />
+                  </div>
+
+                  {/* Revenue in Last Year */}
+                  <div>
+                    <Label className={lbl}>Revenue in Last Year *</Label>
+                    <Input
+                      required
+                      type="text"
+                      value={bldForm2.revenueInLastYear}
+                      onChange={(e) => setBldForm2({ ...bldForm2, revenueInLastYear: e.target.value.replace(/\D/g, '') })}
+                      className={inp}
+                      placeholder="e.g. 12000000"
+                    />
+                  </div>
+                </div>
+              </div>
+
+              {/* ── Section 4: Compliance & Legal ── */}
+              <div className="p-6 bg-gray-50/50 border border-gray-100 rounded-2xl space-y-6">
+                <div>
+                  <span className={sectionHead}>Compliance &amp; Legal</span>
+                  <p className="text-xs text-gray-400 font-bold tracking-wide uppercase mt-1">Disclose any litigation or disputes.</p>
+                </div>
+
+                {/* Litigation / Disputes */}
+                <div>
+                  <Label className={lbl}>Litigation / Disputes (Optional)</Label>
                   <Textarea
-                    value={bldForm2.financialOfCompany}
-                    onChange={(e) => setBldForm2({ ...bldForm2, financialOfCompany: e.target.value })}
+                    value={bldForm2.declaredLitigationDisputes}
+                    onChange={(e) => setBldForm2({ ...bldForm2, declaredLitigationDisputes: e.target.value })}
                     className={txta}
-                    placeholder="Summary of profit & loss highlights"
+                    placeholder="Disclose any ongoing or past litigation or legal disputes (if applicable)"
                   />
                 </div>
               </div>

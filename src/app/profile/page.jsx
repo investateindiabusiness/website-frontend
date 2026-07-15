@@ -93,27 +93,11 @@ const BUDGET_RANGES = [
 
 // Builder Mappings
 const PROJECT_CATEGORY_TYPES = {
-  "Residential": [
-    "Apartments", "Villas", "Villaments", "Luxury Homes", "Senior Living", "Affordable Housing"
-  ],
-  "Commercial": [
-    "Office Spaces", "Retail", "Shopping Mall", "Commercial Complex", "IT Park", "Business Park"
-  ],
-  "Land Development": [
-    "Residential Plots", "Villa Plots", "Farm Plots", "Commercial Plots", "Townships"
-  ],
-  "Industrial": [
-    "Warehouse", "Logistics Park", "Manufacturing Unit", "Industrial Facility"
-  ],
-  "Agricultural": [
-    "Farm Projects", "Agricultural Land", "Plantation Projects"
-  ],
-  "Hospitality": [
-    "Hotels", "Resorts", "Serviced Apartments"
-  ],
-  "Mixed Use": [
-    "Residential + Commercial", "Integrated Township", "Smart City Development"
-  ]
+  "Residential": ["Apartments", "Villas", "Luxury Homes", "Senior Living", "Holiday & Farm Houses"],
+  "Commercial": ["Office Spaces", "Retail Shops", "Shopping Malls", "Co-working Spaces", "IT Parks"],
+  "Land & Plots": ["Residential Plots", "Villa Plots", "Farm Plots", "Commercial Plots", "Agricultural Land"],
+  "Industrial & Warehousing": ["Warehouses", "Industrial Parks", "Industrial Plots", "Cold Storage"],
+  "Hospitality": ["Hotels & Resorts"]
 };
 
 const PROJECT_STAGES = [
