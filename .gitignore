@@ -29,7 +29,18 @@ yarn-error.log*
 
 # custom ignores
 /INVESTATE.zip
+<<<<<<< HEAD
+/invest.zip
+*.zip
+=======
+>>>>>>> c16292d1eb4429f93479923b1728dca485f0eaf8
 /diff.txt
 /.run-logs/
 /.npm-cache/
 
+<<<<<<< HEAD
+# Large locally-generated/upscaled images (served from public, not needed in repo)
+/public/images/image copy 27.png
+/public/images/image copy 33.png
+=======
+>>>>>>> c16292d1eb4429f93479923b1728dca485f0eaf8
