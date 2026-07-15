@@ -745,14 +745,9 @@ export default function BuilderHome() {
 
                 return (
                   <div
-<<<<<<< HEAD
-                    className={`faq-accordion-item ${activeFaq === index ? "active" : ""
-                      }`}
-=======
                     className={`faq-accordion-item ${
                       activeFaq === index ? "active" : ""
                     }`}
->>>>>>> c16292d1eb4429f93479923b1728dca485f0eaf8
                     key={index}
                     onClick={() => toggleFaq(index)}
                   >
