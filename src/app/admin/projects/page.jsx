@@ -8,11 +8,27 @@ import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
-import { Building2, Eye, ShieldCheck, CheckCircle, XCircle, MapPin, RefreshCw, FileText, Download, X, ChevronLeft, ChevronRight, Loader2, AlertTriangle, Phone, Mail, Ruler, Layers, TrendingUp, Calendar } from 'lucide-react';
+import { Building2, Eye, ShieldCheck, CheckCircle, XCircle, MapPin, RefreshCw, FileText, Download, X, ChevronLeft, ChevronRight, Loader2, AlertTriangle, Phone, Mail, Ruler, Layers, TrendingUp, Calendar, DollarSign, Landmark, Globe, Link2 } from 'lucide-react';
 import { toast } from '@/hooks/use-toast';
 import { useAuth } from '@/hooks/AuthContext';
 import { fetchAllProjects, approveProject, verifyProjectStatus } from '@/api';
 import { Chip, FormControl, InputLabel, Select, MenuItem, Box, Typography } from '@mui/material';
+
+const DetailBlock = ({ label, value, isFullWidth = false, isLink = false }) => {
+  if (!value) return null;
+  return (
+    <div className={`bg-white rounded-xl p-3 border border-gray-100 shadow-sm ${isFullWidth ? 'col-span-full' : ''}`}>
+      <span className="text-[10px] font-bold text-gray-400 uppercase tracking-wider block mb-1">{label}</span>
+      {isLink ? (
+        <a href={value.startsWith('http') ? value : `https://${value}`} target="_blank" rel="noopener noreferrer" className="text-xs font-semibold text-blue-600 hover:underline flex items-center gap-1 break-all">
+          <Link2 className="w-3.5 h-3.5 flex-shrink-0" /> {value}
+        </a>
+      ) : (
+        <p className="text-xs font-semibold text-gray-800 whitespace-pre-wrap leading-relaxed">{value}</p>
+      )}
+    </div>
+  );
+};
 
 export default function AdminProjects() {
   const { user } = useAuth();
@@ -291,29 +307,122 @@ export default function AdminProjects() {
                 </div>
               )}
 
-              {/* Core Details Grid */}
-              <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-                {[
-                  { label: 'Project Type', value: Array.isArray(viewProjectData.projectType) ? viewProjectData.projectType.join(', ') : viewProjectData.projectType, icon: <Building2 className="w-4 h-4" /> },
-                  { label: 'Total Units', value: viewProjectData.totalUnits, icon: <Layers className="w-4 h-4" /> },
-                  { label: 'Land Area', value: viewProjectData.totalLandArea, icon: <Ruler className="w-4 h-4" /> },
-                  { label: 'Selling Price', value: viewProjectData.sellingPrice, icon: <TrendingUp className="w-4 h-4" /> },
-                  { label: 'RERA Number', value: viewProjectData.reraRegistrationNumber, icon: <ShieldCheck className="w-4 h-4" /> },
-                  { label: 'Construction Status', value: viewProjectData.currentConstructionStatus, icon: <Calendar className="w-4 h-4" /> },
-                  { label: 'Expected Rent', value: viewProjectData.expectedRent, icon: <TrendingUp className="w-4 h-4" /> },
-                  { label: 'Location', value: viewProjectData.projectLocation, icon: <MapPin className="w-4 h-4" /> },
-                  { label: 'Land Type', value: viewProjectData.landType === 'Other' ? viewProjectData.landTypeOther : viewProjectData.landType, icon: <ShieldCheck className="w-4 h-4" /> },
-                  { label: 'Sizes / Area Range', value: viewProjectData.area, icon: <Ruler className="w-4 h-4" /> },
-                  { label: 'Configurations', value: viewProjectData.inventory, icon: <Layers className="w-4 h-4" /> },
-                ].map(({ label, value, icon }) => (
-                  <div key={label} className="bg-gray-50 rounded-xl p-3 border border-gray-100">
-                    <div className="flex items-center gap-1.5 text-gray-400 mb-1">
-                      {icon}
-                      <span className="text-[10px] font-bold uppercase tracking-wider">{label}</span>
-                    </div>
-                    <p className="text-sm font-semibold text-gray-800">{value || 'N/A'}</p>
+              {/* Section 1: Basic Information */}
+              <div className="bg-gray-50/50 rounded-xl p-4 border border-gray-100 space-y-3">
+                <h3 className="text-sm font-bold text-gray-900 flex items-center gap-2">
+                  <Building2 className="w-4 h-4 text-blue-600" /> Basic Information
+                </h3>
+                <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3">
+                  <DetailBlock label="Project Name" value={viewProjectData.projectName} />
+                  <DetailBlock label="Builder Name" value={viewProjectData.builderName} />
+                  <DetailBlock label="Project Location" value={viewProjectData.projectLocation} />
+                  <DetailBlock label="Current Construction Status" value={viewProjectData.currentConstructionStatus} />
+                  <DetailBlock label="Expected Completion Date" value={viewProjectData.expectedCompletionDate} />
+                  <DetailBlock label="Project Categories" value={Array.isArray(viewProjectData.projectCategories) ? viewProjectData.projectCategories.join(', ') : viewProjectData.projectCategories} />
+                  <DetailBlock label="Project Types" value={Array.isArray(viewProjectData.projectType) ? viewProjectData.projectType.join(', ') : viewProjectData.projectType} />
+                </div>
+              </div>
+
+              {/* Section 2: Land, Inventory & Configuration */}
+              <div className="bg-gray-50/50 rounded-xl p-4 border border-gray-100 space-y-3">
+                <h3 className="text-sm font-bold text-gray-900 flex items-center gap-2">
+                  <Layers className="w-4 h-4 text-purple-600" /> Land, Inventory & Configuration
+                </h3>
+                <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3">
+                  <DetailBlock label="Total Land Area" value={viewProjectData.totalLandArea} />
+                  <DetailBlock label="Total Built-up Area" value={viewProjectData.totalBuiltUpArea} />
+                  <DetailBlock label="Total Units" value={viewProjectData.totalUnits} />
+                  <DetailBlock label="Unit Sizes / Configurations" value={viewProjectData.area} isFullWidth />
+                  <DetailBlock label="Unit Mix" value={viewProjectData.inventory} isFullWidth />
+                  <DetailBlock label="Undivided Share (UDS) / Land Share" value={viewProjectData.undividedShare} isFullWidth />
+                  <DetailBlock label="Other Unit Information" value={viewProjectData.otherUnitInformation} isFullWidth />
+                </div>
+              </div>
+
+              {/* Section 3: Approvals & Compliance */}
+              <div className="bg-gray-50/50 rounded-xl p-4 border border-gray-100 space-y-3">
+                <h3 className="text-sm font-bold text-gray-900 flex items-center gap-2">
+                  <ShieldCheck className="w-4 h-4 text-green-600" /> Approvals & Compliance
+                </h3>
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                  <DetailBlock label="Project State" value={viewProjectData.projectState} />
+                  <DetailBlock label="Government Construction Approvals" value={Array.isArray(viewProjectData.governmentApprovalsObtained) ? viewProjectData.governmentApprovalsObtained.join(', ') : viewProjectData.governmentApprovalsObtained} />
+                  {viewProjectData.governmentApprovalsObtained?.includes("Other") && (
+                    <DetailBlock label="Other Government Approvals" value={viewProjectData.otherGovernmentApprovals} isFullWidth />
+                  )}
+                  <DetailBlock label="RERA Registration Number" value={viewProjectData.reraRegistrationNumber} />
+                  <DetailBlock label="Bank Approvals" value={viewProjectData.bankApprovals} />
+                  {viewProjectData.bankApprovals === 'Yes' && (
+                    <DetailBlock label="Names of Approved Banks" value={viewProjectData.bankApprovalsName} isFullWidth />
+                  )}
+                  <DetailBlock label="Existing Borrowings" value={viewProjectData.existingBorrowings} />
+                  {viewProjectData.existingBorrowings === 'Yes' && (
+                    <>
+                      <DetailBlock label="Borrowing Amount" value={viewProjectData.existingBorrowingsAmount} />
+                      <DetailBlock label="Purpose of Borrowing" value={viewProjectData.existingBorrowingsPurpose} />
+                    </>
+                  )}
+                </div>
+              </div>
+
+              {/* Section 4: Project Financials */}
+              <div className="bg-gray-50/50 rounded-xl p-4 border border-gray-100 space-y-3">
+                <h3 className="text-sm font-bold text-gray-900 flex items-center gap-2">
+                  <DollarSign className="w-4 h-4 text-emerald-600" /> Project Financials
+                </h3>
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                  <DetailBlock label="Estimated Project Value" value={viewProjectData.projectCost} />
+                </div>
+              </div>
+
+              {/* Section 5: Investment Opportunity */}
+              <div className="bg-gray-50/50 rounded-xl p-4 border border-gray-100 space-y-3">
+                <h3 className="text-sm font-bold text-gray-900 flex items-center gap-2">
+                  <TrendingUp className="w-4 h-4 text-teal-600" /> Investment Opportunity
+                </h3>
+                <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3">
+                  <DetailBlock label="Selling Price" value={viewProjectData.sellingPrice} />
+                  <DetailBlock label="Pricing Offered" value={viewProjectData.pricingOffered} />
+                  <DetailBlock label="Security Offered" value={viewProjectData.securityOffered} />
+                  <DetailBlock label="Lock-in Period" value={viewProjectData.lockInPeriod} />
+                  <DetailBlock label="Buyback Guarantee" value={viewProjectData.buybackGuarantee} />
+                  {viewProjectData.buybackGuarantee === 'Yes' && (
+                    <DetailBlock label="Guarantee Details" value={viewProjectData.buybackGuaranteeDetails} />
+                  )}
+                  <DetailBlock label="Rental Opportunity Available" value={viewProjectData.availableForRent} />
+                  {viewProjectData.availableForRent === 'Yes' && (
+                    <DetailBlock label="Expected Rent" value={viewProjectData.expectedRent} />
+                  )}
+                  <DetailBlock label="Exit & Resale Framework" value={viewProjectData.exitResaleFramework} isFullWidth />
+                  <DetailBlock label="Marketing Responsibility" value={viewProjectData.marketingResponsibility} isFullWidth />
+                  <DetailBlock label="Additional Disclosures" value={viewProjectData.additionalDisclosures} isFullWidth />
+                </div>
+              </div>
+
+              {/* Section 6: Live Project Monitoring (Optional) */}
+              {viewProjectData.liveCctvAvailable === 'Yes' && (
+                <div className="bg-gray-50/50 rounded-xl p-4 border border-gray-100 space-y-3">
+                  <h3 className="text-sm font-bold text-gray-900 flex items-center gap-2">
+                    <Eye className="w-4 h-4 text-amber-600" /> Live Project Monitoring
+                  </h3>
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                    <DetailBlock label="Live Camera URL" value={viewProjectData.liveCameraUrl} isFullWidth />
+                    <DetailBlock label="Camera Username" value={viewProjectData.cameraUsername} />
+                    <DetailBlock label="Camera Password" value={viewProjectData.cameraPassword ? '********' : 'N/A'} />
+                    <DetailBlock label="Viewer Instructions" value={viewProjectData.viewerInstructions} isFullWidth />
                   </div>
-                ))}
+                </div>
+              )}
+
+              {/* Section 7: Additional Project Information */}
+              <div className="bg-gray-50/50 rounded-xl p-4 border border-gray-100 space-y-3">
+                <h3 className="text-sm font-bold text-gray-900 flex items-center gap-2">
+                  <Building2 className="w-4 h-4 text-indigo-600" /> Additional Project Information
+                </h3>
+                <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3">
+                  <DetailBlock label="Land Ownership Type" value={viewProjectData.landType === 'Other' ? viewProjectData.landTypeOther : viewProjectData.landType} />
+                  <DetailBlock label="Google Maps Location" value={viewProjectData.googleMapsLocation} isLink />
+                </div>
               </div>
 
               {/* Builder Info */}

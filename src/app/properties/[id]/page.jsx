@@ -12,7 +12,7 @@ import { Badge } from '@/components/ui/badge';
 import { Dialog, DialogContent } from '@/components/ui/dialog';
 import {
    MapPin, Building2, Calendar, FileCheck,
-   Ruler, Layers, TrendingUp, Phone,
+   Ruler, Layers, TrendingUp, Phone, Mail,
    AlertCircle, CheckCircle,
    Download, ShieldCheck, Loader2,
    ChevronLeft, ChevronRight, X,
@@ -161,7 +161,16 @@ export default function ProjectDetail() {
                      <div>
                         <h1 className="text-2xl md:text-3xl font-bold text-gray-900">{project.projectName}</h1>
                         <Badge className="bg-green-100 text-green-800 mt-2"><ShieldCheck className="w-3 h-3 mr-1" /> Verified Project</Badge>
-                        <p className="text-gray-500 flex items-center text-sm mt-2"><MapPin className="h-3.5 w-3.5 mr-1" /> {project.projectLocation}</p>
+                        <p className="text-gray-500 flex items-center text-sm mt-2">
+                           <MapPin className="h-3.5 w-3.5 mr-1 text-orange-500" />
+                           {project.googleMapsLocation ? (
+                              <a href={project.googleMapsLocation} target="_blank" rel="noopener noreferrer" className="hover:underline text-blue-600 font-semibold flex items-center gap-1">
+                                 {project.projectLocation} (View Map)
+                              </a>
+                           ) : (
+                              project.projectLocation
+                           )}
+                        </p>
                      </div>
                      <div className="text-left md:text-right mt-4 md:mt-0 flex flex-col items-start md:items-end gap-2">
                         <p className="text-2xl font-bold text-[#0b264f]">{project.sellingPrice}</p>
@@ -219,18 +228,28 @@ export default function ProjectDetail() {
                   </div>
                </div>
 
-               <div className="bg-white p-6 rounded-xl shadow-sm border border-gray-200">
-                  <h2 className="text-lg font-bold mb-4">Overview</h2>
-                  <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
-                     <DetailItem label="Type" value={Array.isArray(project.projectType) ? project.projectType.join(', ') : (project.projectType || 'Property')} icon={<Building2 />} />
-                     <DetailItem label="Units" value={project.totalUnits} icon={<Layers />} />
-                     <DetailItem label="Land Area" value={project.totalLandArea} icon={<Ruler />} />
-                     <DetailItem label="RERA ID" value={project.reraRegistrationNumber} icon={<CheckCircle />} />
-                     {project.area && <DetailItem label="Sizes" value={project.area} icon={<Ruler />} />}
-                     {project.inventory && <DetailItem label="Configurations" value={project.inventory} icon={<Layers />} />}
-                     {project.landType && <DetailItem label="Land Ownership" value={project.landType === 'Other' ? project.landTypeOther : project.landType} icon={<ShieldCheck />} />}
-                  </div>
-               </div>
+                <div className="bg-white p-6 rounded-xl shadow-sm border border-gray-200">
+                   <h2 className="text-lg font-bold mb-4">Overview</h2>
+                   <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
+                      <DetailItem label="Type" value={Array.isArray(project.projectType) ? project.projectType.join(', ') : (project.projectType || 'Property')} icon={<Building2 />} />
+                      <DetailItem label="Units" value={project.totalUnits} icon={<Layers />} />
+                      <DetailItem label="Land Area" value={project.totalLandArea} icon={<Ruler />} />
+                      <DetailItem label="RERA ID" value={project.reraRegistrationNumber} icon={<CheckCircle />} />
+                      {project.area && <DetailItem label="Sizes" value={project.area} icon={<Ruler />} />}
+                      {project.inventory && <DetailItem label="Configurations" value={project.inventory} icon={<Layers />} />}
+                      {project.landType && <DetailItem label="Land Ownership" value={project.landType === 'Other' ? project.landTypeOther : project.landType} icon={<ShieldCheck />} />}
+                      {project.undividedShare && <DetailItem label="UDS / Land Share" value={project.undividedShare} icon={<Layers />} />}
+                      {project.otherUnitInformation && <DetailItem label="Other Unit Info" value={project.otherUnitInformation} icon={<Layers />} />}
+                      {project.projectState && <DetailItem label="State" value={project.projectState} icon={<MapPin />} />}
+                      {project.governmentApprovalsObtained && <DetailItem label="Approvals" value={Array.isArray(project.governmentApprovalsObtained) ? project.governmentApprovalsObtained.join(', ') : project.governmentApprovalsObtained} icon={<ShieldCheck />} />}
+                      {project.projectCost && <DetailItem label="Estimated Project Value" value={project.projectCost} icon={<TrendingUp />} />}
+                      {project.pricingOffered && <DetailItem label="Pricing Offered" value={project.pricingOffered} icon={<TrendingUp />} />}
+                      {project.securityOffered && <DetailItem label="Security Offered" value={project.securityOffered} icon={<ShieldCheck />} />}
+                      {project.lockInPeriod && <DetailItem label="Lock-in Period" value={project.lockInPeriod} icon={<Calendar />} />}
+                      {project.buybackGuarantee === 'Yes' && <DetailItem label="Buyback Guarantee" value={project.buybackGuaranteeDetails || 'Yes'} icon={<ShieldCheck />} />}
+                      {project.availableForRent === 'Yes' && <DetailItem label="Expected Rent" value={project.expectedRent || 'Yes'} icon={<TrendingUp />} />}
+                   </div>
+                </div>
 
                <div className="bg-white p-6 rounded-xl shadow-sm border border-gray-200">
                   <h2 className="text-lg font-bold mb-4">Project Overview</h2>
