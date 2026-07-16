@@ -90,7 +90,10 @@ export default function AdBanner({ zoneId, variant = 'default', forceRole }) {
     };
   }, [zoneId]);
 
-  const zone = ZONE_CONFIG[zoneId] || { width: 728, height: 90 };
+  const zone = {
+    width: ad?.width || ZONE_CONFIG[zoneId]?.width || 728,
+    height: ad?.height || ZONE_CONFIG[zoneId]?.height || 90,
+  };
 
   // Role-specific advertisement URLs
   const AD_PATHS = {
