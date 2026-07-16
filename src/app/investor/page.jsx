@@ -66,14 +66,14 @@ const contentDataForSection2 = [
     title: "Asset Protection",
     text: "Remote monitoring of your properties against illegal occupation, encroachment, forged documents, and misuse of Power of Attorney.",
     image:
-      "https://images.unsplash.com/photo-1554224155-8d04cb21cd6c?q=80&w=1000&auto=format&fit=crop",
+      "/images/image copy 44.png",
   },
   {
     id: "03",
     title: "Legal & Tax Advisory",
     text: "A trusted network of legal partners and tax advisors helping you navigate FEMA, TDS, DTAA, capital gains, and property disputes from abroad.",
     image:
-      "https://images.unsplash.com/photo-1460925895917-afdab827c52f?q=80&w=1000&auto=format&fit=crop",
+      "/images/image copy 45.png",
   },
   // {
   //     id: "04",

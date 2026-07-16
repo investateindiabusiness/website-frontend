@@ -40,7 +40,7 @@ import {
 
 const heroSlides = [
   {
-    image: "/images/build.png",
+    image: "/images/image copy 50.png",
     tag: "Global Investment Ecosystem",
     title: "INVESTATE INDIA",
     highlight: "Your Gateway to Indian Growth",
