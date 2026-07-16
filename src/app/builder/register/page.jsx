@@ -362,6 +362,7 @@ function BuilderRegisterContent() {
       setUserId(err.uid);
       setAuthData(prev => ({ ...prev, email: err.email }));
       setBuilderData(prev => ({ ...prev, contactName: err.name || '' }));
+      setOnboardingInitData(err);
       setStep(2);
     } else if (err.error === 'CHANGES_REQUESTED') {
       toast({ title: 'Update Required', description: err.message });

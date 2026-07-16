@@ -12,7 +12,7 @@ import { toast } from '@/hooks/use-toast';
 import { CheckCircle, ChevronRight, Loader2, FileWarning, ClipboardList, ArrowLeft, Eye, EyeOff } from 'lucide-react';
 import { getAuth } from 'firebase/auth';
 import { app } from '@/firebase';
-import { registerStep1, sendOtp, submitServiceProviderForm1, submitRequestedChanges } from '@/api';
+import { registerStep1, sendOtp, submitServiceProviderForm1, submitRequestedChanges, loginRequest, googleSyncRequest } from '@/api';
 import GoogleAuthButton from '@/components/GoogleAuthButton';
 
 function ServiceProviderRegisterContent() {
@@ -27,6 +27,7 @@ function ServiceProviderRegisterContent() {
   const [otpSent, setOtpSent] = useState(false);
   const [otpCode, setOtpCode] = useState('');
   const [onboardingInitData, setOnboardingInitData] = useState(null);
+  const [googleIdToken, setGoogleIdToken] = useState(null);
 
   // Form states
   const [authData, setAuthData] = useState({ email: '', password: '', confirmPassword: '' });
@@ -254,7 +255,31 @@ function ServiceProviderRegisterContent() {
       } else {
         await submitServiceProviderForm1(userId, serviceProviderData);
       }
-      setSubmitted(true);
+
+      // Auto-login and navigate to service provider dashboard
+      let autoLoginSucceeded = false;
+      try {
+        let userData;
+        if (googleIdToken) {
+          userData = await googleSyncRequest(googleIdToken, 'serviceProvider');
+        } else if (authData.email && authData.password) {
+          userData = await loginRequest({ email: authData.email, password: authData.password, role: 'serviceProvider' });
+        }
+
+        if (userData && userData.uid) {
+          login(userData);
+          autoLoginSucceeded = true;
+          toast({ title: 'Registration Complete! 🎉', description: 'Welcome! Taking you to your dashboard...' });
+          router.push('/service-provider/dashboard');
+          return;
+        }
+      } catch (loginErr) {
+        console.warn('Auto-login failed after Form 1:', loginErr);
+      }
+
+      if (!autoLoginSucceeded) {
+        setSubmitted(true);
+      }
     } catch (error) {
       toast({ title: 'Error', description: error.message || 'Failed to submit profile.', variant: 'destructive' });
     } finally {
@@ -275,6 +300,7 @@ function ServiceProviderRegisterContent() {
       setUserId(err.uid);
       setAuthData(prev => ({ ...prev, email: err.email }));
       setServiceProviderData(prev => ({ ...prev, fullName: err.name || '' }));
+      if (err.idToken) setGoogleIdToken(err.idToken);
       setStep(2);
     } else if (err.error === 'CHANGES_REQUESTED') {
       toast({ title: 'Update Required', description: err.message });

@@ -347,6 +347,7 @@ function InvestorRegisterContent() {
       setUserId(err.uid);
       setAuthData(prev => ({ ...prev, email: err.email }));
       setInvestorData(prev => ({ ...prev, fullName: err.name || '' }));
+      setOnboardingInitData(err);
       setStep(2);
     } else if (err.error === 'CHANGES_REQUESTED') {
       toast({ title: 'Update Required', description: err.message });

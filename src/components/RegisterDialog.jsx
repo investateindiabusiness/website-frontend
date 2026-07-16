@@ -374,7 +374,31 @@ const RegisterDialog = ({ isOpen, onOpenChange, onLoginClick, initialData = {} }
         }
       } else {
         await submitServiceProviderForm1(userId, currentData);
-        setSubmitted(true);
+        let autoLoginSucceeded = false;
+        try {
+          let userData;
+          if (localInitialData?.idToken) {
+            userData = await googleSyncRequest(localInitialData.idToken, 'serviceProvider');
+          } else if (authData.email && authData.password) {
+            userData = await loginRequest({ email: authData.email, password: authData.password, role: 'serviceProvider' });
+          }
+
+          if (userData && userData.uid) {
+            login(userData);
+            autoLoginSucceeded = true;
+            toast({ title: 'Account Initialized 🎉', description: 'Basic details saved. Routing to dashboard...' });
+            onOpenChange(false);
+            router.push('/service-provider/dashboard');
+            return;
+          }
+        } catch (loginErr) {
+          console.warn('Auto-login failed after Form 1:', loginErr);
+        }
+
+        if (!autoLoginSucceeded) {
+          toast({ title: 'Details Saved!', description: 'Please sign in to access your dashboard.' });
+          setSubmitted(true);
+        }
       }
     } catch (error) {
       toast({ title: 'Error', description: error.message || 'Failed to submit.', variant: 'destructive' });
@@ -435,7 +459,8 @@ const RegisterDialog = ({ isOpen, onOpenChange, onLoginClick, initialData = {} }
         email: err.email,
         name: err.name,
         skipStep1: true,
-        userType: targetUserType
+        userType: targetUserType,
+        idToken: err.idToken
       });
     } else if (err.error === 'CHANGES_REQUESTED') {
       toast({ title: 'Update Required', description: err.message });

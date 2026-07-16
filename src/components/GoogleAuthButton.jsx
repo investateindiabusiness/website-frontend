@@ -62,6 +62,7 @@ const GoogleAuthButton = ({ onSuccess, onError, text = "Continue with Google", u
 
       if (syncError) {
         syncError.userType = finalRole;
+        syncError.idToken = idToken;
         throw syncError;
       }
 
