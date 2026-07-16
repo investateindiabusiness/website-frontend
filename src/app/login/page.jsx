@@ -145,6 +145,23 @@ function UnifiedLoginPageContent() {
     }
   };
 
+  const appDetails = {
+    investor: {
+      title: "Investate Investor",
+      desc: "Explore vetted properties, monitor assets safety, and manage rental income on the go."
+    },
+    builder: {
+      title: "Investate Builder",
+      desc: "Manage listings, track high-net-worth investor leads, and update bookings on the go."
+    },
+    "service-provider": {
+      title: "Investate Partner",
+      desc: "Manage service requests, connect with premium developers, and track business growth on the go."
+    }
+  };
+
+  const currentApp = appDetails[selectedRole.id] || appDetails.investor;
+
   return (
     <div className="min-h-screen bg-[#0b1120] flex flex-col font-sans">
       <Header transparent={false} />
@@ -251,6 +268,53 @@ function UnifiedLoginPageContent() {
           >
             <UserPlus className="w-4 h-4" /> Register as {selectedRole.label}
           </button>
+
+          {/* Dynamic App Download Card */}
+          <div className="mt-5 p-4 bg-gray-50 border border-gray-100 rounded-xl flex flex-col gap-3 text-left">
+            <div className="flex items-center gap-2">
+              <div className="w-8 h-8 bg-orange-600 rounded-lg flex items-center justify-center text-white">
+                <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="2.5" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M10.5 1.5H8.25A2.25 2.25 0 0 0 6 3.75v16.5a2.25 2.25 0 0 0 2.25 2.25h7.5A2.25 2.25 0 0 0 18 20.25V3.75a2.25 2.25 0 0 0-2.25-2.25H13.5m-3 0V3h3V1.5m-3 0h3m-3 18.75h3" />
+                </svg>
+              </div>
+              <div>
+                <h4 className="text-[8px] font-black text-gray-400 uppercase tracking-widest leading-none mb-0.5">Get the App</h4>
+                <h3 className="text-xs font-black text-gray-900 uppercase tracking-tight">{currentApp.title}</h3>
+              </div>
+            </div>
+
+            <p className="text-[10px] text-gray-500 font-semibold leading-relaxed">
+              {currentApp.desc}
+            </p>
+
+            <div className="grid grid-cols-2 gap-2 mt-1">
+              <a
+                href="#"
+                onClick={(e) => e.preventDefault()}
+                aria-label="Download on App Store"
+                className="rounded-lg overflow-hidden block"
+              >
+                <img
+                  src="/images/app-store.png"
+                  alt="Download on App Store"
+                  className="h-8 w-full object-contain rounded-lg hover:scale-105 transition-transform"
+                />
+              </a>
+
+              <a
+                href="#"
+                onClick={(e) => e.preventDefault()}
+                aria-label="Get it on Google Play"
+                className="rounded-lg overflow-hidden block"
+              >
+                <img
+                  src="/images/google-play.png"
+                  alt="Get it on Google Play"
+                  className="h-8 w-full object-contain rounded-lg hover:scale-105 transition-transform"
+                />
+              </a>
+            </div>
+          </div>
         </div>
       </main>
 

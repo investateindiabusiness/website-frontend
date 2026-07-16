@@ -133,7 +133,7 @@ export default function BuilderDashboard() {
                     <Inbox className="w-4 h-4" /> SP Inbox
                   </Button>
                   <Button
-                    onClick={() => router.push('/support')}
+                    onClick={() => router.push('/builder/support')}
                     variant="outline"
                     className="bg-white/10 border-white/20 text-white hover:bg-white/20 rounded-xl gap-2 text-sm h-9 sm:h-10"
                   >

@@ -76,23 +76,8 @@ export default function AdminHelpdesk() {
     const loadTickets = async () => {
       try {
         setLoading(true);
-
-        let apiTickets = [];
-        try {
-          const res = await fetchAllTickets(filterStatus !== 'ALL' ? { status: filterStatus } : {});
-          apiTickets = res.data || [];
-        } catch (apiErr) {
-          console.warn("API load failed, falling back to local mock storage:", apiErr);
-        }
-
-        const isDev = typeof window !== 'undefined' &&
-          (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1');
-        if (isDev) {
-          const mockTickets = JSON.parse(localStorage.getItem('mock_tickets') || '[]');
-          setTickets([...mockTickets, ...apiTickets]);
-        } else {
-          setTickets(apiTickets);
-        }
+        const res = await fetchAllTickets(filterStatus !== 'ALL' ? { status: filterStatus } : {});
+        setTickets(res.data || []);
       } catch (error) {
         console.warn("Failed to load tickets:", error);
         toast({ title: "Error", description: "Could not load support tickets.", variant: "destructive" });

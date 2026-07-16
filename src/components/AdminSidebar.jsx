@@ -65,6 +65,7 @@ const NAV_ITEMS_BY_ROLE = {
     { label: 'Referrals', path: '/builder/referrals', icon: <ReferralsIcon /> },
     { label: 'Coupons', path: '/builder/coupons', icon: <CouponsIcon /> },
     { label: 'SP Inbox', path: '/builder/outreach-inbox', icon: <OutreachIcon /> },
+    { label: 'Support', path: '/builder/support', icon: <HelpdeskIcon /> },
   ],
   investor: [
     { label: 'Dashboard', path: '/dashboard', icon: <DashboardIcon /> },
@@ -75,6 +76,7 @@ const NAV_ITEMS_BY_ROLE = {
     { label: 'Payments', path: '/investor/payments', icon: <LeadsIcon /> },
     { label: 'Coupons', path: '/investor/coupons', icon: <CouponsIcon /> },
     { label: 'SP Inbox', path: '/investor/outreach-inbox', icon: <OutreachIcon /> },
+    { label: 'Support', path: '/investor/support', icon: <HelpdeskIcon /> },
   ],
   serviceProvider: [
     { label: 'Dashboard', path: '/service-provider/dashboard', icon: <DashboardIcon /> },
@@ -84,6 +86,7 @@ const NAV_ITEMS_BY_ROLE = {
     { label: 'Advertise', path: '/service-provider/advertisements', icon: <AdsIcon /> },
     { label: 'Payments', path: '/service-provider/payments', icon: <LeadsIcon /> },
     { label: 'Coupons', path: '/service-provider/coupons', icon: <CouponsIcon /> },
+    { label: 'Support', path: '/service-provider/support', icon: <HelpdeskIcon /> },
   ],
 };
 

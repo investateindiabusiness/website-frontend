@@ -127,7 +127,7 @@ export default function InvestorDashboard() {
                 <h1 className="text-2xl md:text-3xl lg:text-4xl font-bold mb-1">Welcome, {user?.name || 'Investor'}</h1>
                 <p className="text-blue-100 text-sm md:text-base opacity-90">Manage your portfolio and discover India's top realty.</p>
                 <Button
-                  onClick={() => router.push('/support')}
+                  onClick={() => router.push('/investor/support')}
                   variant="outline"
                   className="mt-4 bg-white/10 hover:bg-white/20 text-white border-white/20 backdrop-blur-sm rounded-xl"
                 >

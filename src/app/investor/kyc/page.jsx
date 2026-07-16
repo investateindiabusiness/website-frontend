@@ -72,37 +72,19 @@ const DEFAULT_INCOME_OPTIONS = [
   '$0 - $50,000', '$50,000 - $100,000', '$100,000 and above'
 ];
 
-// Dynamic Categories and Types mapping
+// Categories and types — kept in sync with builder/projects PROJECT_CATEGORY_TYPES
 const INVESTMENT_CATEGORY_TYPES = {
-  "Residential": [
-    "Apartments", "Villas", "Villaments", "Gated Communities",
-    "Luxury Homes", "Senior Living", "Affordable Housing", "Holiday Homes"
-  ],
-  "Commercial": [
-    "Office Spaces", "Retail Shops", "Commercial Complexes",
-    "Shopping Malls", "Co-working Spaces", "IT Parks"
-  ],
-  "Land & Plots": [
-    "Residential Plots", "Villa Plots", "Farm Plots",
-    "Commercial Plots", "Township Plots"
-  ],
-  "Industrial & Warehousing": [
-    "Warehouses", "Industrial Parks", "Manufacturing Units",
-    "Logistics Parks", "Cold Storage"
-  ],
-  "Agricultural": [
-    "Agricultural Land", "Farm Houses", "Organic Farms", "Plantation Projects"
-  ],
-  "Hospitality": [
-    "Hotels", "Resorts", "Serviced Apartments", "Holiday Projects"
-  ],
-  "Alternative Investments": [
-    "Fractional Ownership", "REIT Opportunities", "Equity Participation", "Joint Ventures"
-  ]
+  "Residential": ["Apartments", "Villas", "Luxury Homes", "Senior Living", "Holiday & Farm Houses"],
+  "Commercial": ["Office Spaces", "Retail Shops", "Shopping Malls", "Co-working Spaces", "IT Parks"],
+  "Land & Plots": ["Residential Plots", "Villa Plots", "Farm Plots", "Commercial Plots", "Agricultural Land"],
+  "Industrial & Warehousing": ["Warehouses", "Industrial Parks", "Industrial Plots", "Cold Storage"],
+  "Hospitality": ["Hotels & Resorts"]
 };
 
+// Investment stages — kept in sync with builder/projects CONSTRUCTION_STATUSES
 const PREFERRED_INVESTMENT_STAGES = [
-  "Pre-Launch", "New Launch", "Under Construction", "Ready to Move", "Rental Income", "Resale"
+  "Pre-Launch", "Excavation", "Foundation", "Under Construction",
+  "Structure Complete", "Finishing", "Ready to Move", "Delivered"
 ];
 
 const INVESTMENT_PURPOSES = [
@@ -293,12 +275,16 @@ export default function InvestorKycPage() {
     }
   };
 
+  const existingPassportUrl = user?.kycPassportUrl || '';
+  const existingVisaUrl = user?.kycVisaUrl || '';
+
   const handleUploadSubmit = async (e) => {
     e.preventDefault();
-    if (!file) {
+    // Only require a new file if there's no existing passport already saved
+    if (!file && !existingPassportUrl) {
       return toast({ title: "No File Selected", description: "Please select your passport scanned copy first.", variant: "destructive" });
     }
-    if (invForm2.nationality === 'Indian' && invForm2.nriStatus === 'NRI' && !visaFile && !invForm2.kycVisaUrl) {
+    if (invForm2.nationality === 'Indian' && invForm2.nriStatus === 'NRI' && !visaFile && !existingVisaUrl && !invForm2.kycVisaUrl) {
       return toast({ title: "Visa Required", description: "Please upload your visa document copy first.", variant: "destructive" });
     }
     if (!invForm2.passportNumber || !invForm2.passportNumber.trim()) {
@@ -314,8 +300,8 @@ export default function InvestorKycPage() {
     try {
       setUploading(true);
 
-      // Upload Visa if selected
-      let kycVisaUrl = invForm2.kycVisaUrl || null;
+      // Upload Visa if a new one is selected; otherwise reuse existing
+      let kycVisaUrl = invForm2.kycVisaUrl || existingVisaUrl || null;
       if (invForm2.nationality === 'Indian' && invForm2.nriStatus === 'NRI' && visaFile) {
         const visaUploadRes = await uploadFile(visaFile, 'kyc_visas');
         if (!visaUploadRes.success || !visaUploadRes.url) throw new Error(visaUploadRes.error || "Visa file upload failed");
@@ -332,13 +318,18 @@ export default function InvestorKycPage() {
 
       await submitInvestorForm2(user.uid, payload);
 
-      const uploadRes = await uploadFile(file, 'kyc_passports');
-      if (!uploadRes.success || !uploadRes.url) throw new Error(uploadRes.error || "File upload failed");
+      // Upload passport only if a new file was selected; otherwise keep existing URL
+      let kycPassportUrl = existingPassportUrl;
+      if (file) {
+        const uploadRes = await uploadFile(file, 'kyc_passports');
+        if (!uploadRes.success || !uploadRes.url) throw new Error(uploadRes.error || "File upload failed");
+        kycPassportUrl = uploadRes.url;
+      }
 
       await apiRequest('/api/investors/submit-kyc', {
         method: 'POST',
         body: JSON.stringify({ 
-          kycPassportUrl: uploadRes.url, 
+          kycPassportUrl: kycPassportUrl, 
           passportNumber: invForm2.passportNumber,
           kycVisaUrl: kycVisaUrl
         })
@@ -472,7 +463,7 @@ export default function InvestorKycPage() {
 
                 {/* Passport Document Copy */}
                 <div>
-                  <Label className={labelStyle}>Passport Document Copy *</Label>
+                  <Label className={labelStyle}>Passport Document Copy {existingPassportUrl ? '' : '*'}</Label>
                   <div className="relative group border-2 border-dashed border-gray-200 hover:border-orange-500/50 rounded-2xl h-12 flex items-center justify-center transition-all bg-gray-50/50 hover:bg-orange-50/10 cursor-pointer">
                     <input
                       type="file"
@@ -483,10 +474,15 @@ export default function InvestorKycPage() {
                     <div className="flex items-center gap-2 px-3">
                       <Upload className="w-4 h-4 text-gray-400 group-hover:text-orange-500" />
                       <span className="text-xs font-bold text-gray-700 uppercase tracking-tight block truncate max-w-[200px]">
-                        {file ? file.name : (invForm2.kycPassportUrl ? "Update Passport copy" : "Upload Passport copy")}
+                        {file ? file.name : (existingPassportUrl ? 'Replace passport (optional)' : 'Upload Passport copy')}
                       </span>
                     </div>
                   </div>
+                  {existingPassportUrl && !file && (
+                    <a href={existingPassportUrl} target="_blank" rel="noreferrer" className="mt-1.5 inline-flex items-center gap-1 text-emerald-600 text-xs font-bold underline">
+                      ✓ Already uploaded — click to view
+                    </a>
+                  )}
                 </div>
 
                 {/* Nationality */}
@@ -547,7 +543,7 @@ export default function InvestorKycPage() {
                 {/* Visa Document Upload (Conditional on NRI Status == NRI) */}
                 {invForm2.nationality === 'Indian' && invForm2.nriStatus === 'NRI' && (
                   <div className="md:col-span-2 animate-in slide-in-from-top-2 duration-300">
-                    <Label className={labelStyle}>Visa Document Copy *</Label>
+                    <Label className={labelStyle}>Visa Document Copy {existingVisaUrl ? '' : '*'}</Label>
                     <div className="relative group border-2 border-dashed border-gray-200 hover:border-orange-500/50 rounded-2xl h-12 flex items-center justify-center transition-all bg-gray-50/50 hover:bg-orange-50/10 cursor-pointer">
                       <input
                         type="file"
@@ -558,10 +554,15 @@ export default function InvestorKycPage() {
                       <div className="flex items-center gap-2 px-3">
                         <Upload className="w-4 h-4 text-gray-400 group-hover:text-orange-500" />
                         <span className="text-xs font-bold text-gray-700 uppercase tracking-tight block truncate max-w-[400px]">
-                          {visaFile ? visaFile.name : (invForm2.kycVisaUrl ? "Update Visa Document" : "Upload Visa Document")}
+                          {visaFile ? visaFile.name : (existingVisaUrl ? 'Replace visa (optional)' : 'Upload Visa Document')}
                         </span>
                       </div>
                     </div>
+                    {existingVisaUrl && !visaFile && (
+                      <a href={existingVisaUrl} target="_blank" rel="noreferrer" className="mt-1.5 inline-flex items-center gap-1 text-emerald-600 text-xs font-bold underline">
+                        ✓ Already uploaded — click to view
+                      </a>
+                    )}
                   </div>
                 )}
 
@@ -712,8 +713,8 @@ export default function InvestorKycPage() {
                 type="submit"
                 disabled={
                   uploading || 
-                  !file || 
-                  (invForm2.nationality === 'Indian' && invForm2.nriStatus === 'NRI' && !visaFile && !invForm2.kycVisaUrl) ||
+                  (!file && !existingPassportUrl) || 
+                  (invForm2.nationality === 'Indian' && invForm2.nriStatus === 'NRI' && !visaFile && !existingVisaUrl && !invForm2.kycVisaUrl) ||
                   invForm2.preferredCategories.length === 0 || 
                   invForm2.preferredTypes.length === 0
                 }

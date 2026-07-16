@@ -269,7 +269,7 @@ export default function AdminInvestors() {
     {
       field: 'actions', headerName: 'Actions', width: 110, align: 'right', stopPropagation: true,
       renderCell: ({ row }) => (
-        <Button onClick={() => setViewInvestorData(row)} className="bg-gray-900 hover:bg-gray-800 text-white rounded-xl text-xs px-3 py-1.5">
+        <Button onClick={() => window.location.href = `/admin/investors/${row.uid || row.id}`} className="bg-gray-900 hover:bg-gray-800 text-white rounded-xl text-xs px-3 py-1.5">
           <Eye className="w-3.5 h-3.5 mr-1" /> View
         </Button>
       )

@@ -395,6 +395,52 @@ function ServiceProviderRegisterContent() {
             <span className="text-[8px] font-black text-gray-700 uppercase tracking-[0.2em]">Growth Intel</span>
           </div>
         </div>
+        {/* App Download Card */}
+        <div className="p-5 bg-white/5 border border-white/10 rounded-2xl flex flex-col gap-4 text-left shadow-sm backdrop-blur-sm">
+          <div className="flex items-center gap-3">
+            <div className="w-10 h-10 bg-orange-600 rounded-xl flex items-center justify-center text-white shadow-md shadow-orange-600/20">
+              <svg className="w-5 h-5" fill="none" stroke="currentColor" strokeWidth="2.5" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" d="M10.5 1.5H8.25A2.25 2.25 0 0 0 6 3.75v16.5a2.25 2.25 0 0 0 2.25 2.25h7.5A2.25 2.25 0 0 0 18 20.25V3.75a2.25 2.25 0 0 0-2.25-2.25H13.5m-3 0V3h3V1.5m-3 0h3m-3 18.75h3" />
+              </svg>
+            </div>
+            <div>
+              <h4 className="text-[10px] font-black text-white/55 uppercase tracking-widest leading-none mb-1">Get the App</h4>
+              <h3 className="text-sm font-black text-white uppercase tracking-tight">Investate Partner</h3>
+            </div>
+          </div>
+          
+          <p className="text-[11px] text-gray-300 font-semibold leading-relaxed">
+            Manage service requests, connect with premium developers, and track business growth on the go.
+          </p>
+
+          <div className="grid grid-cols-2 gap-2">
+            <a
+              href="#"
+              onClick={(e) => e.preventDefault()}
+              aria-label="Download on App Store"
+              className="rounded-xl overflow-hidden block"
+            >
+              <img
+                src="/images/app-store.png"
+                alt="Download on App Store"
+                className="h-11 w-full object-contain rounded-xl hover:scale-105 transition-transform"
+              />
+            </a>
+
+            <a
+              href="#"
+              onClick={(e) => e.preventDefault()}
+              aria-label="Get it on Google Play"
+              className="rounded-xl overflow-hidden block"
+            >
+              <img
+                src="/images/google-play.png"
+                alt="Get it on Google Play"
+                className="h-11 w-full object-contain rounded-xl hover:scale-105 transition-transform"
+              />
+            </a>
+          </div>
+        </div>
 
         <div className="relative z-20 space-y-5">
           <div className="pt-8 border-t border-white/10 flex flex-col gap-4">
@@ -775,6 +821,53 @@ function ServiceProviderRegisterContent() {
               )}
             </div>
           )}
+
+          {/* Mobile App Download Card (Visible on Mobile only) */}
+          <div className="lg:hidden mt-8 p-5 bg-gray-50 border border-gray-100 rounded-2xl flex flex-col gap-4 text-left shadow-sm">
+            <div className="flex items-center gap-3">
+              <div className="w-10 h-10 bg-orange-600 rounded-xl flex items-center justify-center text-white shadow-md shadow-orange-600/20">
+                <svg className="w-5 h-5" fill="none" stroke="currentColor" strokeWidth="2.5" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M10.5 1.5H8.25A2.25 2.25 0 0 0 6 3.75v16.5a2.25 2.25 0 0 0 2.25 2.25h7.5A2.25 2.25 0 0 0 18 20.25V3.75a2.25 2.25 0 0 0-2.25-2.25H13.5m-3 0V3h3V1.5m-3 0h3m-3 18.75h3" />
+                </svg>
+              </div>
+              <div>
+                <h4 className="text-[10px] font-black text-gray-400 uppercase tracking-widest leading-none mb-1">Get the App</h4>
+                <h3 className="text-sm font-black text-gray-900 uppercase tracking-tight">Investate Partner</h3>
+              </div>
+            </div>
+            
+            <p className="text-[11px] text-gray-500 font-semibold leading-relaxed">
+              Manage service requests, connect with premium developers, and track business growth on the go.
+            </p>
+
+            <div className="grid grid-cols-2 gap-2">
+              <a
+                href="#"
+                onClick={(e) => e.preventDefault()}
+                aria-label="Download on App Store"
+                className="rounded-xl overflow-hidden block"
+              >
+                <img
+                  src="/images/app-store.png"
+                  alt="Download on App Store"
+                  className="h-11 w-full object-contain rounded-xl hover:scale-105 transition-transform"
+                />
+              </a>
+
+              <a
+                href="#"
+                onClick={(e) => e.preventDefault()}
+                aria-label="Get it on Google Play"
+                className="rounded-xl overflow-hidden block"
+              >
+                <img
+                  src="/images/google-play.png"
+                  alt="Get it on Google Play"
+                  className="h-11 w-full object-contain rounded-xl hover:scale-105 transition-transform"
+                />
+              </a>
+            </div>
+          </div>
         </div>
       </div>
     </div>
