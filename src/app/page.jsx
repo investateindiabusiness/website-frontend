@@ -40,7 +40,7 @@ import {
 
 const heroSlides = [
   {
-    image: "/images/image copy 50.png",
+    image: "/images/image copy 8.png",
     tag: "Global Investment Ecosystem",
     title: "INVESTATE INDIA",
     highlight: "Your Gateway to Indian Growth",
@@ -48,7 +48,7 @@ const heroSlides = [
       "Connecting global investors, trusted builders, businesses, and professional partners through a transparent investment ecosystem.",
   },
   {
-    image: "/images/image copy 8.png",
+    image: "/images/build.png",
     tag: "Trusted Cross-Border Platform",
     title: "Bridging Global Capital with",
     highlight: "Indian Opportunities",
@@ -691,7 +691,7 @@ export default function ServiceProviderHome() {
             >
               <div className="w-[85%] h-[85%] rounded-3xl overflow-hidden shadow-lg border border-slate-100">
                 <img
-                  src="/images/image copy 22.png"
+                  src="/images/image copy 54.png"
                   alt="Professional Consultations"
                   className="w-full h-full object-cover"
                   loading="lazy"

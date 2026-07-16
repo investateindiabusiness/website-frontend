@@ -22,7 +22,7 @@ import {
 
 const heroSlides = [
   {
-    image: "/images/image copy 46.png",
+    image: "/images/image service.png",
     tag: "Trusted Professional Ecosystem",
     title: "Expand Your Services to",
     highlight: "Global NRIs & Real Estate Networks",
@@ -30,7 +30,7 @@ const heroSlides = [
       "Partner with Investate India to offer legal, financial, property, and advisory services to NRIs, investors, and developers through a trusted platform.",
   },
   {
-    image: "/images/image copy 48.png",
+    image: "/images/image copy 52.png",
     tag: "Professional Growth Network",
     title: "Build Trust Through",
     highlight: "Verified Service Partnerships",
