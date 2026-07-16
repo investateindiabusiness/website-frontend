@@ -116,7 +116,7 @@ const quickLinks = [
   { label: "Real Estate Investor", href: "/investor" },
   { label: "Builder", href: "/builder" },
   { label: "Service Provider", href: "/service-provider" },
-  { label: "Capital Sourcing", href: "/equity-raising" },
+  { label: "Capital Sourcing", href: "/capital-sourcing" },
   { label: "Gallery", href: "/gallery" },
   { label: "Contact Us", href: "/contact-us" },
 ];

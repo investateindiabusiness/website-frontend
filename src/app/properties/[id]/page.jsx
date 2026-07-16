@@ -270,6 +270,40 @@ export default function ProjectDetail() {
             </div>
          </main>
          {showPublicHeaderFooter && <Footer />}
+
+         <Dialog open={isGalleryOpen} onOpenChange={setIsGalleryOpen}>
+            <DialogContent className="max-w-5xl p-1 bg-black/95 border-none h-auto">
+               <div className="relative w-full h-[60vh] md:h-[80vh] flex items-center justify-center">
+                  <button onClick={() => setIsGalleryOpen(false)} className="absolute top-4 right-4 z-50 p-2 bg-black/50 hover:bg-black/80 rounded-full text-white transition-colors">
+                     <X className="w-5 h-5" />
+                  </button>
+                  {project.images?.length > 1 && (
+                     <>
+                        <button 
+                           onClick={(e) => { e.stopPropagation(); setCurrentImageIndex(prev => prev === 0 ? project.images.length - 1 : prev - 1); }}
+                           className="absolute left-4 z-50 p-3 bg-black/50 hover:bg-black/80 rounded-full text-white transition-colors"
+                        >
+                           <ChevronLeft className="w-6 h-6" />
+                        </button>
+                        <button 
+                           onClick={(e) => { e.stopPropagation(); setCurrentImageIndex(prev => prev === project.images.length - 1 ? 0 : prev + 1); }}
+                           className="absolute right-4 z-50 p-3 bg-black/50 hover:bg-black/80 rounded-full text-white transition-colors"
+                        >
+                           <ChevronRight className="w-6 h-6" />
+                        </button>
+                     </>
+                  )}
+                  <img 
+                     src={project.images[currentImageIndex]} 
+                     alt={`${project.projectName} Image ${currentImageIndex + 1}`} 
+                     className="max-w-full max-h-full object-contain"
+                  />
+                  <div className="absolute bottom-4 left-1/2 -translate-x-1/2 bg-black/50 px-4 py-2 rounded-full text-white text-sm">
+                     {currentImageIndex + 1} / {project.images.length}
+                  </div>
+               </div>
+            </DialogContent>
+         </Dialog>
       </div>
    );
 }
