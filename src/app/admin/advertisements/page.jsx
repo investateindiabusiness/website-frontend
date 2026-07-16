@@ -114,6 +114,27 @@ const getZoneMeta = (zoneIdOrName) => {
   return { label: zoneIdOrName, location: "—", page: "—", color: "bg-slate-100 text-slate-600", dot: "bg-slate-400" };
 };
 
+const validateImageDimensions = (file, reqWidth, reqHeight) => {
+  return new Promise((resolve) => {
+    const img = new window.Image();
+    img.src = URL.createObjectURL(file);
+    img.onload = () => {
+      URL.revokeObjectURL(img.src);
+      if (img.width !== reqWidth || img.height !== reqHeight) {
+        resolve({
+          valid: false,
+          error: `Selected image dimensions (${img.width}x${img.height}px) do not match the required zone dimensions (${reqWidth}x${reqHeight}px).`
+        });
+      } else {
+        resolve({ valid: true });
+      }
+    };
+    img.onerror = () => {
+      resolve({ valid: false, error: "Failed to read image dimensions. Please make sure it's a valid image file." });
+    };
+  });
+};
+
 export default function AdminAdvertisements() {
   const { user } = useAuth();
 
@@ -140,6 +161,8 @@ export default function AdminAdvertisements() {
   const [editZoneItem, setEditZoneItem] = useState(null);
   const [editZoneForm, setEditZoneForm] = useState({
     name: "",
+    width: 728,
+    height: 90,
     costPerDay: 0,
     status: "active",
     defaultAd: {
@@ -267,6 +290,20 @@ export default function AdminAdvertisements() {
       return;
     }
 
+    const reqWidth = editZoneForm.width || 728;
+    const reqHeight = editZoneForm.height || 90;
+
+    const check = await validateImageDimensions(file, reqWidth, reqHeight);
+    if (!check.valid) {
+      toast({
+        title: "Invalid Image Size",
+        description: check.error,
+        variant: "destructive",
+      });
+      e.target.value = '';
+      return;
+    }
+
     try {
       setIsUploadingImage(true);
       setUploadProgress(25);
@@ -303,6 +340,8 @@ export default function AdminAdvertisements() {
     setEditZoneItem(zone);
     setEditZoneForm({
       name: zone.name,
+      width: zone.width || 728,
+      height: zone.height || 90,
       costPerDay: zone.costPerDay,
       status: zone.status || "active",
       defaultAd: {
@@ -359,8 +398,8 @@ export default function AdminAdvertisements() {
         platform: editZoneItem.platform || "Web",
         category: editZoneItem.category || "Real Estate",
         adType: editZoneItem.adType || "Image",
-        width: Number(editZoneItem.width || 728),
-        height: Number(editZoneItem.height || 90),
+        width: Number(editZoneForm.width || 728),
+        height: Number(editZoneForm.height || 90),
         costPerDay: Number(editZoneForm.costPerDay),
         availableDateRange: editZoneItem.availableDateRange || {
           start: "2026-06-01",
@@ -1094,6 +1133,45 @@ export default function AdminAdvertisements() {
                     Investors will be charged this rate × number of days they
                     select.
                   </p>
+                </div>
+
+                <div className="grid grid-cols-2 gap-4">
+                  <div className="space-y-1.5">
+                    <label className="text-xs font-bold text-slate-600 block">
+                      Required Width (px)
+                    </label>
+                    <input
+                      type="number"
+                      required
+                      min="1"
+                      className="w-full border border-slate-200 rounded-xl px-4 py-2.5 text-sm outline-none focus:border-slate-800 text-slate-700"
+                      value={editZoneForm.width}
+                      onChange={(e) =>
+                        setEditZoneForm({
+                          ...editZoneForm,
+                          width: parseInt(e.target.value) || 0,
+                        })
+                      }
+                    />
+                  </div>
+                  <div className="space-y-1.5">
+                    <label className="text-xs font-bold text-slate-600 block">
+                      Required Height (px)
+                    </label>
+                    <input
+                      type="number"
+                      required
+                      min="1"
+                      className="w-full border border-slate-200 rounded-xl px-4 py-2.5 text-sm outline-none focus:border-slate-800 text-slate-700"
+                      value={editZoneForm.height}
+                      onChange={(e) =>
+                        setEditZoneForm({
+                          ...editZoneForm,
+                          height: parseInt(e.target.value) || 0,
+                        })
+                      }
+                    />
+                  </div>
                 </div>
 
                 <div className="space-y-1.5">
