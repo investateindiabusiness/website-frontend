@@ -1,0 +1,46 @@
+# See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
+
+# dependencies
+/node_modules
+/.pnp
+.pnp.js
+
+# testing
+/coverage
+
+# production
+/build
+
+# misc
+.env
+.DS_Store
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# next.js
+/.next/
+/out/
+
+# custom ignores
+/INVESTATE.zip
+<<<<<<< HEAD
+/invest.zip
+*.zip
+=======
+>>>>>>> c16292d1eb4429f93479923b1728dca485f0eaf8
+/diff.txt
+/.run-logs/
+/.npm-cache/
+
+<<<<<<< HEAD
+# Large locally-generated/upscaled images (served from public, not needed in repo)
+/public/images/image copy 27.png
+/public/images/image copy 33.png
+=======
+>>>>>>> c16292d1eb4429f93479923b1728dca485f0eaf8
