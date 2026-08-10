@@ -1,0 +1,5 @@
+{
+  "Description": "Domain ownership verification file for Microsoft 365 - place in the website root",
+  "Domain": "nrifederation.business",
+  "Id": "464d1556-d271-43cb-8cc7-048c1528909b"
+}
